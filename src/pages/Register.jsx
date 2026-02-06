@@ -2,18 +2,19 @@ import { useState } from 'react';
 import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { parseUnits } from 'viem';
 import { API_URL, USDC_ABI } from '../config';
+import { useTranslation } from '../i18n/LanguageContext';
 
-// Resolved at runtime from the 402 response
-const REGISTER_COST = 1; // 1 USDC
+const REGISTER_COST = 1;
 
 export default function Register() {
   const { address, isConnected } = useAccount();
   const { writeContractAsync } = useWriteContract();
+  const { t } = useTranslation();
 
   const [form, setForm] = useState({
     name: '', description: '', url: '', price: '', tags: ''
   });
-  const [step, setStep] = useState('form'); // form | paying | registering | done | error
+  const [step, setStep] = useState('form');
   const [txHash, setTxHash] = useState(null);
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
@@ -25,12 +26,11 @@ export default function Register() {
     setError(null);
 
     if (!isConnected) {
-      setError('Please connect your wallet first.');
+      setError(t.register.connectError);
       return;
     }
 
     try {
-      // Step 1: Get payment details from 402
       setStep('paying');
       const res402 = await fetch(`${API_URL}/register`, {
         method: 'POST',
@@ -51,7 +51,6 @@ export default function Register() {
 
       const { payment_details } = await res402.json();
 
-      // Step 2: Send USDC payment
       const usdcContract = payment_details.chainId === 8453
         ? '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'
         : '0x036CbD53842c5426634e7929541eC2318f3dCF7e';
@@ -67,11 +66,8 @@ export default function Register() {
       });
 
       setTxHash(hash);
-
-      // Step 3: Wait for confirmation then register
       setStep('registering');
 
-      // Poll for receipt (simpler than watching)
       let confirmed = false;
       for (let i = 0; i < 30; i++) {
         await new Promise(r => setTimeout(r, 2000));
@@ -96,7 +92,6 @@ export default function Register() {
 
       if (!confirmed) throw new Error('Transaction not confirmed after 60s');
 
-      // Step 4: Retry with payment proof
       const resRegister = await fetch(`${API_URL}/register`, {
         method: 'POST',
         headers: {
@@ -128,79 +123,84 @@ export default function Register() {
   };
 
   return (
-    <div className="max-w-xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-white mb-2">Register a Service</h1>
-      <p className="text-gray-500 mb-8">
-        List your API on x402 Bazaar. Costs {REGISTER_COST} USDC, paid on-chain.
+    <div className="max-w-xl mx-auto px-4 py-10">
+      <h1 className="text-3xl font-bold text-white mb-2 animate-fade-in-up">{t.register.title}</h1>
+      <p className="text-gray-500 mb-8 animate-fade-in-up delay-100">
+        {t.register.subtitle.replace('{cost}', REGISTER_COST)}
       </p>
 
       {step === 'done' ? (
-        <div className="bg-green-500/10 border border-green-500/30 rounded-xl p-6 text-center">
-          <div className="text-green-400 text-xl font-bold mb-2">Service registered!</div>
-          <p className="text-gray-400 text-sm mb-4">{result?.data?.name} is now live on x402 Bazaar.</p>
+        <div className="glass glow-green rounded-2xl p-8 text-center animate-fade-in-up">
+          <div className="text-green-400 text-2xl font-bold mb-3">{t.register.successTitle}</div>
+          <p className="text-gray-400 text-sm mb-5">{result?.data?.name} {t.register.successDesc}</p>
           {txHash && (
             <a
               href={`https://basescan.org/tx/${txHash}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-400 hover:text-blue-300 text-sm"
+              className="gradient-text font-medium text-sm no-underline"
             >
-              View transaction on BaseScan
+              {t.register.viewTx}
             </a>
           )}
         </div>
       ) : (
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-5 animate-fade-in-up delay-200">
           <div>
-            <label className="block text-sm text-gray-400 mb-1">Service Name *</label>
+            <label className="block text-sm text-gray-400 mb-1.5">{t.register.serviceName}</label>
             <input
               type="text" required value={form.name}
               onChange={e => setForm({ ...form, name: e.target.value })}
-              placeholder="Weather API Pro"
-              className="w-full bg-[#12121a] border border-gray-700 rounded-lg px-4 py-2.5 text-white placeholder-gray-600 focus:outline-none focus:border-blue-500"
+              placeholder={t.register.namePlaceholder}
+              className="w-full glass rounded-xl px-4 py-2.5 text-white placeholder-gray-600
+                         focus:outline-none focus:glow-blue focus:border-blue-500/50 transition-all duration-300"
             />
           </div>
           <div>
-            <label className="block text-sm text-gray-400 mb-1">Description</label>
+            <label className="block text-sm text-gray-400 mb-1.5">{t.register.description}</label>
             <textarea
               rows={3} value={form.description}
               onChange={e => setForm({ ...form, description: e.target.value })}
-              placeholder="Describe what your API does..."
-              className="w-full bg-[#12121a] border border-gray-700 rounded-lg px-4 py-2.5 text-white placeholder-gray-600 focus:outline-none focus:border-blue-500 resize-none"
+              placeholder={t.register.descPlaceholder}
+              className="w-full glass rounded-xl px-4 py-2.5 text-white placeholder-gray-600
+                         focus:outline-none focus:glow-blue focus:border-blue-500/50 transition-all duration-300 resize-none"
             />
           </div>
           <div>
-            <label className="block text-sm text-gray-400 mb-1">API URL *</label>
+            <label className="block text-sm text-gray-400 mb-1.5">{t.register.apiUrl}</label>
             <input
               type="url" required value={form.url}
               onChange={e => setForm({ ...form, url: e.target.value })}
-              placeholder="https://api.example.com/v1"
-              className="w-full bg-[#12121a] border border-gray-700 rounded-lg px-4 py-2.5 text-white placeholder-gray-600 focus:outline-none focus:border-blue-500"
+              placeholder={t.register.urlPlaceholder}
+              className="w-full glass rounded-xl px-4 py-2.5 text-white placeholder-gray-600
+                         focus:outline-none focus:glow-blue focus:border-blue-500/50 transition-all duration-300"
             />
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm text-gray-400 mb-1">Price (USDC) *</label>
+              <label className="block text-sm text-gray-400 mb-1.5">{t.register.priceLabel}</label>
               <input
                 type="number" step="0.01" min="0.01" required value={form.price}
                 onChange={e => setForm({ ...form, price: e.target.value })}
-                placeholder="0.10"
-                className="w-full bg-[#12121a] border border-gray-700 rounded-lg px-4 py-2.5 text-white placeholder-gray-600 focus:outline-none focus:border-blue-500"
+                placeholder={t.register.pricePlaceholder}
+                className="w-full glass rounded-xl px-4 py-2.5 text-white placeholder-gray-600
+                           focus:outline-none focus:glow-blue focus:border-blue-500/50 transition-all duration-300"
               />
             </div>
             <div>
-              <label className="block text-sm text-gray-400 mb-1">Tags (comma-separated)</label>
+              <label className="block text-sm text-gray-400 mb-1.5">{t.register.tagsLabel}</label>
               <input
                 type="text" value={form.tags}
                 onChange={e => setForm({ ...form, tags: e.target.value })}
-                placeholder="ai, weather, api"
-                className="w-full bg-[#12121a] border border-gray-700 rounded-lg px-4 py-2.5 text-white placeholder-gray-600 focus:outline-none focus:border-blue-500"
+                placeholder={t.register.tagsPlaceholder}
+                className="w-full glass rounded-xl px-4 py-2.5 text-white placeholder-gray-600
+                           focus:outline-none focus:glow-blue focus:border-blue-500/50 transition-all duration-300"
               />
             </div>
           </div>
 
           {error && (
-            <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-3 text-red-400 text-sm">
+            <div className="glass rounded-xl p-3 text-red-400 text-sm border-red-500/30">
               {error}
             </div>
           )}
@@ -208,15 +208,16 @@ export default function Register() {
           <button
             type="submit"
             disabled={step === 'paying' || step === 'registering'}
-            className="w-full bg-blue-600 hover:bg-blue-500 disabled:bg-gray-700 disabled:text-gray-500 text-white py-3 rounded-lg font-medium cursor-pointer transition-colors"
+            className="w-full gradient-btn disabled:opacity-40 text-white py-3 rounded-xl font-medium
+                       cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:glow-blue"
           >
-            {step === 'paying' ? 'Sending USDC payment...' :
-             step === 'registering' ? 'Confirming on-chain...' :
-             `Register (${REGISTER_COST} USDC)`}
+            {step === 'paying' ? t.register.paying :
+             step === 'registering' ? t.register.confirming :
+             `${t.register.submitButton} (${REGISTER_COST} USDC)`}
           </button>
 
           {!isConnected && (
-            <p className="text-orange-400 text-sm text-center">Connect your wallet to register a service.</p>
+            <p className="text-orange-400 text-sm text-center">{t.register.connectFirst}</p>
           )}
         </form>
       )}

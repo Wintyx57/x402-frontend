@@ -1,11 +1,17 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { API_URL } from '../config';
+import { useTranslation } from '../i18n/LanguageContext';
+import { useReveal } from '../hooks/useReveal';
 import ServiceCard from '../components/ServiceCard';
 
 export default function Home() {
   const [stats, setStats] = useState(null);
   const [topServices, setTopServices] = useState([]);
+  const { t } = useTranslation();
+  const statsRef = useReveal();
+  const howRef = useReveal();
+  const servicesRef = useReveal();
 
   useEffect(() => {
     fetch(`${API_URL}/api/stats`).then(r => r.json()).then(setStats).catch(() => {});
@@ -17,83 +23,96 @@ export default function Home() {
   return (
     <div>
       {/* Hero */}
-      <section className="py-20 px-4 text-center">
-        <h1 className="text-5xl md:text-6xl font-bold text-white mb-4">
-          x402 <span className="text-blue-400">Bazaar</span>
-        </h1>
-        <p className="text-xl text-gray-400 max-w-2xl mx-auto mb-3">
-          The autonomous marketplace where AI agents buy and sell services.
-        </p>
-        <p className="text-gray-500 max-w-xl mx-auto mb-8">
-          Pay with USDC on Base. Every transaction verified on-chain.
-          No middlemen, no subscriptions — just HTTP 402.
-        </p>
+      <section className="relative py-24 px-4 text-center overflow-hidden">
+        {/* Background glow orbs */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px]
+                        bg-blue-500/10 rounded-full blur-[120px] animate-glow-pulse pointer-events-none" />
+        <div className="absolute top-1/3 left-1/3 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[300px]
+                        bg-purple-500/8 rounded-full blur-[100px] animate-glow-pulse pointer-events-none" />
 
-        <div className="flex gap-4 justify-center">
-          <Link
-            to="/services"
-            className="bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-lg font-medium no-underline transition-colors"
-          >
-            Browse Services
-          </Link>
-          <Link
-            to="/register"
-            className="bg-gray-800 hover:bg-gray-700 text-gray-300 px-6 py-3 rounded-lg font-medium no-underline transition-colors"
-          >
-            List Your API
-          </Link>
+        <div className="relative z-10">
+          <h1 className="text-6xl md:text-7xl font-bold text-white mb-4 animate-fade-in-up">
+            x402 <span className="gradient-text">Bazaar</span>
+          </h1>
+          <p className="text-xl md:text-2xl text-gray-300 max-w-2xl mx-auto mb-3 animate-fade-in-up delay-100">
+            {t.home.heroSubtitle}
+          </p>
+          <p className="text-gray-500 max-w-xl mx-auto mb-10 animate-fade-in-up delay-200">
+            {t.home.heroDescription}
+          </p>
+
+          <div className="flex gap-4 justify-center animate-fade-in-up delay-300">
+            <Link
+              to="/services"
+              className="gradient-btn text-white px-7 py-3 rounded-xl font-medium no-underline
+                         transition-all duration-300 hover:scale-105 hover:glow-blue"
+            >
+              {t.home.browseServices}
+            </Link>
+            <Link
+              to="/register"
+              className="glass text-gray-300 px-7 py-3 rounded-xl font-medium no-underline
+                         transition-all duration-300 hover:scale-105 hover:border-white/20"
+            >
+              {t.home.listYourApi}
+            </Link>
+          </div>
         </div>
       </section>
 
       {/* Stats */}
       {stats && (
-        <section className="max-w-4xl mx-auto px-4 mb-16">
+        <section ref={statsRef} className="reveal max-w-4xl mx-auto px-4 mb-20">
           <div className="grid grid-cols-3 gap-4">
-            <div className="bg-[#12121a] border border-gray-800 rounded-xl p-6 text-center">
+            <div className="glass rounded-2xl p-6 text-center transition-all duration-300 hover:glow-blue">
               <div className="text-3xl font-bold text-white">{stats.totalServices}</div>
-              <div className="text-gray-500 text-sm mt-1">Services Listed</div>
+              <div className="text-gray-500 text-sm mt-1">{t.home.servicesListed}</div>
             </div>
-            <div className="bg-[#12121a] border border-gray-800 rounded-xl p-6 text-center">
+            <div className="glass rounded-2xl p-6 text-center transition-all duration-300 hover:glow-green">
               <div className="text-3xl font-bold text-green-400">{stats.totalPayments}</div>
-              <div className="text-gray-500 text-sm mt-1">Payments Verified</div>
+              <div className="text-gray-500 text-sm mt-1">{t.home.paymentsVerified}</div>
             </div>
-            <div className="bg-[#12121a] border border-gray-800 rounded-xl p-6 text-center">
-              <div className="text-3xl font-bold text-blue-400">{stats.totalRevenue} USDC</div>
-              <div className="text-gray-500 text-sm mt-1">Total Volume</div>
+            <div className="glass rounded-2xl p-6 text-center transition-all duration-300 hover:glow-purple">
+              <div className="text-3xl font-bold gradient-text">{stats.totalRevenue} USDC</div>
+              <div className="text-gray-500 text-sm mt-1">{t.home.totalVolume}</div>
             </div>
           </div>
         </section>
       )}
 
       {/* How it works */}
-      <section className="max-w-4xl mx-auto px-4 mb-16">
-        <h2 className="text-2xl font-bold text-white text-center mb-8">How it works</h2>
+      <section ref={howRef} className="reveal max-w-4xl mx-auto px-4 mb-20">
+        <h2 className="text-2xl font-bold text-white text-center mb-10">{t.home.howItWorks}</h2>
         <div className="grid md:grid-cols-3 gap-6">
-          <div className="text-center">
-            <div className="w-12 h-12 bg-orange-500/10 text-orange-400 rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-3">1</div>
-            <h3 className="text-white font-semibold mb-2">Call an API</h3>
-            <p className="text-gray-500 text-sm">Your agent calls any endpoint. If it's paid, the server responds HTTP 402 with the price.</p>
+          <div className="glass rounded-2xl p-6 text-center transition-all duration-300 hover:glow-blue">
+            <div className="w-12 h-12 glass text-orange-400 rounded-full flex items-center justify-center
+                            text-xl font-bold mx-auto mb-4 ring-2 ring-orange-400/30">1</div>
+            <h3 className="text-white font-semibold mb-2 text-lg">{t.home.step1Title}</h3>
+            <p className="text-gray-500 text-sm">{t.home.step1Desc}</p>
           </div>
-          <div className="text-center">
-            <div className="w-12 h-12 bg-green-500/10 text-green-400 rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-3">2</div>
-            <h3 className="text-white font-semibold mb-2">Pay USDC on Base</h3>
-            <p className="text-gray-500 text-sm">Transfer the exact amount to the recipient address. Takes seconds on Base L2.</p>
+          <div className="glass rounded-2xl p-6 text-center transition-all duration-300 hover:glow-green">
+            <div className="w-12 h-12 glass text-green-400 rounded-full flex items-center justify-center
+                            text-xl font-bold mx-auto mb-4 ring-2 ring-green-400/30">2</div>
+            <h3 className="text-white font-semibold mb-2 text-lg">{t.home.step2Title}</h3>
+            <p className="text-gray-500 text-sm">{t.home.step2Desc}</p>
           </div>
-          <div className="text-center">
-            <div className="w-12 h-12 bg-blue-500/10 text-blue-400 rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-3">3</div>
-            <h3 className="text-white font-semibold mb-2">Access Granted</h3>
-            <p className="text-gray-500 text-sm">Resend your request with the tx hash in the header. Verified on-chain, access granted.</p>
+          <div className="glass rounded-2xl p-6 text-center transition-all duration-300 hover:glow-purple">
+            <div className="w-12 h-12 glass text-blue-400 rounded-full flex items-center justify-center
+                            text-xl font-bold mx-auto mb-4 ring-2 ring-blue-400/30">3</div>
+            <h3 className="text-white font-semibold mb-2 text-lg">{t.home.step3Title}</h3>
+            <p className="text-gray-500 text-sm">{t.home.step3Desc}</p>
           </div>
         </div>
       </section>
 
       {/* Top Services */}
       {topServices.length > 0 && (
-        <section className="max-w-6xl mx-auto px-4 mb-16">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-white">Top Services</h2>
-            <Link to="/services" className="text-blue-400 hover:text-blue-300 text-sm no-underline">
-              View all &rarr;
+        <section ref={servicesRef} className="reveal max-w-6xl mx-auto px-4 mb-20">
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-2xl font-bold text-white">{t.home.topServices}</h2>
+            <Link to="/services" className="gradient-text text-sm no-underline font-medium
+                     transition-all duration-300 hover:opacity-80">
+              {t.home.viewAll} &rarr;
             </Link>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -103,8 +122,9 @@ export default function Home() {
       )}
 
       {/* Footer */}
-      <footer className="border-t border-gray-800 py-8 mt-8 text-center text-gray-600 text-sm">
-        x402 Bazaar — Autonomous AI Marketplace on Base
+      <div className="h-px bg-gradient-to-r from-transparent via-blue-500/20 to-transparent" />
+      <footer className="py-8 mt-2 text-center text-gray-600 text-sm">
+        {t.home.footer}
       </footer>
     </div>
   );

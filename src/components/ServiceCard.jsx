@@ -1,9 +1,15 @@
+import { useTranslation } from '../i18n/LanguageContext';
+
 export default function ServiceCard({ service }) {
+  const { t } = useTranslation();
+
   return (
-    <div className="bg-[#12121a] border border-gray-800 rounded-xl p-5 hover:border-blue-500/50 transition-colors">
+    <div className="glass rounded-2xl p-5 transition-all duration-300 hover:scale-[1.02] hover:glow-blue
+                    hover:border-white/15">
       <div className="flex items-start justify-between mb-3">
         <h3 className="text-white font-semibold text-lg">{service.name}</h3>
-        <span className="text-green-400 font-mono text-sm font-bold whitespace-nowrap ml-3">
+        <span className="bg-green-500/10 text-green-400 font-mono text-sm font-bold px-3 py-1
+                         rounded-full whitespace-nowrap ml-3">
           {service.price_usdc} USDC
         </span>
       </div>
@@ -14,7 +20,7 @@ export default function ServiceCard({ service }) {
 
       <div className="flex flex-wrap gap-1.5 mb-4">
         {service.tags?.map(tag => (
-          <span key={tag} className="text-xs bg-blue-500/10 text-blue-400 px-2 py-0.5 rounded">
+          <span key={tag} className="text-xs glass text-blue-300 px-2.5 py-0.5 rounded-full">
             {tag}
           </span>
         ))}
@@ -29,9 +35,9 @@ export default function ServiceCard({ service }) {
             href={`https://basescan.org/tx/${service.tx_hash}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-blue-400 hover:text-blue-300 no-underline"
+            className="gradient-text font-medium no-underline"
           >
-            Verified on-chain
+            {t.serviceCard.verifiedOnChain}
           </a>
         )}
       </div>
