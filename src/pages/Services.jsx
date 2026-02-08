@@ -101,7 +101,7 @@ export default function Services() {
       {/* Header row */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-white">{t.services.title}</h1>
+          <h1 className="text-3xl font-bold text-white">{t.services.title}</h1>
           <p className="text-gray-500 text-sm mt-1">
             {services.length} {t.services.apisAvailable}
             <span className="text-gray-600 mx-2">|</span>
@@ -166,7 +166,7 @@ export default function Services() {
             <button
               key={cat.key}
               onClick={() => setParam('cat', cat.key)}
-              className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-medium transition-all duration-200 cursor-pointer ${
+              className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer ${
                 isActive
                   ? 'bg-white/10 text-white border border-white/15'
                   : 'bg-white/[0.02] text-gray-500 hover:text-gray-300 hover:bg-white/5 border border-transparent'
@@ -174,13 +174,15 @@ export default function Services() {
             >
               <CategoryIcon category={cat.key} className="w-3.5 h-3.5" />
               <span>{t.services[CATEGORY_LABELS[cat.key]]}</span>
-              <span className={`text-[10px] ${isActive ? 'text-gray-400' : 'text-gray-600'}`}>
+              <span className={`text-xs ${isActive ? 'text-gray-400' : 'text-gray-600'}`}>
                 {count}
               </span>
             </button>
           );
         })}
       </div>
+
+      <div className="border-b border-white/6 mb-6" />
 
       {/* Results info */}
       {(search || priceFilter !== 'all' || category !== 'all') && (
@@ -199,7 +201,7 @@ export default function Services() {
 
       {/* Grid */}
       {loading ? (
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
           {[...Array(12)].map((_, i) => (
             <div key={i} className="glass-card rounded-lg p-4 animate-shimmer h-44" />
           ))}
@@ -209,8 +211,12 @@ export default function Services() {
           <p className="text-sm">{search ? `${t.services.noMatch} "${search}"` : t.services.noServices}</p>
         </div>
       ) : (
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
-          {sorted.map(s => <ServiceCard key={s.id} service={s} />)}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+          {sorted.map((s, i) => (
+            <div key={s.id} className="animate-fade-in-up" style={{ animationDelay: `${Math.min(i, 11) * 50}ms` }}>
+              <ServiceCard service={s} />
+            </div>
+          ))}
         </div>
       )}
     </div>

@@ -52,7 +52,7 @@ export default function Home() {
       {/* ===== HERO ===== */}
       <section className="relative py-16 sm:py-24 px-4 overflow-hidden">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px]
-                        bg-[#FF9900]/5 rounded-full blur-[120px] animate-glow-pulse pointer-events-none" />
+                        bg-[#FF9900]/8 rounded-full blur-[120px] animate-glow-pulse pointer-events-none" />
 
         <div className="relative z-10 max-w-3xl mx-auto text-center">
           <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold text-white mb-4 animate-fade-in-up">
@@ -91,33 +91,33 @@ export default function Home() {
           <div className="flex items-center justify-center gap-6 mt-6 animate-fade-in-up delay-300">
             <div className="text-center">
               <div className="text-xl font-bold text-white">{services.length}</div>
-              <div className="text-[10px] text-gray-500 uppercase tracking-wider">{t.home.apis}</div>
+              <div className="text-xs text-gray-500 uppercase tracking-wider">{t.home.apis}</div>
             </div>
             <div className="w-px h-8 bg-white/10" />
             <div className="text-center">
               <div className="text-xl font-bold text-[#FF9900]">
                 {services.filter(s => Number(s.price_usdc) === 0).length}
               </div>
-              <div className="text-[10px] text-gray-500 uppercase tracking-wider">{t.home.freeApis}</div>
+              <div className="text-xs text-gray-500 uppercase tracking-wider">{t.home.freeApis}</div>
             </div>
             <div className="w-px h-8 bg-white/10" />
             <div className="text-center">
               <div className="text-xl font-bold text-[#FF9900]">{stats?.totalPayments || 0}</div>
-              <div className="text-[10px] text-gray-500 uppercase tracking-wider">{t.home.payments}</div>
+              <div className="text-xs text-gray-500 uppercase tracking-wider">{t.home.payments}</div>
             </div>
           </div>
         </div>
       </section>
 
       {/* ===== CATEGORIES GRID ===== */}
-      <section ref={catRef} className="reveal max-w-7xl mx-auto px-4 mb-16">
+      <section ref={catRef} className="reveal max-w-7xl mx-auto px-4 mb-20">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-lg sm:text-xl font-bold text-white">{t.home.browseByCategory}</h2>
+          <h2 className="text-2xl font-bold text-white">{t.home.browseByCategory}</h2>
           <Link to="/services" className="text-xs text-[#FF9900] no-underline hover:text-[#FEBD69]">
             {t.home.viewAll} &rarr;
           </Link>
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-3">
           {CATEGORIES.map((cat, i) => (
             <Link
               key={cat}
@@ -129,15 +129,15 @@ export default function Home() {
             >
               <CategoryIcon category={cat} className="w-5 h-5 mx-auto mb-1.5" />
               <div className="text-white text-sm font-medium">{t.home.categories[cat]}</div>
-              <div className="text-gray-500 text-[10px] mt-1">{categoryCounts[cat] || 0} APIs</div>
+              <div className="text-gray-500 text-xs mt-1">{categoryCounts[cat] || 0} APIs</div>
             </Link>
           ))}
         </div>
       </section>
 
       {/* ===== HOW IT WORKS ===== */}
-      <section ref={howRef} className="reveal max-w-5xl mx-auto px-4 mb-16">
-        <h2 className="text-lg sm:text-xl font-bold text-white text-center mb-8">{t.home.howItWorks}</h2>
+      <section ref={howRef} className="reveal max-w-5xl mx-auto px-4 mb-20">
+        <h2 className="text-2xl font-bold text-white text-center mb-8">{t.home.howItWorks}</h2>
         <div className="grid md:grid-cols-3 gap-4">
           {[
             { num: '1', title: t.home.step1Title, desc: t.home.step1Desc },
@@ -145,8 +145,8 @@ export default function Home() {
             { num: '3', title: t.home.step3Title, desc: t.home.step3Desc },
           ].map(step => (
             <div key={step.num} className="glass-card rounded-lg p-5 text-center">
-              <div className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold
-                              mx-auto mb-3 border border-[#FF9900]/30 text-[#FF9900] bg-[#FF9900]/5">
+              <div className="w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold
+                              mx-auto mb-3 border-2 border-[#FF9900]/30 text-[#FF9900] bg-[#FF9900]/5">
                 {step.num}
               </div>
               <h3 className="text-white font-semibold text-sm mb-2">{step.title}</h3>
@@ -160,13 +160,17 @@ export default function Home() {
       {freeServices.length > 0 && (
         <section ref={freeRef} className="reveal max-w-7xl mx-auto px-4 mb-16">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-lg font-bold text-white">{t.home.freeApisTitle}</h2>
+            <h2 className="text-xl font-bold text-white">{t.home.freeApisTitle}</h2>
             <Link to="/services?price=free" className="text-xs text-[#FF9900] no-underline hover:text-[#FEBD69]">
               {t.home.viewAll} &rarr;
             </Link>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
-            {freeServices.map(s => <ServiceCard key={s.id} service={s} />)}
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {freeServices.map((s, i) => (
+              <div key={s.id} className="animate-fade-in-up" style={{ animationDelay: `${i * 75}ms` }}>
+                <ServiceCard service={s} />
+              </div>
+            ))}
           </div>
         </section>
       )}
@@ -175,35 +179,39 @@ export default function Home() {
       {paidServices.length > 0 && (
         <section ref={paidRef} className="reveal max-w-7xl mx-auto px-4 mb-16">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-lg font-bold text-white">{t.home.premiumApisTitle}</h2>
+            <h2 className="text-xl font-bold text-white">{t.home.premiumApisTitle}</h2>
             <Link to="/services?price=paid" className="text-xs text-[#FF9900] no-underline hover:text-[#FEBD69]">
               {t.home.viewAll} &rarr;
             </Link>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
-            {paidServices.map(s => <ServiceCard key={s.id} service={s} />)}
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {paidServices.map((s, i) => (
+              <div key={s.id} className="animate-fade-in-up" style={{ animationDelay: `${i * 75}ms` }}>
+                <ServiceCard service={s} />
+              </div>
+            ))}
           </div>
         </section>
       )}
 
       {/* ===== STATS BAR ===== */}
       {stats && (
-        <section ref={statsRef} className="reveal max-w-5xl mx-auto px-4 mb-16">
+        <section ref={statsRef} className="reveal max-w-5xl mx-auto px-4 mb-20">
           <div className="glass-card rounded-xl p-6 grid grid-cols-2 sm:grid-cols-4 gap-4">
             <div className="text-center">
-              <div className="text-2xl font-bold text-white">{stats.totalServices}</div>
+              <div className="text-3xl font-bold text-white">{stats.totalServices}</div>
               <div className="text-xs text-gray-500 mt-1">{t.home.servicesListed}</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-[#FF9900]">{stats.totalPayments}</div>
+              <div className="text-3xl font-bold text-[#FF9900]">{stats.totalPayments}</div>
               <div className="text-xs text-gray-500 mt-1">{t.home.paymentsVerified}</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold gradient-text">{stats.totalRevenue} USDC</div>
+              <div className="text-3xl font-bold gradient-text">{stats.totalRevenue} USDC</div>
               <div className="text-xs text-gray-500 mt-1">{t.home.totalVolume}</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-white">11</div>
+              <div className="text-3xl font-bold text-white">11</div>
               <div className="text-xs text-gray-500 mt-1">{t.home.categoriesCount}</div>
             </div>
           </div>
@@ -211,9 +219,9 @@ export default function Home() {
       )}
 
       {/* ===== CTA ===== */}
-      <section className="max-w-3xl mx-auto px-4 mb-16">
-        <div className="glass-card rounded-xl p-8 text-center">
-          <h2 className="text-xl font-bold text-white mb-3">{t.home.ctaTitle}</h2>
+      <section className="max-w-3xl mx-auto px-4 mb-20">
+        <div className="gradient-cta glow-orange rounded-xl p-10 sm:p-14 text-center">
+          <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3">{t.home.ctaTitle}</h2>
           <p className="text-gray-400 text-sm mb-6 max-w-md mx-auto">{t.home.ctaDesc}</p>
           <div className="flex flex-wrap gap-3 justify-center">
             <Link to="/register" className="gradient-btn text-white px-6 py-2.5 rounded-lg text-sm font-medium no-underline hover:brightness-110 transition-all">
@@ -255,10 +263,10 @@ export default function Home() {
             </div>
           </div>
           <div className="border-t border-white/5 pt-6 flex flex-wrap items-center justify-between gap-4">
-            <p className="text-[10px] text-gray-600">
+            <p className="text-xs text-gray-600">
               Built for the <span className="text-[#FF9900] font-medium">x402 Hackathon</span> &middot; Powered by Base
             </p>
-            <p className="text-[10px] text-gray-600">&copy; 2025 x402 Bazaar</p>
+            <p className="text-xs text-gray-600">&copy; 2025 x402 Bazaar</p>
           </div>
         </div>
       </footer>

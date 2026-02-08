@@ -17,8 +17,8 @@ export default function ServiceCard({ service }) {
   const [imgError, setImgError] = useState(false);
 
   return (
-    <div className="glass-card rounded-lg p-4 transition-all duration-200 hover:bg-white/[0.04]
-                    hover:border-white/10 group">
+    <div className="glass-card rounded-xl p-5 transition-all duration-200 hover:bg-white/[0.04]
+                    hover:border-[#FF9900]/20 hover:-translate-y-0.5 hover:shadow-lg group">
       {/* Top row: logo + name + price */}
       <div className="flex items-start gap-3 mb-3">
         <div className="w-9 h-9 rounded-lg bg-[#232f3e] flex items-center justify-center shrink-0 overflow-hidden">
@@ -40,9 +40,9 @@ export default function ServiceCard({ service }) {
             {service.tags?.[0]}
           </span>
         </div>
-        <span className={`shrink-0 font-mono text-xs font-bold px-2.5 py-1 rounded-md ${
+        <span className={`shrink-0 font-mono text-xs font-bold px-2.5 py-1 rounded-lg ${
           isFree
-            ? 'bg-white/5 text-gray-400 border border-white/8'
+            ? 'bg-[#34D399]/10 text-[#34D399] border border-[#34D399]/20'
             : 'bg-[#FF9900]/10 text-[#FF9900] border border-[#FF9900]/20'
         }`}>
           {isFree ? t.serviceCard.free : `$${service.price_usdc}`}
@@ -57,18 +57,18 @@ export default function ServiceCard({ service }) {
       {/* Tags */}
       <div className="flex flex-wrap gap-1 mb-3">
         {service.tags?.slice(0, 3).map(tag => (
-          <span key={tag} className="text-[10px] text-gray-500 bg-white/5 px-2 py-0.5 rounded">
+          <span key={tag} className="text-xs text-gray-500 bg-white/5 px-2 py-0.5 rounded-lg">
             {tag}
           </span>
         ))}
         {service.tags?.length > 3 && (
-          <span className="text-[10px] text-gray-600 px-1">+{service.tags.length - 3}</span>
+          <span className="text-xs text-gray-600 px-1">+{service.tags.length - 3}</span>
         )}
       </div>
 
       {/* Bottom row: owner + verify + action */}
       <div className="flex items-center justify-between pt-2 border-t border-white/5">
-        <div className="flex items-center gap-2 text-[10px] text-gray-600">
+        <div className="flex items-center gap-2 text-xs text-gray-600">
           <span className="font-mono">
             {service.owner_address?.slice(0, 6)}...{service.owner_address?.slice(-4)}
           </span>
@@ -87,8 +87,8 @@ export default function ServiceCard({ service }) {
           href={service.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-[10px] font-medium text-[#FF9900] hover:text-[#FEBD69] no-underline
-                     opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+          className="text-xs font-medium text-[#FF9900] hover:text-[#FFB340] no-underline
+                     transition-opacity duration-200"
         >
           {t.serviceCard.viewApi} &rarr;
         </a>

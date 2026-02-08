@@ -1,6 +1,34 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '../i18n/LanguageContext';
 import { useReveal } from '../hooks/useReveal';
+
+function CodeBlock({ code, lang }) {
+  const [copied, setCopied] = useState(false);
+  const handleCopy = async () => {
+    await navigator.clipboard.writeText(code);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+  return (
+    <div className="relative bg-[#1a1f2e] border border-white/10 rounded-xl overflow-hidden">
+      <div className="flex items-center justify-between px-4 py-2 border-b border-white/10">
+        <span className="text-xs font-medium text-[#FF9900]/80 bg-[#FF9900]/10 px-2 py-0.5 rounded">
+          {lang || 'Code'}
+        </span>
+        <button
+          onClick={handleCopy}
+          className="text-xs text-gray-400 hover:text-white transition-colors duration-200 cursor-pointer bg-transparent border-none"
+        >
+          {copied ? 'Copied!' : 'Copy'}
+        </button>
+      </div>
+      <pre className="px-4 py-3 text-sm text-gray-300 overflow-x-auto font-mono leading-relaxed">
+        {code}
+      </pre>
+    </div>
+  );
+}
 
 export default function Integrate() {
   const { t } = useTranslation();
@@ -23,21 +51,21 @@ export default function Integrate() {
 
       {/* Why Integrate */}
       <section ref={whyRef} className="reveal mb-14">
-        <h2 className="text-xl font-bold text-white mb-6">{t.integrate.whyTitle}</h2>
+        <h2 className="text-2xl font-bold text-white mb-6">{t.integrate.whyTitle}</h2>
         <div className="grid sm:grid-cols-3 gap-4">
-          <div className="glass rounded-2xl p-5 transition-all duration-200 hover:glow-orange">
+          <div className="glass rounded-xl p-5 transition-all duration-200 hover:glow-orange">
             <div className="w-10 h-10 glass text-[#FF9900] rounded-full flex items-center justify-center
                             text-lg mb-3 border border-[#FF9900]/30">$</div>
             <h3 className="text-white font-semibold mb-1">{t.integrate.why1Title}</h3>
             <p className="text-gray-500 text-sm">{t.integrate.why1Desc}</p>
           </div>
-          <div className="glass rounded-2xl p-5 transition-all duration-200 hover:glow-orange">
+          <div className="glass rounded-xl p-5 transition-all duration-200 hover:glow-orange">
             <div className="w-10 h-10 glass text-[#FF9900] rounded-full flex items-center justify-center
                             text-lg mb-3 border border-[#FF9900]/30">?</div>
             <h3 className="text-white font-semibold mb-1">{t.integrate.why2Title}</h3>
             <p className="text-gray-500 text-sm">{t.integrate.why2Desc}</p>
           </div>
-          <div className="glass rounded-2xl p-5 transition-all duration-200 hover:glow-orange">
+          <div className="glass rounded-xl p-5 transition-all duration-200 hover:glow-orange">
             <div className="w-10 h-10 glass text-[#FF9900] rounded-full flex items-center justify-center
                             text-lg mb-3 border border-[#FF9900]/30">&#x2713;</div>
             <h3 className="text-white font-semibold mb-1">{t.integrate.why3Title}</h3>
@@ -48,7 +76,7 @@ export default function Integrate() {
 
       {/* Agent Flow */}
       <section ref={flowRef} className="reveal mb-14">
-        <h2 className="text-xl font-bold text-white mb-6">{t.integrate.flowTitle}</h2>
+        <h2 className="text-2xl font-bold text-white mb-6">{t.integrate.flowTitle}</h2>
         <div className="space-y-4">
           {[
             { title: t.integrate.flowStep1Title, desc: t.integrate.flowStep1Desc, code: t.integrate.flowStep1Code },
@@ -56,12 +84,10 @@ export default function Integrate() {
             { title: t.integrate.flowStep3Title, desc: t.integrate.flowStep3Desc, code: t.integrate.flowStep3Code },
             { title: t.integrate.flowStep4Title, desc: t.integrate.flowStep4Desc, code: t.integrate.flowStep4Code },
           ].map(({ title, desc, code }) => (
-            <div key={title} className="glass rounded-2xl p-5">
+            <div key={title} className="glass rounded-xl p-5">
               <h3 className="text-[#FF9900] font-bold mb-1">{title}</h3>
               <p className="text-gray-400 text-sm mb-3">{desc}</p>
-              <pre className="glass rounded-xl px-4 py-3 text-xs sm:text-sm text-gray-300 overflow-x-auto">
-                {code}
-              </pre>
+              <CodeBlock code={code} />
             </div>
           ))}
         </div>
@@ -69,10 +95,9 @@ export default function Integrate() {
 
       {/* Core Pattern */}
       <section ref={coreRef} className="reveal mb-14">
-        <h2 className="text-xl font-bold text-white mb-2">{t.integrate.corePatternTitle}</h2>
+        <h2 className="text-2xl font-bold text-white mb-2">{t.integrate.corePatternTitle}</h2>
         <p className="text-gray-400 text-sm mb-4">{t.integrate.corePatternDesc}</p>
-        <pre className="glass rounded-2xl p-5 text-xs sm:text-sm text-gray-300 overflow-x-auto leading-relaxed">
-{`async function payAndRequest(url, wallet, options = {}) {
+        <CodeBlock lang="JavaScript" code={`async function payAndRequest(url, wallet, options = {}) {
   // 1. Make the request
   const res = await fetch(url, options);
   const body = await res.json();
@@ -101,16 +126,14 @@ export default function Integrate() {
     },
   });
   return retryRes.json();
-}`}
-        </pre>
+}`} />
       </section>
 
       {/* Full Agent Example */}
       <section ref={agentRef} className="reveal mb-14">
-        <h2 className="text-xl font-bold text-white mb-2">{t.integrate.agentExampleTitle}</h2>
+        <h2 className="text-2xl font-bold text-white mb-2">{t.integrate.agentExampleTitle}</h2>
         <p className="text-gray-400 text-sm mb-4">{t.integrate.agentExampleDesc}</p>
-        <pre className="glass rounded-2xl p-5 text-xs sm:text-sm text-gray-300 overflow-x-auto leading-relaxed">
-{`import OpenAI from 'openai';
+        <CodeBlock lang="JavaScript" code={`import OpenAI from 'openai';
 import { Coinbase, Wallet } from '@coinbase/coinbase-sdk';
 
 const BAZAAR = 'https://x402-api.onrender.com';
@@ -189,8 +212,7 @@ for (let turn = 0; turn < 10; turn++) {
   }
 }
 
-console.log(messages.at(-1).content); // Final answer`}
-        </pre>
+console.log(messages.at(-1).content); // Final answer`} />
         <p className="text-gray-500 text-xs mt-3">
           {t.integrate.agentExampleNote}{' '}
           <a
@@ -206,10 +228,9 @@ console.log(messages.at(-1).content); // Final answer`}
 
       {/* Python Example */}
       <section ref={pythonRef} className="reveal mb-14">
-        <h2 className="text-xl font-bold text-white mb-2">{t.integrate.pythonTitle}</h2>
+        <h2 className="text-2xl font-bold text-white mb-2">{t.integrate.pythonTitle}</h2>
         <p className="text-gray-400 text-sm mb-4">{t.integrate.pythonDesc}</p>
-        <pre className="glass rounded-2xl p-5 text-xs sm:text-sm text-gray-300 overflow-x-auto leading-relaxed">
-{`import requests
+        <CodeBlock lang="Python" code={`import requests
 from web3 import Web3
 
 BAZAAR = "https://x402-api.onrender.com"
@@ -262,23 +283,22 @@ services = pay_and_request(
     f"{BAZAAR}/search?q=weather",
     wallet_key="0xYOUR_PRIVATE_KEY"
 )
-print(services)`}
-        </pre>
+print(services)`} />
       </section>
 
       {/* Use Cases */}
       <section ref={useCasesRef} className="reveal mb-14">
-        <h2 className="text-xl font-bold text-white mb-6">{t.integrate.useCasesTitle}</h2>
+        <h2 className="text-2xl font-bold text-white mb-6">{t.integrate.useCasesTitle}</h2>
         <div className="grid sm:grid-cols-3 gap-4">
-          <div className="glass rounded-2xl p-5 transition-all duration-300 hover:glow-orange">
+          <div className="glass rounded-xl p-5 transition-all duration-300 hover:glow-orange">
             <h3 className="text-white font-semibold mb-2">{t.integrate.useCase1Title}</h3>
             <p className="text-gray-500 text-sm">{t.integrate.useCase1Desc}</p>
           </div>
-          <div className="glass rounded-2xl p-5 transition-all duration-300 hover:glow-orange">
+          <div className="glass rounded-xl p-5 transition-all duration-300 hover:glow-orange">
             <h3 className="text-white font-semibold mb-2">{t.integrate.useCase2Title}</h3>
             <p className="text-gray-500 text-sm">{t.integrate.useCase2Desc}</p>
           </div>
-          <div className="glass rounded-2xl p-5 transition-all duration-300 hover:glow-orange">
+          <div className="glass rounded-xl p-5 transition-all duration-300 hover:glow-orange">
             <h3 className="text-white font-semibold mb-2">{t.integrate.useCase3Title}</h3>
             <p className="text-gray-500 text-sm">{t.integrate.useCase3Desc}</p>
           </div>
@@ -287,10 +307,9 @@ print(services)`}
 
       {/* Get Started */}
       <section ref={startRef} className="reveal mb-10">
-        <h2 className="text-xl font-bold text-white mb-2">{t.integrate.getStartedTitle}</h2>
+        <h2 className="text-2xl font-bold text-white mb-2">{t.integrate.getStartedTitle}</h2>
         <p className="text-gray-400 text-sm mb-4">{t.integrate.getStartedDesc}</p>
-        <pre className="glass rounded-2xl p-5 text-xs sm:text-sm text-gray-300 overflow-x-auto leading-relaxed">
-{`# ${t.integrate.getStartedStep1}
+        <CodeBlock lang="Shell" code={`# ${t.integrate.getStartedStep1}
 git clone https://github.com/Wintyx57/x402-backend.git
 cd x402-backend
 
@@ -302,8 +321,7 @@ cp .env.example .env
 # Edit .env with your Coinbase API keys + OpenAI key
 
 # ${t.integrate.getStartedStep4}
-npm run demo`}
-        </pre>
+npm run demo`} />
 
         <div className="flex flex-wrap gap-4 mt-8">
           <Link

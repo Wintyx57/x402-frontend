@@ -1,6 +1,34 @@
+import { useState } from 'react';
 import { API_URL } from '../config';
 import { useTranslation } from '../i18n/LanguageContext';
 import { useReveal } from '../hooks/useReveal';
+
+function CodeBlock({ code, lang }) {
+  const [copied, setCopied] = useState(false);
+  const handleCopy = async () => {
+    await navigator.clipboard.writeText(code);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+  return (
+    <div className="relative bg-[#1a1f2e] border border-white/10 rounded-xl overflow-hidden">
+      <div className="flex items-center justify-between px-4 py-2 border-b border-white/10">
+        <span className="text-xs font-medium text-[#FF9900]/80 bg-[#FF9900]/10 px-2 py-0.5 rounded">
+          {lang || 'Code'}
+        </span>
+        <button
+          onClick={handleCopy}
+          className="text-xs text-gray-400 hover:text-white transition-colors duration-200 cursor-pointer bg-transparent border-none"
+        >
+          {copied ? 'Copied!' : 'Copy'}
+        </button>
+      </div>
+      <pre className="px-4 py-3 text-sm text-gray-300 overflow-x-auto font-mono leading-relaxed">
+        {code}
+      </pre>
+    </div>
+  );
+}
 
 export default function Developers() {
   const baseUrl = API_URL === 'http://localhost:3000' ? 'https://x402-api.onrender.com' : API_URL;
@@ -11,15 +39,15 @@ export default function Developers() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-10">
-      <h1 className="text-3xl font-bold text-white mb-2 animate-fade-in-up">{t.developers.title}</h1>
+      <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2 animate-fade-in-up">{t.developers.title}</h1>
       <p className="text-gray-500 mb-10 animate-fade-in-up delay-100">
         {t.developers.subtitle}
       </p>
 
       {/* Protocol */}
       <section ref={protocolRef} className="reveal mb-10">
-        <h2 className="text-xl font-bold text-white mb-4">{t.developers.protocolTitle}</h2>
-        <div className="glass rounded-2xl p-6 text-sm text-gray-300 space-y-3">
+        <h2 className="text-2xl font-bold text-white mb-4">{t.developers.protocolTitle}</h2>
+        <div className="glass rounded-xl p-6 text-sm text-gray-300 space-y-3">
           <p><strong className="text-white">1.</strong> {t.developers.step1}</p>
           <p><strong className="text-white">2.</strong> {t.developers.step2pre} <code className="glass px-1.5 py-0.5 rounded text-orange-400">{t.developers.step2code}</code> {t.developers.step2post}</p>
           <p><strong className="text-white">3.</strong> {t.developers.step3}</p>
@@ -30,8 +58,8 @@ export default function Developers() {
 
       {/* Endpoints */}
       <section ref={endpointsRef} className="reveal mb-10">
-        <h2 className="text-xl font-bold text-white mb-4">{t.developers.endpointsTitle}</h2>
-        <div className="overflow-x-auto glass rounded-2xl p-4 sm:p-5">
+        <h2 className="text-2xl font-bold text-white mb-4">{t.developers.endpointsTitle}</h2>
+        <div className="overflow-x-auto glass rounded-xl p-4 sm:p-5">
           <table className="w-full text-xs sm:text-sm min-w-[480px]">
             <thead>
               <tr className="text-left text-gray-500 border-b border-white/10">
@@ -73,9 +101,8 @@ export default function Developers() {
 
       {/* Example */}
       <section ref={exampleRef} className="reveal mb-10">
-        <h2 className="text-xl font-bold text-white mb-4">{t.developers.exampleTitle}</h2>
-        <pre className="glass rounded-2xl p-5 text-sm text-gray-300 overflow-x-auto">
-{`# 1. Discover the marketplace
+        <h2 className="text-2xl font-bold text-white mb-4">{t.developers.exampleTitle}</h2>
+        <CodeBlock lang="Shell" code={`# 1. Discover the marketplace
 curl ${baseUrl}/
 
 # 2. Try to search (will get 402)
@@ -88,30 +115,26 @@ curl ${baseUrl}/search?q=weather
 # 4. Retry with proof of payment
 curl -H "X-Payment-TxHash: 0xabc123..." \\
   ${baseUrl}/search?q=weather
-# → HTTP 200 + results`}
-        </pre>
+# → HTTP 200 + results`} />
       </section>
 
       {/* Register body */}
       <section className="mb-10">
-        <h2 className="text-xl font-bold text-white mb-4">{t.developers.registerBodyTitle}</h2>
-        <pre className="glass rounded-2xl p-5 text-sm text-gray-300 overflow-x-auto">
-{`{
+        <h2 className="text-2xl font-bold text-white mb-4">{t.developers.registerBodyTitle}</h2>
+        <CodeBlock lang="JSON" code={`{
   "name": "My AI Service",
   "description": "What my service does",
   "url": "https://api.myservice.com/v1",
   "price": 0.10,
   "tags": ["ai", "nlp"],
   "ownerAddress": "0xYourWalletAddress"
-}`}
-        </pre>
+}`} />
       </section>
 
       {/* 402 Response */}
       <section className="mb-10">
-        <h2 className="text-xl font-bold text-white mb-4">{t.developers.responseTitle}</h2>
-        <pre className="glass rounded-2xl p-5 text-sm text-gray-300 overflow-x-auto">
-{`{
+        <h2 className="text-2xl font-bold text-white mb-4">{t.developers.responseTitle}</h2>
+        <CodeBlock lang="JSON" code={`{
   "error": "Payment Required",
   "payment_details": {
     "amount": 0.05,
@@ -121,8 +144,7 @@ curl -H "X-Payment-TxHash: 0xabc123..." \\
     "recipient": "0xServerWallet...",
     "action": "Search services"
   }
-}`}
-        </pre>
+}`} />
       </section>
     </div>
   );

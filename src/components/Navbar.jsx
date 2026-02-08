@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from '../i18n/LanguageContext';
 import ConnectButton from './ConnectButton';
 import LanguageToggle from './LanguageToggle';
@@ -9,6 +9,7 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [search, setSearch] = useState('');
   const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   const closeMobile = () => setMobileOpen(false);
 
@@ -29,7 +30,7 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="sticky top-0 z-50 bg-[#131921] border-b border-white/8">
+      <nav className="sticky top-0 z-50 bg-[#131921]/80 backdrop-blur-xl border-b border-white/8">
         <div className="max-w-7xl mx-auto px-4 h-14 flex items-center gap-4">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 no-underline shrink-0">
@@ -65,6 +66,7 @@ export default function Navbar() {
               onClick={() => setMobileOpen((prev) => !prev)}
               className="md:hidden relative w-8 h-8 flex flex-col items-center justify-center gap-[5px] bg-transparent border-none cursor-pointer z-50"
               aria-label="Toggle menu"
+              aria-expanded={mobileOpen}
             >
               <span className={`block w-5 h-[2px] bg-gray-300 rounded-full transition-all duration-300 origin-center ${
                 mobileOpen ? 'translate-y-[7px] rotate-45 bg-[#FF9900]' : ''
@@ -82,16 +84,22 @@ export default function Navbar() {
         {/* Nav links strip — desktop */}
         <div className="hidden md:block border-t border-white/5 bg-[#232f3e]">
           <div className="max-w-7xl mx-auto px-4 flex items-center gap-1 h-10 overflow-x-auto">
-            {navLinks.map(({ to, label }) => (
-              <Link
-                key={to}
-                to={to}
-                className="text-gray-300 hover:text-white text-xs font-medium no-underline
-                           px-3 py-1.5 rounded transition-colors duration-200 hover:bg-white/5 whitespace-nowrap"
-              >
-                {label}
-              </Link>
-            ))}
+            {navLinks.map(({ to, label }) => {
+              const isActive = pathname === to || pathname.startsWith(to + '/');
+              return (
+                <Link
+                  key={to}
+                  to={to}
+                  className={`text-xs font-medium no-underline px-3 py-1.5 rounded transition-colors duration-200 whitespace-nowrap ${
+                    isActive
+                      ? 'text-[#FF9900] bg-[#FF9900]/10'
+                      : 'text-gray-300 hover:text-white hover:bg-white/5'
+                  }`}
+                >
+                  {label}
+                </Link>
+              );
+            })}
             <div className="w-px h-4 bg-white/10 mx-1" />
             <Link
               to="/services"
@@ -108,17 +116,23 @@ export default function Navbar() {
           mobileOpen ? 'max-h-64 opacity-100' : 'max-h-0 opacity-0'
         }`}>
           <div className="border-t border-white/6 px-4 py-3 flex flex-col gap-1 bg-[#131921]">
-            {navLinks.map(({ to, label }) => (
-              <Link
-                key={to}
-                to={to}
-                onClick={closeMobile}
-                className="text-gray-300 hover:text-white hover:bg-white/5 text-sm no-underline
-                           px-3 py-2.5 rounded-lg transition-colors duration-200"
-              >
-                {label}
-              </Link>
-            ))}
+            {navLinks.map(({ to, label }) => {
+              const isActive = pathname === to || pathname.startsWith(to + '/');
+              return (
+                <Link
+                  key={to}
+                  to={to}
+                  onClick={closeMobile}
+                  className={`text-sm no-underline px-3 py-2.5 rounded-lg transition-colors duration-200 ${
+                    isActive
+                      ? 'text-[#FF9900] bg-[#FF9900]/10'
+                      : 'text-gray-300 hover:text-white hover:bg-white/5'
+                  }`}
+                >
+                  {label}
+                </Link>
+              );
+            })}
           </div>
         </div>
       </nav>
