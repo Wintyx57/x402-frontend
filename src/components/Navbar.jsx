@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { useTranslation } from '../i18n/LanguageContext';
 import ConnectButton from './ConnectButton';
 import LanguageToggle from './LanguageToggle';
@@ -7,17 +7,37 @@ import LanguageToggle from './LanguageToggle';
 export default function Navbar() {
   const { t } = useTranslation();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [search, setSearch] = useState('');
+  const [localSearch, setLocalSearch] = useState('');
   const navigate = useNavigate();
   const { pathname } = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const onServicesPage = pathname === '/services' || pathname.startsWith('/services/');
+  const searchValue = onServicesPage ? (searchParams.get('q') || '') : localSearch;
 
   const closeMobile = () => setMobileOpen(false);
 
+  const handleSearchChange = (e) => {
+    const val = e.target.value;
+    if (onServicesPage) {
+      const params = new URLSearchParams(searchParams);
+      if (val) {
+        params.set('q', val);
+      } else {
+        params.delete('q');
+      }
+      setSearchParams(params);
+    } else {
+      setLocalSearch(val);
+    }
+  };
+
   const handleSearch = (e) => {
     e.preventDefault();
-    if (search.trim()) {
-      navigate(`/services?q=${encodeURIComponent(search.trim())}`);
-      setSearch('');
+    if (onServicesPage) return;
+    if (localSearch.trim()) {
+      navigate(`/services?q=${encodeURIComponent(localSearch.trim())}`);
+      setLocalSearch('');
     }
   };
 
@@ -47,8 +67,8 @@ export default function Navbar() {
             <div className="relative flex items-center">
               <input
                 type="text"
-                value={search}
-                onChange={e => setSearch(e.target.value)}
+                value={searchValue}
+                onChange={handleSearchChange}
                 placeholder={t.nav.searchPlaceholder}
                 className="w-full bg-white/8 border border-white/10 rounded-lg pl-10 pr-4 py-2 text-sm text-white
                            placeholder-gray-500 focus:outline-none focus:border-[#FF9900]/50 focus:bg-white/10
