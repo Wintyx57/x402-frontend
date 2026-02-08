@@ -8,9 +8,12 @@ export default function ServiceCard({ service }) {
                     hover:border-white/15">
       <div className="flex items-start justify-between mb-3">
         <h3 className="text-white font-semibold text-lg">{service.name}</h3>
-        <span className="bg-green-500/10 text-green-400 font-mono text-sm font-bold px-3 py-1
-                         rounded-full whitespace-nowrap ml-3">
-          {service.price_usdc} USDC
+        <span className={`font-mono text-sm font-bold px-3 py-1 rounded-full whitespace-nowrap ml-3 ${
+          Number(service.price_usdc) === 0
+            ? 'bg-blue-500/10 text-blue-400'
+            : 'bg-green-500/10 text-green-400'
+        }`}>
+          {Number(service.price_usdc) === 0 ? t.serviceCard.free : `${service.price_usdc} USDC`}
         </span>
       </div>
 
