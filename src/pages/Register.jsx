@@ -130,8 +130,8 @@ export default function Register() {
       </p>
 
       {step === 'done' ? (
-        <div className="glass glow-green rounded-2xl p-8 text-center animate-fade-in-up">
-          <div className="text-green-400 text-2xl font-bold mb-3">{t.register.successTitle}</div>
+        <div className="glass glow-orange rounded-2xl p-8 text-center animate-fade-in-up">
+          <div className="text-[#FF9900] text-2xl font-bold mb-3">{t.register.successTitle}</div>
           <p className="text-gray-400 text-sm mb-5">{result?.data?.name} {t.register.successDesc}</p>
           {txHash && (
             <a
@@ -153,7 +153,7 @@ export default function Register() {
               onChange={e => setForm({ ...form, name: e.target.value })}
               placeholder={t.register.namePlaceholder}
               className="w-full glass rounded-xl px-4 py-2.5 text-white placeholder-gray-600
-                         focus:outline-none focus:glow-blue focus:border-blue-500/50 transition-all duration-300"
+                         focus:outline-none focus:border-[#FF9900]/40 transition-all duration-300"
             />
           </div>
           <div>
@@ -163,7 +163,7 @@ export default function Register() {
               onChange={e => setForm({ ...form, description: e.target.value })}
               placeholder={t.register.descPlaceholder}
               className="w-full glass rounded-xl px-4 py-2.5 text-white placeholder-gray-600
-                         focus:outline-none focus:glow-blue focus:border-blue-500/50 transition-all duration-300 resize-none"
+                         focus:outline-none focus:border-[#FF9900]/40 transition-all duration-300 resize-none"
             />
           </div>
           <div>
@@ -173,7 +173,7 @@ export default function Register() {
               onChange={e => setForm({ ...form, url: e.target.value })}
               placeholder={t.register.urlPlaceholder}
               className="w-full glass rounded-xl px-4 py-2.5 text-white placeholder-gray-600
-                         focus:outline-none focus:glow-blue focus:border-blue-500/50 transition-all duration-300"
+                         focus:outline-none focus:border-[#FF9900]/40 transition-all duration-300"
             />
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -184,7 +184,7 @@ export default function Register() {
                 onChange={e => setForm({ ...form, price: e.target.value })}
                 placeholder={t.register.pricePlaceholder}
                 className="w-full glass rounded-xl px-4 py-2.5 text-white placeholder-gray-600
-                           focus:outline-none focus:glow-blue focus:border-blue-500/50 transition-all duration-300"
+                           focus:outline-none focus:border-[#FF9900]/40 transition-all duration-300"
               />
             </div>
             <div>
@@ -194,7 +194,7 @@ export default function Register() {
                 onChange={e => setForm({ ...form, tags: e.target.value })}
                 placeholder={t.register.tagsPlaceholder}
                 className="w-full glass rounded-xl px-4 py-2.5 text-white placeholder-gray-600
-                           focus:outline-none focus:glow-blue focus:border-blue-500/50 transition-all duration-300"
+                           focus:outline-none focus:border-[#FF9900]/40 transition-all duration-300"
               />
             </div>
           </div>
@@ -209,7 +209,7 @@ export default function Register() {
             type="submit"
             disabled={step === 'paying' || step === 'registering'}
             className="w-full gradient-btn disabled:opacity-40 text-white py-3 rounded-xl font-medium
-                       cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:glow-blue"
+                       cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:glow-orange"
           >
             {step === 'paying' ? t.register.paying :
              step === 'registering' ? t.register.confirming :

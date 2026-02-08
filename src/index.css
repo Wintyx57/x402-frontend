@@ -4,24 +4,22 @@
 @theme {
   --color-glass: rgba(255, 255, 255, 0.03);
   --color-glass-border: rgba(255, 255, 255, 0.08);
-  --color-surface: #12121a;
+  --color-surface: #131921;
   --color-surface-dark: #0a0a0f;
-  --color-accent-blue: #60a5fa;
-  --color-accent-green: #4ade80;
-  --color-accent-purple: #a78bfa;
-  --color-accent-orange: #fb923c;
+  --color-accent: #FF9900;
+  --color-accent-light: #FEBD69;
 }
 
 /* ========== BASE STYLES ========== */
 body {
   margin: 0;
-  background-color: #0a0a0f;
+  background-color: #0f1111;
   color: #e2e8f0;
 }
 
 /* Scrollbar */
 ::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: #0a0a0f; }
+::-webkit-scrollbar-track { background: #0f1111; }
 ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
 
@@ -41,47 +39,25 @@ body {
 }
 
 @utility glass-card {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.025);
   border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 /* ========== GLOW UTILITIES ========== */
-@utility glow-blue {
-  box-shadow: 0 0 20px rgba(96, 165, 250, 0.15), 0 0 60px rgba(96, 165, 250, 0.05);
-}
-
-@utility glow-green {
-  box-shadow: 0 0 20px rgba(74, 222, 128, 0.15), 0 0 60px rgba(74, 222, 128, 0.05);
-}
-
-@utility glow-purple {
-  box-shadow: 0 0 20px rgba(167, 139, 250, 0.15), 0 0 60px rgba(167, 139, 250, 0.05);
-}
-
 @utility glow-orange {
-  box-shadow: 0 0 20px rgba(251, 146, 60, 0.15), 0 0 60px rgba(251, 146, 60, 0.05);
+  box-shadow: 0 0 20px rgba(255, 153, 0, 0.15), 0 0 60px rgba(255, 153, 0, 0.05);
 }
 
 /* ========== GRADIENT UTILITIES ========== */
 @utility gradient-text {
-  background: linear-gradient(135deg, #60a5fa, #a78bfa);
+  background: linear-gradient(135deg, #FF9900, #FEBD69);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 @utility gradient-btn {
-  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-}
-
-@utility gradient-btn-green {
-  background: linear-gradient(135deg, #22c55e, #10b981);
-}
-
-@utility gradient-btn-orange {
-  background: linear-gradient(135deg, #f97316, #fb923c);
+  background: linear-gradient(135deg, #FF9900, #e68a00);
 }
 
 /* ========== ANIMATIONS ========== */
@@ -149,16 +125,3 @@ body {
   opacity: 1;
   transform: translateY(0);
 }
-
-/* ========== CATEGORY COLORS ========== */
-@utility cat-ai { border-left: 3px solid #a78bfa; }
-@utility cat-finance { border-left: 3px solid #fbbf24; }
-@utility cat-data { border-left: 3px solid #60a5fa; }
-@utility cat-developer { border-left: 3px solid #34d399; }
-@utility cat-media { border-left: 3px solid #f472b6; }
-@utility cat-security { border-left: 3px solid #f87171; }
-@utility cat-location { border-left: 3px solid #38bdf8; }
-@utility cat-communication { border-left: 3px solid #fb923c; }
-@utility cat-seo { border-left: 3px solid #a3e635; }
-@utility cat-scraping { border-left: 3px solid #c084fc; }
-@utility cat-fun { border-left: 3px solid #fcd34d; }

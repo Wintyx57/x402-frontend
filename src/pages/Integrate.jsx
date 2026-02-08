@@ -25,21 +25,21 @@ export default function Integrate() {
       <section ref={whyRef} className="reveal mb-14">
         <h2 className="text-xl font-bold text-white mb-6">{t.integrate.whyTitle}</h2>
         <div className="grid sm:grid-cols-3 gap-4">
-          <div className="glass rounded-2xl p-5 transition-all duration-300 hover:glow-blue">
-            <div className="w-10 h-10 glass text-blue-400 rounded-full flex items-center justify-center
-                            text-lg mb-3 ring-2 ring-blue-400/30">$</div>
+          <div className="glass rounded-2xl p-5 transition-all duration-200 hover:glow-orange">
+            <div className="w-10 h-10 glass text-[#FF9900] rounded-full flex items-center justify-center
+                            text-lg mb-3 border border-[#FF9900]/30">$</div>
             <h3 className="text-white font-semibold mb-1">{t.integrate.why1Title}</h3>
             <p className="text-gray-500 text-sm">{t.integrate.why1Desc}</p>
           </div>
-          <div className="glass rounded-2xl p-5 transition-all duration-300 hover:glow-green">
-            <div className="w-10 h-10 glass text-green-400 rounded-full flex items-center justify-center
-                            text-lg mb-3 ring-2 ring-green-400/30">?</div>
+          <div className="glass rounded-2xl p-5 transition-all duration-200 hover:glow-orange">
+            <div className="w-10 h-10 glass text-[#FF9900] rounded-full flex items-center justify-center
+                            text-lg mb-3 border border-[#FF9900]/30">?</div>
             <h3 className="text-white font-semibold mb-1">{t.integrate.why2Title}</h3>
             <p className="text-gray-500 text-sm">{t.integrate.why2Desc}</p>
           </div>
-          <div className="glass rounded-2xl p-5 transition-all duration-300 hover:glow-purple">
-            <div className="w-10 h-10 glass text-purple-400 rounded-full flex items-center justify-center
-                            text-lg mb-3 ring-2 ring-purple-400/30">&#x2713;</div>
+          <div className="glass rounded-2xl p-5 transition-all duration-200 hover:glow-orange">
+            <div className="w-10 h-10 glass text-[#FF9900] rounded-full flex items-center justify-center
+                            text-lg mb-3 border border-[#FF9900]/30">&#x2713;</div>
             <h3 className="text-white font-semibold mb-1">{t.integrate.why3Title}</h3>
             <p className="text-gray-500 text-sm">{t.integrate.why3Desc}</p>
           </div>
@@ -51,13 +51,13 @@ export default function Integrate() {
         <h2 className="text-xl font-bold text-white mb-6">{t.integrate.flowTitle}</h2>
         <div className="space-y-4">
           {[
-            { title: t.integrate.flowStep1Title, desc: t.integrate.flowStep1Desc, code: t.integrate.flowStep1Code, color: 'blue' },
-            { title: t.integrate.flowStep2Title, desc: t.integrate.flowStep2Desc, code: t.integrate.flowStep2Code, color: 'orange' },
-            { title: t.integrate.flowStep3Title, desc: t.integrate.flowStep3Desc, code: t.integrate.flowStep3Code, color: 'green' },
-            { title: t.integrate.flowStep4Title, desc: t.integrate.flowStep4Desc, code: t.integrate.flowStep4Code, color: 'purple' },
-          ].map(({ title, desc, code, color }) => (
+            { title: t.integrate.flowStep1Title, desc: t.integrate.flowStep1Desc, code: t.integrate.flowStep1Code },
+            { title: t.integrate.flowStep2Title, desc: t.integrate.flowStep2Desc, code: t.integrate.flowStep2Code },
+            { title: t.integrate.flowStep3Title, desc: t.integrate.flowStep3Desc, code: t.integrate.flowStep3Code },
+            { title: t.integrate.flowStep4Title, desc: t.integrate.flowStep4Desc, code: t.integrate.flowStep4Code },
+          ].map(({ title, desc, code }) => (
             <div key={title} className="glass rounded-2xl p-5">
-              <h3 className={`text-${color}-400 font-bold mb-1`}>{title}</h3>
+              <h3 className="text-[#FF9900] font-bold mb-1">{title}</h3>
               <p className="text-gray-400 text-sm mb-3">{desc}</p>
               <pre className="glass rounded-xl px-4 py-3 text-xs sm:text-sm text-gray-300 overflow-x-auto">
                 {code}
@@ -270,15 +270,15 @@ print(services)`}
       <section ref={useCasesRef} className="reveal mb-14">
         <h2 className="text-xl font-bold text-white mb-6">{t.integrate.useCasesTitle}</h2>
         <div className="grid sm:grid-cols-3 gap-4">
-          <div className="glass rounded-2xl p-5 transition-all duration-300 hover:glow-blue">
+          <div className="glass rounded-2xl p-5 transition-all duration-300 hover:glow-orange">
             <h3 className="text-white font-semibold mb-2">{t.integrate.useCase1Title}</h3>
             <p className="text-gray-500 text-sm">{t.integrate.useCase1Desc}</p>
           </div>
-          <div className="glass rounded-2xl p-5 transition-all duration-300 hover:glow-green">
+          <div className="glass rounded-2xl p-5 transition-all duration-300 hover:glow-orange">
             <h3 className="text-white font-semibold mb-2">{t.integrate.useCase2Title}</h3>
             <p className="text-gray-500 text-sm">{t.integrate.useCase2Desc}</p>
           </div>
-          <div className="glass rounded-2xl p-5 transition-all duration-300 hover:glow-purple">
+          <div className="glass rounded-2xl p-5 transition-all duration-300 hover:glow-orange">
             <h3 className="text-white font-semibold mb-2">{t.integrate.useCase3Title}</h3>
             <p className="text-gray-500 text-sm">{t.integrate.useCase3Desc}</p>
           </div>
@@ -309,7 +309,7 @@ npm run demo`}
           <Link
             to="/services"
             className="gradient-btn text-white px-6 py-3 rounded-xl font-medium no-underline
-                       transition-all duration-300 hover:scale-105 hover:glow-blue"
+                       transition-all duration-300 hover:scale-105 hover:glow-orange"
           >
             {t.home.browseServices}
           </Link>

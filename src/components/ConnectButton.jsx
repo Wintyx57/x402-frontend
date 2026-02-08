@@ -15,8 +15,8 @@ export default function ConnectButton() {
     return (
       <button
         onClick={() => connect({ connector: connectors[0] })}
-        className="gradient-btn text-white text-sm px-4 py-2 rounded-xl font-medium cursor-pointer
-                   transition-all duration-300 hover:scale-105 hover:glow-blue"
+        className="gradient-btn text-white text-sm px-4 py-2 rounded-lg font-medium cursor-pointer
+                   transition-all duration-200 hover:brightness-110"
       >
         {t.connect.connectWallet}
       </button>
@@ -27,8 +27,8 @@ export default function ConnectButton() {
     return (
       <button
         onClick={() => switchChain({ chainId: TARGET_CHAIN.id })}
-        className="bg-orange-600 hover:bg-orange-500 text-white text-sm px-4 py-2 rounded-xl font-medium
-                   cursor-pointer transition-all duration-300 hover:scale-105"
+        className="bg-red-600 hover:bg-red-500 text-white text-sm px-4 py-2 rounded-lg font-medium
+                   cursor-pointer transition-all duration-200"
       >
         {t.connect.switchTo} {TARGET_CHAIN.name}
       </button>
@@ -37,13 +37,13 @@ export default function ConnectButton() {
 
   return (
     <div className="flex items-center gap-2">
-      <span className="hidden sm:inline text-xs text-green-400 glass px-2.5 py-1 rounded-full glow-green">
+      <span className="hidden sm:inline text-xs text-[#FF9900] bg-[#FF9900]/10 px-2.5 py-1 rounded border border-[#FF9900]/20">
         {TARGET_CHAIN.name}
       </span>
       <button
         onClick={() => disconnect()}
-        className="glass text-gray-300 text-xs sm:text-sm px-2 sm:px-3 py-2 rounded-xl font-mono cursor-pointer
-                   transition-all duration-300 hover:glow-blue"
+        className="glass text-gray-300 text-xs sm:text-sm px-2 sm:px-3 py-2 rounded-lg font-mono cursor-pointer
+                   transition-all duration-200 hover:border-white/15"
       >
         {address.slice(0, 6)}...{address.slice(-4)}
       </button>
