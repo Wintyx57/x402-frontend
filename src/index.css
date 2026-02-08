@@ -9,6 +9,7 @@
   --color-accent-blue: #60a5fa;
   --color-accent-green: #4ade80;
   --color-accent-purple: #a78bfa;
+  --color-accent-orange: #fb923c;
 }
 
 /* ========== BASE STYLES ========== */
@@ -17,6 +18,12 @@ body {
   background-color: #0a0a0f;
   color: #e2e8f0;
 }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #0a0a0f; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
 
 /* ========== GLASS UTILITIES ========== */
 @utility glass {
@@ -33,6 +40,13 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
+@utility glass-card {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
 /* ========== GLOW UTILITIES ========== */
 @utility glow-blue {
   box-shadow: 0 0 20px rgba(96, 165, 250, 0.15), 0 0 60px rgba(96, 165, 250, 0.05);
@@ -46,6 +60,10 @@ body {
   box-shadow: 0 0 20px rgba(167, 139, 250, 0.15), 0 0 60px rgba(167, 139, 250, 0.05);
 }
 
+@utility glow-orange {
+  box-shadow: 0 0 20px rgba(251, 146, 60, 0.15), 0 0 60px rgba(251, 146, 60, 0.05);
+}
+
 /* ========== GRADIENT UTILITIES ========== */
 @utility gradient-text {
   background: linear-gradient(135deg, #60a5fa, #a78bfa);
@@ -56,6 +74,14 @@ body {
 
 @utility gradient-btn {
   background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+}
+
+@utility gradient-btn-green {
+  background: linear-gradient(135deg, #22c55e, #10b981);
+}
+
+@utility gradient-btn-orange {
+  background: linear-gradient(135deg, #f97316, #fb923c);
 }
 
 /* ========== ANIMATIONS ========== */
@@ -74,6 +100,11 @@ body {
   50% { opacity: 1; }
 }
 
+@keyframes slide-in-right {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
 @utility animate-fade-in-up {
   animation: fade-in-up 0.6s ease-out both;
 }
@@ -86,10 +117,15 @@ body {
   animation: glow-pulse 3s ease-in-out infinite;
 }
 
+@utility animate-slide-in-right {
+  animation: slide-in-right 0.4s ease-out both;
+}
+
 @utility delay-100 { animation-delay: 100ms; }
 @utility delay-200 { animation-delay: 200ms; }
 @utility delay-300 { animation-delay: 300ms; }
 @utility delay-400 { animation-delay: 400ms; }
+@utility delay-500 { animation-delay: 500ms; }
 
 @keyframes shimmer {
   0% { background-position: -200% 0; }
@@ -113,3 +149,16 @@ body {
   opacity: 1;
   transform: translateY(0);
 }
+
+/* ========== CATEGORY COLORS ========== */
+@utility cat-ai { border-left: 3px solid #a78bfa; }
+@utility cat-finance { border-left: 3px solid #fbbf24; }
+@utility cat-data { border-left: 3px solid #60a5fa; }
+@utility cat-developer { border-left: 3px solid #34d399; }
+@utility cat-media { border-left: 3px solid #f472b6; }
+@utility cat-security { border-left: 3px solid #f87171; }
+@utility cat-location { border-left: 3px solid #38bdf8; }
+@utility cat-communication { border-left: 3px solid #fb923c; }
+@utility cat-seo { border-left: 3px solid #a3e635; }
+@utility cat-scraping { border-left: 3px solid #c084fc; }
+@utility cat-fun { border-left: 3px solid #fcd34d; }
