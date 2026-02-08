@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://x402bazaar.com/sitemap.xml
+Sitemap: https://x402bazaar.org/sitemap.xml
