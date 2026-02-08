@@ -31,13 +31,13 @@ export default function Developers() {
       {/* Endpoints */}
       <section ref={endpointsRef} className="reveal mb-10">
         <h2 className="text-xl font-bold text-white mb-4">{t.developers.endpointsTitle}</h2>
-        <div className="overflow-x-auto glass rounded-2xl p-5">
-          <table className="w-full text-sm">
+        <div className="overflow-x-auto glass rounded-2xl p-4 sm:p-5">
+          <table className="w-full text-xs sm:text-sm min-w-[480px]">
             <thead>
               <tr className="text-left text-gray-500 border-b border-white/10">
-                <th className="pb-3 pr-4">{t.developers.thRoute}</th>
-                <th className="pb-3 pr-4">{t.developers.thMethod}</th>
-                <th className="pb-3 pr-4">{t.developers.thCost}</th>
+                <th className="pb-3 pr-3 sm:pr-4">{t.developers.thRoute}</th>
+                <th className="pb-3 pr-3 sm:pr-4">{t.developers.thMethod}</th>
+                <th className="pb-3 pr-3 sm:pr-4">{t.developers.thCost}</th>
                 <th className="pb-3">{t.developers.thDescription}</th>
               </tr>
             </thead>

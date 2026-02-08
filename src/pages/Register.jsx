@@ -176,7 +176,7 @@ export default function Register() {
                          focus:outline-none focus:glow-blue focus:border-blue-500/50 transition-all duration-300"
             />
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm text-gray-400 mb-1.5">{t.register.priceLabel}</label>
               <input

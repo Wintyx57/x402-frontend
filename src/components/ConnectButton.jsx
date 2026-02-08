@@ -36,13 +36,13 @@ export default function ConnectButton() {
   }
 
   return (
-    <div className="flex items-center gap-3">
-      <span className="text-xs text-green-400 glass px-2.5 py-1 rounded-full glow-green">
+    <div className="flex items-center gap-2">
+      <span className="hidden sm:inline text-xs text-green-400 glass px-2.5 py-1 rounded-full glow-green">
         {TARGET_CHAIN.name}
       </span>
       <button
         onClick={() => disconnect()}
-        className="glass text-gray-300 text-sm px-3 py-2 rounded-xl font-mono cursor-pointer
+        className="glass text-gray-300 text-xs sm:text-sm px-2 sm:px-3 py-2 rounded-xl font-mono cursor-pointer
                    transition-all duration-300 hover:glow-blue"
       >
         {address.slice(0, 6)}...{address.slice(-4)}

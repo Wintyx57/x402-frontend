@@ -48,7 +48,7 @@ export default function Services() {
       {loading ? (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
           {[...Array(6)].map((_, i) => (
-            <div key={i} className="glass rounded-2xl p-5 animate-pulse h-48" />
+            <div key={i} className="glass rounded-2xl p-5 animate-shimmer h-48" />
           ))}
         </div>
       ) : filtered.length === 0 ? (
