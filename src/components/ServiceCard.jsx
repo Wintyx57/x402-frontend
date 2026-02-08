@@ -35,7 +35,7 @@ export default function ServiceCard({ service }) {
           )}
         </div>
         <div className="flex-1 min-w-0">
-          <h3 className="text-white font-semibold text-sm leading-tight truncate">{service.name}</h3>
+          <h3 className="text-white font-semibold text-sm leading-tight truncate" title={service.name}>{service.name}</h3>
           <span className="inline-block text-xs mt-0.5 text-gray-500 capitalize">
             {service.tags?.[0]}
           </span>
@@ -50,7 +50,7 @@ export default function ServiceCard({ service }) {
       </div>
 
       {/* Description */}
-      <p className="text-gray-500 text-xs mb-3 leading-relaxed line-clamp-2">
+      <p className="text-gray-500 text-xs mb-3 leading-relaxed line-clamp-2" title={service.description}>
         {service.description}
       </p>
 
