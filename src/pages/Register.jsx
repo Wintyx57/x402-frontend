@@ -30,12 +30,35 @@ export default function Register() {
 
   const { isSuccess: txConfirmed } = useWaitForTransactionReceipt({ hash: txHash });
 
+  const validateForm = () => {
+    if (!form.name.trim() || form.name.length > 200) return 'Service name is required (max 200 chars)';
+    if (form.description && form.description.length > 1000) return 'Description too long (max 1000 chars)';
+    try {
+      const parsed = new URL(form.url);
+      if (!['http:', 'https:'].includes(parsed.protocol)) return 'Only HTTP/HTTPS URLs are allowed';
+    } catch {
+      return 'Invalid URL format';
+    }
+    const price = parseFloat(form.price);
+    if (isNaN(price) || price < 0.01 || price > 1000) return 'Price must be between 0.01 and 1000 USDC';
+    const tags = form.tags.split(',').map(t => t.trim()).filter(Boolean);
+    if (tags.length > 10) return 'Maximum 10 tags allowed';
+    if (tags.some(t => t.length > 50)) return 'Each tag max 50 chars';
+    return null;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
 
     if (!isConnected) {
       setError(t.register.connectError);
+      return;
+    }
+
+    const validationError = validateForm();
+    if (validationError) {
+      setError(validationError);
       return;
     }
 
@@ -131,7 +154,9 @@ export default function Register() {
       setStep('done');
       setPaymentStep(0);
     } catch (err) {
-      setError(err.message || 'Something went wrong');
+      const safeMessages = ['Transaction not confirmed', 'User rejected', 'Unexpected response'];
+      const isSafe = safeMessages.some(m => err.message?.includes(m));
+      setError(isSafe ? err.message : 'Registration failed. Please try again.');
       setStep('error');
       setPaymentStep(0);
     }

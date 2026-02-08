@@ -3,9 +3,21 @@ import { useTranslation } from '../i18n/LanguageContext';
 
 function getDomain(url) {
   try {
-    return new URL(url).hostname;
+    const parsed = new URL(url);
+    if (!['http:', 'https:'].includes(parsed.protocol)) return null;
+    if (/^(localhost|127\.|10\.|192\.168\.|172\.(1[6-9]|2\d|3[01]))/.test(parsed.hostname)) return null;
+    return parsed.hostname;
   } catch {
     return null;
+  }
+}
+
+function isValidServiceUrl(url) {
+  try {
+    const parsed = new URL(url);
+    return ['http:', 'https:'].includes(parsed.protocol);
+  } catch {
+    return false;
   }
 }
 
@@ -83,15 +95,19 @@ export default function ServiceCard({ service }) {
             </a>
           )}
         </div>
-        <a
-          href={service.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-xs font-medium text-[#FF9900] hover:text-[#FFB340] no-underline
-                     transition-opacity duration-200"
-        >
-          {t.serviceCard.viewApi} &rarr;
-        </a>
+        {isValidServiceUrl(service.url) ? (
+          <a
+            href={service.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs font-medium text-[#FF9900] hover:text-[#FFB340] no-underline
+                       transition-opacity duration-200"
+          >
+            {t.serviceCard.viewApi} &rarr;
+          </a>
+        ) : (
+          <span className="text-xs text-gray-600">{t.serviceCard.viewApi}</span>
+        )}
       </div>
     </div>
   );

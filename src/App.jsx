@@ -6,6 +6,7 @@ import Services from './pages/Services';
 import Register from './pages/Register';
 import Integrate from './pages/Integrate';
 import Developers from './pages/Developers';
+import MCP from './pages/MCP';
 
 export default function App() {
   return (
@@ -17,6 +18,7 @@ export default function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/integrate" element={<Integrate />} />
         <Route path="/developers" element={<Developers />} />
+        <Route path="/mcp" element={<MCP />} />
       </Routes>
       <ScrollToTop />
     </div>
