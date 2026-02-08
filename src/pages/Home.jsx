@@ -102,8 +102,8 @@ export default function Home() {
             </div>
             <div className="w-px h-8 bg-white/10" />
             <div className="text-center">
-              <div className="text-xl font-bold text-[#FF9900]">{stats?.totalPayments || 0}</div>
-              <div className="text-xs text-gray-500 uppercase tracking-wider">{t.home.payments}</div>
+              <div className="text-xl font-bold text-[#FF9900]">11</div>
+              <div className="text-xs text-gray-500 uppercase tracking-wider">{t.home.categoriesCount}</div>
             </div>
           </div>
         </div>
@@ -203,12 +203,12 @@ export default function Home() {
               <div className="text-xs text-gray-500 mt-1">{t.home.servicesListed}</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-[#FF9900]">{stats.totalPayments}</div>
-              <div className="text-xs text-gray-500 mt-1">{t.home.paymentsVerified}</div>
+              <div className="text-3xl font-bold text-[#FF9900]">{stats.walletBalance}</div>
+              <div className="text-xs text-gray-500 mt-1">USDC Balance</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold gradient-text">{stats.totalRevenue} USDC</div>
-              <div className="text-xs text-gray-500 mt-1">{t.home.totalVolume}</div>
+              <div className="text-3xl font-bold gradient-text">{t.home.network || 'Base'}</div>
+              <div className="text-xs text-gray-500 mt-1">Blockchain</div>
             </div>
             <div className="text-center">
               <div className="text-3xl font-bold text-white">11</div>
