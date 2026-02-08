@@ -4,6 +4,7 @@ import { API_URL } from '../config';
 import { useTranslation } from '../i18n/LanguageContext';
 import { useReveal } from '../hooks/useReveal';
 import ServiceCard from '../components/ServiceCard';
+import CategoryIcon from '../components/CategoryIcon';
 
 const CATEGORIES = [
   'ai', 'finance', 'data', 'developer', 'media', 'security',
@@ -126,6 +127,7 @@ export default function Home() {
                          animate-fade-in-up"
               style={{ animationDelay: `${i * 40}ms` }}
             >
+              <CategoryIcon category={cat} className="w-5 h-5 mx-auto mb-1.5" />
               <div className="text-white text-sm font-medium">{t.home.categories[cat]}</div>
               <div className="text-gray-500 text-[10px] mt-1">{categoryCounts[cat] || 0} APIs</div>
             </Link>

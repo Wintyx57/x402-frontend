@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { API_URL } from '../config';
 import { useTranslation } from '../i18n/LanguageContext';
 import ServiceCard from '../components/ServiceCard';
+import CategoryIcon from '../components/CategoryIcon';
 
 const CATEGORIES = [
   { key: 'all', tag: null },
@@ -171,6 +172,7 @@ export default function Services() {
                   : 'bg-white/[0.02] text-gray-500 hover:text-gray-300 hover:bg-white/5 border border-transparent'
               }`}
             >
+              <CategoryIcon category={cat.key} className="w-3.5 h-3.5" />
               <span>{t.services[CATEGORY_LABELS[cat.key]]}</span>
               <span className={`text-[10px] ${isActive ? 'text-gray-400' : 'text-gray-600'}`}>
                 {count}

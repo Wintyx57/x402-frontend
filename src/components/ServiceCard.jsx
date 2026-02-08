@@ -1,18 +1,38 @@
+import { useState } from 'react';
 import { useTranslation } from '../i18n/LanguageContext';
+
+function getDomain(url) {
+  try {
+    return new URL(url).hostname;
+  } catch {
+    return null;
+  }
+}
 
 export default function ServiceCard({ service }) {
   const { t } = useTranslation();
   const isFree = Number(service.price_usdc) === 0;
   const initial = service.name?.charAt(0)?.toUpperCase() || '?';
+  const domain = getDomain(service.url);
+  const [imgError, setImgError] = useState(false);
 
   return (
     <div className="glass-card rounded-lg p-4 transition-all duration-200 hover:bg-white/[0.04]
                     hover:border-white/10 group">
-      {/* Top row: initial + name + price */}
+      {/* Top row: logo + name + price */}
       <div className="flex items-start gap-3 mb-3">
-        <div className="w-9 h-9 rounded-lg bg-[#232f3e] flex items-center justify-center
-                        text-sm font-bold text-[#FF9900] shrink-0">
-          {initial}
+        <div className="w-9 h-9 rounded-lg bg-[#232f3e] flex items-center justify-center shrink-0 overflow-hidden">
+          {domain && !imgError ? (
+            <img
+              src={`https://www.google.com/s2/favicons?domain=${domain}&sz=64`}
+              alt=""
+              className="w-6 h-6 object-contain"
+              onError={() => setImgError(true)}
+              loading="lazy"
+            />
+          ) : (
+            <span className="text-sm font-bold text-[#FF9900]">{initial}</span>
+          )}
         </div>
         <div className="flex-1 min-w-0">
           <h3 className="text-white font-semibold text-sm leading-tight truncate">{service.name}</h3>
