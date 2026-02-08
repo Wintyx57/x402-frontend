@@ -21,9 +21,12 @@ export default function Navbar() {
     }
   };
 
-  const navLinks = [
+  const marketplaceLinks = [
     { to: '/services', label: t.nav.services },
     { to: '/register', label: t.nav.register },
+  ];
+
+  const devLinks = [
     { to: '/mcp', label: 'MCP' },
     { to: '/integrate', label: t.nav.integrate },
     { to: '/developers', label: t.nav.developers },
@@ -85,7 +88,8 @@ export default function Navbar() {
         {/* Nav links strip — desktop */}
         <div className="hidden md:block border-t border-white/5 bg-[#232f3e]">
           <div className="max-w-7xl mx-auto px-4 flex items-center gap-1 h-10 overflow-x-auto">
-            {navLinks.map(({ to, label }) => {
+            <span className="text-[10px] uppercase tracking-wider text-gray-500 font-medium px-2 shrink-0">{t.nav.marketplace}</span>
+            {marketplaceLinks.map(({ to, label }) => {
               const isActive = pathname === to || pathname.startsWith(to + '/');
               return (
                 <Link
@@ -101,7 +105,25 @@ export default function Navbar() {
                 </Link>
               );
             })}
-            <div className="w-px h-4 bg-white/10 mx-1" />
+            <div className="w-px h-4 bg-white/10 mx-2" />
+            <span className="text-[10px] uppercase tracking-wider text-gray-500 font-medium px-2 shrink-0">{t.nav.forDevelopers}</span>
+            {devLinks.map(({ to, label }) => {
+              const isActive = pathname === to || pathname.startsWith(to + '/');
+              return (
+                <Link
+                  key={to}
+                  to={to}
+                  className={`text-xs font-medium no-underline px-3 py-1.5 rounded transition-colors duration-200 whitespace-nowrap ${
+                    isActive
+                      ? 'text-[#FF9900] bg-[#FF9900]/10'
+                      : 'text-gray-300 hover:text-white hover:bg-white/5'
+                  }`}
+                >
+                  {label}
+                </Link>
+              );
+            })}
+            <div className="w-px h-4 bg-white/10 mx-2" />
             <Link
               to="/services"
               className="text-gray-400 hover:text-[#FF9900] text-xs no-underline px-3 py-1.5 rounded
@@ -114,10 +136,30 @@ export default function Navbar() {
 
         {/* Mobile menu */}
         <div className={`md:hidden overflow-hidden transition-all duration-300 ${
-          mobileOpen ? 'max-h-64 opacity-100' : 'max-h-0 opacity-0'
+          mobileOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
         }`}>
           <div className="border-t border-white/6 px-4 py-3 flex flex-col gap-1 bg-[#131921]">
-            {navLinks.map(({ to, label }) => {
+            <span className="text-[10px] uppercase tracking-wider text-gray-500 font-medium px-3 pt-1 pb-1">{t.nav.marketplace}</span>
+            {marketplaceLinks.map(({ to, label }) => {
+              const isActive = pathname === to || pathname.startsWith(to + '/');
+              return (
+                <Link
+                  key={to}
+                  to={to}
+                  onClick={closeMobile}
+                  className={`text-sm no-underline px-3 py-2.5 rounded-lg transition-colors duration-200 ${
+                    isActive
+                      ? 'text-[#FF9900] bg-[#FF9900]/10'
+                      : 'text-gray-300 hover:text-white hover:bg-white/5'
+                  }`}
+                >
+                  {label}
+                </Link>
+              );
+            })}
+            <div className="h-px bg-white/6 mx-3 my-1" />
+            <span className="text-[10px] uppercase tracking-wider text-gray-500 font-medium px-3 pt-1 pb-1">{t.nav.forDevelopers}</span>
+            {devLinks.map(({ to, label }) => {
               const isActive = pathname === to || pathname.startsWith(to + '/');
               return (
                 <Link
