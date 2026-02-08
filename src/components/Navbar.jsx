@@ -13,6 +13,7 @@ export default function Navbar() {
   const navLinks = [
     { to: '/services', label: t.nav.services },
     { to: '/register', label: t.nav.register },
+    { to: '/integrate', label: t.nav.integrate },
     { to: '/developers', label: t.nav.developers },
   ];
 

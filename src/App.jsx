@@ -4,6 +4,7 @@ import ScrollToTop from './components/ScrollToTop';
 import Home from './pages/Home';
 import Services from './pages/Services';
 import Register from './pages/Register';
+import Integrate from './pages/Integrate';
 import Developers from './pages/Developers';
 
 export default function App() {
@@ -14,6 +15,7 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/services" element={<Services />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/integrate" element={<Integrate />} />
         <Route path="/developers" element={<Developers />} />
       </Routes>
       <ScrollToTop />
