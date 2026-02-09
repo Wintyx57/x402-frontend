@@ -64,6 +64,9 @@ export const translations = {
       ctaDesc: "Join the autonomous marketplace. Your API accessible to thousands of AI agents worldwide.",
       listYourApi: "List Your API",
       integrateAgent: "Integrate Your Agent",
+      providerTitle: "API Provider? Monetize in 5 minutes",
+      providerDesc: "Use our Python template to turn any function into a paid API. One decorator, USDC payments, on-chain verification.",
+      providerBtn: "Get the Template",
       footerDesc: "The autonomous marketplace where AI agents discover, pay for, and consume API services using the HTTP 402 protocol on Base.",
       footerProduct: "Product",
       footerResources: "Resources",
@@ -118,6 +121,8 @@ export const translations = {
       successTitle: "Service registered!",
       successDesc: "is now live on x402 Bazaar.",
       viewTx: "View transaction on BaseScan",
+      templateHint: "Prefer code over forms? Use our Python template to monetize any function with a single decorator.",
+      templateLink: "Get the Python Template",
     },
     integrate: {
       title: "Integrate Your Agent",
@@ -169,6 +174,9 @@ export const translations = {
       getStartedStep2: "Install dependencies",
       getStartedStep3: "Set up your environment variables",
       getStartedStep4: "Run the demo agent",
+      providerTitle: "Provider Side: Monetize Your API",
+      providerDesc: "Want to sell your own API? Use our Python template to turn any function into a paid x402 endpoint in minutes.",
+      providerBtn: "Get the Python Template",
     },
     mcp: {
       title: "MCP Server — Plug & Play for AI",
@@ -266,6 +274,15 @@ export const translations = {
       exampleTitle: "Quick Example",
       registerBodyTitle: "POST /register Body",
       responseTitle: "402 Response Format",
+      templateTitle: "Monetize Your API",
+      templateDesc: "Turn any Python function into a paid API with one decorator. USDC payments on Base, verified on-chain.",
+      templateCode: `from x402 import x402_paywall
+
+@x402_paywall(price=0.05, description="My paid endpoint")
+def my_function(query: str) -> dict:
+    return {"result": process(query)}`,
+      templateLink: "Get the template",
+      templateGithub: "View on GitHub",
     },
   },
   fr: {
@@ -333,6 +350,9 @@ export const translations = {
       ctaDesc: "Rejoignez la marketplace autonome. Votre API accessible a des milliers d'agents IA dans le monde.",
       listYourApi: "Lister votre API",
       integrateAgent: "Integrer votre Agent",
+      providerTitle: "Fournisseur d'API ? Monetisez en 5 min",
+      providerDesc: "Utilisez notre template Python pour transformer n'importe quelle fonction en API payante. Un decorator, paiements USDC, verification on-chain.",
+      providerBtn: "Obtenir le Template",
       footerDesc: "La marketplace autonome ou les agents IA decouvrent, paient et consomment des services API via le protocole HTTP 402 sur Base.",
       footerProduct: "Produit",
       footerResources: "Ressources",
@@ -387,6 +407,8 @@ export const translations = {
       successTitle: "Service enregistre !",
       successDesc: "est maintenant en ligne sur x402 Bazaar.",
       viewTx: "Voir la transaction sur BaseScan",
+      templateHint: "Vous preferez le code aux formulaires ? Utilisez notre template Python pour monetiser n'importe quelle fonction avec un seul decorator.",
+      templateLink: "Obtenir le Template Python",
     },
     integrate: {
       title: "Integrez votre Agent",
@@ -438,6 +460,9 @@ export const translations = {
       getStartedStep2: "Installer les dependances",
       getStartedStep3: "Configurer vos variables d'environnement",
       getStartedStep4: "Lancer l'agent demo",
+      providerTitle: "Cote Fournisseur : Monetisez votre API",
+      providerDesc: "Vous voulez vendre votre propre API ? Utilisez notre template Python pour transformer n'importe quelle fonction en endpoint x402 payant en quelques minutes.",
+      providerBtn: "Obtenir le Template Python",
     },
     mcp: {
       title: "Serveur MCP — Plug & Play pour l'IA",
@@ -535,6 +560,15 @@ export const translations = {
       exampleTitle: "Exemple rapide",
       registerBodyTitle: "Body POST /register",
       responseTitle: "Format de reponse 402",
+      templateTitle: "Monetisez votre API",
+      templateDesc: "Transformez n'importe quelle fonction Python en API payante avec un seul decorator. Paiements USDC sur Base, verifies on-chain.",
+      templateCode: `from x402 import x402_paywall
+
+@x402_paywall(price=0.05, description="Mon endpoint payant")
+def my_function(query: str) -> dict:
+    return {"result": process(query)}`,
+      templateLink: "Obtenir le template",
+      templateGithub: "Voir sur GitHub",
     },
   },
 };
