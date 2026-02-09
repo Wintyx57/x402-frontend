@@ -309,6 +309,10 @@ def my_function(query: str) -> dict:
       templateLink: "Get the template",
       templateGithub: "View on GitHub",
     },
+    blog: {
+      title: "Blog",
+      backHome: "Back to Home",
+    },
   },
   fr: {
     nav: {
@@ -619,6 +623,10 @@ def my_function(query: str) -> dict:
     return {"result": process(query)}`,
       templateLink: "Obtenir le template",
       templateGithub: "Voir sur GitHub",
+    },
+    blog: {
+      title: "Blog",
+      backHome: "Retour à l'accueil",
     },
   },
 };
