@@ -70,14 +70,14 @@ a, button, [role="button"] {
 }
 
 @utility glass-card {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.10);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   transition: all 0.2s ease-in-out;
 }
 
 @utility surface-card {
   background: #1a1f2e;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   transition: all 0.2s ease-in-out;
 }
 

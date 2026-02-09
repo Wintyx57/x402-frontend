@@ -139,8 +139,8 @@ export default function Home() {
               key={cat}
               to={`/services?cat=${cat}`}
               className="no-underline glass-card rounded-lg p-3 text-center
-                         transition-all duration-200 hover:bg-white/[0.04] hover:border-[#FF9900]/20
-                         animate-fade-in-up"
+                         transition-all duration-200 hover:bg-white/[0.07] hover:border-[#FF9900]/30
+                         hover:shadow-[0_0_15px_rgba(255,153,0,0.06)] animate-fade-in-up"
               style={{ animationDelay: `${i * 40}ms` }}
             >
               <CategoryIcon category={cat} className="w-5 h-5 mx-auto mb-1.5" />
@@ -306,7 +306,7 @@ export default function Home() {
           </div>
           <div className="border-t border-white/5 pt-6 flex flex-wrap items-center justify-between gap-4">
             <p className="text-xs text-gray-600">
-              Built for the <span className="text-[#FF9900] font-medium">x402 Hackathon</span> &middot; Powered by Base
+              Built for the <span className="text-[#FF9900] font-medium">x402 Hackathon</span> &middot; Powered by Base & <span className="text-[#34D399]">SKALE</span>
             </p>
             <p className="text-xs text-gray-600">&copy; 2025 x402 Bazaar</p>
           </div>

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { parseUnits } from 'viem';
-import { API_URL, USDC_ABI } from '../config';
+import { API_URL, USDC_ABI, CHAIN_CONFIG } from '../config';
 import { useTranslation } from '../i18n/LanguageContext';
 
 const REGISTER_COST = 1;
@@ -15,7 +15,7 @@ const PAYMENT_STEPS = [
 ];
 
 export default function Register() {
-  const { address, isConnected } = useAccount();
+  const { address, isConnected, chain } = useAccount();
   const { writeContractAsync } = useWriteContract();
   const { t } = useTranslation();
 
@@ -84,9 +84,9 @@ export default function Register() {
 
       const { payment_details } = await res402.json();
 
-      const usdcContract = payment_details.chainId === 8453
-        ? '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'
-        : '0x036CbD53842c5426634e7929541eC2318f3dCF7e';
+      // Resolve USDC contract and RPC from user's current chain
+      const currentChainConfig = CHAIN_CONFIG[chain?.id] || CHAIN_CONFIG[8453];
+      const usdcContract = currentChainConfig.usdcContract;
 
       setPaymentStep(2);
       const hash = await writeContractAsync({
@@ -107,9 +107,7 @@ export default function Register() {
       for (let i = 0; i < 30; i++) {
         await new Promise(r => setTimeout(r, 2000));
         try {
-          const receiptRes = await fetch(payment_details.chainId === 8453
-            ? 'https://mainnet.base.org'
-            : 'https://sepolia.base.org', {
+          const receiptRes = await fetch(currentChainConfig.rpcUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -133,6 +131,7 @@ export default function Register() {
         headers: {
           'Content-Type': 'application/json',
           'X-Payment-TxHash': hash,
+          'X-Payment-Chain': currentChainConfig.key,
         },
         body: JSON.stringify({
           name: form.name,
@@ -177,7 +176,7 @@ export default function Register() {
           <p className="text-gray-400 text-sm mb-5">{result?.data?.name} {t.register.successDesc}</p>
           {txHash && (
             <a
-              href={`https://basescan.org/tx/${txHash}`}
+              href={`${(CHAIN_CONFIG[chain?.id] || CHAIN_CONFIG[8453]).explorer}/tx/${txHash}`}
               target="_blank"
               rel="noopener noreferrer"
               className="gradient-text font-medium text-sm no-underline"
@@ -242,7 +241,7 @@ export default function Register() {
           </div>
 
           {error && (
-            <div className="bg-[#1a1f2e] border border-red-500/30 rounded-xl p-3 text-red-400 text-sm">
+            <div className="bg-red-500/10 border border-red-500/50 rounded-xl p-4 text-red-300 text-sm font-medium">
               {error}
             </div>
           )}

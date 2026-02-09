@@ -108,7 +108,7 @@ export default function Navbar() {
         {/* Nav links strip — desktop */}
         <div className="hidden md:block border-t border-white/5 bg-[#232f3e]">
           <div className="max-w-7xl mx-auto px-4 flex items-center gap-1 h-10 overflow-x-auto">
-            <span className="text-[10px] uppercase tracking-wider text-gray-500 font-medium px-2 shrink-0">{t.nav.marketplace}</span>
+            <span className="text-[11px] uppercase tracking-wider text-gray-500 font-medium px-2 shrink-0">{t.nav.marketplace}</span>
             {marketplaceLinks.map(({ to, label }) => {
               const isActive = pathname === to || pathname.startsWith(to + '/');
               return (
@@ -126,7 +126,7 @@ export default function Navbar() {
               );
             })}
             <div className="w-px h-4 bg-white/10 mx-2" />
-            <span className="text-[10px] uppercase tracking-wider text-gray-500 font-medium px-2 shrink-0">{t.nav.forDevelopers}</span>
+            <span className="text-[11px] uppercase tracking-wider text-gray-500 font-medium px-2 shrink-0">{t.nav.forDevelopers}</span>
             {devLinks.map(({ to, label }) => {
               const isActive = pathname === to || pathname.startsWith(to + '/');
               return (
@@ -159,7 +159,7 @@ export default function Navbar() {
           mobileOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
         }`}>
           <div className="border-t border-white/6 px-4 py-3 flex flex-col gap-1 bg-[#131921]">
-            <span className="text-[10px] uppercase tracking-wider text-gray-500 font-medium px-3 pt-1 pb-1">{t.nav.marketplace}</span>
+            <span className="text-[11px] uppercase tracking-wider text-gray-500 font-medium px-3 pt-1 pb-1">{t.nav.marketplace}</span>
             {marketplaceLinks.map(({ to, label }) => {
               const isActive = pathname === to || pathname.startsWith(to + '/');
               return (
@@ -178,7 +178,7 @@ export default function Navbar() {
               );
             })}
             <div className="h-px bg-white/6 mx-3 my-1" />
-            <span className="text-[10px] uppercase tracking-wider text-gray-500 font-medium px-3 pt-1 pb-1">{t.nav.forDevelopers}</span>
+            <span className="text-[11px] uppercase tracking-wider text-gray-500 font-medium px-3 pt-1 pb-1">{t.nav.forDevelopers}</span>
             {devLinks.map(({ to, label }) => {
               const isActive = pathname === to || pathname.startsWith(to + '/');
               return (

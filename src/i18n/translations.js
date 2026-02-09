@@ -12,7 +12,9 @@ export const translations = {
     },
     connect: {
       connectWallet: "Connect Wallet",
+      connecting: "Connecting...",
       switchTo: "Switch to",
+      switchNetwork: "Switch Network",
     },
     serviceCard: {
       verifiedOnChain: "Verified on-chain",
@@ -25,7 +27,7 @@ export const translations = {
     home: {
       heroTitle: "The Amazon for",
       heroTitleHighlight: "AI Agent APIs",
-      heroSubtitle: "Discover, pay, and consume APIs with USDC on Base. Every transaction verified on-chain.",
+      heroSubtitle: "Discover, pay, and consume APIs with USDC on Base & SKALE. Every transaction verified on-chain.",
       searchPlaceholder: "Search GPT, translation, weather, crypto...",
       searchBtn: "Search",
       apis: "APIs",
@@ -67,7 +69,7 @@ export const translations = {
       providerTitle: "API Provider? Monetize in 5 minutes",
       providerDesc: "Use our Python template to turn any function into a paid API. One decorator, USDC payments, on-chain verification.",
       providerBtn: "Get the Template",
-      footerDesc: "The autonomous marketplace where AI agents discover, pay for, and consume API services using the HTTP 402 protocol on Base.",
+      footerDesc: "The autonomous marketplace where AI agents discover, pay for, and consume API services using the HTTP 402 protocol on Base & SKALE Europa.",
       footerProduct: "Product",
       footerResources: "Resources",
     },
@@ -298,7 +300,9 @@ def my_function(query: str) -> dict:
     },
     connect: {
       connectWallet: "Connecter Wallet",
+      connecting: "Connexion...",
       switchTo: "Basculer vers",
+      switchNetwork: "Changer de reseau",
     },
     serviceCard: {
       verifiedOnChain: "Verifie on-chain",
@@ -311,7 +315,7 @@ def my_function(query: str) -> dict:
     home: {
       heroTitle: "Le Amazon des",
       heroTitleHighlight: "APIs pour Agents IA",
-      heroSubtitle: "Decouvrez, payez et consommez des APIs en USDC sur Base. Chaque transaction verifiee on-chain.",
+      heroSubtitle: "Decouvrez, payez et consommez des APIs en USDC sur Base & SKALE. Chaque transaction verifiee on-chain.",
       searchPlaceholder: "Rechercher GPT, traduction, meteo, crypto...",
       searchBtn: "Rechercher",
       apis: "APIs",
@@ -353,7 +357,7 @@ def my_function(query: str) -> dict:
       providerTitle: "Fournisseur d'API ? Monetisez en 5 min",
       providerDesc: "Utilisez notre template Python pour transformer n'importe quelle fonction en API payante. Un decorator, paiements USDC, verification on-chain.",
       providerBtn: "Obtenir le Template",
-      footerDesc: "La marketplace autonome ou les agents IA decouvrent, paient et consomment des services API via le protocole HTTP 402 sur Base.",
+      footerDesc: "La marketplace autonome ou les agents IA decouvrent, paient et consomment des services API via le protocole HTTP 402 sur Base & SKALE Europa.",
       footerProduct: "Produit",
       footerResources: "Ressources",
     },
