@@ -1,0 +1,238 @@
+import { Link } from 'react-router-dom';
+import { useTranslation } from '../i18n/LanguageContext';
+import { useReveal } from '../hooks/useReveal';
+import { CHAIN_CONFIG } from '../config';
+
+export default function About() {
+  const { t } = useTranslation();
+  const whatIsRef = useReveal();
+  const howItWorksRef = useReveal();
+  const protocolRef = useReveal();
+  const blockchainRef = useReveal();
+  const openSourceRef = useReveal();
+  const teamRef = useReveal();
+  const contactRef = useReveal();
+
+  return (
+    <div className="max-w-3xl mx-auto px-4 py-10">
+      {/* Hero */}
+      <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2 animate-fade-in-up">
+        {t.about.title}
+      </h1>
+      <p className="text-gray-500 mb-8 animate-fade-in-up delay-100">
+        {t.about.subtitle}
+      </p>
+
+      {/* What is x402 Bazaar */}
+      <section ref={whatIsRef} className="reveal mb-10">
+        <h2 className="text-2xl font-bold text-white mb-4">{t.about.whatIsTitle}</h2>
+        <div className="glass rounded-xl p-6 space-y-4 text-gray-300 text-sm leading-relaxed">
+          <p>{t.about.whatIsPara1}</p>
+          <p>{t.about.whatIsPara2}</p>
+          <p>{t.about.whatIsPara3}</p>
+        </div>
+      </section>
+
+      {/* How It Works */}
+      <section ref={howItWorksRef} className="reveal mb-10">
+        <h2 className="text-2xl font-bold text-white mb-4">{t.about.howItWorksTitle}</h2>
+        <div className="grid sm:grid-cols-2 gap-4">
+          {[
+            { num: '1', title: t.about.step1Title, desc: t.about.step1Desc, icon: 'search' },
+            { num: '2', title: t.about.step2Title, desc: t.about.step2Desc, icon: 'payment' },
+            { num: '3', title: t.about.step3Title, desc: t.about.step3Desc, icon: 'check' },
+            { num: '4', title: t.about.step4Title, desc: t.about.step4Desc, icon: 'earn' },
+          ].map(step => (
+            <div key={step.num} className="glass-card rounded-lg p-5">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-10 h-10 rounded-full flex items-center justify-center text-base font-bold
+                                border-2 border-[#FF9900]/30 text-[#FF9900] bg-[#FF9900]/5 shrink-0">
+                  {step.num}
+                </div>
+                <h3 className="text-white font-semibold text-sm">{step.title}</h3>
+              </div>
+              <p className="text-gray-400 text-xs leading-relaxed">{step.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* The x402 Protocol */}
+      <section ref={protocolRef} className="reveal mb-10">
+        <h2 className="text-2xl font-bold text-white mb-4">{t.about.protocolTitle}</h2>
+        <div className="glass rounded-xl p-6 space-y-4 text-gray-300 text-sm leading-relaxed">
+          <p>{t.about.protocolDesc}</p>
+          <div className="glass-card rounded-lg p-4 border border-[#FF9900]/10">
+            <h3 className="text-white font-semibold text-sm mb-2">{t.about.protocolLearnMore}</h3>
+            <a
+              href="https://x402.org"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#FF9900] text-xs hover:text-[#FEBD69] transition-colors inline-flex items-center gap-1"
+            >
+              {t.about.protocolVisit}
+              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Built On */}
+      <section ref={blockchainRef} className="reveal mb-10">
+        <h2 className="text-2xl font-bold text-white mb-4">{t.about.builtOnTitle}</h2>
+        <div className="space-y-4">
+          {/* Base */}
+          <div className="glass-card rounded-lg p-6 border border-blue-500/10">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-400 font-bold text-lg">
+                B
+              </div>
+              <div>
+                <h3 className="text-white font-semibold text-base">Base</h3>
+                <p className="text-gray-500 text-xs">{t.about.baseChainId}: {CHAIN_CONFIG[8453].key}</p>
+              </div>
+            </div>
+            <p className="text-gray-400 text-sm leading-relaxed mb-3">{t.about.baseDesc}</p>
+            <div className="flex flex-wrap gap-2 text-xs">
+              <span className="glass px-3 py-1 rounded-full text-gray-400">{t.about.baseFeature1}</span>
+              <span className="glass px-3 py-1 rounded-full text-gray-400">{t.about.baseFeature2}</span>
+              <span className="glass px-3 py-1 rounded-full text-gray-400">{t.about.baseFeature3}</span>
+            </div>
+          </div>
+
+          {/* SKALE */}
+          <div className="glass-card rounded-lg p-6 border border-green-500/10">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-10 h-10 rounded-full bg-green-500/10 flex items-center justify-center text-green-400 font-bold text-lg">
+                S
+              </div>
+              <div>
+                <h3 className="text-white font-semibold text-base">SKALE Europa</h3>
+                <p className="text-gray-500 text-xs">{t.about.skaleChainId}: {CHAIN_CONFIG[2046399126].key}</p>
+              </div>
+            </div>
+            <p className="text-gray-400 text-sm leading-relaxed mb-3">{t.about.skaleDesc}</p>
+            <div className="flex flex-wrap gap-2 text-xs">
+              <span className="glass px-3 py-1 rounded-full text-green-400">{t.about.skaleFeature1}</span>
+              <span className="glass px-3 py-1 rounded-full text-gray-400">{t.about.skaleFeature2}</span>
+              <span className="glass px-3 py-1 rounded-full text-gray-400">{t.about.skaleFeature3}</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Open Source */}
+      <section ref={openSourceRef} className="reveal mb-10">
+        <h2 className="text-2xl font-bold text-white mb-4">{t.about.openSourceTitle}</h2>
+        <div className="glass rounded-xl p-6 space-y-4 text-gray-300 text-sm leading-relaxed">
+          <p>{t.about.openSourceDesc}</p>
+          <div className="grid sm:grid-cols-2 gap-3">
+            <a
+              href="https://github.com/Wintyx57/x402-frontend"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="glass-card rounded-lg p-4 hover:border-white/20 transition-all no-underline group"
+            >
+              <div className="flex items-center gap-2 mb-2">
+                <svg className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                </svg>
+                <h3 className="text-white font-semibold text-sm">{t.about.frontendRepo}</h3>
+              </div>
+              <p className="text-gray-500 text-xs">{t.about.frontendRepoDesc}</p>
+            </a>
+            <a
+              href="https://github.com/Wintyx57/x402-backend"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="glass-card rounded-lg p-4 hover:border-white/20 transition-all no-underline group"
+            >
+              <div className="flex items-center gap-2 mb-2">
+                <svg className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                </svg>
+                <h3 className="text-white font-semibold text-sm">{t.about.backendRepo}</h3>
+              </div>
+              <p className="text-gray-500 text-xs">{t.about.backendRepoDesc}</p>
+            </a>
+          </div>
+          <div className="glass-card rounded-lg p-4 border border-[#FF9900]/10">
+            <p className="text-gray-400 text-xs mb-2">
+              <span className="text-[#FF9900] font-medium">{t.about.licenseLabel}</span> {t.about.licenseDesc}
+            </p>
+            <p className="text-gray-400 text-xs">
+              <span className="text-[#FF9900] font-medium">{t.about.contributionsLabel}</span> {t.about.contributionsDesc}
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* The Team */}
+      <section ref={teamRef} className="reveal mb-10">
+        <h2 className="text-2xl font-bold text-white mb-4">{t.about.teamTitle}</h2>
+        <div className="glass rounded-xl p-6 space-y-4 text-gray-300 text-sm leading-relaxed">
+          <p>{t.about.teamDesc}</p>
+          <div className="glass-card rounded-lg p-4 border border-[#FF9900]/10 flex items-center gap-3">
+            <span className="text-3xl">🏆</span>
+            <div>
+              <h3 className="text-white font-semibold text-sm">{t.about.teamHackathon}</h3>
+              <p className="text-gray-500 text-xs">{t.about.teamHackathonDesc}</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Contact */}
+      <section ref={contactRef} className="reveal mb-10">
+        <h2 className="text-2xl font-bold text-white mb-4">{t.about.contactTitle}</h2>
+        <div className="glass rounded-xl p-6 space-y-4">
+          <div className="flex items-center gap-3 text-sm">
+            <svg className="w-5 h-5 text-[#FF9900]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+            <a href="mailto:x402bazaar@gmail.com" className="text-gray-300 hover:text-white transition-colors">
+              x402bazaar@gmail.com
+            </a>
+          </div>
+          <div className="flex items-center gap-3 text-sm">
+            <svg className="w-5 h-5 text-[#FF9900]" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+            </svg>
+            <a href="https://x.com/x402bazaar" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white transition-colors">
+              @x402bazaar
+            </a>
+          </div>
+          <div className="flex items-center gap-3 text-sm">
+            <svg className="w-5 h-5 text-[#FF9900]" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+            </svg>
+            <a href="https://github.com/Wintyx57" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white transition-colors">
+              GitHub
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <div className="glass-card rounded-xl p-8 text-center border border-[#FF9900]/10">
+        <h2 className="text-xl font-bold text-white mb-3">{t.about.ctaTitle}</h2>
+        <p className="text-gray-400 text-sm mb-6">{t.about.ctaDesc}</p>
+        <div className="flex flex-wrap gap-3 justify-center">
+          <Link to="/services" className="gradient-btn text-white px-6 py-2.5 rounded-lg text-sm font-medium no-underline hover:brightness-110 transition-all">
+            {t.about.ctaBrowse}
+          </Link>
+          <Link to="/developers" className="glass text-gray-300 px-6 py-2.5 rounded-lg text-sm font-medium no-underline hover:border-white/20 transition-all">
+            {t.about.ctaDocs}
+          </Link>
+        </div>
+        <div className="mt-6 pt-6 border-t border-white/5">
+          <code className="bg-[#0d1117] px-4 py-2 rounded-lg text-[#FF9900] text-sm font-mono inline-block">
+            npx x402-bazaar init
+          </code>
+        </div>
+      </div>
+    </div>
+  );
+}

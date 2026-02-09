@@ -8,6 +8,8 @@ import Integrate from './pages/Integrate';
 import Developers from './pages/Developers';
 import MCP from './pages/MCP';
 import Blog from './pages/Blog';
+import About from './pages/About';
+import Pricing from './pages/Pricing';
 
 export default function App() {
   return (
@@ -21,6 +23,8 @@ export default function App() {
         <Route path="/developers" element={<Developers />} />
         <Route path="/mcp" element={<MCP />} />
         <Route path="/blog" element={<Blog />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/pricing" element={<Pricing />} />
       </Routes>
       <ScrollToTop />
     </div>

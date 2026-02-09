@@ -341,6 +341,8 @@ export default function Home() {
               <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">{t.home.footerProduct}</h4>
               <div className="flex flex-col gap-2">
                 <Link to="/services" className="text-xs text-gray-500 hover:text-white no-underline transition-colors">{t.nav.services}</Link>
+                <Link to="/pricing" className="text-xs text-gray-500 hover:text-white no-underline transition-colors">Pricing</Link>
+                <Link to="/about" className="text-xs text-gray-500 hover:text-white no-underline transition-colors">About</Link>
                 <Link to="/register" className="text-xs text-gray-500 hover:text-white no-underline transition-colors">{t.nav.register}</Link>
                 <Link to="/developers" className="text-xs text-gray-500 hover:text-white no-underline transition-colors">{t.nav.developers}</Link>
               </div>
