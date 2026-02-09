@@ -1,0 +1,16 @@
+{
+  "name": "x402 Bazaar",
+  "short_name": "x402",
+  "description": "AI Agent API Marketplace - Pay with USDC micropayments on Base & SKALE",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f1111",
+  "theme_color": "#FF9900",
+  "icons": [
+    {
+      "src": "/og-image.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
