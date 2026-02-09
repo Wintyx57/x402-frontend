@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>x402 Bazaar - OG Image</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 1200px;
+            height: 630px;
+            overflow: hidden;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #000;
+        }
+
+        .container {
+            width: 1200px;
+            height: 630px;
+            background: linear-gradient(135deg, #0a0e14 0%, #131921 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Background pattern */
+        .container::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image:
+                radial-gradient(circle at 2px 2px, rgba(255, 153, 0, 0.08) 1px, transparent 1px);
+            background-size: 32px 32px;
+            opacity: 0.4;
+        }
+
+        /* Top accent bar */
+        .accent-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #FF9900 0%, #FFB347 100%);
+        }
+
+        /* Main content */
+        .content {
+            position: relative;
+            z-index: 10;
+            height: 100%;
+            display: flex;
+            padding: 60px 80px;
+            gap: 60px;
+        }
+
+        /* Left side */
+        .left {
+            flex: 0 0 60%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 32px;
+        }
+
+        .logo {
+            font-size: 48px;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: -0.5px;
+        }
+
+        .tagline {
+            font-size: 24px;
+            color: #9ca3af;
+            line-height: 1.4;
+            margin-top: -8px;
+        }
+
+        .divider {
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, #FF9900, #FFB347);
+            border-radius: 2px;
+        }
+
+        .stats {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+
+        .stat {
+            font-size: 20px;
+            font-weight: 600;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .stat-divider {
+            width: 1px;
+            height: 24px;
+            background: rgba(255, 153, 0, 0.3);
+        }
+
+        .code-box {
+            background: rgba(15, 18, 25, 0.8);
+            border: 1px solid rgba(255, 153, 0, 0.2);
+            border-radius: 12px;
+            padding: 20px 28px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 18px;
+            color: #FF9900;
+            display: inline-block;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Right side */
+        .right {
+            flex: 0 0 40%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .terminal {
+            background: rgba(10, 14, 20, 0.9);
+            border: 1px solid rgba(255, 153, 0, 0.15);
+            border-radius: 12px;
+            padding: 24px;
+            width: 100%;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.8;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .terminal-header {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .terminal-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .dot-red { background: #ff5f56; }
+        .dot-yellow { background: #ffbd2e; }
+        .dot-green { background: #27c93f; }
+
+        .terminal-line {
+            margin-bottom: 8px;
+        }
+
+        .prompt { color: #6b7280; }
+        .payment { color: #FF9900; }
+        .success { color: #10b981; }
+        .output { color: #9ca3af; }
+
+        /* Bottom bar */
+        .bottom-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px 80px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.3), transparent);
+        }
+
+        .bottom-text {
+            font-size: 14px;
+            color: #6b7280;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="accent-bar"></div>
+
+        <div class="content">
+            <div class="left">
+                <div>
+                    <div class="logo">x402 Bazaar</div>
+                    <div class="tagline">The API Marketplace for AI Agents</div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="stats">
+                    <div class="stat">70+ APIs</div>
+                    <div class="stat-divider"></div>
+                    <div class="stat">Zero Gas</div>
+                    <div class="stat-divider"></div>
+                    <div class="stat">$0.005/call</div>
+                </div>
+
+                <div class="code-box">npx x402-bazaar init</div>
+            </div>
+
+            <div class="right">
+                <div class="terminal">
+                    <div class="terminal-header">
+                        <div class="terminal-dot dot-red"></div>
+                        <div class="terminal-dot dot-yellow"></div>
+                        <div class="terminal-dot dot-green"></div>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="prompt">$ curl api.x402bazaar.org/search</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="payment">→ 402 Payment Required</span>
+                    </div>
+                    <div class="terminal-line" style="margin-top: 12px;">
+                        <span class="prompt">$ pay 0.005 USDC</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="success">→ ✓ Payment verified</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="success">→ 200 OK</span> <span class="output">{results: [...]}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-bar">
+            <div class="bottom-text">x402bazaar.org</div>
+            <div class="bottom-text">Base & SKALE | USDC | HTTP 402</div>
+        </div>
+    </div>
+</body>
+</html>
