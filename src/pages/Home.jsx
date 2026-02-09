@@ -124,7 +124,7 @@ export default function Home() {
             </div>
             <div className="w-px h-8 bg-white/10" />
             <div className="text-center">
-              <div className="text-xl font-bold text-[#FF9900]">11</div>
+              <div className="text-xl font-bold text-[#FF9900]">{CATEGORIES.length}</div>
               <div className="text-xs text-gray-500 uppercase tracking-wider">{t.home.categoriesCount}</div>
             </div>
           </div>
@@ -229,11 +229,11 @@ export default function Home() {
               <div className="text-xs text-gray-500 mt-1">USDC Balance</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold gradient-text">{t.home.network || 'Base'}</div>
+              <div className="text-3xl font-bold gradient-text">{t.home.network}</div>
               <div className="text-xs text-gray-500 mt-1">Blockchain</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-white">11</div>
+              <div className="text-3xl font-bold text-white">{CATEGORIES.length}</div>
               <div className="text-xs text-gray-500 mt-1">{t.home.categoriesCount}</div>
             </div>
           </div>
@@ -314,7 +314,7 @@ export default function Home() {
             <p className="text-xs text-gray-600">
               Built for the <span className="text-[#FF9900] font-medium">x402 Hackathon</span> &middot; Powered by Base & <span className="text-[#34D399]">SKALE</span>
             </p>
-            <p className="text-xs text-gray-600">&copy; 2025 x402 Bazaar</p>
+            <p className="text-xs text-gray-600">&copy; 2026 x402 Bazaar</p>
           </div>
         </div>
       </footer>

@@ -6,18 +6,18 @@ import { useTranslation } from '../i18n/LanguageContext';
 
 const REGISTER_COST = 1;
 
-const PAYMENT_STEPS = [
-  '', // 0 = idle
-  'Preparing transaction...',
-  'Waiting for wallet approval...',
-  'Confirming on-chain...',
-  'Registering your API...',
-];
-
 export default function Register() {
   const { address, isConnected, chain } = useAccount();
   const { writeContractAsync } = useWriteContract();
   const { t } = useTranslation();
+
+  const PAYMENT_STEPS = [
+    '', // 0 = idle
+    t.register.step1,
+    t.register.step2,
+    t.register.step3,
+    t.register.step4,
+  ];
 
   const [form, setForm] = useState({
     name: '', description: '', url: '', price: '', tags: ''

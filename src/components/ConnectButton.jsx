@@ -95,7 +95,7 @@ export default function ConnectButton() {
         <div className="absolute right-0 top-full mt-2 w-72 bg-[#1a2332] border border-white/10 rounded-xl shadow-xl z-50 overflow-hidden">
           {/* Full address */}
           <div className="px-4 py-3 border-b border-white/5">
-            <p className="text-[11px] text-gray-500 uppercase tracking-wider mb-1">Wallet</p>
+            <p className="text-[11px] text-gray-500 uppercase tracking-wider mb-1">{t.connect.wallet}</p>
             <p className="text-xs text-gray-300 font-mono break-all leading-relaxed">{address}</p>
           </div>
 
@@ -104,7 +104,7 @@ export default function ConnectButton() {
             <span className="w-2 h-2 rounded-full" style={{ backgroundColor: chainColor }} />
             <span className="text-xs text-gray-300">{chainLabel}</span>
             {chain?.id === skaleEuropa.id && (
-              <span className="text-[11px] bg-green-500/10 text-green-400 px-1.5 py-0.5 rounded">FREE GAS</span>
+              <span className="text-[11px] bg-green-500/10 text-green-400 px-1.5 py-0.5 rounded">{t.connect.freeGas}</span>
             )}
           </div>
 
@@ -123,7 +123,7 @@ export default function ConnectButton() {
                     style={{ backgroundColor: c.id === skaleEuropa.id ? '#34D399' : '#FF9900' }} />
                   {c.name}
                   {c.id === skaleEuropa.id && (
-                    <span className="text-[11px] text-green-400 ml-auto">0 gas</span>
+                    <span className="text-[11px] text-green-400 ml-auto">{t.connect.zeroGas}</span>
                   )}
                 </button>
               ))}
@@ -137,14 +137,14 @@ export default function ConnectButton() {
               className="w-full text-left text-xs text-gray-300 hover:text-white hover:bg-white/5
                          px-3 py-2 rounded-lg transition-colors duration-150 cursor-pointer"
             >
-              {copied ? 'Copied!' : 'Copy address'}
+              {copied ? t.connect.addressCopied : t.connect.copyAddress}
             </button>
             <button
               onClick={() => { disconnect(); setDropdownOpen(false); }}
               className="w-full text-left text-xs text-red-400 hover:text-red-300 hover:bg-red-500/10
                          px-3 py-2 rounded-lg transition-colors duration-150 cursor-pointer"
             >
-              Disconnect
+              {t.connect.disconnect}
             </button>
           </div>
         </div>
