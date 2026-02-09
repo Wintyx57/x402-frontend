@@ -23,6 +23,7 @@ export const translations = {
       viewApi: "View API",
       useWithAI: "Use with AI",
       copied: "Copied!",
+      native: "x402 Native",
     },
     home: {
       heroTitle: "The Amazon for",
@@ -33,6 +34,7 @@ export const translations = {
       apis: "APIs",
       freeApis: "Free",
       payments: "Payments",
+      liveApis: "Live APIs",
       browseByCategory: "Browse by Category",
       viewAll: "View all",
       categories: {
@@ -311,6 +313,7 @@ def my_function(query: str) -> dict:
       viewApi: "Voir API",
       useWithAI: "Utiliser avec IA",
       copied: "Copie !",
+      native: "x402 Natif",
     },
     home: {
       heroTitle: "Le Amazon des",
@@ -321,6 +324,7 @@ def my_function(query: str) -> dict:
       apis: "APIs",
       freeApis: "Gratuites",
       payments: "Paiements",
+      liveApis: "APIs Live",
       browseByCategory: "Parcourir par categorie",
       viewAll: "Voir tout",
       categories: {

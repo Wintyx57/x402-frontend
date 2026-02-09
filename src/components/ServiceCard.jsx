@@ -28,6 +28,7 @@ export default function ServiceCard({ service }) {
   const domain = getDomain(service.url);
   const [imgError, setImgError] = useState(false);
   const [copied, setCopied] = useState(false);
+  const isNative = service.url?.startsWith('https://x402-api.onrender.com');
 
   const handleCopyPrompt = async (e) => {
     e.stopPropagation();
@@ -56,7 +57,14 @@ export default function ServiceCard({ service }) {
           )}
         </div>
         <div className="flex-1 min-w-0">
-          <h3 className="text-white font-semibold text-sm leading-tight truncate" title={service.name}>{service.name}</h3>
+          <div className="flex items-center gap-1.5">
+            <h3 className="text-white font-semibold text-sm leading-tight truncate" title={service.name}>{service.name}</h3>
+            {isNative && (
+              <span className="text-[11px] bg-[#FF9900]/10 text-[#FF9900] px-1.5 py-0.5 rounded border border-[#FF9900]/20 shrink-0">
+                {t.serviceCard.native}
+              </span>
+            )}
+          </div>
           <span className="inline-block text-xs mt-0.5 text-gray-500 capitalize">
             {service.tags?.[0]}
           </span>

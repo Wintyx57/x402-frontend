@@ -46,6 +46,7 @@ export default function Home() {
   const freeServices = services.filter(s => Number(s.price_usdc) === 0).slice(0, 4);
   const paidServices = services.filter(s => Number(s.price_usdc) > 0)
     .sort((a, b) => Number(b.price_usdc) - Number(a.price_usdc)).slice(0, 4);
+  const nativeCount = services.filter(s => s.url?.startsWith('https://x402-api.onrender.com')).length;
 
   return (
     <div>
@@ -115,6 +116,11 @@ export default function Home() {
                 {services.filter(s => Number(s.price_usdc) === 0).length}
               </div>
               <div className="text-xs text-gray-500 uppercase tracking-wider">{t.home.freeApis}</div>
+            </div>
+            <div className="w-px h-8 bg-white/10" />
+            <div className="text-center">
+              <div className="text-xl font-bold text-[#FF9900]">{nativeCount}</div>
+              <div className="text-xs text-gray-500 uppercase tracking-wider">{t.home.liveApis}</div>
             </div>
             <div className="w-px h-8 bg-white/10" />
             <div className="text-center">
