@@ -42,6 +42,7 @@ const tools = [
   { name: 'discover_marketplace', cost: 'Free', desc_en: 'Discover the marketplace, available endpoints and total services', desc_fr: 'Decouvrir la marketplace, endpoints et nombre de services' },
   { name: 'search_services', cost: '0.05 USDC', desc_en: 'Search APIs by keyword (weather, crypto, ai...)', desc_fr: 'Rechercher des APIs par mot-cle (meteo, crypto, ia...)' },
   { name: 'list_services', cost: '0.05 USDC', desc_en: 'List the full catalog of available services', desc_fr: 'Lister le catalogue complet des services' },
+  { name: 'find_tool_for_task', cost: '0.05 USDC', desc_en: 'Describe what you need in plain English, get the best API ready to call', desc_fr: 'Decrivez votre besoin en langage naturel, obtenez la meilleure API prete a appeler' },
   { name: 'call_api', cost: 'Free', desc_en: 'Call any external API URL and return the response', desc_fr: 'Appeler une API externe et retourner la reponse' },
   { name: 'get_wallet_balance', cost: 'Free', desc_en: 'Check agent USDC balance on Base', desc_fr: 'Verifier le solde USDC de l\'agent sur Base' },
   { name: 'get_budget_status', cost: 'Free', desc_en: 'Check session spending, remaining budget and payment history', desc_fr: 'Verifier les depenses de session, budget restant et historique' },

@@ -19,6 +19,8 @@ export const translations = {
       verified: "Verified",
       free: "Free",
       viewApi: "View API",
+      useWithAI: "Use with AI",
+      copied: "Copied!",
     },
     home: {
       heroTitle: "The Amazon for",
@@ -264,6 +266,8 @@ export const translations = {
       verified: "Verifie",
       free: "Gratuit",
       viewApi: "Voir API",
+      useWithAI: "Utiliser avec IA",
+      copied: "Copie !",
     },
     home: {
       heroTitle: "Le Amazon des",

@@ -27,6 +27,15 @@ export default function ServiceCard({ service }) {
   const initial = service.name?.charAt(0)?.toUpperCase() || '?';
   const domain = getDomain(service.url);
   const [imgError, setImgError] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const handleCopyPrompt = async (e) => {
+    e.stopPropagation();
+    const prompt = `Use x402 Bazaar to call "${service.name}" at ${service.url}${isFree ? ' (free)' : ` (costs ${service.price_usdc} USDC)`}`;
+    await navigator.clipboard.writeText(prompt);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   return (
     <div className="glass-card rounded-xl p-5 transition-all duration-200 hover:bg-white/[0.04]
@@ -78,7 +87,7 @@ export default function ServiceCard({ service }) {
         )}
       </div>
 
-      {/* Bottom row: owner + verify + action */}
+      {/* Bottom row: owner + verify + actions */}
       <div className="flex items-center justify-between pt-2 border-t border-white/5">
         <div className="flex items-center gap-2 text-xs text-gray-600">
           <span className="font-mono">
@@ -95,19 +104,35 @@ export default function ServiceCard({ service }) {
             </a>
           )}
         </div>
-        {isValidServiceUrl(service.url) ? (
-          <a
-            href={service.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-xs font-medium text-[#FF9900] hover:text-[#FFB340] no-underline
-                       transition-opacity duration-200"
-          >
-            {t.serviceCard.viewApi} &rarr;
-          </a>
-        ) : (
-          <span className="text-xs text-gray-600">{t.serviceCard.viewApi}</span>
-        )}
+        <div className="flex items-center gap-2">
+          {isValidServiceUrl(service.url) && (
+            <button
+              onClick={handleCopyPrompt}
+              className="flex items-center gap-1 text-xs font-medium px-2 py-1 rounded-md
+                         bg-white/5 text-gray-400 hover:text-white hover:bg-white/10
+                         transition-all duration-200 cursor-pointer border-none"
+              title={t.serviceCard.useWithAI}
+            >
+              <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 2l2.5 7.5L22 12l-7.5 2.5L12 22l-2.5-7.5L2 12l7.5-2.5z"/>
+              </svg>
+              {copied ? t.serviceCard.copied : t.serviceCard.useWithAI}
+            </button>
+          )}
+          {isValidServiceUrl(service.url) ? (
+            <a
+              href={service.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs font-medium text-[#FF9900] hover:text-[#FFB340] no-underline
+                         transition-opacity duration-200"
+            >
+              {t.serviceCard.viewApi} &rarr;
+            </a>
+          ) : (
+            <span className="text-xs text-gray-600">{t.serviceCard.viewApi}</span>
+          )}
+        </div>
       </div>
     </div>
   );
