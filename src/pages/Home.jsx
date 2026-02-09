@@ -104,8 +104,39 @@ export default function Home() {
             </div>
           </form>
 
+          {/* Primary CTA */}
+          <div className="flex flex-col items-center gap-3 mt-6 animate-fade-in-up delay-250">
+            <Link
+              to="/services"
+              className="gradient-btn text-white text-base font-semibold px-10 py-3.5 rounded-xl no-underline
+                         transition-all duration-200 hover:brightness-110 hover:scale-[1.02] hover:glow-orange"
+            >
+              {t.home.exploreCTA}
+            </Link>
+            <div className="flex items-center gap-4 text-xs">
+              <Link to="/register" className="text-gray-400 underline hover:text-white transition-colors">
+                {t.home.listApiCTA}
+              </Link>
+              <Link to="/developers" className="text-gray-400 underline hover:text-white transition-colors">
+                {t.home.readDocsCTA}
+              </Link>
+            </div>
+          </div>
+
+          {/* Trust logo bar */}
+          <div className="flex items-center justify-center gap-4 sm:gap-6 text-gray-500 text-sm mt-8 mb-2 animate-fade-in-up delay-300">
+            <span className="text-gray-600 text-xs uppercase tracking-wider">{t.home.trustBarLabel}</span>
+            <span className="font-semibold text-gray-400 hover:text-white transition-colors">Coinbase</span>
+            <span className="text-gray-700">|</span>
+            <span className="font-semibold text-gray-400 hover:text-white transition-colors">Base</span>
+            <span className="text-gray-700">|</span>
+            <span className="font-semibold text-gray-400 hover:text-white transition-colors">SKALE</span>
+            <span className="text-gray-700">|</span>
+            <span className="font-semibold text-gray-400 hover:text-white transition-colors">x402 Protocol</span>
+          </div>
+
           {/* Quick stats */}
-          <div className="flex items-center justify-center gap-6 mt-6 animate-fade-in-up delay-300">
+          <div className="flex flex-wrap items-center justify-center gap-6 mt-4 animate-fade-in-up delay-300">
             <div className="text-center">
               <div className="text-xl font-bold text-white">{services.length}</div>
               <div className="text-xs text-gray-500 uppercase tracking-wider">{t.home.apis}</div>
@@ -124,8 +155,13 @@ export default function Home() {
             </div>
             <div className="w-px h-8 bg-white/10" />
             <div className="text-center">
-              <div className="text-xl font-bold text-[#FF9900]">{CATEGORIES.length}</div>
-              <div className="text-xs text-gray-500 uppercase tracking-wider">{t.home.categoriesCount}</div>
+              <div className="text-xl font-bold text-white">200ms</div>
+              <div className="text-xs text-gray-500 uppercase tracking-wider">{t.home.avgTransaction}</div>
+            </div>
+            <div className="w-px h-8 bg-white/10" />
+            <div className="text-center">
+              <div className="text-xl font-bold text-[#34D399]">$0 Gas</div>
+              <div className="text-xs text-gray-500 uppercase tracking-wider">{t.home.onSkale}</div>
             </div>
           </div>
         </div>
@@ -219,7 +255,7 @@ export default function Home() {
       {/* ===== STATS BAR ===== */}
       {stats && (
         <section ref={statsRef} className="reveal max-w-5xl mx-auto px-4 mb-20">
-          <div className="glass-card rounded-xl p-6 grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div className="glass-card rounded-xl p-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
             <div className="text-center">
               <div className="text-3xl font-bold text-white">{stats.totalServices}</div>
               <div className="text-xs text-gray-500 mt-1">{t.home.servicesListed}</div>
@@ -235,6 +271,14 @@ export default function Home() {
             <div className="text-center">
               <div className="text-3xl font-bold text-white">{CATEGORIES.length}</div>
               <div className="text-xs text-gray-500 mt-1">{t.home.categoriesCount}</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-white">200ms</div>
+              <div className="text-xs text-gray-500 mt-1">{t.home.avgTransaction}</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-[#34D399]">$0 Gas</div>
+              <div className="text-xs text-gray-500 mt-1">{t.home.onSkale}</div>
             </div>
           </div>
         </section>

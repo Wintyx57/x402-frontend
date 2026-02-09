@@ -271,6 +271,40 @@ export default function Register() {
         </form>
       )}
 
+      {/* What Happens Next */}
+      <div className="mt-10 mb-2">
+        <h2 className="text-lg font-bold text-white text-center mb-6">{t.register.whatHappensNext}</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="glass-card rounded-xl p-5 text-center">
+            <div className="w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-3 bg-[#FF9900]/10 border border-[#FF9900]/20">
+              <svg className="w-5 h-5 text-[#FF9900]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+            </div>
+            <div className="text-xs text-[#FF9900] font-semibold mb-1">1</div>
+            <p className="text-white text-sm font-medium">{t.register.nextStep1}</p>
+          </div>
+          <div className="glass-card rounded-xl p-5 text-center">
+            <div className="w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-3 bg-[#FF9900]/10 border border-[#FF9900]/20">
+              <svg className="w-5 h-5 text-[#FF9900]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+              </svg>
+            </div>
+            <div className="text-xs text-[#FF9900] font-semibold mb-1">2</div>
+            <p className="text-white text-sm font-medium">{t.register.nextStep2}</p>
+          </div>
+          <div className="glass-card rounded-xl p-5 text-center">
+            <div className="w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-3 bg-[#FF9900]/10 border border-[#FF9900]/20">
+              <svg className="w-5 h-5 text-[#FF9900]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div className="text-xs text-[#FF9900] font-semibold mb-1">3</div>
+            <p className="text-white text-sm font-medium">{t.register.nextStep3}</p>
+          </div>
+        </div>
+      </div>
+
       {/* Template hint */}
       <div className="mt-8 glass rounded-xl p-5 border border-white/5 text-center">
         <p className="text-gray-400 text-sm mb-3">{t.register.templateHint}</p>
