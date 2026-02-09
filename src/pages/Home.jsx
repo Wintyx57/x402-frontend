@@ -59,9 +59,25 @@ export default function Home() {
             {t.home.heroTitle}{' '}
             <span className="gradient-text">{t.home.heroTitleHighlight}</span>
           </h1>
-          <p className="text-gray-400 text-base sm:text-lg max-w-xl mx-auto mb-8 animate-fade-in-up delay-100">
+          <p className="text-gray-400 text-base sm:text-lg max-w-xl mx-auto mb-6 animate-fade-in-up delay-100">
             {t.home.heroSubtitle}
           </p>
+
+          {/* CLI One-liner */}
+          <div className="animate-fade-in-up delay-150 mb-8">
+            <div className="inline-flex items-center gap-3 bg-[#0d1117] border border-[#FF9900]/20 rounded-xl px-5 py-3 font-mono text-sm
+                            hover:border-[#FF9900]/40 transition-all duration-300 group cursor-pointer"
+                 onClick={() => { navigator.clipboard.writeText('npx x402-bazaar init'); }}
+            >
+              <span className="text-gray-500">$</span>
+              <span className="text-[#FF9900] font-medium">npx x402-bazaar init</span>
+              <svg className="w-4 h-4 text-gray-500 group-hover:text-[#FF9900] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+              </svg>
+            </div>
+            <p className="text-gray-500 text-xs mt-2">{t.home.cliHint}</p>
+          </div>
 
           {/* Hero search bar */}
           <form onSubmit={handleHeroSearch} className="animate-fade-in-up delay-200">

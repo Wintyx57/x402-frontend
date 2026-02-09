@@ -40,9 +40,22 @@ export default function Developers() {
   return (
     <div className="max-w-3xl mx-auto px-4 py-10">
       <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2 animate-fade-in-up">{t.developers.title}</h1>
-      <p className="text-gray-500 mb-10 animate-fade-in-up delay-100">
+      <p className="text-gray-500 mb-6 animate-fade-in-up delay-100">
         {t.developers.subtitle}
       </p>
+
+      {/* CLI Quick Start Banner */}
+      <div className="animate-fade-in-up delay-200 mb-10 rounded-xl bg-[#FF9900]/[0.06] border border-[#FF9900]/20 p-4 flex flex-col sm:flex-row items-start sm:items-center gap-3">
+        <div className="flex items-center gap-2 shrink-0">
+          <svg className="w-5 h-5 text-[#FF9900]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="4 17 10 11 4 5"/>
+            <line x1="12" y1="19" x2="20" y2="19"/>
+          </svg>
+          <span className="text-white font-medium text-sm">{t.developers.cliQuickStart}</span>
+        </div>
+        <code className="bg-[#0d1117] px-3 py-1.5 rounded-lg text-[#FF9900] text-sm font-mono">npx x402-bazaar init</code>
+        <span className="text-gray-500 text-xs">{t.developers.cliQuickStartDesc}</span>
+      </div>
 
       {/* Protocol */}
       <section ref={protocolRef} className="reveal mb-10">

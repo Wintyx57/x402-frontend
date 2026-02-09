@@ -113,6 +113,7 @@ export default function MCP() {
   const { t, lang } = useTranslation();
   const m = t.mcp;
   const [selectedIde, setSelectedIde] = useState('claude-desktop');
+  const [showManual, setShowManual] = useState(false);
   const reveal = useReveal();
 
   return (
@@ -279,83 +280,135 @@ export default function MCP() {
         </div>
       </section>
 
-      {/* Installation by IDE */}
+      {/* Quick Install (CLI) */}
       <section className="mb-12" ref={reveal}>
         <h2 className="text-2xl font-bold text-white mb-4">{m.installTitle}</h2>
 
-        {/* Prerequisites */}
+        {/* Primary: One-liner CLI */}
+        <div className="rounded-xl border-2 border-[#FF9900]/30 bg-gradient-to-br from-[#FF9900]/[0.06] to-transparent p-6 mb-6">
+          <div className="flex items-center gap-2 mb-3">
+            <div className="w-8 h-8 rounded-full bg-[#FF9900]/15 text-[#FF9900] flex items-center justify-center">
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="4 17 10 11 4 5"/>
+                <line x1="12" y1="19" x2="20" y2="19"/>
+              </svg>
+            </div>
+            <h3 className="text-white font-bold text-lg">{m.quickInstallTitle}</h3>
+            <span className="ml-auto text-xs font-medium text-[#34D399] bg-[#34D399]/10 px-2 py-0.5 rounded-full">{m.quickInstallBadge}</span>
+          </div>
+          <p className="text-gray-400 text-sm mb-4">{m.quickInstallDesc}</p>
+          <CodeBlock code="npx x402-bazaar init" />
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-4">
+            <div className="flex items-center gap-2 text-sm text-gray-400">
+              <svg className="w-4 h-4 text-[#34D399] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M9 12l2 2 4-4"/>
+                <circle cx="12" cy="12" r="10"/>
+              </svg>
+              {m.quickFeature1}
+            </div>
+            <div className="flex items-center gap-2 text-sm text-gray-400">
+              <svg className="w-4 h-4 text-[#34D399] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M9 12l2 2 4-4"/>
+                <circle cx="12" cy="12" r="10"/>
+              </svg>
+              {m.quickFeature2}
+            </div>
+            <div className="flex items-center gap-2 text-sm text-gray-400">
+              <svg className="w-4 h-4 text-[#34D399] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M9 12l2 2 4-4"/>
+                <circle cx="12" cy="12" r="10"/>
+              </svg>
+              {m.quickFeature3}
+            </div>
+          </div>
+        </div>
+
+        {/* Supported environments */}
         <div className="glass-card rounded-xl p-5 mb-6">
-          <h3 className="text-white font-semibold mb-3">{m.prereqTitle}</h3>
-          <ol className="list-decimal list-inside space-y-2 text-gray-400 text-sm">
-            <li>{m.prereq1}</li>
-            <li>{m.prereq2}</li>
-            <li>{m.prereq3}</li>
-          </ol>
-          <CodeBlock code={`git clone https://github.com/Wintyx57/x402-backend.git
-cd x402-backend
-npm install`} />
+          <h3 className="text-white font-semibold mb-3">{m.supportedEnvTitle}</h3>
+          <div className="flex flex-wrap gap-2">
+            {ides.map(ide => (
+              <div key={ide.id} className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 text-gray-300 text-sm">
+                <span>{ide.icon}</span>
+                {ide.name}
+              </div>
+            ))}
+          </div>
+          <p className="text-gray-500 text-xs mt-3">{m.supportedEnvDesc}</p>
         </div>
 
-        {/* IDE Tabs */}
-        <div className="flex gap-2 mb-4 overflow-x-auto pb-2">
-          {ides.map(ide => (
-            <button
-              key={ide.id}
-              onClick={() => setSelectedIde(ide.id)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap
-                         cursor-pointer border-none transition-all duration-200 ${
-                selectedIde === ide.id
-                  ? 'bg-[#FF9900]/15 text-[#FF9900] border border-[#FF9900]/30'
-                  : 'bg-white/5 text-gray-400 hover:text-white hover:bg-white/10'
-              }`}
-            >
-              <span>{ide.icon}</span>
-              {ide.name}
-            </button>
-          ))}
-        </div>
+        {/* Manual Configuration (collapsible) */}
+        <div className="glass-card rounded-xl overflow-hidden">
+          <button
+            onClick={() => setShowManual(!showManual)}
+            className="w-full flex items-center justify-between px-5 py-4 text-left cursor-pointer
+                       bg-transparent border-none text-white hover:bg-white/[0.02] transition-colors"
+          >
+            <span className="font-semibold text-sm">{m.manualTitle}</span>
+            <svg className={`w-5 h-5 text-gray-500 transition-transform duration-200 ${showManual ? 'rotate-180' : ''}`}
+                 viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </button>
 
-        {/* Config panels */}
-        <div className="glass-card rounded-xl p-5">
-          {selectedIde === 'claude-desktop' && (
-            <div>
-              <h3 className="text-white font-semibold mb-2">Claude Desktop</h3>
-              <p className="text-gray-400 text-sm mb-4">{m.claudeDesktopDesc}</p>
-              <p className="text-gray-500 text-xs mb-2 font-mono">
-                {m.claudeDesktopPath}
-              </p>
-              <CodeBlock code={CLAUDE_CONFIG} language="json" />
-            </div>
-          )}
+          {showManual && (
+            <div className="px-5 pb-5 border-t border-white/5 pt-4">
+              <p className="text-gray-500 text-xs mb-4">{m.manualDesc}</p>
 
-          {selectedIde === 'cursor' && (
-            <div>
-              <h3 className="text-white font-semibold mb-2">Cursor</h3>
-              <p className="text-gray-400 text-sm mb-4">{m.cursorDesc}</p>
-              <p className="text-gray-500 text-xs mb-2 font-mono">
-                {m.cursorPath}
-              </p>
-              <CodeBlock code={CURSOR_CONFIG} language="json" />
-            </div>
-          )}
+              {/* IDE Tabs */}
+              <div className="flex gap-2 mb-4 overflow-x-auto pb-2">
+                {ides.map(ide => (
+                  <button
+                    key={ide.id}
+                    onClick={() => setSelectedIde(ide.id)}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap
+                               cursor-pointer border-none transition-all duration-200 ${
+                      selectedIde === ide.id
+                        ? 'bg-[#FF9900]/15 text-[#FF9900] border border-[#FF9900]/30'
+                        : 'bg-white/5 text-gray-400 hover:text-white hover:bg-white/10'
+                    }`}
+                  >
+                    <span>{ide.icon}</span>
+                    {ide.name}
+                  </button>
+                ))}
+              </div>
 
-          {selectedIde === 'vscode' && (
-            <div>
-              <h3 className="text-white font-semibold mb-2">VS Code</h3>
-              <p className="text-gray-400 text-sm mb-4">{m.vscodeDesc}</p>
-              <p className="text-gray-500 text-xs mb-2 font-mono">
-                {m.vscodePath}
-              </p>
-              <CodeBlock code={CLAUDE_CONFIG} language="json" />
-            </div>
-          )}
-
-          {selectedIde === 'claude-code' && (
-            <div>
-              <h3 className="text-white font-semibold mb-2">Claude Code CLI</h3>
-              <p className="text-gray-400 text-sm mb-4">{m.claudeCodeDesc}</p>
-              <CodeBlock code={CLAUDE_CODE_CMD} language="bash" />
-              <p className="text-gray-500 text-xs mt-3">{m.claudeCodeNote}</p>
+              {/* Config panels */}
+              <div>
+                {selectedIde === 'claude-desktop' && (
+                  <div>
+                    <h3 className="text-white font-semibold mb-2">Claude Desktop</h3>
+                    <p className="text-gray-400 text-sm mb-4">{m.claudeDesktopDesc}</p>
+                    <p className="text-gray-500 text-xs mb-2 font-mono">{m.claudeDesktopPath}</p>
+                    <CodeBlock code={CLAUDE_CONFIG} language="json" />
+                  </div>
+                )}
+                {selectedIde === 'cursor' && (
+                  <div>
+                    <h3 className="text-white font-semibold mb-2">Cursor</h3>
+                    <p className="text-gray-400 text-sm mb-4">{m.cursorDesc}</p>
+                    <p className="text-gray-500 text-xs mb-2 font-mono">{m.cursorPath}</p>
+                    <CodeBlock code={CURSOR_CONFIG} language="json" />
+                  </div>
+                )}
+                {selectedIde === 'vscode' && (
+                  <div>
+                    <h3 className="text-white font-semibold mb-2">VS Code</h3>
+                    <p className="text-gray-400 text-sm mb-4">{m.vscodeDesc}</p>
+                    <p className="text-gray-500 text-xs mb-2 font-mono">{m.vscodePath}</p>
+                    <CodeBlock code={CLAUDE_CONFIG} language="json" />
+                  </div>
+                )}
+                {selectedIde === 'claude-code' && (
+                  <div>
+                    <h3 className="text-white font-semibold mb-2">Claude Code CLI</h3>
+                    <p className="text-gray-400 text-sm mb-4">{m.claudeCodeDesc}</p>
+                    <CodeBlock code={CLAUDE_CODE_CMD} language="bash" />
+                    <p className="text-gray-500 text-xs mt-3">{m.claudeCodeNote}</p>
+                  </div>
+                )}
+              </div>
             </div>
           )}
         </div>
@@ -392,20 +445,37 @@ npm install`} />
         </div>
       </section>
 
-      {/* GitHub CTA */}
+      {/* CTA */}
       <section ref={reveal}>
         <div className="rounded-xl border border-[#FF9900]/30 bg-gradient-to-br from-[#FF9900]/[0.08] to-transparent p-8 text-center">
-          <h2 className="text-2xl font-bold text-white mb-3">{m.ctaTitle}</h2>
-          <p className="text-gray-400 mb-6 max-w-lg mx-auto">{m.ctaDesc}</p>
-          <a
-            href="https://github.com/Wintyx57/x402-backend"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#FF9900] text-[#0a0a0f] font-semibold
-                       hover:bg-[#FFB033] transition-colors duration-200 no-underline"
-          >
-            GitHub Repository
-          </a>
+          <h2 className="text-2xl font-bold text-white mb-3">{m.ctaTitle2}</h2>
+          <p className="text-gray-400 mb-6 max-w-lg mx-auto">{m.ctaDesc2}</p>
+          <div className="flex flex-wrap gap-3 justify-center">
+            <div className="inline-flex items-center gap-2 bg-[#0d1117] border border-[#FF9900]/30 rounded-xl px-5 py-3 font-mono text-sm">
+              <span className="text-gray-500">$</span>
+              <span className="text-[#FF9900] font-medium">npx x402-bazaar init</span>
+            </div>
+          </div>
+          <div className="flex flex-wrap gap-3 justify-center mt-4">
+            <a
+              href="https://github.com/Wintyx57/x402-backend"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-gray-300 text-sm font-medium
+                         hover:bg-white/10 transition-colors duration-200 no-underline"
+            >
+              GitHub Repository
+            </a>
+            <a
+              href="https://www.npmjs.com/package/x402-bazaar"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-gray-300 text-sm font-medium
+                         hover:bg-white/10 transition-colors duration-200 no-underline"
+            >
+              npm Package
+            </a>
+          </div>
         </div>
       </section>
     </div>

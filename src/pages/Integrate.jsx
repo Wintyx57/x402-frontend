@@ -308,8 +308,23 @@ print(services)`} />
       {/* Get Started */}
       <section ref={startRef} className="reveal mb-10">
         <h2 className="text-2xl font-bold text-white mb-2">{t.integrate.getStartedTitle}</h2>
-        <p className="text-gray-400 text-sm mb-4">{t.integrate.getStartedDesc}</p>
-        <CodeBlock lang="Shell" code={`# ${t.integrate.getStartedStep1}
+
+        {/* Quick Start with CLI */}
+        <div className="rounded-xl border-2 border-[#FF9900]/30 bg-gradient-to-br from-[#FF9900]/[0.06] to-transparent p-6 mb-6">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-xs font-medium text-[#34D399] bg-[#34D399]/10 px-2 py-0.5 rounded-full">{t.integrate.recommended}</span>
+          </div>
+          <h3 className="text-white font-bold mb-2">{t.integrate.quickStartCliTitle}</h3>
+          <p className="text-gray-400 text-sm mb-4">{t.integrate.quickStartCliDesc}</p>
+          <CodeBlock lang="Shell" code="npx x402-bazaar init" />
+          <p className="text-gray-500 text-xs mt-3">{t.integrate.quickStartCliNote}</p>
+        </div>
+
+        {/* Manual alternative */}
+        <div className="glass rounded-xl p-5 mb-8">
+          <h3 className="text-white font-semibold mb-2">{t.integrate.manualTitle}</h3>
+          <p className="text-gray-400 text-sm mb-4">{t.integrate.manualDesc}</p>
+          <CodeBlock lang="Shell" code={`# ${t.integrate.getStartedStep1}
 git clone https://github.com/Wintyx57/x402-backend.git
 cd x402-backend
 
@@ -322,14 +337,22 @@ cp .env.example .env
 
 # ${t.integrate.getStartedStep4}
 npm run demo`} />
+        </div>
 
-        <div className="flex flex-wrap gap-4 mt-8">
+        <div className="flex flex-wrap gap-4">
           <Link
             to="/services"
             className="gradient-btn text-white px-6 py-3 rounded-xl font-medium no-underline
                        transition-all duration-300 hover:scale-105 hover:glow-orange"
           >
-            {t.home.browseServices}
+            {t.integrate.browseServices}
+          </Link>
+          <Link
+            to="/mcp"
+            className="glass text-gray-300 px-6 py-3 rounded-xl font-medium no-underline
+                       transition-all duration-300 hover:scale-105 hover:border-white/20"
+          >
+            MCP Server
           </Link>
           <Link
             to="/developers"
