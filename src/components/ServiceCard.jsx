@@ -92,7 +92,7 @@ export default function ServiceCard({ service, lastActivity, healthStatus }) {
             )}
           </div>
           <span className="inline-block text-xs mt-0.5 text-gray-500 capitalize">
-            {service.tags?.[0]}
+            {service.tags?.find(t => !['x402-native', 'live'].includes(t)) || service.tags?.[0]}
           </span>
         </div>
         <span className={`shrink-0 font-mono text-xs font-bold px-2.5 py-1 rounded-lg ${

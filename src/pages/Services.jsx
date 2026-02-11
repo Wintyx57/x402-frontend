@@ -74,10 +74,14 @@ export default function Services() {
       .catch(() => {});
   }, []);
 
+  // Helper: find the primary category of a service (first tag matching a known category)
+  const categoryTags = CATEGORIES.filter(c => c.tag).map(c => c.tag);
+  const getCategory = (s) => s.tags?.find(t => categoryTags.includes(t)) || null;
+
   // Count per category
   const categoryCounts = { all: services.length };
   services.forEach(s => {
-    const cat = s.tags?.[0];
+    const cat = getCategory(s);
     if (cat) categoryCounts[cat] = (categoryCounts[cat] || 0) + 1;
   });
 
@@ -255,7 +259,67 @@ export default function Services() {
         <div className="text-gray-500 text-center py-20 glass-card rounded-lg">
           <p className="text-sm">{search ? `${t.services.noMatch} "${search}"` : t.services.noServices}</p>
         </div>
+      ) : category === 'all' && !search ? (
+        /* Grouped by category view */
+        <div className="space-y-10">
+          {CATEGORIES.filter(c => c.tag).map(cat => {
+            const catServices = sorted.filter(s => getCategory(s) === cat.tag);
+            if (catServices.length === 0) return null;
+            return (
+              <section key={cat.key}>
+                <div className="flex items-center gap-2.5 mb-4">
+                  <CategoryIcon category={cat.key} className="w-5 h-5" />
+                  <h2 className="text-lg font-semibold text-white">
+                    {t.services[CATEGORY_LABELS[cat.key]]}
+                  </h2>
+                  <span className="text-xs text-gray-500 bg-white/5 px-2 py-0.5 rounded-full">
+                    {catServices.length}
+                  </span>
+                  <button
+                    onClick={() => setParam('cat', cat.key)}
+                    className="ml-auto text-xs text-[#FF9900] hover:text-[#FEBD69] cursor-pointer bg-transparent border-none"
+                  >
+                    {t.services.viewAll || 'View all'} &rarr;
+                  </button>
+                </div>
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+                  {catServices.map((s, i) => (
+                    <div key={s.id} className="animate-fade-in-up" style={{ animationDelay: `${Math.min(i, 7) * 50}ms` }}>
+                      <ServiceCard service={s} lastActivity={activityMap[s.url]} healthStatus={healthMap[s.url]} />
+                    </div>
+                  ))}
+                </div>
+              </section>
+            );
+          })}
+          {/* Uncategorized services */}
+          {(() => {
+            const uncategorized = sorted.filter(s => !getCategory(s));
+            if (uncategorized.length === 0) return null;
+            return (
+              <section>
+                <div className="flex items-center gap-2.5 mb-4">
+                  <CategoryIcon category="all" className="w-5 h-5" />
+                  <h2 className="text-lg font-semibold text-white">
+                    {t.services.otherApis || 'Other'}
+                  </h2>
+                  <span className="text-xs text-gray-500 bg-white/5 px-2 py-0.5 rounded-full">
+                    {uncategorized.length}
+                  </span>
+                </div>
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+                  {uncategorized.map((s, i) => (
+                    <div key={s.id} className="animate-fade-in-up" style={{ animationDelay: `${Math.min(i, 7) * 50}ms` }}>
+                      <ServiceCard service={s} lastActivity={activityMap[s.url]} healthStatus={healthMap[s.url]} />
+                    </div>
+                  ))}
+                </div>
+              </section>
+            );
+          })()}
+        </div>
       ) : (
+        /* Flat grid when filtering by category or searching */
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
           {sorted.map((s, i) => (
             <div key={s.id} className="animate-fade-in-up" style={{ animationDelay: `${Math.min(i, 11) * 50}ms` }}>
