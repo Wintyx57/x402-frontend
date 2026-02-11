@@ -6,7 +6,8 @@ import { useReveal } from '../hooks/useReveal';
 import ServiceCard from '../components/ServiceCard';
 import CategoryIcon from '../components/CategoryIcon';
 
-const CATEGORIES = [
+// Fallback categories — used until services are loaded from API
+const DEFAULT_CATEGORIES = [
   'ai', 'finance', 'data', 'developer', 'media', 'security',
   'location', 'communication', 'seo', 'scraping', 'fun',
 ];
@@ -41,16 +42,36 @@ export default function Home() {
     }
   };
 
+  // Build dynamic category list from actual service tags
   const categoryCounts = {};
   services.forEach(s => {
-    const cat = s.tags?.[0];
-    if (cat) categoryCounts[cat] = (categoryCounts[cat] || 0) + 1;
+    (s.tags || []).forEach(tag => {
+      if (tag !== 'x402-native' && tag !== 'live') {
+        categoryCounts[tag] = (categoryCounts[tag] || 0) + 1;
+      }
+    });
   });
+
+  // Use dynamic categories from API data, fallback to defaults while loading
+  const categories = services.length > 0
+    ? [...new Set(services.flatMap(s => (s.tags || []).filter(t => t !== 'x402-native' && t !== 'live')))]
+        .sort((a, b) => (categoryCounts[b] || 0) - (categoryCounts[a] || 0))
+        .slice(0, 16)
+    : DEFAULT_CATEGORIES;
 
   const freeServices = services.filter(s => Number(s.price_usdc) === 0).slice(0, 4);
   const paidServices = services.filter(s => Number(s.price_usdc) > 0)
     .sort((a, b) => Number(b.price_usdc) - Number(a.price_usdc)).slice(0, 4);
   const nativeCount = services.filter(s => s.url?.startsWith('https://x402-api.onrender.com')).length;
+
+  // Helper to interpolate dynamic values into translation strings
+  const interp = (str, vars) => {
+    let result = str;
+    Object.entries(vars).forEach(([key, val]) => {
+      result = result.replace(`{${key}}`, val);
+    });
+    return result;
+  };
 
   return (
     <div>
@@ -65,7 +86,7 @@ export default function Home() {
             <span className="gradient-text">{t.home.heroTitleHighlight}</span>
           </h1>
           <p className="text-gray-400 text-base sm:text-lg max-w-xl mx-auto mb-6 animate-fade-in-up delay-100">
-            {t.home.heroSubtitle}
+            {interp(t.home.heroSubtitle, { count: services.length || '...' })}
           </p>
 
           {/* CLI One-liner */}
@@ -281,7 +302,7 @@ export default function Home() {
           </Link>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-3">
-          {CATEGORIES.map((cat, i) => (
+          {categories.map((cat, i) => (
             <Link
               key={cat}
               to={`/services?cat=${cat}`}
@@ -374,7 +395,7 @@ export default function Home() {
               <div className="text-xs text-gray-500 mt-1">Blockchain</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-white">{CATEGORIES.length}</div>
+              <div className="text-3xl font-bold text-white">{categories.length}</div>
               <div className="text-xs text-gray-500 mt-1">{t.home.categoriesCount}</div>
             </div>
             <div className="text-center">

@@ -385,7 +385,7 @@ curl -H "X-Payment-TxHash: 0xabc123..." \\
           {/* ========== NATIVE WRAPPERS ========== */}
           <section id="native-wrappers">
             <h2 className="text-2xl font-bold text-white mb-2">{d.nativeTitle || 'Native Wrappers'}</h2>
-            <p className="text-gray-400 text-sm mb-8">{d.nativeSubtitle || ''}</p>
+            <p className="text-gray-400 text-sm mb-8">{(d.nativeSubtitle || '').replace('{count}', NATIVE_ENDPOINTS.length)}</p>
 
             <div className="space-y-8">
               {NATIVE_ENDPOINTS.map(ep => (

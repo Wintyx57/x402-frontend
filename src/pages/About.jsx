@@ -1,10 +1,23 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '../i18n/LanguageContext';
 import { useReveal } from '../hooks/useReveal';
-import { CHAIN_CONFIG } from '../config';
+import { API_URL, CHAIN_CONFIG } from '../config';
 
 export default function About() {
   const { t } = useTranslation();
+  const [serviceCount, setServiceCount] = useState('...');
+  const [catCount, setCatCount] = useState('...');
+
+  useEffect(() => {
+    fetch(`${API_URL}/api/services`).then(r => r.json()).then(data => {
+      const list = Array.isArray(data) ? data : [];
+      setServiceCount(list.length);
+      const cats = new Set();
+      list.forEach(s => (s.tags || []).forEach(tag => { if (tag !== 'x402-native' && tag !== 'live') cats.add(tag); }));
+      setCatCount(cats.size);
+    }).catch(() => {});
+  }, []);
   const whatIsRef = useReveal();
   const howItWorksRef = useReveal();
   const protocolRef = useReveal();
@@ -40,7 +53,7 @@ export default function About() {
         <h2 className="text-2xl font-bold text-white mb-4">{t.about.howItWorksTitle}</h2>
         <div className="grid sm:grid-cols-2 gap-4">
           {[
-            { num: '1', title: t.about.step1Title, desc: t.about.step1Desc, icon: 'search' },
+            { num: '1', title: t.about.step1Title, desc: t.about.step1Desc.replace('{count}', serviceCount).replace('{catCount}', catCount), icon: 'search' },
             { num: '2', title: t.about.step2Title, desc: t.about.step2Desc, icon: 'payment' },
             { num: '3', title: t.about.step3Title, desc: t.about.step3Desc, icon: 'check' },
             { num: '4', title: t.about.step4Title, desc: t.about.step4Desc, icon: 'earn' },
