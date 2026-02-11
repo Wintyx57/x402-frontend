@@ -6,8 +6,8 @@ import { useReveal } from '../hooks/useReveal';
 import ServiceCard from '../components/ServiceCard';
 import CategoryIcon from '../components/CategoryIcon';
 
-// Fallback categories — used until services are loaded from API
-const DEFAULT_CATEGORIES = [
+// Standard categories with icons on the frontend
+const VALID_CATEGORIES = [
   'ai', 'finance', 'data', 'developer', 'media', 'security',
   'location', 'communication', 'seo', 'scraping', 'fun',
 ];
@@ -42,22 +42,21 @@ export default function Home() {
     }
   };
 
-  // Build dynamic category list from actual service tags
+  // Build category counts from service tags (only standard categories with icons)
   const categoryCounts = {};
   services.forEach(s => {
     (s.tags || []).forEach(tag => {
-      if (tag !== 'x402-native' && tag !== 'live') {
+      if (VALID_CATEGORIES.includes(tag)) {
         categoryCounts[tag] = (categoryCounts[tag] || 0) + 1;
       }
     });
   });
 
-  // Use dynamic categories from API data, fallback to defaults while loading
+  // Show only categories that have at least 1 service, sorted by count
   const categories = services.length > 0
-    ? [...new Set(services.flatMap(s => (s.tags || []).filter(t => t !== 'x402-native' && t !== 'live')))]
+    ? VALID_CATEGORIES.filter(cat => categoryCounts[cat] > 0)
         .sort((a, b) => (categoryCounts[b] || 0) - (categoryCounts[a] || 0))
-        .slice(0, 16)
-    : DEFAULT_CATEGORIES;
+    : VALID_CATEGORIES;
 
   const freeServices = services.filter(s => Number(s.price_usdc) === 0).slice(0, 4);
   const paidServices = services.filter(s => Number(s.price_usdc) > 0)
