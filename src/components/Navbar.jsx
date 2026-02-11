@@ -48,6 +48,7 @@ export default function Navbar() {
   ];
 
   const devLinks = [
+    { to: '/docs', label: t.nav.docs || 'Docs' },
     { to: '/mcp', label: 'MCP' },
     { to: '/integrate', label: t.nav.integrate },
     { to: '/developers', label: t.nav.developers },

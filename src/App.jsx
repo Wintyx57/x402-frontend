@@ -14,6 +14,7 @@ import FAQ from './pages/FAQ';
 import Demos from './pages/Demos';
 import Analytics from './pages/Analytics';
 import Config from './pages/Config';
+import Docs from './pages/Docs';
 
 export default function App() {
   return (
@@ -33,6 +34,7 @@ export default function App() {
         <Route path="/demos" element={<Demos />} />
         <Route path="/analytics" element={<Analytics />} />
         <Route path="/config" element={<Config />} />
+        <Route path="/docs" element={<Docs />} />
       </Routes>
       <ScrollToTop />
     </div>
