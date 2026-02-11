@@ -53,6 +53,7 @@ export default function Navbar() {
     { to: '/developers', label: t.nav.developers },
     { to: '/demos', label: t.nav.demos || 'Demos' },
     { to: '/faq', label: 'FAQ' },
+    { to: '/config', label: t.nav.config || 'Config' },
   ];
 
   return (

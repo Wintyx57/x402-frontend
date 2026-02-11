@@ -13,6 +13,7 @@ import Pricing from './pages/Pricing';
 import FAQ from './pages/FAQ';
 import Demos from './pages/Demos';
 import Analytics from './pages/Analytics';
+import Config from './pages/Config';
 
 export default function App() {
   return (
@@ -31,6 +32,7 @@ export default function App() {
         <Route path="/faq" element={<FAQ />} />
         <Route path="/demos" element={<Demos />} />
         <Route path="/analytics" element={<Analytics />} />
+        <Route path="/config" element={<Config />} />
       </Routes>
       <ScrollToTop />
     </div>
