@@ -44,12 +44,15 @@ export default function Navbar() {
   const marketplaceLinks = [
     { to: '/services', label: t.nav.services },
     { to: '/register', label: t.nav.register },
+    { to: '/analytics', label: t.nav.analytics || 'Analytics' },
   ];
 
   const devLinks = [
     { to: '/mcp', label: 'MCP' },
     { to: '/integrate', label: t.nav.integrate },
     { to: '/developers', label: t.nav.developers },
+    { to: '/demos', label: t.nav.demos || 'Demos' },
+    { to: '/faq', label: 'FAQ' },
   ];
 
   return (

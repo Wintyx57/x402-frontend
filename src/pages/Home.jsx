@@ -14,6 +14,7 @@ const CATEGORIES = [
 export default function Home() {
   const [stats, setStats] = useState(null);
   const [services, setServices] = useState([]);
+  const [activityMap, setActivityMap] = useState({});
   const [heroSearch, setHeroSearch] = useState('');
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -28,6 +29,7 @@ export default function Home() {
     fetch(`${API_URL}/api/services`).then(r => r.json()).then(data => {
       setServices(Array.isArray(data) ? data : []);
     }).catch(() => {});
+    fetch(`${API_URL}/api/services/activity`).then(r => r.json()).then(data => setActivityMap(data || {})).catch(() => {});
   }, []);
 
   const handleHeroSearch = (e) => {
@@ -226,7 +228,7 @@ export default function Home() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {freeServices.map((s, i) => (
               <div key={s.id} className="animate-fade-in-up" style={{ animationDelay: `${i * 75}ms` }}>
-                <ServiceCard service={s} />
+                <ServiceCard service={s} lastActivity={activityMap[s.url]} />
               </div>
             ))}
           </div>
@@ -245,7 +247,7 @@ export default function Home() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {paidServices.map((s, i) => (
               <div key={s.id} className="animate-fade-in-up" style={{ animationDelay: `${i * 75}ms` }}>
-                <ServiceCard service={s} />
+                <ServiceCard service={s} lastActivity={activityMap[s.url]} />
               </div>
             ))}
           </div>

@@ -21,7 +21,21 @@ function isValidServiceUrl(url) {
   }
 }
 
-export default function ServiceCard({ service }) {
+function timeAgo(dateStr, t) {
+  if (!dateStr) return null;
+  const now = Date.now();
+  const then = new Date(dateStr).getTime();
+  const diffMs = now - then;
+  const diffMin = Math.floor(diffMs / 60000);
+  const diffH = Math.floor(diffMs / 3600000);
+  const diffD = Math.floor(diffMs / 86400000);
+  if (diffMin < 5) return t.serviceCard.activeNow || 'Active now';
+  if (diffMin < 60) return `${diffMin}m ago`;
+  if (diffH < 24) return `${diffH}h ago`;
+  return `${diffD}d ago`;
+}
+
+export default function ServiceCard({ service, lastActivity, healthStatus }) {
   const { t } = useTranslation();
   const isFree = Number(service.price_usdc) === 0;
   const initial = service.name?.charAt(0)?.toUpperCase() || '?';
@@ -57,8 +71,20 @@ export default function ServiceCard({ service }) {
           )}
         </div>
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1.5 flex-wrap">
             <h3 className="text-white font-semibold text-sm leading-tight truncate" title={service.name}>{service.name}</h3>
+            {healthStatus === 'online' && (
+              <span className="flex items-center gap-1 text-[10px] text-[#34D399] shrink-0">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#34D399] animate-pulse" />
+                {t.serviceCard.online || 'Online'}
+              </span>
+            )}
+            {healthStatus === 'offline' && (
+              <span className="flex items-center gap-1 text-[10px] text-red-400 shrink-0">
+                <span className="w-1.5 h-1.5 rounded-full bg-red-400" />
+                {t.serviceCard.offline || 'Offline'}
+              </span>
+            )}
             {isNative && (
               <span className="text-[11px] bg-[#FF9900]/10 text-[#FF9900] px-1.5 py-0.5 rounded border border-[#FF9900]/20 shrink-0">
                 {t.serviceCard.native}
@@ -82,6 +108,14 @@ export default function ServiceCard({ service }) {
       <p className="text-gray-500 text-xs mb-3 leading-relaxed line-clamp-2" title={service.description}>
         {service.description}
       </p>
+
+      {/* Activity badge */}
+      {lastActivity && (
+        <div className="flex items-center gap-1.5 mb-2">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#34D399] animate-pulse" />
+          <span className="text-xs text-gray-500">{timeAgo(lastActivity, t)}</span>
+        </div>
+      )}
 
       {/* Tags */}
       <div className="flex flex-wrap gap-1 mb-3">

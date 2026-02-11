@@ -10,6 +10,9 @@ import MCP from './pages/MCP';
 import Blog from './pages/Blog';
 import About from './pages/About';
 import Pricing from './pages/Pricing';
+import FAQ from './pages/FAQ';
+import Demos from './pages/Demos';
+import Analytics from './pages/Analytics';
 
 export default function App() {
   return (
@@ -25,6 +28,9 @@ export default function App() {
         <Route path="/blog" element={<Blog />} />
         <Route path="/about" element={<About />} />
         <Route path="/pricing" element={<Pricing />} />
+        <Route path="/faq" element={<FAQ />} />
+        <Route path="/demos" element={<Demos />} />
+        <Route path="/analytics" element={<Analytics />} />
       </Routes>
       <ScrollToTop />
     </div>

@@ -30,6 +30,8 @@ const CATEGORY_LABELS = {
 export default function Services() {
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [activityMap, setActivityMap] = useState({});
+  const [healthMap, setHealthMap] = useState({});
   const [searchParams, setSearchParams] = useSearchParams();
   const { t } = useTranslation();
 
@@ -37,6 +39,8 @@ export default function Services() {
   const priceFilter = searchParams.get('price') || 'all';
   const category = searchParams.get('cat') || 'all';
   const sort = searchParams.get('sort') || 'name';
+  const maxPrice = parseFloat(searchParams.get('maxPrice') || '1');
+  const sourceFilter = searchParams.get('source') || 'all';
 
   const setParam = (key, value) => {
     const params = new URLSearchParams(searchParams);
@@ -56,6 +60,18 @@ export default function Services() {
         setLoading(false);
       })
       .catch(() => setLoading(false));
+
+    // Fetch activity timestamps
+    fetch(`${API_URL}/api/services/activity`)
+      .then(r => r.json())
+      .then(data => setActivityMap(data || {}))
+      .catch(() => {});
+
+    // Fetch health status
+    fetch(`${API_URL}/api/health-check`)
+      .then(r => r.json())
+      .then(data => setHealthMap(data || {}))
+      .catch(() => {});
   }, []);
 
   // Count per category
@@ -80,6 +96,11 @@ export default function Services() {
       const cat = CATEGORIES.find(c => c.key === category);
       if (cat?.tag && !s.tags?.includes(cat.tag)) return false;
     }
+    // Advanced: max price slider
+    if (maxPrice < 1 && Number(s.price_usdc) > maxPrice) return false;
+    // Advanced: source filter
+    if (sourceFilter === 'native' && !s.url?.startsWith('https://x402-api.onrender.com')) return false;
+    if (sourceFilter === 'community' && s.url?.startsWith('https://x402-api.onrender.com')) return false;
     return true;
   });
 
@@ -144,6 +165,43 @@ export default function Services() {
         ))}
       </div>
 
+      {/* Advanced filters */}
+      <div className="flex flex-wrap items-center gap-4 mb-3">
+        {/* Max price slider */}
+        <div className="flex items-center gap-2">
+          <label className="text-xs text-gray-500 whitespace-nowrap">{t.services.maxPrice || 'Max price'}:</label>
+          <input
+            type="range"
+            min="0"
+            max="1"
+            step="0.005"
+            value={maxPrice}
+            onChange={e => setParam('maxPrice', e.target.value === '1' ? 'all' : e.target.value)}
+            className="w-24 accent-[#FF9900] cursor-pointer"
+          />
+          <span className="text-xs text-[#FF9900] font-mono min-w-[3rem]">
+            {maxPrice >= 1 ? (t.services.all || 'All') : `$${maxPrice}`}
+          </span>
+        </div>
+
+        {/* Source filter */}
+        <div className="flex items-center gap-1.5">
+          {['all', 'native', 'community'].map(f => (
+            <button
+              key={f}
+              onClick={() => setParam('source', f)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 cursor-pointer ${
+                sourceFilter === f
+                  ? 'bg-[#FF9900]/15 text-[#FF9900] border border-[#FF9900]/25'
+                  : 'bg-white/3 text-gray-500 hover:text-gray-300 hover:bg-white/5 border border-transparent'
+              }`}
+            >
+              {f === 'all' ? (t.services.sourceAll || 'All') : f === 'native' ? (t.services.sourceNative || 'x402 Native') : (t.services.sourceCommunity || 'Community')}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Category filter */}
       <div className="flex flex-wrap items-center gap-1.5 mb-8">
         {CATEGORIES.map(cat => {
@@ -201,7 +259,7 @@ export default function Services() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
           {sorted.map((s, i) => (
             <div key={s.id} className="animate-fade-in-up" style={{ animationDelay: `${Math.min(i, 11) * 50}ms` }}>
-              <ServiceCard service={s} />
+              <ServiceCard service={s} lastActivity={activityMap[s.url]} healthStatus={healthMap[s.url]} />
             </div>
           ))}
         </div>
