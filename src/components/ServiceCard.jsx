@@ -133,7 +133,7 @@ export default function ServiceCard({ service }) {
               target="_blank"
               rel="noopener noreferrer"
               className="text-xs font-medium text-[#FF9900] hover:text-[#FFB340] no-underline
-                         transition-opacity duration-200"
+                         sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-200"
             >
               {t.serviceCard.viewApi} &rarr;
             </a>
