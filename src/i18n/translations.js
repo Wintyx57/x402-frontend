@@ -107,6 +107,8 @@ export const translations = {
       socialProof1: "Built on Coinbase's x402 Protocol",
       socialProof2: "100% Open Source",
       socialProof3: "Multi-Chain: Base + SKALE",
+      erc8004Badge: "ERC-8004 Verified Agent",
+      erc8004ViewOnChain: "View on BaseScan",
     },
     services: {
       title: "Services",
@@ -492,6 +494,12 @@ def my_function(query: str) -> dict:
       security5Desc: "Configurable MAX_BUDGET_USDC prevents runaway spending.",
       security6Title: "Economic Spam Prevention",
       security6Desc: "Every API call costs real USDC. Abuse scales linearly in cost.",
+      onChainIdentityTitle: "On-Chain Identity",
+      onChainIdentityDesc: "x402 Bazaar has a verifiable on-chain identity via ERC-8004 on Base mainnet.",
+      erc8004What: "ERC-8004 is a standard for Trustless Agent Identity on Ethereum. It allows autonomous agents to register a verifiable on-chain identity, including metadata such as name, capabilities, and a registration URL. This enables other agents and users to verify who they are interacting with, without relying on centralized identity providers.",
+      erc8004Bazaar: "x402 Bazaar is registered as a verified agent in the ERC-8004 Identity Registry on Base. This means any user or agent can independently verify our identity on-chain, ensuring trustless interactions.",
+      erc8004Registry: "Identity Registry on BaseScan",
+      erc8004Registration: "Agent Registration JSON",
     },
     pricing: {
       title: "Pricing",
@@ -645,6 +653,9 @@ def my_function(query: str) -> dict:
       securityBest1: "Use testnet (Base Sepolia) for development — no real funds needed.",
       securityBest2: "Set a conservative budget (0.10 USDC for testing, 1.00 for production).",
       securityBest3: "Always check your budget with get_budget_status before heavy operations.",
+      erc8004Title: "ERC-8004 Agent Identity",
+      erc8004Desc: "x402 Bazaar is registered as a verified agent via ERC-8004 on Base mainnet. The free endpoint GET /api/agent/:agentId lets anyone verify an agent's on-chain identity without payment.",
+      erc8004Endpoint: "Verify any agent identity for free:",
     },
   },
   fr: {
@@ -755,6 +766,8 @@ def my_function(query: str) -> dict:
       socialProof1: "Construit sur le protocole x402 de Coinbase",
       socialProof2: "100% Open Source",
       socialProof3: "Multi-Chain : Base + SKALE",
+      erc8004Badge: "Agent Verifie ERC-8004",
+      erc8004ViewOnChain: "Voir sur BaseScan",
     },
     services: {
       title: "Services",
@@ -1140,6 +1153,12 @@ def my_function(query: str) -> dict:
       security5Desc: "MAX_BUDGET_USDC configurable empeche les depenses incontrolees.",
       security6Title: "Prevention Economique du Spam",
       security6Desc: "Chaque appel API coute du vrai USDC. L'abus coute proportionnellement.",
+      onChainIdentityTitle: "Identite On-Chain",
+      onChainIdentityDesc: "x402 Bazaar possede une identite on-chain verifiable via ERC-8004 sur Base mainnet.",
+      erc8004What: "ERC-8004 est un standard pour l'identite d'agents autonomes sur Ethereum. Il permet aux agents de s'enregistrer avec une identite on-chain verifiable, incluant des metadonnees comme le nom, les capacites et une URL d'enregistrement. Cela permet aux autres agents et utilisateurs de verifier avec qui ils interagissent, sans dependre de fournisseurs d'identite centralises.",
+      erc8004Bazaar: "x402 Bazaar est enregistre en tant qu'agent verifie dans le registre d'identite ERC-8004 sur Base. Cela signifie que tout utilisateur ou agent peut verifier notre identite on-chain de maniere independante, garantissant des interactions trustless.",
+      erc8004Registry: "Registre d'identite sur BaseScan",
+      erc8004Registration: "JSON d'enregistrement de l'agent",
     },
     pricing: {
       title: "Tarifs",
@@ -1293,6 +1312,9 @@ def my_function(query: str) -> dict:
       securityBest1: "Utilisez le testnet (Base Sepolia) pour le developpement — pas de vrais fonds necessaires.",
       securityBest2: "Definissez un budget conservateur (0.10 USDC pour les tests, 1.00 pour la production).",
       securityBest3: "Verifiez toujours votre budget avec get_budget_status avant les operations lourdes.",
+      erc8004Title: "Identite Agent ERC-8004",
+      erc8004Desc: "x402 Bazaar est enregistre comme agent verifie via ERC-8004 sur Base mainnet. L'endpoint gratuit GET /api/agent/:agentId permet a quiconque de verifier l'identite on-chain d'un agent sans paiement.",
+      erc8004Endpoint: "Verifier l'identite d'un agent gratuitement :",
     },
   },
 };

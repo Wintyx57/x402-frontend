@@ -11,6 +11,7 @@ export default function About() {
   const blockchainRef = useReveal();
   const openSourceRef = useReveal();
   const securityRef = useReveal();
+  const identityRef = useReveal();
   const teamRef = useReveal();
   const contactRef = useReveal();
 
@@ -242,6 +243,47 @@ export default function About() {
               </div>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* On-Chain Identity (ERC-8004) */}
+      <section ref={identityRef} className="reveal mb-10">
+        <h2 className="text-2xl font-bold text-white mb-2">{t.about.onChainIdentityTitle}</h2>
+        <p className="text-gray-400 text-sm mb-5">{t.about.onChainIdentityDesc}</p>
+        <div className="glass rounded-xl p-6 space-y-4 text-gray-300 text-sm leading-relaxed">
+          <p>{t.about.erc8004What}</p>
+          <p>{t.about.erc8004Bazaar}</p>
+
+          <div className="grid sm:grid-cols-2 gap-3">
+            <a
+              href="https://basescan.org/token/0x8004A169FB4a3325136EB29fA0ceB6D2e539a432"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="glass-card rounded-lg p-4 hover:border-violet-500/30 transition-all no-underline group"
+            >
+              <div className="flex items-center gap-2 mb-2">
+                <svg className="w-5 h-5 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+                <h3 className="text-white font-semibold text-sm group-hover:text-violet-300 transition-colors">{t.about.erc8004Registry}</h3>
+              </div>
+              <p className="text-gray-500 text-xs font-mono">0x8004...a432</p>
+            </a>
+            <a
+              href="https://x402-api.onrender.com/.well-known/agent-registration.json"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="glass-card rounded-lg p-4 hover:border-blue-500/30 transition-all no-underline group"
+            >
+              <div className="flex items-center gap-2 mb-2">
+                <svg className="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <h3 className="text-white font-semibold text-sm group-hover:text-blue-300 transition-colors">{t.about.erc8004Registration}</h3>
+              </div>
+              <p className="text-gray-500 text-xs font-mono">/.well-known/agent-registration.json</p>
+            </a>
+          </div>
         </div>
       </section>
 
