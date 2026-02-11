@@ -18,6 +18,8 @@ export default function Home() {
   const [heroSearch, setHeroSearch] = useState('');
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const valueProRef = useReveal();
+  const socialProofRef = useReveal();
   const catRef = useReveal();
   const statsRef = useReveal();
   const howRef = useReveal();
@@ -166,6 +168,82 @@ export default function Home() {
               <div className="text-xs text-gray-500 uppercase tracking-wider">{t.home.onSkale}</div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* ===== VALUE PROPOSITION ===== */}
+      <section ref={valueProRef} className="reveal max-w-5xl mx-auto px-4 mb-20">
+        <h2 className="text-2xl font-bold text-white text-center mb-8">{t.home.valueProTitle}</h2>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {[
+            {
+              title: t.home.valuePro1Title,
+              desc: t.home.valuePro1Desc,
+              icon: (
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                </svg>
+              ),
+            },
+            {
+              title: t.home.valuePro2Title,
+              desc: t.home.valuePro2Desc,
+              icon: (
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              ),
+            },
+            {
+              title: t.home.valuePro3Title,
+              desc: t.home.valuePro3Desc,
+              icon: (
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+              ),
+            },
+            {
+              title: t.home.valuePro4Title,
+              desc: t.home.valuePro4Desc,
+              icon: (
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              ),
+            },
+          ].map((card, i) => (
+            <div
+              key={card.title}
+              className="glass-card rounded-xl p-5 text-center animate-fade-in-up"
+              style={{ animationDelay: `${i * 80}ms` }}
+            >
+              <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3
+                              text-[#FF9900] bg-[#FF9900]/5 border border-[#FF9900]/20">
+                {card.icon}
+              </div>
+              <h3 className="text-white font-semibold text-sm mb-2">{card.title}</h3>
+              <p className="text-gray-500 text-xs leading-relaxed">{card.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ===== SOCIAL PROOF ===== */}
+      <section ref={socialProofRef} className="reveal max-w-3xl mx-auto px-4 mb-20">
+        <h2 className="text-lg font-bold text-white text-center mb-5">{t.home.socialProofTitle}</h2>
+        <div className="flex flex-wrap items-center justify-center gap-4">
+          {[t.home.socialProof1, t.home.socialProof2, t.home.socialProof3].map((text, i) => (
+            <div
+              key={i}
+              className="glass-card rounded-full px-5 py-2 text-xs text-gray-400 font-medium
+                         animate-fade-in-up"
+              style={{ animationDelay: `${i * 60}ms` }}
+            >
+              <span className="text-[#FF9900] mr-1.5">&#10003;</span>
+              {text}
+            </div>
+          ))}
         </div>
       </section>
 

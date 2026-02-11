@@ -37,6 +37,7 @@ export default function Integrate() {
   const coreRef = useReveal();
   const agentRef = useReveal();
   const pythonRef = useReveal();
+  const langchainRef = useReveal();
   const useCasesRef = useReveal();
   const startRef = useReveal();
 
@@ -284,6 +285,53 @@ services = pay_and_request(
     wallet_key="0xYOUR_PRIVATE_KEY"
 )
 print(services)`} />
+      </section>
+
+      {/* LangChain Integration */}
+      <section ref={langchainRef} className="reveal mb-14">
+        <h2 className="text-2xl font-bold text-white mb-2">{t.integrate.langchainTitle}</h2>
+        <p className="text-gray-400 text-sm mb-4">{t.integrate.langchainDesc}</p>
+        <CodeBlock lang="Python" code={`from langchain.tools import BaseTool
+from x402_langchain import X402BazaarTool
+
+# Create x402 tools
+search_tool = X402BazaarTool(
+    name="x402_search",
+    description="Search the x402 Bazaar marketplace",
+    endpoint="https://x402-api.onrender.com/search",
+    private_key="0xYOUR_KEY",
+    max_budget_usdc=1.0,
+)
+
+# Use in a LangChain agent
+from langchain.agents import initialize_agent, AgentType
+from langchain_openai import ChatOpenAI
+
+llm = ChatOpenAI(model="gpt-4o-mini")
+agent = initialize_agent(
+    tools=[search_tool],
+    llm=llm,
+    agent=AgentType.OPENAI_FUNCTIONS,
+)
+
+result = agent.run("Find weather APIs on x402 Bazaar")`} />
+        <div className="flex flex-wrap items-center gap-3 mt-4">
+          <span className="inline-flex items-center gap-2 bg-[#0d1117] border border-[#FF9900]/20 rounded-lg px-4 py-2 font-mono text-xs text-[#FF9900]">
+            <span className="text-gray-500">$</span> pip install x402-langchain
+          </span>
+          <a
+            href="https://github.com/Wintyx57/x402-langchain"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs text-gray-400 hover:text-white transition-colors inline-flex items-center gap-1 no-underline"
+          >
+            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+            </svg>
+            GitHub
+          </a>
+        </div>
+        <p className="text-gray-500 text-xs mt-3">{t.integrate.langchainNote}</p>
       </section>
 
       {/* Use Cases */}
