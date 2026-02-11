@@ -36,22 +36,28 @@ export default function Analytics() {
 
   useReveal();
 
+  useEffect(() => { document.title = 'Analytics | x402 Bazaar'; }, []);
+
   useEffect(() => {
+    const controller = new AbortController();
     async function fetchAnalytics() {
       try {
-        const response = await fetch(`${API_URL}/api/analytics`);
+        const response = await fetch(`${API_URL}/api/analytics`, { signal: controller.signal });
         if (!response.ok) throw new Error('Failed to fetch analytics');
         const result = await response.json();
         setData(result);
       } catch (err) {
-        console.error('Analytics fetch error:', err);
-        setError(true);
+        if (!controller.signal.aborted) {
+          console.error('Analytics fetch error:', err);
+          setError(true);
+        }
       } finally {
-        setLoading(false);
+        if (!controller.signal.aborted) setLoading(false);
       }
     }
 
     fetchAnalytics();
+    return () => controller.abort();
   }, []);
 
   // Chart options communes

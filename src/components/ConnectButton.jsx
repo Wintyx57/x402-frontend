@@ -37,9 +37,13 @@ export default function ConnectButton() {
 
   const copyAddress = async () => {
     if (!address) return;
-    await navigator.clipboard.writeText(address);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
+    try {
+      await navigator.clipboard.writeText(address);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {
+      // Clipboard API may fail in insecure contexts
+    }
   };
 
   const isOnAcceptedChain = chain && ACCEPTED_IDS.has(chain.id);

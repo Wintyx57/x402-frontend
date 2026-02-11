@@ -1,9 +1,11 @@
+import { useEffect } from 'react';
 import { useTranslation } from '../i18n/LanguageContext';
 import { useReveal } from '../hooks/useReveal';
 import { Link } from 'react-router-dom';
 
 export default function Demos() {
   const { t } = useTranslation();
+  useEffect(() => { document.title = 'Demos | x402 Bazaar'; }, []);
   const revealRef = useReveal();
   const scenariosRef = useReveal();
 

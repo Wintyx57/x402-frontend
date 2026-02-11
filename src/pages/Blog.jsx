@@ -1,11 +1,14 @@
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '../i18n/LanguageContext';
 
 export default function Blog() {
   const { t } = useTranslation();
 
+  useEffect(() => { document.title = 'Blog | x402 Bazaar'; }, []);
+
   return (
-    <div className="min-h-screen bg-[#0f1111]">
+    <div className="min-h-screen">
       <div className="max-w-3xl mx-auto px-4 py-10">
         {/* Back to Home */}
         <Link

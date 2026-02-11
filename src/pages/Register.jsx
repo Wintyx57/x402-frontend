@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { parseUnits } from 'viem';
 import { API_URL, USDC_ABI, CHAIN_CONFIG } from '../config';
@@ -10,6 +10,8 @@ export default function Register() {
   const { address, isConnected, chain } = useAccount();
   const { writeContractAsync } = useWriteContract();
   const { t } = useTranslation();
+
+  useEffect(() => { document.title = 'Register | x402 Bazaar'; }, []);
 
   const PAYMENT_STEPS = [
     '', // 0 = idle
@@ -41,14 +43,15 @@ export default function Register() {
     }
     const price = parseFloat(form.price);
     if (isNaN(price) || price < 0.01 || price > 1000) return 'Price must be between 0.01 and 1000 USDC';
-    const tags = form.tags.split(',').map(t => t.trim()).filter(Boolean);
+    const tags = form.tags.split(',').map(tag => tag.trim()).filter(Boolean);
     if (tags.length > 10) return 'Maximum 10 tags allowed';
-    if (tags.some(t => t.length > 50)) return 'Each tag max 50 chars';
+    if (tags.some(tag => tag.length > 50)) return 'Each tag max 50 chars';
     return null;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isProcessing) return;
     setError(null);
 
     if (!isConnected) {
@@ -73,7 +76,7 @@ export default function Register() {
           description: form.description,
           url: form.url,
           price: parseFloat(form.price),
-          tags: form.tags.split(',').map(t => t.trim()).filter(Boolean),
+          tags: form.tags.split(',').map(tag => tag.trim()).filter(Boolean),
           ownerAddress: address,
         }),
       });
@@ -138,7 +141,7 @@ export default function Register() {
           description: form.description,
           url: form.url,
           price: parseFloat(form.price),
-          tags: form.tags.split(',').map(t => t.trim()).filter(Boolean),
+          tags: form.tags.split(',').map(tag => tag.trim()).filter(Boolean),
           ownerAddress: address,
         }),
       });

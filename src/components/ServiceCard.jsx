@@ -47,9 +47,13 @@ export default function ServiceCard({ service, lastActivity, healthStatus }) {
   const handleCopyPrompt = async (e) => {
     e.stopPropagation();
     const prompt = `Use x402 Bazaar to call "${service.name}" at ${service.url}${isFree ? ' (free)' : ` (costs ${service.price_usdc} USDC)`}`;
-    await navigator.clipboard.writeText(prompt);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    try {
+      await navigator.clipboard.writeText(prompt);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Clipboard API may fail in insecure contexts
+    }
   };
 
   return (
@@ -92,7 +96,7 @@ export default function ServiceCard({ service, lastActivity, healthStatus }) {
             )}
           </div>
           <span className="inline-block text-xs mt-0.5 text-gray-500 capitalize">
-            {service.tags?.find(t => !['x402-native', 'live'].includes(t)) || service.tags?.[0]}
+            {service.tags?.find(tag => !['x402-native', 'live'].includes(tag)) || service.tags?.[0]}
           </span>
         </div>
         <span className={`shrink-0 font-mono text-xs font-bold px-2.5 py-1 rounded-lg ${
@@ -135,7 +139,7 @@ export default function ServiceCard({ service, lastActivity, healthStatus }) {
           <span className="font-mono">
             {service.owner_address?.slice(0, 6)}...{service.owner_address?.slice(-4)}
           </span>
-          {service.tx_hash && (
+          {service.tx_hash && /^0x[a-fA-F0-9]{64}$/.test(service.tx_hash) && (
             <a
               href={`https://basescan.org/tx/${service.tx_hash}`}
               target="_blank"

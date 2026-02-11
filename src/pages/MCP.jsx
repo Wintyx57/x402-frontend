@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from '../i18n/LanguageContext';
 import { useReveal } from '../hooks/useReveal';
+import SharedCopyButton from '../components/CopyButton';
 
 const CLAUDE_CONFIG = `{
   "mcpServers": {
@@ -78,30 +79,10 @@ const ides = [
   { id: 'claude-code', name: 'Claude Code CLI', icon: <TerminalIcon /> },
 ];
 
-function CopyButton({ text }) {
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = async () => {
-    await navigator.clipboard.writeText(text);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  return (
-    <button
-      onClick={handleCopy}
-      className="absolute top-3 right-3 px-2.5 py-1 text-xs rounded-md bg-white/10 hover:bg-white/20
-                 text-gray-400 hover:text-white transition-all duration-200 cursor-pointer border-none"
-    >
-      {copied ? '✓ Copied' : 'Copy'}
-    </button>
-  );
-}
-
-function CodeBlock({ code, language }) {
+function MCPCodeBlock({ code }) {
   return (
     <div className="relative group">
-      <CopyButton text={code} />
+      <SharedCopyButton text={code} copiedLabel="Copied" />
       <pre className="bg-[#0d1117] border border-white/10 rounded-xl p-5 pt-12 overflow-x-auto text-sm leading-relaxed">
         <code className="text-gray-300 font-mono">{code}</code>
       </pre>
@@ -115,6 +96,8 @@ export default function MCP() {
   const [selectedIde, setSelectedIde] = useState('claude-desktop');
   const [showManual, setShowManual] = useState(false);
   const reveal = useReveal();
+
+  useEffect(() => { document.title = 'MCP Server | x402 Bazaar'; }, []);
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-10">
@@ -297,7 +280,7 @@ export default function MCP() {
             <span className="ml-auto text-xs font-medium text-[#34D399] bg-[#34D399]/10 px-2 py-0.5 rounded-full">{m.quickInstallBadge}</span>
           </div>
           <p className="text-gray-400 text-sm mb-4">{m.quickInstallDesc}</p>
-          <CodeBlock code="npx x402-bazaar init" />
+          <MCPCodeBlock code="npx x402-bazaar init" />
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-4">
             <div className="flex items-center gap-2 text-sm text-gray-400">
               <svg className="w-4 h-4 text-[#34D399] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -381,7 +364,7 @@ export default function MCP() {
                     <h3 className="text-white font-semibold mb-2">Claude Desktop</h3>
                     <p className="text-gray-400 text-sm mb-4">{m.claudeDesktopDesc}</p>
                     <p className="text-gray-500 text-xs mb-2 font-mono">{m.claudeDesktopPath}</p>
-                    <CodeBlock code={CLAUDE_CONFIG} language="json" />
+                    <MCPCodeBlock code={CLAUDE_CONFIG} language="json" />
                   </div>
                 )}
                 {selectedIde === 'cursor' && (
@@ -389,7 +372,7 @@ export default function MCP() {
                     <h3 className="text-white font-semibold mb-2">Cursor</h3>
                     <p className="text-gray-400 text-sm mb-4">{m.cursorDesc}</p>
                     <p className="text-gray-500 text-xs mb-2 font-mono">{m.cursorPath}</p>
-                    <CodeBlock code={CURSOR_CONFIG} language="json" />
+                    <MCPCodeBlock code={CURSOR_CONFIG} language="json" />
                   </div>
                 )}
                 {selectedIde === 'vscode' && (
@@ -397,14 +380,14 @@ export default function MCP() {
                     <h3 className="text-white font-semibold mb-2">VS Code</h3>
                     <p className="text-gray-400 text-sm mb-4">{m.vscodeDesc}</p>
                     <p className="text-gray-500 text-xs mb-2 font-mono">{m.vscodePath}</p>
-                    <CodeBlock code={CLAUDE_CONFIG} language="json" />
+                    <MCPCodeBlock code={CLAUDE_CONFIG} language="json" />
                   </div>
                 )}
                 {selectedIde === 'claude-code' && (
                   <div>
                     <h3 className="text-white font-semibold mb-2">Claude Code CLI</h3>
                     <p className="text-gray-400 text-sm mb-4">{m.claudeCodeDesc}</p>
-                    <CodeBlock code={CLAUDE_CODE_CMD} language="bash" />
+                    <MCPCodeBlock code={CLAUDE_CODE_CMD} language="bash" />
                     <p className="text-gray-500 text-xs mt-3">{m.claudeCodeNote}</p>
                   </div>
                 )}

@@ -4,6 +4,7 @@ import { useTranslation } from '../i18n/LanguageContext';
 import { useScrollSpy } from '../hooks/useScrollSpy';
 import { API_URL } from '../config';
 import DocsSidebar from '../components/DocsSidebar';
+import SharedCopyButton from '../components/CopyButton';
 
 const API_BASE = 'https://x402-api.onrender.com';
 
@@ -126,24 +127,10 @@ const STATIC_ENDPOINTS = {
   native: NATIVE_ENDPOINTS.map(ep => ({ method: ep.method, route: ep.route, price: ep.price, description: ep.id })),
 };
 
-function CopyButton({ text }) {
-  const [copied, setCopied] = useState(false);
-  const handleCopy = async () => {
-    await navigator.clipboard.writeText(text);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-  return (
-    <button onClick={handleCopy} className="absolute top-3 right-3 px-2.5 py-1 text-xs rounded-md bg-white/10 hover:bg-white/20 text-gray-400 hover:text-white transition-all duration-200 cursor-pointer border-none">
-      {copied ? '✓ Copied' : 'Copy'}
-    </button>
-  );
-}
-
-function CodeBlock({ code }) {
+function DocsCodeBlock({ code }) {
   return (
     <div className="relative group">
-      <CopyButton text={code} />
+      <SharedCopyButton text={code} copiedLabel="Copied" />
       <pre className="bg-[#0d1117] border border-white/10 rounded-xl p-5 pt-12 overflow-x-auto text-sm leading-relaxed">
         <code className="text-gray-300 font-mono">{code}</code>
       </pre>
@@ -175,24 +162,31 @@ export default function Docs() {
   const [endpointsRaw, setEndpointsRaw] = useState(undefined);
   const activeSection = useScrollSpy(SECTION_IDS);
 
+  useEffect(() => { document.title = 'Documentation | x402 Bazaar'; }, []);
+
   useEffect(() => {
-    fetch(API_URL + '/')
+    const controller = new AbortController();
+    fetch(API_URL + '/', { signal: controller.signal })
       .then(r => r.json())
       .then(data => setEndpointsRaw(data.endpoints || null))
-      .catch(() => setEndpointsRaw(null));
+      .catch(() => { if (!controller.signal.aborted) setEndpointsRaw(null); });
+    return () => controller.abort();
   }, []);
 
   useEffect(() => {
     if (window.location.hash) {
       const id = window.location.hash.slice(1);
-      setTimeout(() => {
-        const el = document.getElementById(id);
-        if (el) el.scrollIntoView({ behavior: 'smooth' });
-      }, 300);
+      if (SECTION_IDS.includes(id)) {
+        setTimeout(() => {
+          const el = document.getElementById(id);
+          if (el) el.scrollIntoView({ behavior: 'smooth' });
+        }, 300);
+      }
     }
   }, []);
 
   const handleNavigate = (id) => {
+    if (!SECTION_IDS.includes(id)) return;
     const el = document.getElementById(id);
     if (el) {
       el.scrollIntoView({ behavior: 'smooth' });
@@ -248,17 +242,17 @@ export default function Docs() {
               <div className="glass-card rounded-xl p-6">
                 <h3 className="text-white font-semibold mb-2">{d.quickstartStep1Title || 'Step 1 — Install the CLI'}</h3>
                 <p className="text-gray-400 text-sm mb-4">{d.quickstartStep1Desc || ''}</p>
-                <CodeBlock code="npx x402-bazaar init" />
+                <DocsCodeBlock code="npx x402-bazaar init" />
               </div>
               <div className="glass-card rounded-xl p-6">
                 <h3 className="text-white font-semibold mb-2">{d.quickstartStep2Title || 'Step 2 — Make your first call'}</h3>
                 <p className="text-gray-400 text-sm mb-4">{d.quickstartStep2Desc || ''}</p>
-                <CodeBlock code={`curl ${API_BASE}/api/joke`} />
+                <DocsCodeBlock code={`curl ${API_BASE}/api/joke`} />
               </div>
               <div className="glass-card rounded-xl p-6">
                 <h3 className="text-white font-semibold mb-2">{d.quickstartStep3Title || 'Step 3 — Handle the 402 response'}</h3>
                 <p className="text-gray-400 text-sm mb-4">{d.quickstartStep3Desc || ''}</p>
-                <CodeBlock code={`{
+                <DocsCodeBlock code={`{
   "error": "Payment Required",
   "payment_details": {
     "amount": 0.01,
@@ -273,7 +267,7 @@ export default function Docs() {
               <div className="glass-card rounded-xl p-6">
                 <h3 className="text-white font-semibold mb-2">{d.quickstartStep4Title || 'Step 4 — Pay & retry'}</h3>
                 <p className="text-gray-400 text-sm mb-4">{d.quickstartStep4Desc || ''}</p>
-                <CodeBlock code={`# Pay 0.01 USDC to the recipient address on Base
+                <DocsCodeBlock code={`# Pay 0.01 USDC to the recipient address on Base
 # Then retry with the transaction hash:
 
 curl -H "X-Payment-TxHash: 0xabc123..." \\
@@ -307,7 +301,7 @@ curl -H "X-Payment-TxHash: 0xabc123..." \\
               </div>
             </div>
             <h3 className="text-white font-semibold mb-3">{d.protocolResponseTitle || '402 Response Format'}</h3>
-            <CodeBlock code={`{
+            <DocsCodeBlock code={`{
   "error": "Payment Required",
   "payment_details": {
     "amount": 0.05,
@@ -426,10 +420,10 @@ curl -H "X-Payment-TxHash: 0xabc123..." \\
                   )}
 
                   <h4 className="text-gray-300 text-xs font-semibold uppercase tracking-wider mb-2">{d.nativeExample || 'Example Request'}</h4>
-                  <CodeBlock code={ep.curl} />
+                  <DocsCodeBlock code={ep.curl} />
 
                   <h4 className="text-gray-300 text-xs font-semibold uppercase tracking-wider mt-4 mb-2">{d.nativeResponse || 'Example Response'}</h4>
-                  <CodeBlock code={ep.response} />
+                  <DocsCodeBlock code={ep.response} />
                 </div>
               ))}
             </div>
@@ -456,7 +450,7 @@ curl -H "X-Payment-TxHash: 0xabc123..." \\
             </div>
 
             <h3 className="text-white font-semibold mb-3">{d.mcpInstall || 'Install with one command:'}</h3>
-            <CodeBlock code="npx x402-bazaar init" />
+            <DocsCodeBlock code="npx x402-bazaar init" />
 
             <div className="mt-4">
               <Link to="/mcp" className="text-[#FF9900] hover:text-[#FFB84D] text-sm font-medium no-underline inline-flex items-center gap-1">
@@ -471,7 +465,7 @@ curl -H "X-Payment-TxHash: 0xabc123..." \\
             <p className="text-gray-400 text-sm mb-6">{d.integrationDesc || ''}</p>
 
             <h3 className="text-white font-semibold mb-3">{d.integrationJs || 'JavaScript (Node.js)'}</h3>
-            <CodeBlock code={`async function payAndRequest(url, wallet, options = {}) {
+            <DocsCodeBlock code={`async function payAndRequest(url, wallet, options = {}) {
   const res = await fetch(url, options);
   const body = await res.json();
   if (res.status !== 402) return body;
@@ -491,7 +485,7 @@ curl -H "X-Payment-TxHash: 0xabc123..." \\
 }`} />
 
             <h3 className="text-white font-semibold mt-6 mb-3">{d.integrationPy || 'Python (requests + web3)'}</h3>
-            <CodeBlock code={`import requests
+            <DocsCodeBlock code={`import requests
 
 BAZAAR = "https://x402-api.onrender.com"
 
@@ -564,7 +558,7 @@ data = pay_and_request(f"{BAZAAR}/api/weather?city=Paris", KEY)`} />
               </div>
               <p className="text-gray-400 text-xs leading-relaxed mb-4">{d.erc8004Desc || ''}</p>
               <p className="text-gray-500 text-xs mb-2">{d.erc8004Endpoint || 'Verify any agent identity for free:'}</p>
-              <CodeBlock code={`curl ${API_BASE}/api/agent/0xYourAgentAddress`} />
+              <DocsCodeBlock code={`curl ${API_BASE}/api/agent/0xYourAgentAddress`} />
             </div>
           </section>
 

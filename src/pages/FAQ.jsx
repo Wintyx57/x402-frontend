@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from '../i18n/LanguageContext';
 import { useReveal } from '../hooks/useReveal';
 import { Link } from 'react-router-dom';
@@ -7,13 +7,14 @@ function FAQItem({ question, answer }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div
-      className={`glass-card rounded-lg p-5 cursor-pointer transition-all duration-200 ${
-        isOpen ? 'border-[#FF9900]/20' : 'border-transparent'
-      } hover:bg-white/[0.04]`}
-      onClick={() => setIsOpen(!isOpen)}
-    >
-      <div className="flex items-start justify-between gap-4">
+    <div className={`glass-card rounded-lg transition-all duration-200 ${
+      isOpen ? 'border-[#FF9900]/20' : 'border-transparent'
+    } hover:bg-white/[0.04]`}>
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        aria-expanded={isOpen}
+        className="w-full text-left p-5 flex items-start justify-between gap-4 cursor-pointer bg-transparent border-none"
+      >
         <h3 className="text-white font-medium text-base flex-1">{question}</h3>
         <svg
           className={`w-5 h-5 text-[#FF9900] flex-shrink-0 transition-transform duration-300 ${
@@ -30,10 +31,10 @@ function FAQItem({ question, answer }) {
             d="M19 9l-7 7-7-7"
           />
         </svg>
-      </div>
+      </button>
       <div
         className={`overflow-hidden transition-all duration-300 ${
-          isOpen ? 'max-h-96 mt-3' : 'max-h-0'
+          isOpen ? 'max-h-96 px-5 pb-5' : 'max-h-0'
         }`}
       >
         <p className="text-gray-400 text-sm leading-relaxed">{answer}</p>
@@ -44,6 +45,7 @@ function FAQItem({ question, answer }) {
 
 export default function FAQ() {
   const { t } = useTranslation();
+  useEffect(() => { document.title = 'FAQ | x402 Bazaar'; }, []);
   const ref1 = useReveal();
   const ref2 = useReveal();
   const ref3 = useReveal();

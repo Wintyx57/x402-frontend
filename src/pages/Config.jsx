@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useTranslation } from '../i18n/LanguageContext';
 import { useReveal } from '../hooks/useReveal';
 
@@ -91,12 +91,16 @@ function generateConfig({ env, serverUrl, maxBudget, network, withWallet, apiKey
   };
 }
 
-function CopyButton({ text, labels }) {
+function ConfigCopyButton({ text, labels }) {
   const [copied, setCopied] = useState(false);
   const handleCopy = async () => {
-    await navigator.clipboard.writeText(text);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Clipboard API may fail in insecure contexts
+    }
   };
   return (
     <button
@@ -113,6 +117,8 @@ export default function Config() {
   const { t } = useTranslation();
   const c = t.config;
   const reveal = useReveal();
+
+  useEffect(() => { document.title = 'Config Generator | x402 Bazaar'; }, []);
 
   const detectedOs = useMemo(() => detectOS(), []);
 
@@ -134,6 +140,13 @@ export default function Config() {
       2
     );
   }, [selectedEnv, serverUrl, maxBudget, network, withWallet, apiKey, apiSecret, installDir]);
+
+  // Masked version for display (hide credentials)
+  const configJsonMasked = useMemo(() => {
+    return configJson
+      .replace(/"COINBASE_API_KEY":\s*"[^"]*"/g, '"COINBASE_API_KEY": "***"')
+      .replace(/"COINBASE_API_SECRET":\s*"[^"]*"/g, '"COINBASE_API_SECRET": "***"');
+  }, [configJson]);
 
   const osLabel = detectedOs === 'windows' ? 'Windows' : detectedOs === 'macos' ? 'macOS' : 'Linux';
 
@@ -290,10 +303,20 @@ export default function Config() {
       {/* JSON Preview */}
       <section className="mb-12" ref={useReveal()}>
         <h2 className="text-2xl font-bold text-white mb-4">{c.previewTitle}</h2>
+        {withWallet && (apiKey || apiSecret) && (
+          <div className="mb-4 p-3 rounded-lg bg-[#FF9900]/5 border border-[#FF9900]/20 flex items-start gap-2">
+            <svg className="w-4 h-4 text-[#FF9900] shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+              <line x1="12" y1="9" x2="12" y2="13"/>
+              <line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+            <p className="text-[#FF9900] text-xs">Credentials are masked in preview. The full JSON with real values is copied to your clipboard when you click Copy.</p>
+          </div>
+        )}
         <div className="relative group">
-          <CopyButton text={configJson} labels={{ copied: c.copied, copyBtn: c.copyBtn }} />
+          <ConfigCopyButton text={configJson} labels={{ copied: c.copied, copyBtn: c.copyBtn }} />
           <pre className="bg-[#0d1117] border border-white/10 rounded-xl p-5 pt-12 overflow-x-auto text-sm leading-relaxed">
-            <code className="text-gray-300 font-mono">{configJson}</code>
+            <code className="text-gray-300 font-mono">{configJsonMasked}</code>
           </pre>
         </div>
       </section>

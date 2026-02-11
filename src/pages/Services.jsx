@@ -1,31 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { API_URL } from '../config';
 import { useTranslation } from '../i18n/LanguageContext';
 import ServiceCard from '../components/ServiceCard';
 import CategoryIcon from '../components/CategoryIcon';
-
-const CATEGORIES = [
-  { key: 'all', tag: null },
-  { key: 'ai', tag: 'ai' },
-  { key: 'finance', tag: 'finance' },
-  { key: 'data', tag: 'data' },
-  { key: 'developer', tag: 'developer' },
-  { key: 'media', tag: 'media' },
-  { key: 'security', tag: 'security' },
-  { key: 'location', tag: 'location' },
-  { key: 'communication', tag: 'communication' },
-  { key: 'seo', tag: 'seo' },
-  { key: 'scraping', tag: 'scraping' },
-  { key: 'fun', tag: 'fun' },
-];
-
-const CATEGORY_LABELS = {
-  all: 'categoryAll', ai: 'categoryAi', finance: 'categoryFinance', data: 'categoryData',
-  developer: 'categoryDeveloper', media: 'categoryMedia', security: 'categorySecurity',
-  location: 'categoryLocation', communication: 'categoryCommunication', seo: 'categorySeo',
-  scraping: 'categoryScraping', fun: 'categoryFun',
-};
+import { CATEGORIES, CATEGORY_LABELS } from '../data/categories';
 
 export default function Services() {
   const [services, setServices] = useState([]);
@@ -52,26 +31,29 @@ export default function Services() {
     setSearchParams(params);
   };
 
+  useEffect(() => { document.title = 'Services | x402 Bazaar'; }, []);
+
   useEffect(() => {
-    fetch(`${API_URL}/api/services`)
+    const controller = new AbortController();
+    const signal = controller.signal;
+    fetch(`${API_URL}/api/services`, { signal })
       .then(r => r.json())
       .then(data => {
         setServices(Array.isArray(data) ? data : []);
         setLoading(false);
       })
-      .catch(() => setLoading(false));
+      .catch(() => { if (!signal.aborted) setLoading(false); });
 
-    // Fetch activity timestamps
-    fetch(`${API_URL}/api/services/activity`)
+    fetch(`${API_URL}/api/services/activity`, { signal })
       .then(r => r.json())
       .then(data => setActivityMap(data || {}))
       .catch(() => {});
 
-    // Fetch health status
-    fetch(`${API_URL}/api/health-check`)
+    fetch(`${API_URL}/api/health-check`, { signal })
       .then(r => r.json())
       .then(data => setHealthMap(data || {}))
       .catch(() => {});
+    return () => controller.abort();
   }, []);
 
   // Helper: find the primary category of a service (first tag matching a known category)
@@ -86,7 +68,7 @@ export default function Services() {
   });
 
   // Filter
-  const filtered = services.filter(s => {
+  const filtered = useMemo(() => services.filter(s => {
     if (search) {
       const q = search.toLowerCase();
       const match = s.name.toLowerCase().includes(q) ||
@@ -100,23 +82,21 @@ export default function Services() {
       const cat = CATEGORIES.find(c => c.key === category);
       if (cat?.tag && !s.tags?.includes(cat.tag)) return false;
     }
-    // Advanced: max price slider
     if (maxPrice < 1 && Number(s.price_usdc) > maxPrice) return false;
-    // Advanced: source filter
     if (sourceFilter === 'native' && !s.url?.startsWith('https://x402-api.onrender.com')) return false;
     if (sourceFilter === 'community' && s.url?.startsWith('https://x402-api.onrender.com')) return false;
     return true;
-  });
+  }), [services, search, priceFilter, category, maxPrice, sourceFilter]);
 
   // Sort
-  const sorted = [...filtered].sort((a, b) => {
+  const sorted = useMemo(() => [...filtered].sort((a, b) => {
     switch (sort) {
       case 'price-asc': return Number(a.price_usdc) - Number(b.price_usdc);
       case 'price-desc': return Number(b.price_usdc) - Number(a.price_usdc);
       case 'newest': return new Date(b.created_at) - new Date(a.created_at);
       default: return a.name.localeCompare(b.name);
     }
-  });
+  }), [filtered, sort]);
 
   const freeCount = services.filter(s => Number(s.price_usdc) === 0).length;
   const paidCount = services.filter(s => Number(s.price_usdc) > 0).length;
