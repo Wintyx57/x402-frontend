@@ -176,6 +176,15 @@ a, button, [role="button"] {
   animation: shimmer 1.5s infinite;
 }
 
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(255, 153, 0, 0.4), 0 0 40px rgba(255, 153, 0, 0.1); }
+  50% { box-shadow: 0 0 30px rgba(255, 153, 0, 0.6), 0 0 60px rgba(255, 153, 0, 0.2); }
+}
+
+@utility animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
 /* ========== SCROLL REVEAL ========== */
 @utility reveal {
   opacity: 0;

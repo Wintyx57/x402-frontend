@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { API_URL } from '../config';
 import { useTranslation } from '../i18n/LanguageContext';
@@ -9,6 +9,52 @@ import CategoryIcon from '../components/CategoryIcon';
 import GitHubIcon from '../components/icons/GitHubIcon';
 import { VALID_CATEGORIES } from '../data/categories';
 
+// Animated counter component (vanilla JS, no deps)
+function CountUp({ end, duration = 2000, suffix = '' }) {
+  const [count, setCount] = useState(0);
+  const ref = useRef(null);
+  const hasAnimated = useRef(false);
+
+  useEffect(() => {
+    const element = ref.current;
+    if (!element || hasAnimated.current) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !hasAnimated.current) {
+          hasAnimated.current = true;
+          const start = 0;
+          const increment = end / (duration / 16);
+          let current = start;
+
+          const timer = setInterval(() => {
+            current += increment;
+            if (current >= end) {
+              setCount(end);
+              clearInterval(timer);
+            } else {
+              setCount(Math.floor(current));
+            }
+          }, 16);
+
+          return () => clearInterval(timer);
+        }
+      },
+      { threshold: 0.3 }
+    );
+
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [end, duration]);
+
+  return (
+    <span ref={ref}>
+      {count}
+      {suffix}
+    </span>
+  );
+}
+
 export default function Home() {
   const [stats, setStats] = useState(null);
   const [services, setServices] = useState([]);
@@ -18,12 +64,13 @@ export default function Home() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const valueProRef = useReveal();
-  const socialProofRef = useReveal();
+  const compatibleRef = useReveal();
+  const useCaseRef = useReveal();
   const catRef = useReveal();
-  const statsRef = useReveal();
   const howRef = useReveal();
   const freeRef = useReveal();
   const paidRef = useReveal();
+  const statsRef = useReveal();
 
   useSEO({
     title: 'API Marketplace for AI Agents',
@@ -135,60 +182,125 @@ export default function Home() {
             </div>
           </form>
 
-          {/* Primary CTA */}
-          <div className="flex flex-col items-center gap-3 mt-6 animate-fade-in-up delay-250">
+          {/* Primary & Secondary CTAs */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-6 animate-fade-in-up delay-250">
             <Link
               to="/services"
               className="gradient-btn text-white text-base font-semibold px-10 py-3.5 rounded-xl no-underline
-                         transition-all duration-200 hover:brightness-110 hover:scale-[1.02] hover:glow-orange"
+                         transition-all duration-200 hover:brightness-110 hover:scale-[1.02] animate-pulse-glow"
             >
               {t.home.exploreCTA}
             </Link>
-            <div className="flex items-center gap-4 text-xs">
-              <Link to="/register" className="text-gray-400 underline hover:text-white transition-colors">
-                {t.home.listApiCTA}
-              </Link>
-              <Link to="/developers" className="text-gray-400 underline hover:text-white transition-colors">
-                {t.home.readDocsCTA}
-              </Link>
-            </div>
+            <Link
+              to="/services"
+              className="glass-card text-gray-300 text-base font-medium px-8 py-3.5 rounded-xl no-underline
+                         transition-all duration-200 hover:border-[#FF9900]/30 hover:text-white"
+            >
+              {t.home.browseApisCTA} →
+            </Link>
           </div>
 
-          {/* Trust logo bar */}
-          <div className="flex items-center justify-center flex-wrap gap-2 sm:gap-4 md:gap-6 text-gray-500 text-sm mt-8 mb-2 animate-fade-in-up delay-300">
-            <span className="text-gray-600 text-xs uppercase tracking-wider">{t.home.trustBarLabel}</span>
-            <span className="font-semibold text-gray-400 hover:text-white transition-colors">Coinbase</span>
-            <span className="text-gray-700 hidden sm:inline">|</span>
-            <span className="font-semibold text-gray-400 hover:text-white transition-colors">Base</span>
-            <span className="text-gray-700 hidden sm:inline">|</span>
-            <span className="font-semibold text-gray-400 hover:text-white transition-colors">SKALE</span>
-            <span className="text-gray-700 hidden sm:inline">|</span>
-            <span className="font-semibold text-gray-400 hover:text-white transition-colors">x402 Protocol</span>
+          <div className="flex items-center justify-center gap-4 text-xs mt-4 animate-fade-in-up delay-300">
+            <Link to="/register" className="text-gray-400 underline hover:text-white transition-colors">
+              {t.home.listApiCTA}
+            </Link>
+            <Link to="/developers" className="text-gray-400 underline hover:text-white transition-colors">
+              {t.home.readDocsCTA}
+            </Link>
           </div>
 
-          {/* Quick stats */}
-          <div className="grid grid-cols-3 sm:grid-cols-5 gap-4 sm:gap-6 mt-4 animate-fade-in-up delay-300">
+          {/* Quick stats with CountUp animation */}
+          <div className="grid grid-cols-3 sm:grid-cols-5 gap-4 sm:gap-6 mt-8 animate-fade-in-up delay-300">
             <div className="text-center">
-              <div className="text-lg sm:text-xl font-bold text-white">{loading ? <span className="inline-block w-8 h-5 animate-shimmer rounded" /> : services.length}</div>
+              <div className="text-lg sm:text-xl font-bold text-white">
+                {loading ? <span className="inline-block w-8 h-5 animate-shimmer rounded" /> : <CountUp end={services.length} />}
+              </div>
               <div className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wider">{t.home.apis}</div>
             </div>
             <div className="text-center">
               <div className="text-lg sm:text-xl font-bold text-[#FF9900]">
-                {services.filter(s => Number(s.price_usdc) === 0).length}
+                <CountUp end={services.filter(s => Number(s.price_usdc) === 0).length} />
               </div>
               <div className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wider">{t.home.freeApis}</div>
             </div>
             <div className="text-center">
-              <div className="text-lg sm:text-xl font-bold text-[#FF9900]">{nativeCount}</div>
+              <div className="text-lg sm:text-xl font-bold text-[#FF9900]">
+                <CountUp end={nativeCount} />
+              </div>
               <div className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wider">{t.home.liveApis}</div>
             </div>
             <div className="text-center">
-              <div className="text-lg sm:text-xl font-bold text-white">200ms</div>
+              <div className="text-lg sm:text-xl font-bold text-white">
+                <CountUp end={200} suffix="ms" />
+              </div>
               <div className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wider">{t.home.avgTransaction}</div>
             </div>
             <div className="text-center">
               <div className="text-lg sm:text-xl font-bold text-[#34D399]">$0 Gas</div>
               <div className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wider">{t.home.onSkale}</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ===== COMPATIBLE WITH ===== */}
+      <section ref={compatibleRef} className="reveal max-w-4xl mx-auto px-4 mb-16">
+        <div className="text-center mb-6">
+          <p className="text-gray-500 text-xs uppercase tracking-wider mb-4">{t.home.compatibleWith}</p>
+          <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-8">
+            {/* Claude */}
+            <div className="flex flex-col items-center gap-2 group animate-fade-in-up" style={{ animationDelay: '0ms' }}>
+              <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center
+                              group-hover:border-[#FF9900]/30 transition-all duration-300">
+                <svg className="w-6 h-6 text-gray-400 group-hover:text-[#FF9900] transition-colors" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/>
+                </svg>
+              </div>
+              <span className="text-xs text-gray-500 group-hover:text-gray-300 transition-colors">Claude</span>
+            </div>
+
+            {/* Cursor */}
+            <div className="flex flex-col items-center gap-2 group animate-fade-in-up" style={{ animationDelay: '50ms' }}>
+              <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center
+                              group-hover:border-[#FF9900]/30 transition-all duration-300">
+                <svg className="w-6 h-6 text-gray-400 group-hover:text-[#FF9900] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
+                </svg>
+              </div>
+              <span className="text-xs text-gray-500 group-hover:text-gray-300 transition-colors">Cursor</span>
+            </div>
+
+            {/* VS Code */}
+            <div className="flex flex-col items-center gap-2 group animate-fade-in-up" style={{ animationDelay: '100ms' }}>
+              <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center
+                              group-hover:border-[#FF9900]/30 transition-all duration-300">
+                <svg className="w-6 h-6 text-gray-400 group-hover:text-[#FF9900] transition-colors" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M23.15 2.587L18.21.21a1.494 1.494 0 0 0-1.705.29l-9.46 8.63-4.12-3.128a.999.999 0 0 0-1.276.057L.327 7.261A1 1 0 0 0 .326 8.74L3.899 12 .326 15.26a1 1 0 0 0 .001 1.479L1.65 17.94a.999.999 0 0 0 1.276.057l4.12-3.128 9.46 8.63a1.492 1.492 0 0 0 1.704.29l4.942-2.377A1.5 1.5 0 0 0 24 20.06V3.939a1.5 1.5 0 0 0-.85-1.352zm-5.146 14.861L10.826 12l7.178-5.448v10.896z"/>
+                </svg>
+              </div>
+              <span className="text-xs text-gray-500 group-hover:text-gray-300 transition-colors">VS Code</span>
+            </div>
+
+            {/* LangChain */}
+            <div className="flex flex-col items-center gap-2 group animate-fade-in-up" style={{ animationDelay: '150ms' }}>
+              <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center
+                              group-hover:border-[#FF9900]/30 transition-all duration-300">
+                <svg className="w-6 h-6 text-gray-400 group-hover:text-[#FF9900] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                </svg>
+              </div>
+              <span className="text-xs text-gray-500 group-hover:text-gray-300 transition-colors">LangChain</span>
+            </div>
+
+            {/* Auto-GPT */}
+            <div className="flex flex-col items-center gap-2 group animate-fade-in-up" style={{ animationDelay: '200ms' }}>
+              <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center
+                              group-hover:border-[#FF9900]/30 transition-all duration-300">
+                <svg className="w-6 h-6 text-gray-400 group-hover:text-[#FF9900] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                </svg>
+              </div>
+              <span className="text-xs text-gray-500 group-hover:text-gray-300 transition-colors">Auto-GPT</span>
             </div>
           </div>
         </div>
@@ -252,25 +364,52 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== SOCIAL PROOF ===== */}
-      <section ref={socialProofRef} className="reveal max-w-3xl mx-auto px-4 mb-20">
-        <h2 className="text-lg font-bold text-white text-center mb-5">{t.home.socialProofTitle}</h2>
-        <div className="flex flex-wrap items-center justify-center gap-4">
-          {[t.home.socialProof1, t.home.socialProof2, t.home.socialProof3].map((text, i) => (
+      {/* ===== USE CASES / SOCIAL PROOF ===== */}
+      <section ref={useCaseRef} className="reveal max-w-4xl mx-auto px-4 mb-20">
+        <h2 className="text-lg font-bold text-white text-center mb-6">{t.home.useCaseTitle}</h2>
+        <div className="grid sm:grid-cols-3 gap-4">
+          {[
+            {
+              icon: (
+                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                </svg>
+              ),
+              stat: t.home.useCase1,
+            },
+            {
+              icon: (
+                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              ),
+              stat: t.home.useCase2,
+            },
+            {
+              icon: (
+                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+              ),
+              stat: t.home.useCase3,
+            },
+          ].map((useCase, i) => (
             <div
               key={i}
-              className="glass-card rounded-full px-5 py-2 text-xs text-gray-400 font-medium
-                         animate-fade-in-up"
-              style={{ animationDelay: `${i * 60}ms` }}
+              className="glass-card rounded-xl p-6 text-center animate-fade-in-up"
+              style={{ animationDelay: `${i * 100}ms` }}
             >
-              <span className="text-[#FF9900] mr-1.5">&#10003;</span>
-              {text}
+              <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-3
+                              text-[#FF9900] bg-[#FF9900]/5 border border-[#FF9900]/20">
+                {useCase.icon}
+              </div>
+              <p className="text-white font-semibold text-sm">{useCase.stat}</p>
             </div>
           ))}
         </div>
 
         {/* ERC-8004 Verified Agent Badge */}
-        <div className="flex justify-center mt-5">
+        <div className="flex justify-center mt-6">
           <a
             href="https://basescan.org/token/0x8004A169FB4a3325136EB29fA0ceB6D2e539a432"
             target="_blank"
@@ -278,7 +417,7 @@ export default function Home() {
             className="no-underline inline-flex items-center gap-2.5 bg-white/5 border border-violet-500/20
                        rounded-xl px-5 py-3 hover:border-violet-500/40 hover:bg-white/[0.07]
                        transition-all duration-300 group animate-fade-in-up"
-            style={{ animationDelay: '200ms' }}
+            style={{ animationDelay: '300ms' }}
           >
             <div className="w-8 h-8 rounded-full flex items-center justify-center bg-gradient-to-br from-violet-500/20 to-blue-500/20 border border-violet-500/30">
               <svg className="w-4 h-4 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
@@ -321,22 +460,60 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== HOW IT WORKS ===== */}
+      {/* ===== HOW IT WORKS (Horizontal with arrows) ===== */}
       <section ref={howRef} className="reveal max-w-5xl mx-auto px-4 mb-20">
-        <h2 className="text-2xl font-bold text-white text-center mb-8">{t.home.howItWorks}</h2>
-        <div className="grid md:grid-cols-3 gap-4">
+        <h2 className="text-2xl font-bold text-white text-center mb-10">{t.home.howItWorks}</h2>
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-0">
           {[
-            { num: '1', title: t.home.step1Title, desc: t.home.step1Desc },
-            { num: '2', title: t.home.step2Title, desc: t.home.step2Desc },
-            { num: '3', title: t.home.step3Title, desc: t.home.step3Desc },
-          ].map(step => (
-            <div key={step.num} className="glass-card rounded-lg p-5 text-center">
-              <div className="w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold
-                              mx-auto mb-3 border-2 border-[#FF9900]/30 text-[#FF9900] bg-[#FF9900]/5">
-                {step.num}
+            {
+              icon: (
+                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              ),
+              label: t.home.howStep1Icon,
+              title: t.home.step1Title,
+              desc: t.home.step1Desc,
+            },
+            {
+              icon: (
+                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              ),
+              label: t.home.howStep2Icon,
+              title: t.home.step2Title,
+              desc: t.home.step2Desc,
+            },
+            {
+              icon: (
+                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                </svg>
+              ),
+              label: t.home.howStep3Icon,
+              title: t.home.step3Title,
+              desc: t.home.step3Desc,
+            },
+          ].map((step, i) => (
+            <div key={i} className="flex flex-col md:flex-row items-center gap-4 md:gap-6 flex-1">
+              <div className="glass-card rounded-xl p-6 w-full max-w-xs text-center animate-fade-in-up" style={{ animationDelay: `${i * 100}ms` }}>
+                <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4
+                                text-[#FF9900] bg-[#FF9900]/5 border-2 border-[#FF9900]/30">
+                  {step.icon}
+                </div>
+                <div className="text-[#FF9900] text-xs font-semibold uppercase tracking-wider mb-2">{step.label}</div>
+                <h3 className="text-white font-semibold text-sm mb-2">{step.title}</h3>
+                <p className="text-gray-500 text-xs leading-relaxed">{step.desc}</p>
               </div>
-              <h3 className="text-white font-semibold text-sm mb-2">{step.title}</h3>
-              <p className="text-gray-500 text-xs leading-relaxed">{step.desc}</p>
+              {/* Arrow between steps (hidden on last step) */}
+              {i < 2 && (
+                <div className="hidden md:block animate-fade-in-up" style={{ animationDelay: `${i * 100 + 50}ms` }}>
+                  <svg className="w-6 h-6 text-[#FF9900]/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                </div>
+              )}
             </div>
           ))}
         </div>
@@ -385,7 +562,9 @@ export default function Home() {
         <section ref={statsRef} className="reveal max-w-5xl mx-auto px-4 mb-20">
           <div className="glass-card rounded-xl p-4 sm:p-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
             <div className="text-center">
-              <div className="text-xl sm:text-3xl font-bold text-white">{stats.totalServices}</div>
+              <div className="text-xl sm:text-3xl font-bold text-white">
+                <CountUp end={stats.totalServices} />
+              </div>
               <div className="text-xs text-gray-500 mt-1">{t.home.servicesListed}</div>
             </div>
             <div className="text-center">
@@ -397,11 +576,15 @@ export default function Home() {
               <div className="text-xs text-gray-500 mt-1">Blockchain</div>
             </div>
             <div className="text-center">
-              <div className="text-xl sm:text-3xl font-bold text-white">{categories.length}</div>
+              <div className="text-xl sm:text-3xl font-bold text-white">
+                <CountUp end={categories.length} />
+              </div>
               <div className="text-xs text-gray-500 mt-1">{t.home.categoriesCount}</div>
             </div>
             <div className="text-center">
-              <div className="text-xl sm:text-3xl font-bold text-white">200ms</div>
+              <div className="text-xl sm:text-3xl font-bold text-white">
+                <CountUp end={200} suffix="ms" />
+              </div>
               <div className="text-xs text-gray-500 mt-1">{t.home.avgTransaction}</div>
             </div>
             <div className="text-center">
