@@ -1,34 +1,33 @@
-import { http, createConfig } from 'wagmi';
-import { base, baseSepolia } from 'wagmi/chains';
-import { injected, coinbaseWallet, walletConnect } from 'wagmi/connectors';
+import { createAppKit } from '@reown/appkit/react';
+import { WagmiAdapter } from '@reown/appkit-adapter-wagmi';
+import { base, baseSepolia, skaleEuropa } from '@reown/appkit/networks';
 
-// SKALE Europa Hub - custom chain definition
-export const skaleEuropa = {
-  id: 2046399126,
-  name: 'SKALE Europa',
-  nativeCurrency: {
-    name: 'sFUEL',
-    symbol: 'sFUEL',
-    decimals: 18,
-  },
-  rpcUrls: {
-    default: { http: ['https://mainnet.skalenodes.com/v1/elated-tan-skat'] },
-  },
-  blockExplorers: {
-    default: { name: 'SKALE Explorer', url: 'https://elated-tan-skat.explorer.mainnet.skalenodes.com' },
-  },
-};
+// Re-export for ConnectButton chain comparison (uses .id as number)
+export { skaleEuropa };
 
-export const config = createConfig({
-  chains: [base, baseSepolia, skaleEuropa],
-  connectors: [
-    injected(),
-    coinbaseWallet({ appName: 'x402 Bazaar' }),
-    walletConnect({ projectId: '3a8170b8cda23c42664370d9764bffd2' }),
-  ],
-  transports: {
-    [base.id]: http(),
-    [baseSepolia.id]: http(),
-    [skaleEuropa.id]: http('https://mainnet.skalenodes.com/v1/elated-tan-skat'),
+const projectId = '3a8170b8cda23c42664370d9764bffd2';
+
+const networks = [base, baseSepolia, skaleEuropa];
+
+export const wagmiAdapter = new WagmiAdapter({
+  networks,
+  projectId,
+});
+
+createAppKit({
+  adapters: [wagmiAdapter],
+  networks,
+  projectId,
+  metadata: {
+    name: 'x402 Bazaar',
+    description: 'The API Marketplace for AI Agents',
+    url: 'https://x402bazaar.org',
+    icons: ['https://x402bazaar.org/favicon.svg'],
+  },
+  themeMode: 'dark',
+  themeVariables: {
+    '--w3m-accent': '#FF9900',
   },
 });
+
+export const config = wagmiAdapter.wagmiConfig;

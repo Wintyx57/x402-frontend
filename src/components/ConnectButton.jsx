@@ -1,35 +1,28 @@
 import { useState, useRef, useEffect } from 'react';
-import { useAccount, useConnect, useDisconnect, useSwitchChain } from 'wagmi';
+import { useAccount, useDisconnect, useSwitchChain } from 'wagmi';
+import { useAppKit } from '@reown/appkit/react';
 import { base, baseSepolia } from 'wagmi/chains';
 import { skaleEuropa } from '../wagmi';
 import { useTranslation } from '../i18n/LanguageContext';
 
 const IS_MAINNET = import.meta.env.VITE_NETWORK === 'mainnet';
 
+const SKALE_ID = skaleEuropa.chainId ?? skaleEuropa.id;
+
 // Accepted chains depending on environment
 const ACCEPTED_CHAINS = IS_MAINNET
-  ? [base, skaleEuropa]
+  ? [base, { id: SKALE_ID, name: 'SKALE Europa' }]
   : [baseSepolia];
 
 const ACCEPTED_IDS = new Set(ACCEPTED_CHAINS.map(c => c.id));
 
-// Friendly connector names for display
-function connectorLabel(connector) {
-  const id = connector.id?.toLowerCase() || '';
-  if (id.includes('walletconnect')) return 'WalletConnect';
-  if (id.includes('coinbasewallet') || id.includes('coinbase')) return 'Coinbase Wallet';
-  if (id.includes('injected') || id.includes('metamask')) return 'Browser Wallet';
-  return connector.name || 'Wallet';
-}
-
 export default function ConnectButton() {
   const { address, isConnected, chain } = useAccount();
-  const { connect, connectors, isPending: isConnecting } = useConnect();
   const { disconnect } = useDisconnect();
   const { switchChain } = useSwitchChain();
+  const { open } = useAppKit();
   const { t } = useTranslation();
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [showConnectors, setShowConnectors] = useState(false);
   const [copied, setCopied] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -37,14 +30,13 @@ export default function ConnectButton() {
     function handleClickOutside(e) {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
         setDropdownOpen(false);
-        setShowConnectors(false);
       }
     }
-    if (dropdownOpen || showConnectors) {
+    if (dropdownOpen) {
       document.addEventListener('mousedown', handleClickOutside);
       return () => document.removeEventListener('mousedown', handleClickOutside);
     }
-  }, [dropdownOpen, showConnectors]);
+  }, [dropdownOpen]);
 
   const copyAddress = async () => {
     if (!address) return;
@@ -59,51 +51,16 @@ export default function ConnectButton() {
 
   const isOnAcceptedChain = chain && ACCEPTED_IDS.has(chain.id);
 
-  // Not connected: show connector picker
+  // Not connected: open AppKit modal (handles QR codes, deep links, mobile wallets)
   if (!isConnected) {
     return (
-      <div className="relative" ref={dropdownRef}>
-        <button
-          onClick={() => setShowConnectors(prev => !prev)}
-          disabled={isConnecting}
-          aria-expanded={showConnectors}
-          className="gradient-btn text-white text-sm px-4 py-2.5 min-h-[44px] rounded-lg font-medium cursor-pointer
-                     transition-all duration-200 hover:brightness-110 disabled:opacity-60 disabled:cursor-wait"
-        >
-          {isConnecting ? (
-            <span className="flex items-center gap-2">
-              <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-              {t.connect.connecting}
-            </span>
-          ) : t.connect.connectWallet}
-        </button>
-
-        {showConnectors && !isConnecting && (
-          <div className="absolute right-0 sm:right-0 top-full mt-2 w-[min(calc(100vw-2rem),18rem)]
-                          bg-[#1a2332] border border-white/10 rounded-xl shadow-xl z-50 overflow-hidden">
-            <div className="px-4 py-3 border-b border-white/5">
-              <p className="text-[11px] text-gray-500 uppercase tracking-wider">{t.connect.connectWallet}</p>
-            </div>
-            <div className="p-2 flex flex-col gap-1">
-              {connectors.map(connector => (
-                <button
-                  key={connector.uid}
-                  onClick={() => {
-                    connect({ connector });
-                    setShowConnectors(false);
-                  }}
-                  className="w-full text-left text-sm text-gray-300 hover:text-white hover:bg-white/5
-                             px-3 py-3 min-h-[44px] rounded-lg transition-colors duration-150 cursor-pointer
-                             flex items-center gap-3"
-                >
-                  <span className="w-2 h-2 rounded-full bg-blue-400 shrink-0" />
-                  {connectorLabel(connector)}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
+      <button
+        onClick={() => open()}
+        className="gradient-btn text-white text-sm px-4 py-2.5 min-h-[44px] rounded-lg font-medium cursor-pointer
+                   transition-all duration-200 hover:brightness-110"
+      >
+        {t.connect.connectWallet}
+      </button>
     );
   }
 
@@ -119,7 +76,8 @@ export default function ConnectButton() {
     );
   }
 
-  const chainColor = chain?.id === skaleEuropa.id ? '#34D399' : '#FF9900';
+  const isSkale = chain?.id === SKALE_ID;
+  const chainColor = isSkale ? '#34D399' : '#FF9900';
   const chainLabel = chain?.name || 'Unknown';
   const otherChains = ACCEPTED_CHAINS.filter(c => c.id !== chain?.id);
 
@@ -137,7 +95,7 @@ export default function ConnectButton() {
       </button>
 
       {dropdownOpen && (
-        <div className="absolute right-0 sm:right-0 top-full mt-2 w-[min(calc(100vw-2rem),18rem)]
+        <div className="absolute right-0 top-full mt-2 w-[min(calc(100vw-2rem),18rem)]
                         bg-[#1a2332] border border-white/10 rounded-xl shadow-xl z-50 overflow-hidden">
           {/* Full address */}
           <div className="px-4 py-3 border-b border-white/5">
@@ -149,7 +107,7 @@ export default function ConnectButton() {
           <div className="px-4 py-2.5 border-b border-white/5 flex items-center gap-2">
             <span className="w-2 h-2 rounded-full" style={{ backgroundColor: chainColor }} />
             <span className="text-xs text-gray-300">{chainLabel}</span>
-            {chain?.id === skaleEuropa.id && (
+            {isSkale && (
               <span className="text-[11px] bg-green-500/10 text-green-400 px-1.5 py-0.5 rounded">{t.connect.freeGas}</span>
             )}
           </div>
@@ -166,9 +124,9 @@ export default function ConnectButton() {
                              px-3 py-3 min-h-[44px] rounded-lg transition-colors duration-150 cursor-pointer flex items-center gap-2"
                 >
                   <span className="w-2 h-2 rounded-full"
-                    style={{ backgroundColor: c.id === skaleEuropa.id ? '#34D399' : '#FF9900' }} />
+                    style={{ backgroundColor: c.id === SKALE_ID ? '#34D399' : '#FF9900' }} />
                   {c.name}
-                  {c.id === skaleEuropa.id && (
+                  {c.id === SKALE_ID && (
                     <span className="text-[11px] text-green-400 ml-auto">{t.connect.zeroGas}</span>
                   )}
                 </button>
