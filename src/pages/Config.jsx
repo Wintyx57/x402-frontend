@@ -168,12 +168,12 @@ export default function Config() {
           {/* Environment selector */}
           <div>
             <label className="text-white font-medium text-sm block mb-3">{c.envLabel}</label>
-            <div className="flex gap-2 flex-wrap">
+            <div className="flex gap-2 overflow-x-auto pb-2 sm:flex-wrap sm:overflow-visible">
               {environments.map(env => (
                 <button
                   key={env.id}
                   onClick={() => setSelectedEnv(env.id)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap shrink-0 sm:shrink
                              cursor-pointer border-none transition-all duration-200 ${
                     selectedEnv === env.id
                       ? 'bg-[#FF9900]/15 text-[#FF9900] border border-[#FF9900]/30'
@@ -315,7 +315,7 @@ export default function Config() {
         )}
         <div className="relative group">
           <ConfigCopyButton text={configJson} labels={{ copied: c.copied, copyBtn: c.copyBtn }} />
-          <pre className="bg-[#0d1117] border border-white/10 rounded-xl p-5 pt-12 overflow-x-auto text-sm leading-relaxed">
+          <pre className="bg-[#0d1117] border border-white/10 rounded-xl p-3 sm:p-5 pt-12 overflow-x-auto text-xs sm:text-sm leading-relaxed">
             <code className="text-gray-300 font-mono">{configJsonMasked}</code>
           </pre>
         </div>

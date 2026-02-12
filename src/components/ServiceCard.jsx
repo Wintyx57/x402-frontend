@@ -57,7 +57,7 @@ export default function ServiceCard({ service, lastActivity, healthStatus }) {
   };
 
   return (
-    <div className="glass-card rounded-xl p-5 transition-all duration-200 hover:bg-white/[0.07]
+    <div className="glass-card rounded-xl p-3 sm:p-5 transition-all duration-200 hover:bg-white/[0.07]
                     hover:border-[#FF9900]/30 hover:-translate-y-0.5 hover:shadow-[0_0_20px_rgba(255,153,0,0.08),0_4px_12px_rgba(0,0,0,0.3)] group">
       {/* Top row: logo + name + price */}
       <div className="flex items-start gap-3 mb-3">
@@ -154,7 +154,7 @@ export default function ServiceCard({ service, lastActivity, healthStatus }) {
           {isValidServiceUrl(service.url) && (
             <button
               onClick={handleCopyPrompt}
-              className="flex items-center gap-1 text-xs font-medium px-2 py-1 rounded-md
+              className="flex items-center gap-1 text-xs font-medium px-2 py-1 min-h-[44px] sm:min-h-0 rounded-md
                          bg-white/5 text-gray-400 hover:text-white hover:bg-white/10
                          transition-all duration-200 cursor-pointer border-none"
               title={t.serviceCard.useWithAI}
@@ -170,8 +170,8 @@ export default function ServiceCard({ service, lastActivity, healthStatus }) {
               href={service.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs font-medium text-[#FF9900] hover:text-[#FFB340] no-underline
-                         sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-200"
+              className="text-xs font-medium text-[#FF9900] hover:text-[#FFB340] no-underline min-h-[44px] sm:min-h-0 flex items-center
+                         opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-200"
             >
               {t.serviceCard.viewApi} &rarr;
             </a>

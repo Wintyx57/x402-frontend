@@ -21,7 +21,7 @@ export default function Developers() {
       </p>
 
       {/* CLI Quick Start Banner */}
-      <div className="animate-fade-in-up delay-200 mb-10 rounded-xl bg-[#FF9900]/[0.06] border border-[#FF9900]/20 p-4 flex flex-col sm:flex-row items-start sm:items-center gap-3">
+      <div className="animate-fade-in-up delay-200 mb-10 rounded-xl bg-[#FF9900]/[0.06] border border-[#FF9900]/20 p-4 flex flex-col sm:flex-row items-start sm:items-center gap-3 overflow-hidden">
         <div className="flex items-center gap-2 shrink-0">
           <svg className="w-5 h-5 text-[#FF9900]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <polyline points="4 17 10 11 4 5"/>
@@ -89,7 +89,7 @@ export default function Developers() {
       <section ref={endpointsRef} className="reveal mb-10">
         <h2 className="text-2xl font-bold text-white mb-4">{t.developers.endpointsTitle}</h2>
         <div className="overflow-x-auto glass rounded-xl p-4 sm:p-5">
-          <table className="w-full text-xs sm:text-sm min-w-[480px]">
+          <table className="w-full text-xs sm:text-sm min-w-[360px] sm:min-w-[480px]">
             <thead>
               <tr className="text-left text-gray-500 border-b border-white/10">
                 <th className="pb-3 pr-3 sm:pr-4">{t.developers.thRoute}</th>

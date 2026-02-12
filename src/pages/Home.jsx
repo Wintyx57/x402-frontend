@@ -83,7 +83,7 @@ export default function Home() {
                         bg-[#FF9900]/8 rounded-full blur-[120px] animate-glow-pulse pointer-events-none" />
 
         <div className="relative z-10 max-w-3xl mx-auto text-center">
-          <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold text-white mb-4 animate-fade-in-up">
+          <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 animate-fade-in-up">
             {t.home.heroTitle}{' '}
             <span className="gradient-text">{t.home.heroTitleHighlight}</span>
           </h1>
@@ -151,44 +151,40 @@ export default function Home() {
           </div>
 
           {/* Trust logo bar */}
-          <div className="flex items-center justify-center gap-4 sm:gap-6 text-gray-500 text-sm mt-8 mb-2 animate-fade-in-up delay-300">
+          <div className="flex items-center justify-center flex-wrap gap-2 sm:gap-4 md:gap-6 text-gray-500 text-sm mt-8 mb-2 animate-fade-in-up delay-300">
             <span className="text-gray-600 text-xs uppercase tracking-wider">{t.home.trustBarLabel}</span>
             <span className="font-semibold text-gray-400 hover:text-white transition-colors">Coinbase</span>
-            <span className="text-gray-700">|</span>
+            <span className="text-gray-700 hidden sm:inline">|</span>
             <span className="font-semibold text-gray-400 hover:text-white transition-colors">Base</span>
-            <span className="text-gray-700">|</span>
+            <span className="text-gray-700 hidden sm:inline">|</span>
             <span className="font-semibold text-gray-400 hover:text-white transition-colors">SKALE</span>
-            <span className="text-gray-700">|</span>
+            <span className="text-gray-700 hidden sm:inline">|</span>
             <span className="font-semibold text-gray-400 hover:text-white transition-colors">x402 Protocol</span>
           </div>
 
           {/* Quick stats */}
-          <div className="flex flex-wrap items-center justify-center gap-6 mt-4 animate-fade-in-up delay-300">
+          <div className="grid grid-cols-3 sm:grid-cols-5 gap-4 sm:gap-6 mt-4 animate-fade-in-up delay-300">
             <div className="text-center">
-              <div className="text-xl font-bold text-white">{loading ? <span className="inline-block w-8 h-5 animate-shimmer rounded" /> : services.length}</div>
-              <div className="text-xs text-gray-500 uppercase tracking-wider">{t.home.apis}</div>
+              <div className="text-lg sm:text-xl font-bold text-white">{loading ? <span className="inline-block w-8 h-5 animate-shimmer rounded" /> : services.length}</div>
+              <div className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wider">{t.home.apis}</div>
             </div>
-            <div className="w-px h-8 bg-white/10" />
             <div className="text-center">
-              <div className="text-xl font-bold text-[#FF9900]">
+              <div className="text-lg sm:text-xl font-bold text-[#FF9900]">
                 {services.filter(s => Number(s.price_usdc) === 0).length}
               </div>
-              <div className="text-xs text-gray-500 uppercase tracking-wider">{t.home.freeApis}</div>
+              <div className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wider">{t.home.freeApis}</div>
             </div>
-            <div className="w-px h-8 bg-white/10" />
             <div className="text-center">
-              <div className="text-xl font-bold text-[#FF9900]">{nativeCount}</div>
-              <div className="text-xs text-gray-500 uppercase tracking-wider">{t.home.liveApis}</div>
+              <div className="text-lg sm:text-xl font-bold text-[#FF9900]">{nativeCount}</div>
+              <div className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wider">{t.home.liveApis}</div>
             </div>
-            <div className="w-px h-8 bg-white/10" />
             <div className="text-center">
-              <div className="text-xl font-bold text-white">200ms</div>
-              <div className="text-xs text-gray-500 uppercase tracking-wider">{t.home.avgTransaction}</div>
+              <div className="text-lg sm:text-xl font-bold text-white">200ms</div>
+              <div className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wider">{t.home.avgTransaction}</div>
             </div>
-            <div className="w-px h-8 bg-white/10" />
             <div className="text-center">
-              <div className="text-xl font-bold text-[#34D399]">$0 Gas</div>
-              <div className="text-xs text-gray-500 uppercase tracking-wider">{t.home.onSkale}</div>
+              <div className="text-lg sm:text-xl font-bold text-[#34D399]">$0 Gas</div>
+              <div className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wider">{t.home.onSkale}</div>
             </div>
           </div>
         </div>
@@ -383,29 +379,29 @@ export default function Home() {
       {/* ===== STATS BAR ===== */}
       {stats && (
         <section ref={statsRef} className="reveal max-w-5xl mx-auto px-4 mb-20">
-          <div className="glass-card rounded-xl p-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+          <div className="glass-card rounded-xl p-4 sm:p-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
             <div className="text-center">
-              <div className="text-3xl font-bold text-white">{stats.totalServices}</div>
+              <div className="text-xl sm:text-3xl font-bold text-white">{stats.totalServices}</div>
               <div className="text-xs text-gray-500 mt-1">{t.home.servicesListed}</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-[#FF9900]">{stats.walletBalance}</div>
+              <div className="text-xl sm:text-3xl font-bold text-[#FF9900]">{stats.walletBalance}</div>
               <div className="text-xs text-gray-500 mt-1">USDC Balance</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold gradient-text">{t.home.network}</div>
+              <div className="text-xl sm:text-3xl font-bold gradient-text">{t.home.network}</div>
               <div className="text-xs text-gray-500 mt-1">Blockchain</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-white">{categories.length}</div>
+              <div className="text-xl sm:text-3xl font-bold text-white">{categories.length}</div>
               <div className="text-xs text-gray-500 mt-1">{t.home.categoriesCount}</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-white">200ms</div>
+              <div className="text-xl sm:text-3xl font-bold text-white">200ms</div>
               <div className="text-xs text-gray-500 mt-1">{t.home.avgTransaction}</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-[#34D399]">$0 Gas</div>
+              <div className="text-xl sm:text-3xl font-bold text-[#34D399]">$0 Gas</div>
               <div className="text-xs text-gray-500 mt-1">{t.home.onSkale}</div>
             </div>
           </div>

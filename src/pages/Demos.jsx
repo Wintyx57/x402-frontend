@@ -13,7 +13,7 @@ export default function Demos() {
     <div className="max-w-5xl mx-auto px-4 py-12">
       {/* Header */}
       <div className="text-center mb-16" ref={revealRef}>
-        <h1 className="text-3xl font-bold text-white mb-2">
+        <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">
           {t.demos.title}
         </h1>
         <p className="text-gray-400 text-sm">
@@ -38,7 +38,7 @@ export default function Demos() {
           </p>
 
           {/* Code Block */}
-          <div className="bg-[#0d1117] border border-white/10 rounded-xl p-5 font-mono text-sm overflow-x-auto">
+          <div className="bg-[#0d1117] border border-white/10 rounded-xl p-3 sm:p-5 font-mono text-xs sm:text-sm overflow-x-auto">
             <pre className="text-gray-300">
               <span className="text-gray-500">// Autonomous x402 Agent</span>{'\n'}
               <span className="text-[#FF9900]">const</span> agent = <span className="text-[#FF9900]">new</span> <span className="text-white">X402Agent</span>({'{'} budget: <span className="text-[#34D399]">"1.00 USDC"</span> {'}'});{'\n\n'}
@@ -138,7 +138,7 @@ export default function Demos() {
 
       {/* CTA Button */}
       <div className="text-center mt-16">
-        <Link to="/integrate" className="gradient-btn inline-block">
+        <Link to="/integrate" className="gradient-btn inline-block px-8 py-3 rounded-lg text-white font-medium no-underline hover:brightness-110 transition-all">
           {t.demos.ctaButton}
         </Link>
       </div>

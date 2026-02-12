@@ -150,7 +150,7 @@ export default function Services() {
       </div>
 
       {/* Advanced filters */}
-      <div className="flex flex-wrap items-center gap-4 mb-3">
+      <div className="flex flex-col sm:flex-row flex-wrap items-start sm:items-center gap-3 sm:gap-4 mb-3">
         {/* Max price slider */}
         <div className="flex items-center gap-2">
           <label className="text-xs text-gray-500 whitespace-nowrap">{t.services.maxPrice || 'Max price'}:</label>
@@ -161,7 +161,7 @@ export default function Services() {
             step="0.005"
             value={maxPrice}
             onChange={e => setParam('maxPrice', e.target.value === '1' ? 'all' : e.target.value)}
-            className="w-24 accent-[#FF9900] cursor-pointer"
+            className="w-32 sm:w-24 h-2 accent-[#FF9900] cursor-pointer"
           />
           <span className="text-xs text-[#FF9900] font-mono min-w-[3rem]">
             {maxPrice >= 1 ? (t.services.all || 'All') : `$${maxPrice}`}
@@ -187,7 +187,7 @@ export default function Services() {
       </div>
 
       {/* Category filter */}
-      <div className="flex flex-wrap items-center gap-1.5 mb-8">
+      <div className="flex overflow-x-auto items-center gap-1.5 mb-8 pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 sm:flex-wrap sm:overflow-visible">
         {CATEGORIES.map(cat => {
           const count = categoryCounts[cat.key] || 0;
           const isActive = category === cat.key;
@@ -195,7 +195,7 @@ export default function Services() {
             <button
               key={cat.key}
               onClick={() => setParam('cat', cat.key)}
-              className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer ${
+              className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer whitespace-nowrap shrink-0 sm:shrink ${
                 isActive
                   ? 'bg-white/10 text-white border border-white/15'
                   : 'bg-white/[0.02] text-gray-500 hover:text-gray-300 hover:bg-white/5 border border-transparent'

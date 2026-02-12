@@ -54,7 +54,7 @@ export default function FAQ() {
   return (
     <div className="max-w-4xl mx-auto px-4 py-12">
       <div className="animate-fade-in-up">
-        <h1 className="text-3xl font-bold text-white mb-2">{t.faq.title}</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">{t.faq.title}</h1>
         <p className="text-gray-400 text-sm mb-10">{t.faq.subtitle}</p>
       </div>
 

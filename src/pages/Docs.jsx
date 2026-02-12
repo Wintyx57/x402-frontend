@@ -131,7 +131,7 @@ function DocsCodeBlock({ code }) {
   return (
     <div className="relative group">
       <SharedCopyButton text={code} copiedLabel="Copied" />
-      <pre className="bg-[#0d1117] border border-white/10 rounded-xl p-5 pt-12 overflow-x-auto text-sm leading-relaxed">
+      <pre className="bg-[#0d1117] border border-white/10 rounded-xl p-3 sm:p-5 pt-12 overflow-x-auto text-xs sm:text-sm leading-relaxed">
         <code className="text-gray-300 font-mono">{code}</code>
       </pre>
     </div>
@@ -329,7 +329,7 @@ curl -H "X-Payment-TxHash: 0xabc123..." \\
 
             <h3 className="text-white font-semibold mb-3">{d.apiRefMarketplace || 'Marketplace'}</h3>
             <div className="overflow-x-auto glass-card rounded-xl p-4 mb-8">
-              <table className="w-full text-sm min-w-[480px]">
+              <table className="w-full text-sm min-w-[360px] sm:min-w-[480px]">
                 <thead>
                   <tr className="text-left text-gray-500 border-b border-white/10">
                     <th className="pb-3 pr-4">{d.thMethod || 'Method'}</th>
@@ -353,7 +353,7 @@ curl -H "X-Payment-TxHash: 0xabc123..." \\
 
             <h3 className="text-white font-semibold mb-3">{d.apiRefNative || 'Native Wrappers'}</h3>
             <div className="overflow-x-auto glass-card rounded-xl p-4">
-              <table className="w-full text-sm min-w-[480px]">
+              <table className="w-full text-sm min-w-[360px] sm:min-w-[480px]">
                 <thead>
                   <tr className="text-left text-gray-500 border-b border-white/10">
                     <th className="pb-3 pr-4">{d.thMethod || 'Method'}</th>

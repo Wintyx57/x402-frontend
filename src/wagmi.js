@@ -1,6 +1,6 @@
 import { http, createConfig } from 'wagmi';
 import { base, baseSepolia } from 'wagmi/chains';
-import { injected, coinbaseWallet } from 'wagmi/connectors';
+import { injected, coinbaseWallet, walletConnect } from 'wagmi/connectors';
 
 // SKALE Europa Hub - custom chain definition
 export const skaleEuropa = {
@@ -24,6 +24,7 @@ export const config = createConfig({
   connectors: [
     injected(),
     coinbaseWallet({ appName: 'x402 Bazaar' }),
+    walletConnect({ projectId: '3a8170b8cda23c42664370d9764bffd2' }),
   ],
   transports: {
     [base.id]: http(),

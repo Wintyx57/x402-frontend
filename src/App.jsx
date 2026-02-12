@@ -22,7 +22,7 @@ const NotFound = lazy(() => import('./pages/NotFound'));
 
 export default function App() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen overflow-x-hidden">
       <Navbar />
       <ErrorBoundary>
         <Suspense fallback={<div className="flex items-center justify-center min-h-screen"><div className="glass-card rounded-lg p-8 animate-shimmer w-32 h-32" /></div>}>

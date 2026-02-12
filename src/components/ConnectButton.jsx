@@ -13,6 +13,15 @@ const ACCEPTED_CHAINS = IS_MAINNET
 
 const ACCEPTED_IDS = new Set(ACCEPTED_CHAINS.map(c => c.id));
 
+// Friendly connector names for display
+function connectorLabel(connector) {
+  const id = connector.id?.toLowerCase() || '';
+  if (id.includes('walletconnect')) return 'WalletConnect';
+  if (id.includes('coinbasewallet') || id.includes('coinbase')) return 'Coinbase Wallet';
+  if (id.includes('injected') || id.includes('metamask')) return 'Browser Wallet';
+  return connector.name || 'Wallet';
+}
+
 export default function ConnectButton() {
   const { address, isConnected, chain } = useAccount();
   const { connect, connectors, isPending: isConnecting } = useConnect();
@@ -20,6 +29,7 @@ export default function ConnectButton() {
   const { switchChain } = useSwitchChain();
   const { t } = useTranslation();
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [showConnectors, setShowConnectors] = useState(false);
   const [copied, setCopied] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -27,13 +37,14 @@ export default function ConnectButton() {
     function handleClickOutside(e) {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
         setDropdownOpen(false);
+        setShowConnectors(false);
       }
     }
-    if (dropdownOpen) {
+    if (dropdownOpen || showConnectors) {
       document.addEventListener('mousedown', handleClickOutside);
       return () => document.removeEventListener('mousedown', handleClickOutside);
     }
-  }, [dropdownOpen]);
+  }, [dropdownOpen, showConnectors]);
 
   const copyAddress = async () => {
     if (!address) return;
@@ -48,21 +59,51 @@ export default function ConnectButton() {
 
   const isOnAcceptedChain = chain && ACCEPTED_IDS.has(chain.id);
 
+  // Not connected: show connector picker
   if (!isConnected) {
     return (
-      <button
-        onClick={() => connect({ connector: connectors[0] })}
-        disabled={isConnecting}
-        className="gradient-btn text-white text-sm px-4 py-2 rounded-lg font-medium cursor-pointer
-                   transition-all duration-200 hover:brightness-110 disabled:opacity-60 disabled:cursor-wait"
-      >
-        {isConnecting ? (
-          <span className="flex items-center gap-2">
-            <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-            {t.connect.connecting}
-          </span>
-        ) : t.connect.connectWallet}
-      </button>
+      <div className="relative" ref={dropdownRef}>
+        <button
+          onClick={() => setShowConnectors(prev => !prev)}
+          disabled={isConnecting}
+          aria-expanded={showConnectors}
+          className="gradient-btn text-white text-sm px-4 py-2.5 min-h-[44px] rounded-lg font-medium cursor-pointer
+                     transition-all duration-200 hover:brightness-110 disabled:opacity-60 disabled:cursor-wait"
+        >
+          {isConnecting ? (
+            <span className="flex items-center gap-2">
+              <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              {t.connect.connecting}
+            </span>
+          ) : t.connect.connectWallet}
+        </button>
+
+        {showConnectors && !isConnecting && (
+          <div className="absolute right-0 sm:right-0 top-full mt-2 w-[min(calc(100vw-2rem),18rem)]
+                          bg-[#1a2332] border border-white/10 rounded-xl shadow-xl z-50 overflow-hidden">
+            <div className="px-4 py-3 border-b border-white/5">
+              <p className="text-[11px] text-gray-500 uppercase tracking-wider">{t.connect.connectWallet}</p>
+            </div>
+            <div className="p-2 flex flex-col gap-1">
+              {connectors.map(connector => (
+                <button
+                  key={connector.uid}
+                  onClick={() => {
+                    connect({ connector });
+                    setShowConnectors(false);
+                  }}
+                  className="w-full text-left text-sm text-gray-300 hover:text-white hover:bg-white/5
+                             px-3 py-3 min-h-[44px] rounded-lg transition-colors duration-150 cursor-pointer
+                             flex items-center gap-3"
+                >
+                  <span className="w-2 h-2 rounded-full bg-blue-400 shrink-0" />
+                  {connectorLabel(connector)}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
     );
   }
 
@@ -70,7 +111,7 @@ export default function ConnectButton() {
     return (
       <button
         onClick={() => switchChain({ chainId: ACCEPTED_CHAINS[0].id })}
-        className="bg-red-600 hover:bg-red-500 text-white text-sm px-4 py-2 rounded-lg font-medium
+        className="bg-red-600 hover:bg-red-500 text-white text-sm px-4 py-2.5 min-h-[44px] rounded-lg font-medium
                    cursor-pointer transition-all duration-200"
       >
         {t.connect.switchTo} {ACCEPTED_CHAINS[0].name}
@@ -87,16 +128,17 @@ export default function ConnectButton() {
       <button
         onClick={() => setDropdownOpen((prev) => !prev)}
         aria-expanded={dropdownOpen}
-        className="glass text-gray-300 text-xs sm:text-sm px-2 sm:px-3 py-2 rounded-lg font-mono cursor-pointer
+        className="glass text-gray-300 text-xs sm:text-sm px-2 sm:px-3 py-2.5 min-h-[44px] rounded-lg font-mono cursor-pointer
                    transition-all duration-200 hover:border-white/15 flex items-center gap-2"
       >
         <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: chainColor }} />
         <span className="hidden sm:inline text-xs" style={{ color: chainColor }}>{chainLabel}</span>
-        <span>{address.slice(0, 6)}...{address.slice(-4)}</span>
+        <span className="truncate max-w-[120px]">{address.slice(0, 6)}...{address.slice(-4)}</span>
       </button>
 
       {dropdownOpen && (
-        <div className="absolute right-0 top-full mt-2 w-72 bg-[#1a2332] border border-white/10 rounded-xl shadow-xl z-50 overflow-hidden">
+        <div className="absolute right-0 sm:right-0 top-full mt-2 w-[min(calc(100vw-2rem),18rem)]
+                        bg-[#1a2332] border border-white/10 rounded-xl shadow-xl z-50 overflow-hidden">
           {/* Full address */}
           <div className="px-4 py-3 border-b border-white/5">
             <p className="text-[11px] text-gray-500 uppercase tracking-wider mb-1">{t.connect.wallet}</p>
@@ -121,7 +163,7 @@ export default function ConnectButton() {
                   key={c.id}
                   onClick={() => { switchChain({ chainId: c.id }); setDropdownOpen(false); }}
                   className="w-full text-left text-xs text-gray-300 hover:text-white hover:bg-white/5
-                             px-3 py-2 rounded-lg transition-colors duration-150 cursor-pointer flex items-center gap-2"
+                             px-3 py-3 min-h-[44px] rounded-lg transition-colors duration-150 cursor-pointer flex items-center gap-2"
                 >
                   <span className="w-2 h-2 rounded-full"
                     style={{ backgroundColor: c.id === skaleEuropa.id ? '#34D399' : '#FF9900' }} />
@@ -139,14 +181,14 @@ export default function ConnectButton() {
             <button
               onClick={copyAddress}
               className="w-full text-left text-xs text-gray-300 hover:text-white hover:bg-white/5
-                         px-3 py-2 rounded-lg transition-colors duration-150 cursor-pointer"
+                         px-3 py-3 min-h-[44px] rounded-lg transition-colors duration-150 cursor-pointer"
             >
               {copied ? t.connect.addressCopied : t.connect.copyAddress}
             </button>
             <button
               onClick={() => { disconnect(); setDropdownOpen(false); }}
               className="w-full text-left text-xs text-red-400 hover:text-red-300 hover:bg-red-500/10
-                         px-3 py-2 rounded-lg transition-colors duration-150 cursor-pointer"
+                         px-3 py-3 min-h-[44px] rounded-lg transition-colors duration-150 cursor-pointer"
             >
               {t.connect.disconnect}
             </button>

@@ -48,11 +48,16 @@ a, button, [role="button"] {
   transition: all 0.2s ease-in-out;
 }
 
-/* Scrollbar */
-::-webkit-scrollbar { width: 6px; }
+/* Scrollbar — wider on touch for usability */
+::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: #0a0a0f; }
 ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+@media (pointer: coarse) {
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); }
+}
 
 /* ========== GLASS UTILITIES ========== */
 @utility glass {
@@ -188,13 +193,21 @@ pre.code-block {
   background: #1a1f2e;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 12px;
-  padding: 1.25rem;
+  padding: 0.75rem;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.8125rem;
+  font-size: 0.75rem;
   line-height: 1.7;
   color: #E8E4E0;
   position: relative;
+}
+
+@media (min-width: 640px) {
+  pre.code-block {
+    padding: 1.25rem;
+    font-size: 0.8125rem;
+  }
 }
 
 pre.code-block .keyword { color: #FF9900; }

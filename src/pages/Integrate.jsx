@@ -29,7 +29,7 @@ export default function Integrate() {
       {/* Why Integrate */}
       <section ref={whyRef} className="reveal mb-14">
         <h2 className="text-2xl font-bold text-white mb-6">{t.integrate.whyTitle}</h2>
-        <div className="grid sm:grid-cols-3 gap-4">
+        <div className="grid md:grid-cols-3 gap-4">
           <div className="glass rounded-xl p-5 transition-all duration-200 hover:glow-orange">
             <div className="w-10 h-10 glass text-[#FF9900] rounded-full flex items-center justify-center
                             text-lg mb-3 border border-[#FF9900]/30">$</div>
@@ -311,7 +311,7 @@ result = agent.run("Find weather APIs on x402 Bazaar")`} />
       {/* Use Cases */}
       <section ref={useCasesRef} className="reveal mb-14">
         <h2 className="text-2xl font-bold text-white mb-6">{t.integrate.useCasesTitle}</h2>
-        <div className="grid sm:grid-cols-3 gap-4">
+        <div className="grid md:grid-cols-3 gap-4">
           <div className="glass rounded-xl p-5 transition-all duration-300 hover:glow-orange">
             <h3 className="text-white font-semibold mb-2">{t.integrate.useCase1Title}</h3>
             <p className="text-gray-500 text-sm">{t.integrate.useCase1Desc}</p>

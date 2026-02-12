@@ -38,7 +38,7 @@ export default function DocsSidebar({ sections, activeSection, onNavigate }) {
       {/* Mobile floating button */}
       <button
         onClick={() => setDrawerOpen(true)}
-        className="md:hidden fixed bottom-6 left-6 z-40 w-12 h-12 rounded-full bg-[#FF9900] text-white
+        className="md:hidden fixed bottom-6 left-6 z-[45] w-12 h-12 rounded-full bg-[#FF9900] text-white
                    flex items-center justify-center shadow-lg shadow-[#FF9900]/25 cursor-pointer border-none"
         aria-label="Open navigation"
       >

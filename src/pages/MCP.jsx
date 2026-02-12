@@ -83,7 +83,7 @@ function MCPCodeBlock({ code }) {
   return (
     <div className="relative group">
       <SharedCopyButton text={code} copiedLabel="Copied" />
-      <pre className="bg-[#0d1117] border border-white/10 rounded-xl p-5 pt-12 overflow-x-auto text-sm leading-relaxed">
+      <pre className="bg-[#0d1117] border border-white/10 rounded-xl p-3 sm:p-5 pt-12 overflow-x-auto text-xs sm:text-sm leading-relaxed">
         <code className="text-gray-300 font-mono">{code}</code>
       </pre>
     </div>
@@ -146,20 +146,22 @@ export default function MCP() {
         <h2 className="text-2xl font-bold text-white mb-4">{m.toolsTitle}</h2>
         <div className="space-y-3">
           {tools.map(tool => (
-            <div key={tool.name} className="glass-card rounded-xl p-4 flex items-start gap-4">
-              <code className="text-[#FF9900] font-mono text-sm font-medium shrink-0 bg-[#FF9900]/10 px-2 py-1 rounded">
-                {tool.name}
-              </code>
+            <div key={tool.name} className="glass-card rounded-xl p-3 sm:p-4 flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-4">
+              <div className="flex items-center justify-between sm:contents gap-2">
+                <code className="text-[#FF9900] font-mono text-xs sm:text-sm font-medium shrink-0 bg-[#FF9900]/10 px-2 py-1 rounded">
+                  {tool.name}
+                </code>
+                <span className={`shrink-0 text-xs font-mono font-bold px-2 py-1 rounded sm:order-last ${
+                  tool.cost === 'Free'
+                    ? 'bg-[#34D399]/10 text-[#34D399]'
+                    : 'bg-[#FF9900]/10 text-[#FF9900]'
+                }`}>
+                  {tool.cost === 'Free' ? (lang === 'fr' ? 'Gratuit' : 'Free') : tool.cost}
+                </span>
+              </div>
               <div className="flex-1 min-w-0">
                 <p className="text-gray-300 text-sm">{lang === 'fr' ? tool.desc_fr : tool.desc_en}</p>
               </div>
-              <span className={`shrink-0 text-xs font-mono font-bold px-2 py-1 rounded ${
-                tool.cost === 'Free'
-                  ? 'bg-[#34D399]/10 text-[#34D399]'
-                  : 'bg-[#FF9900]/10 text-[#FF9900]'
-              }`}>
-                {tool.cost === 'Free' ? (lang === 'fr' ? 'Gratuit' : 'Free') : tool.cost}
-              </span>
             </div>
           ))}
         </div>
@@ -281,22 +283,22 @@ export default function MCP() {
           </div>
           <p className="text-gray-400 text-sm mb-4">{m.quickInstallDesc}</p>
           <MCPCodeBlock code="npx x402-bazaar init" />
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-4">
-            <div className="flex items-center gap-2 text-sm text-gray-400">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3 mt-4">
+            <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-400">
               <svg className="w-4 h-4 text-[#34D399] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M9 12l2 2 4-4"/>
                 <circle cx="12" cy="12" r="10"/>
               </svg>
               {m.quickFeature1}
             </div>
-            <div className="flex items-center gap-2 text-sm text-gray-400">
+            <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-400">
               <svg className="w-4 h-4 text-[#34D399] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M9 12l2 2 4-4"/>
                 <circle cx="12" cy="12" r="10"/>
               </svg>
               {m.quickFeature2}
             </div>
-            <div className="flex items-center gap-2 text-sm text-gray-400">
+            <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-400">
               <svg className="w-4 h-4 text-[#34D399] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M9 12l2 2 4-4"/>
                 <circle cx="12" cy="12" r="10"/>

@@ -66,9 +66,9 @@ export default function Navbar() {
             <span className="hidden sm:inline text-white text-lg font-light">Bazaar</span>
           </Link>
 
-          {/* Search bar */}
-          <form onSubmit={handleSearch} className="flex-1 max-w-xl mx-auto">
-            <div className="relative flex items-center">
+          {/* Search bar — hidden on small screens to avoid pushing burger off-view */}
+          <form onSubmit={handleSearch} className="hidden sm:flex flex-1 max-w-xl mx-auto">
+            <div className="relative flex items-center w-full">
               <input
                 type="text"
                 value={searchValue}
@@ -160,9 +160,26 @@ export default function Navbar() {
 
         {/* Mobile menu */}
         <div className={`md:hidden overflow-hidden transition-all duration-300 ${
-          mobileOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+          mobileOpen ? 'max-h-[32rem] opacity-100' : 'max-h-0 opacity-0'
         }`}>
           <div className="border-t border-white/6 px-4 py-3 flex flex-col gap-1 bg-[#131921]">
+            {/* Mobile search bar — visible only on small screens */}
+            <form onSubmit={handleSearch} className="sm:hidden mb-2">
+              <div className="relative flex items-center">
+                <input
+                  type="text"
+                  value={searchValue}
+                  onChange={handleSearchChange}
+                  placeholder={t.nav.searchPlaceholder}
+                  className="w-full bg-white/8 border border-white/10 rounded-lg pl-10 pr-4 py-2.5 text-sm text-white
+                             placeholder-gray-500 focus:outline-none focus:border-[#FF9900]/50 focus:bg-white/10
+                             transition-all duration-200"
+                />
+                <svg className="absolute left-3 w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
+            </form>
             <span className="text-[11px] uppercase tracking-wider text-gray-500 font-medium px-3 pt-1 pb-1">{t.nav.marketplace}</span>
             {marketplaceLinks.map(({ to, label }) => {
               const isActive = pathname === to || pathname.startsWith(to + '/');

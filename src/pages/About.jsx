@@ -56,7 +56,7 @@ export default function About() {
       {/* How It Works */}
       <section ref={howItWorksRef} className="reveal mb-10">
         <h2 className="text-2xl font-bold text-white mb-4">{t.about.howItWorksTitle}</h2>
-        <div className="grid sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {[
             { num: '1', title: t.about.step1Title, desc: t.about.step1Desc.replace('{count}', serviceCount).replace('{catCount}', catCount), icon: 'search' },
             { num: '2', title: t.about.step2Title, desc: t.about.step2Desc, icon: 'payment' },

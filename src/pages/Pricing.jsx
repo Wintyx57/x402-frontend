@@ -105,10 +105,10 @@ export default function Pricing() {
         <h2 className="text-2xl font-bold text-white mb-4">{t.pricing.networkFeesTitle}</h2>
         <div className="space-y-4">
           {/* Base */}
-          <div className="glass-card rounded-lg p-5 border border-blue-500/10">
-            <div className="flex items-center justify-between mb-3">
+          <div className="glass-card rounded-lg p-4 sm:p-5 border border-blue-500/10">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-400 font-bold text-base">
+                <div className="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-400 font-bold text-base shrink-0">
                   B
                 </div>
                 <div>
@@ -116,7 +116,7 @@ export default function Pricing() {
                   <p className="text-gray-500 text-xs">{t.pricing.baseChainId}</p>
                 </div>
               </div>
-              <div className="text-right">
+              <div className="text-left sm:text-right">
                 <div className="text-blue-400 font-bold text-lg">{CHAIN_CONFIG[8453].gas}</div>
                 <p className="text-gray-500 text-xs">{t.pricing.perTx}</p>
               </div>
@@ -125,10 +125,10 @@ export default function Pricing() {
           </div>
 
           {/* SKALE */}
-          <div className="glass-card rounded-lg p-5 border border-green-500/10">
-            <div className="flex items-center justify-between mb-3">
+          <div className="glass-card rounded-lg p-4 sm:p-5 border border-green-500/10">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-green-500/10 flex items-center justify-center text-green-400 font-bold text-base">
+                <div className="w-10 h-10 rounded-full bg-green-500/10 flex items-center justify-center text-green-400 font-bold text-base shrink-0">
                   S
                 </div>
                 <div>
@@ -136,7 +136,7 @@ export default function Pricing() {
                   <p className="text-gray-500 text-xs">{t.pricing.skaleChainId}</p>
                 </div>
               </div>
-              <div className="text-right">
+              <div className="text-left sm:text-right">
                 <div className="text-green-400 font-bold text-lg">{CHAIN_CONFIG[2046399126].gas}</div>
                 <p className="text-green-400 text-xs">{t.pricing.zeroGas}</p>
               </div>

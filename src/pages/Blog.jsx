@@ -23,7 +23,7 @@ export default function Blog() {
 
         {/* Article Header */}
         <article className="text-white">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 animate-fade-in-up">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 animate-fade-in-up">
             Your AI Agent Just Got a Credit Card: Introducing x402 Bazaar
           </h1>
           <p className="text-lg sm:text-xl text-gray-400 mb-8 animate-fade-in-up delay-100">
@@ -52,7 +52,7 @@ export default function Blog() {
 
             <hr className="border-white/5 my-8" />
 
-            <h2 className="text-2xl sm:text-3xl font-bold text-white mt-10 mb-4">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mt-10 mb-4">
               The Problem: AI Agents Hit a Wall at the API Signup Page
             </h2>
 
@@ -76,7 +76,7 @@ export default function Blog() {
 
             <hr className="border-white/5 my-8" />
 
-            <h2 className="text-2xl sm:text-3xl font-bold text-white mt-10 mb-4">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mt-10 mb-4">
               The Solution: A Marketplace That Speaks HTTP 402
             </h2>
 
@@ -106,7 +106,7 @@ export default function Blog() {
 
             <hr className="border-white/5 my-8" />
 
-            <h2 className="text-2xl sm:text-3xl font-bold text-white mt-10 mb-4">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mt-10 mb-4">
               How It Works: The Technical Flow
             </h2>
 
@@ -207,7 +207,7 @@ Content-Type: application/json
 
             <hr className="border-white/5 my-8" />
 
-            <h2 className="text-2xl sm:text-3xl font-bold text-white mt-10 mb-4">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mt-10 mb-4">
               Security: Built for a Trustless Environment
             </h2>
 
@@ -231,7 +231,7 @@ Content-Type: application/json
 
             <hr className="border-white/5 my-8" />
 
-            <h2 className="text-2xl sm:text-3xl font-bold text-white mt-10 mb-4">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mt-10 mb-4">
               What's in the Marketplace
             </h2>
 
@@ -287,7 +287,7 @@ Content-Type: application/json
 
             <hr className="border-white/5 my-8" />
 
-            <h2 className="text-2xl sm:text-3xl font-bold text-white mt-10 mb-4">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mt-10 mb-4">
               MCP Integration: Plug Into Your AI Assistant
             </h2>
 
@@ -323,7 +323,7 @@ Content-Type: application/json
 
             <hr className="border-white/5 my-8" />
 
-            <h2 className="text-2xl sm:text-3xl font-bold text-white mt-10 mb-4">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mt-10 mb-4">
               Get Started in One Command
             </h2>
 
@@ -344,7 +344,7 @@ Content-Type: application/json
 
             <hr className="border-white/5 my-8" />
 
-            <h2 className="text-2xl sm:text-3xl font-bold text-white mt-10 mb-4">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mt-10 mb-4">
               Built on Coinbase's x402 Standard
             </h2>
 
@@ -362,7 +362,7 @@ Content-Type: application/json
 
             <hr className="border-white/5 my-8" />
 
-            <h2 className="text-2xl sm:text-3xl font-bold text-white mt-10 mb-4">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mt-10 mb-4">
               The Bigger Picture: Agent Commerce
             </h2>
 
@@ -384,7 +384,7 @@ Content-Type: application/json
 
             <hr className="border-white/5 my-8" />
 
-            <h2 className="text-2xl sm:text-3xl font-bold text-white mt-10 mb-4">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mt-10 mb-4">
               Links
             </h2>
 
@@ -426,7 +426,7 @@ Content-Type: application/json
 
             <hr className="border-white/5 my-8" />
 
-            <h2 className="text-2xl sm:text-3xl font-bold text-white mt-10 mb-4">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mt-10 mb-4">
               Try It Now
             </h2>
 

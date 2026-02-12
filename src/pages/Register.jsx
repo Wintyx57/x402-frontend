@@ -251,7 +251,7 @@ export default function Register() {
 
           {isProcessing && paymentStep > 0 && (
             <div className="flex flex-col items-center gap-3 py-4">
-              <div className="w-8 h-8 border-2 border-[#FF9900] border-t-transparent rounded-full animate-spin" />
+              <div className="w-10 h-10 border-2 border-[#FF9900] border-t-transparent rounded-full animate-spin" />
               <p className="text-white text-sm font-medium">{PAYMENT_STEPS[paymentStep]}</p>
               <p className="text-gray-500 text-xs">Step {paymentStep} of 4</p>
             </div>
@@ -284,7 +284,7 @@ export default function Register() {
       {/* What Happens Next */}
       <div className="mt-10 mb-2">
         <h2 className="text-lg font-bold text-white text-center mb-6">{t.register.whatHappensNext}</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="glass-card rounded-xl p-5 text-center">
             <div className="w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-3 bg-[#FF9900]/10 border border-[#FF9900]/20">
               <svg className="w-5 h-5 text-[#FF9900]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
