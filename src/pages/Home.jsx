@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { API_URL } from '../config';
 import { useTranslation } from '../i18n/LanguageContext';
 import { useReveal } from '../hooks/useReveal';
+import useSEO from '../hooks/useSEO';
 import ServiceCard from '../components/ServiceCard';
 import CategoryIcon from '../components/CategoryIcon';
 import GitHubIcon from '../components/icons/GitHubIcon';
@@ -24,7 +25,10 @@ export default function Home() {
   const freeRef = useReveal();
   const paidRef = useReveal();
 
-  useEffect(() => { document.title = 'x402 Bazaar | AI API Marketplace'; }, []);
+  useSEO({
+    title: 'API Marketplace for AI Agents',
+    description: 'The first API marketplace where AI agents pay per call with USDC. 70+ services, instant payments via x402 protocol on Base.'
+  });
 
   useEffect(() => {
     const controller = new AbortController();

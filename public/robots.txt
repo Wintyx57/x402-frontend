@@ -1,4 +1,6 @@
 User-agent: *
 Allow: /
-
+Disallow: /config
+Crawl-delay: 1
 Sitemap: https://x402bazaar.org/sitemap.xml
+Host: https://x402bazaar.org

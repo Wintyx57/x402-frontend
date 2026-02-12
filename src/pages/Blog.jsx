@@ -1,11 +1,15 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '../i18n/LanguageContext';
+import useSEO from '../hooks/useSEO';
 
 export default function Blog() {
   const { t } = useTranslation();
 
-  useEffect(() => { document.title = `${t.blog.title} | x402 Bazaar`; }, [t]);
+  useSEO({
+    title: 'Blog',
+    description: 'Latest news, updates and insights from x402 Bazaar. Protocol updates, new API wrappers and ecosystem growth.'
+  });
 
   return (
     <div className="min-h-screen">

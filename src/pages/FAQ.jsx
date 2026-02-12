@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from '../i18n/LanguageContext';
 import { useReveal } from '../hooks/useReveal';
+import useSEO from '../hooks/useSEO';
 import { Link } from 'react-router-dom';
 
 function FAQItem({ question, answer }) {
@@ -45,11 +46,46 @@ function FAQItem({ question, answer }) {
 
 export default function FAQ() {
   const { t } = useTranslation();
-  useEffect(() => { document.title = 'FAQ | x402 Bazaar'; }, []);
+  useSEO({
+    title: 'FAQ',
+    description: 'Frequently asked questions about x402 Bazaar — payments, listing APIs, testnet, gas fees and troubleshooting.'
+  });
   const ref1 = useReveal();
   const ref2 = useReveal();
   const ref3 = useReveal();
   const ref4 = useReveal();
+
+  // FAQPage JSON-LD Schema
+  useEffect(() => {
+    const faqSchema = {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: [
+        { '@type': 'Question', name: t.faq.q1, acceptedAnswer: { '@type': 'Answer', text: t.faq.a1 } },
+        { '@type': 'Question', name: t.faq.q2, acceptedAnswer: { '@type': 'Answer', text: t.faq.a2 } },
+        { '@type': 'Question', name: t.faq.q3, acceptedAnswer: { '@type': 'Answer', text: t.faq.a3 } },
+        { '@type': 'Question', name: t.faq.q4, acceptedAnswer: { '@type': 'Answer', text: t.faq.a4 } },
+        { '@type': 'Question', name: t.faq.q5, acceptedAnswer: { '@type': 'Answer', text: t.faq.a5 } },
+        { '@type': 'Question', name: t.faq.q6, acceptedAnswer: { '@type': 'Answer', text: t.faq.a6 } },
+        { '@type': 'Question', name: t.faq.q7, acceptedAnswer: { '@type': 'Answer', text: t.faq.a7 } },
+        { '@type': 'Question', name: t.faq.q8, acceptedAnswer: { '@type': 'Answer', text: t.faq.a8 } },
+        { '@type': 'Question', name: t.faq.q9, acceptedAnswer: { '@type': 'Answer', text: t.faq.a9 } },
+        { '@type': 'Question', name: t.faq.q10, acceptedAnswer: { '@type': 'Answer', text: t.faq.a10 } },
+      ]
+    };
+    let script = document.getElementById('faq-jsonld');
+    if (!script) {
+      script = document.createElement('script');
+      script.id = 'faq-jsonld';
+      script.type = 'application/ld+json';
+      document.head.appendChild(script);
+    }
+    script.textContent = JSON.stringify(faqSchema);
+    return () => {
+      const s = document.getElementById('faq-jsonld');
+      if (s) s.remove();
+    };
+  }, [t]);
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-12">

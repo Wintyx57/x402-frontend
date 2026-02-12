@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import { useTranslation } from '../i18n/LanguageContext';
 import { useReveal } from '../hooks/useReveal';
+import useSEO from '../hooks/useSEO';
 
 const environments = [
   { id: 'claude-desktop', name: 'Claude Desktop', icon: <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1l2.5 7.5L22 12l-7.5 2.5L12 22l-2.5-7.5L2 12l7.5-2.5z"/></svg> },
@@ -118,7 +119,10 @@ export default function Config() {
   const c = t.config;
   const reveal = useReveal();
 
-  useEffect(() => { document.title = 'Config Generator | x402 Bazaar'; }, []);
+  useSEO({
+    title: 'Config Generator',
+    description: 'Generate your MCP configuration for x402 Bazaar. Interactive form with JSON preview and one-click copy.'
+  });
 
   const detectedOs = useMemo(() => detectOS(), []);
 

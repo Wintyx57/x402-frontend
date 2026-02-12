@@ -1,11 +1,15 @@
 import { useEffect } from 'react';
 import { useTranslation } from '../i18n/LanguageContext';
 import { useReveal } from '../hooks/useReveal';
+import useSEO from '../hooks/useSEO';
 import { Link } from 'react-router-dom';
 
 export default function Demos() {
   const { t } = useTranslation();
-  useEffect(() => { document.title = 'Demos | x402 Bazaar'; }, []);
+  useSEO({
+    title: 'Agent Demos',
+    description: 'Watch AI agents use x402 Bazaar in action. Live demos with code examples for autonomous API consumption.'
+  });
   const revealRef = useReveal();
   const scenariosRef = useReveal();
 

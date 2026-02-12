@@ -3,6 +3,7 @@ import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagm
 import { parseUnits } from 'viem';
 import { API_URL, USDC_ABI, CHAIN_CONFIG } from '../config';
 import { useTranslation } from '../i18n/LanguageContext';
+import useSEO from '../hooks/useSEO';
 
 const REGISTER_COST = 1;
 
@@ -11,7 +12,10 @@ export default function Register() {
   const { writeContractAsync } = useWriteContract();
   const { t } = useTranslation();
 
-  useEffect(() => { document.title = 'Register | x402 Bazaar'; }, []);
+  useSEO({
+    title: 'Register Your API',
+    description: 'List your API on x402 Bazaar. Set your price in USDC, get instant payments from AI agents via the x402 protocol.'
+  });
 
   const PAYMENT_STEPS = [
     '', // 0 = idle

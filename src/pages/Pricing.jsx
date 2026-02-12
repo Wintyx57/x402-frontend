@@ -2,12 +2,16 @@ import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '../i18n/LanguageContext';
 import { useReveal } from '../hooks/useReveal';
+import useSEO from '../hooks/useSEO';
 import { CHAIN_CONFIG } from '../config';
 import GitHubIcon from '../components/icons/GitHubIcon';
 
 export default function Pricing() {
   const { t } = useTranslation();
-  useEffect(() => { document.title = 'Pricing | x402 Bazaar'; }, []);
+  useSEO({
+    title: 'Pricing',
+    description: 'x402 Bazaar pricing — pay per API call with USDC stablecoins. No subscriptions, no minimums. From $0.001 to $0.10 per call.'
+  });
   const howRef = useReveal();
   const pricingRef = useReveal();
   const networkRef = useReveal();

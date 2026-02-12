@@ -2,11 +2,15 @@ import { useEffect } from 'react';
 import { API_URL } from '../config';
 import { useTranslation } from '../i18n/LanguageContext';
 import { useReveal } from '../hooks/useReveal';
+import useSEO from '../hooks/useSEO';
 import CodeBlock from '../components/CodeBlock';
 import GitHubIcon from '../components/icons/GitHubIcon';
 
 export default function Developers() {
-  useEffect(() => { document.title = 'Developers | x402 Bazaar'; }, []);
+  useSEO({
+    title: 'Developer Documentation',
+    description: 'Complete API documentation for x402 Bazaar. Endpoints, authentication, payment flow and code examples.'
+  });
   const baseUrl = API_URL === 'http://localhost:3000' ? 'https://x402-api.onrender.com' : API_URL;
   const { t } = useTranslation();
   const protocolRef = useReveal();

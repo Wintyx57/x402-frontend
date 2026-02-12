@@ -2,12 +2,16 @@ import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '../i18n/LanguageContext';
 import { useReveal } from '../hooks/useReveal';
+import useSEO from '../hooks/useSEO';
 import CodeBlock from '../components/CodeBlock';
 import GitHubIcon from '../components/icons/GitHubIcon';
 
 export default function Integrate() {
   const { t } = useTranslation();
-  useEffect(() => { document.title = 'Integrate | x402 Bazaar'; }, []);
+  useSEO({
+    title: 'Integration Guide',
+    description: 'Integrate x402 Bazaar into your AI agent. JavaScript, Python and LangChain examples with full payment handling.'
+  });
   const whyRef = useReveal();
   const flowRef = useReveal();
   const coreRef = useReveal();

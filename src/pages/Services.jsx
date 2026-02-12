@@ -2,6 +2,7 @@ import { useEffect, useState, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { API_URL } from '../config';
 import { useTranslation } from '../i18n/LanguageContext';
+import useSEO from '../hooks/useSEO';
 import ServiceCard from '../components/ServiceCard';
 import CategoryIcon from '../components/CategoryIcon';
 import { CATEGORIES, CATEGORY_LABELS } from '../data/categories';
@@ -31,7 +32,10 @@ export default function Services() {
     setSearchParams(params);
   };
 
-  useEffect(() => { document.title = 'Services | x402 Bazaar'; }, []);
+  useSEO({
+    title: 'API Services',
+    description: 'Browse 70+ API services available for AI agents. Weather, crypto, search, image generation and more — pay per call with USDC.'
+  });
 
   useEffect(() => {
     const controller = new AbortController();

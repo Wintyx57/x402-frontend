@@ -37,34 +37,53 @@
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "WebApplication",
+      "@type": "Organization",
       "name": "x402 Bazaar",
       "url": "https://x402bazaar.org",
-      "description": "The first autonomous AI-to-AI marketplace. Discover, pay, and consume API services with USDC micropayments on Base & SKALE using the HTTP 402 protocol.",
-      "applicationCategory": "DeveloperApplication",
-      "operatingSystem": "Web",
-      "offers": {
-        "@type": "AggregateOffer",
-        "priceCurrency": "USD",
-        "lowPrice": "0.005",
-        "highPrice": "0.10",
-        "offerCount": "70+"
-      },
-      "creator": {
-        "@type": "Organization",
-        "name": "x402 Bazaar",
-        "url": "https://x402bazaar.org"
-      },
-      "featureList": [
-        "HTTP 402 micropayments",
-        "USDC on Base & SKALE",
-        "AI agent API marketplace",
-        "MCP server integration",
-        "Zero gas fees on SKALE",
-        "On-chain payment verification"
+      "logo": "https://x402bazaar.org/favicon.svg",
+      "description": "The first API marketplace powered by x402 protocol — AI agents pay per call with USDC stablecoins.",
+      "sameAs": [
+        "https://github.com/Wintyx57/x402-backend",
+        "https://github.com/Wintyx57/x402-frontend",
+        "https://www.npmjs.com/package/x402-bazaar"
       ]
     }
     </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "x402 Bazaar",
+      "url": "https://x402bazaar.org",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://x402bazaar.org/services?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "x402 Bazaar",
+      "url": "https://x402bazaar.org",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "All",
+      "offers": {
+        "@type": "AggregateOffer",
+        "priceCurrency": "USD",
+        "lowPrice": "0",
+        "highPrice": "0.10",
+        "offerCount": "70"
+      }
+    }
+    </script>
+
+    <!-- Google -->
+    <meta name="google" content="notranslate">
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />

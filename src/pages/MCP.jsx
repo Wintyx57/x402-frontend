@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from '../i18n/LanguageContext';
 import { useReveal } from '../hooks/useReveal';
+import useSEO from '../hooks/useSEO';
 import SharedCopyButton from '../components/CopyButton';
 
 const CLAUDE_CONFIG = `{
@@ -97,7 +98,10 @@ export default function MCP() {
   const [showManual, setShowManual] = useState(false);
   const reveal = useReveal();
 
-  useEffect(() => { document.title = 'MCP Server | x402 Bazaar'; }, []);
+  useSEO({
+    title: 'MCP Server Setup',
+    description: 'Set up the x402 Bazaar MCP server for Claude Desktop, Cursor or VS Code. One-command install with npx.'
+  });
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-10">

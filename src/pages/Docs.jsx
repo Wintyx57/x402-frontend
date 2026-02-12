@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '../i18n/LanguageContext';
 import { useScrollSpy } from '../hooks/useScrollSpy';
+import useSEO from '../hooks/useSEO';
 import { API_URL } from '../config';
 import DocsSidebar from '../components/DocsSidebar';
 import SharedCopyButton from '../components/CopyButton';
@@ -162,7 +163,10 @@ export default function Docs() {
   const [endpointsRaw, setEndpointsRaw] = useState(undefined);
   const activeSection = useScrollSpy(SECTION_IDS);
 
-  useEffect(() => { document.title = 'Documentation | x402 Bazaar'; }, []);
+  useSEO({
+    title: 'Documentation',
+    description: 'Complete technical documentation for x402 Bazaar — protocol spec, API reference, native wrappers, MCP integration and security.'
+  });
 
   useEffect(() => {
     const controller = new AbortController();

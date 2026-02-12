@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '../i18n/LanguageContext';
 import { useReveal } from '../hooks/useReveal';
+import useSEO from '../hooks/useSEO';
 import { API_URL, CHAIN_CONFIG } from '../config';
 import GitHubIcon from '../components/icons/GitHubIcon';
 
@@ -10,7 +11,10 @@ export default function About() {
   const [serviceCount, setServiceCount] = useState('...');
   const [catCount, setCatCount] = useState('...');
 
-  useEffect(() => { document.title = 'About | x402 Bazaar'; }, []);
+  useSEO({
+    title: 'About',
+    description: 'Learn about x402 Bazaar — the first API marketplace powered by the x402 payment protocol. Our mission, security and team.'
+  });
 
   useEffect(() => {
     const controller = new AbortController();
