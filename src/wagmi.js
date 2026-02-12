@@ -5,7 +5,7 @@ import { base, baseSepolia, skaleEuropa } from '@reown/appkit/networks';
 // Re-export for ConnectButton chain comparison (uses .id as number)
 export { skaleEuropa };
 
-const projectId = '3a8170b8cda23c42664370d9764bffd2';
+const projectId = '2437e069335d816faf9cfca4e2702ddf';
 
 const networks = [base, baseSepolia, skaleEuropa];
 
