@@ -16,7 +16,6 @@ const About = lazy(() => import('./pages/About'));
 const Pricing = lazy(() => import('./pages/Pricing'));
 const FAQ = lazy(() => import('./pages/FAQ'));
 const Demos = lazy(() => import('./pages/Demos'));
-const Analytics = lazy(() => import('./pages/Analytics'));
 const Config = lazy(() => import('./pages/Config'));
 const Docs = lazy(() => import('./pages/Docs'));
 const NotFound = lazy(() => import('./pages/NotFound'));
@@ -39,7 +38,6 @@ export default function App() {
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/faq" element={<FAQ />} />
             <Route path="/demos" element={<Demos />} />
-            <Route path="/analytics" element={<Analytics />} />
             <Route path="/config" element={<Config />} />
             <Route path="/docs" element={<Docs />} />
             <Route path="*" element={<NotFound />} />
