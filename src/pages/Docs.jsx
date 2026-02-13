@@ -116,6 +116,568 @@ const NATIVE_ENDPOINTS = [
   "_payment": { "amount": 0.05, "txHash": "0x..." }
 }`,
   },
+  {
+    id: 'translate', route: '/api/translate', method: 'GET', price: '0.005',
+    titleKey: 'translateTitle', descKey: 'translateDesc',
+    params: [
+      { name: 'text', type: 'string', required: true, descKey: 'translateParamText' },
+      { name: 'from', type: 'string', required: false, descKey: 'translateParamFrom' },
+      { name: 'to', type: 'string', required: true, descKey: 'translateParamTo' },
+    ],
+    curl: `curl "${API_BASE}/api/translate?text=Hello&to=fr"`,
+    response: `{
+  "success": true,
+  "translatedText": "Bonjour",
+  "from": "en",
+  "to": "fr",
+  "original": "Hello"
+}`,
+  },
+  {
+    id: 'summarize', route: '/api/summarize', method: 'GET', price: '0.01',
+    titleKey: 'summarizeTitle', descKey: 'summarizeDesc',
+    params: [
+      { name: 'text', type: 'string', required: true, descKey: 'summarizeParamText' },
+      { name: 'maxLength', type: 'number', required: false, descKey: 'summarizeParamMax' },
+    ],
+    curl: `curl "${API_BASE}/api/summarize?text=Long+article+text+here...&maxLength=100"`,
+    response: `{
+  "success": true,
+  "summary": "Brief summary of the text",
+  "originalLength": 5000,
+  "summaryLength": 150
+}`,
+  },
+  {
+    id: 'code', route: '/api/code', method: 'POST', price: '0.005',
+    titleKey: 'codeTitle', descKey: 'codeDesc',
+    params: [
+      { name: 'language', type: 'string', required: true, descKey: 'codeParamLang' },
+      { name: 'code', type: 'string', required: true, descKey: 'codeParamCode' },
+    ],
+    curl: `curl -X POST "${API_BASE}/api/code" -H "Content-Type: application/json" -d '{"language":"python","code":"print(42)"}'`,
+    response: `{
+  "success": true,
+  "language": "python",
+  "version": "3.10.12",
+  "output": "42\\n",
+  "stderr": ""
+}`,
+  },
+  {
+    id: 'dns', route: '/api/dns', method: 'GET', price: '0.003',
+    titleKey: 'dnsTitle', descKey: 'dnsDesc',
+    params: [
+      { name: 'domain', type: 'string', required: true, descKey: 'dnsParamDomain' },
+      { name: 'type', type: 'string', required: false, descKey: 'dnsParamType' },
+    ],
+    curl: `curl "${API_BASE}/api/dns?domain=google.com&type=A"`,
+    response: `{
+  "success": true,
+  "domain": "google.com",
+  "type": "A",
+  "records": ["142.251.41.14"]
+}`,
+  },
+  {
+    id: 'qrcode-gen', route: '/api/qrcode-gen', method: 'GET', price: '0.003',
+    titleKey: 'qrcodeGenTitle', descKey: 'qrcodeGenDesc',
+    params: [
+      { name: 'data', type: 'string', required: true, descKey: 'qrcodeGenParamData' },
+      { name: 'size', type: 'number', required: false, descKey: 'qrcodeGenParamSize' },
+    ],
+    curl: `curl "${API_BASE}/api/qrcode-gen?data=https://x402bazaar.org&size=300"`,
+    response: `{
+  "success": true,
+  "imageUrl": "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=...",
+  "data": "https://x402bazaar.org",
+  "size": 300
+}`,
+  },
+  {
+    id: 'readability', route: '/api/readability', method: 'GET', price: '0.005',
+    titleKey: 'readabilityTitle', descKey: 'readabilityDesc',
+    params: [
+      { name: 'url', type: 'string', required: true, descKey: 'readabilityParamUrl' },
+    ],
+    curl: `curl "${API_BASE}/api/readability?url=https://example.com"`,
+    response: `{
+  "success": true,
+  "title": "Example Domain",
+  "text": "Full extracted article text...",
+  "wordCount": 1200,
+  "url": "https://example.com"
+}`,
+  },
+  {
+    id: 'sentiment', route: '/api/sentiment', method: 'GET', price: '0.005',
+    titleKey: 'sentimentTitle', descKey: 'sentimentDesc',
+    params: [
+      { name: 'text', type: 'string', required: true, descKey: 'sentimentParamText' },
+    ],
+    curl: `curl "${API_BASE}/api/sentiment?text=I+love+this+product"`,
+    response: `{
+  "success": true,
+  "sentiment": "positive",
+  "score": 0.85,
+  "keywords": ["love", "product"],
+  "text": "I love this product"
+}`,
+  },
+  {
+    id: 'validate-email', route: '/api/validate-email', method: 'GET', price: '0.003',
+    titleKey: 'validateEmailTitle', descKey: 'validateEmailDesc',
+    params: [
+      { name: 'email', type: 'string', required: true, descKey: 'validateEmailParamEmail' },
+    ],
+    curl: `curl "${API_BASE}/api/validate-email?email=test@example.com"`,
+    response: `{
+  "success": true,
+  "email": "test@example.com",
+  "valid": true,
+  "format": true,
+  "mxRecords": true,
+  "domain": "example.com"
+}`,
+  },
+  {
+    id: 'hash', route: '/api/hash', method: 'GET', price: '0.001',
+    titleKey: 'hashTitle', descKey: 'hashDesc',
+    params: [
+      { name: 'text', type: 'string', required: true, descKey: 'hashParamText' },
+      { name: 'algo', type: 'string', required: false, descKey: 'hashParamAlgo' },
+    ],
+    curl: `curl "${API_BASE}/api/hash?text=hello&algo=sha256"`,
+    response: `{
+  "success": true,
+  "hash": "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824",
+  "algorithm": "sha256",
+  "input_length": 5
+}`,
+  },
+  {
+    id: 'uuid', route: '/api/uuid', method: 'GET', price: '0.001',
+    titleKey: 'uuidTitle', descKey: 'uuidDesc',
+    params: [
+      { name: 'count', type: 'number', required: false, descKey: 'uuidParamCount' },
+    ],
+    curl: `curl "${API_BASE}/api/uuid?count=3"`,
+    response: `{
+  "success": true,
+  "uuids": ["a1b2c3d4-e5f6-...", "b2c3d4e5-f6g7-...", "c3d4e5f6-g7h8-..."],
+  "count": 3
+}`,
+  },
+  {
+    id: 'base64', route: '/api/base64', method: 'GET', price: '0.001',
+    titleKey: 'base64Title', descKey: 'base64Desc',
+    params: [
+      { name: 'text', type: 'string', required: true, descKey: 'base64ParamText' },
+      { name: 'mode', type: 'string', required: false, descKey: 'base64ParamMode' },
+    ],
+    curl: `curl "${API_BASE}/api/base64?text=hello&mode=encode"`,
+    response: `{
+  "success": true,
+  "result": "aGVsbG8=",
+  "mode": "encode",
+  "input_length": 5,
+  "output_length": 8
+}`,
+  },
+  {
+    id: 'password', route: '/api/password', method: 'GET', price: '0.001',
+    titleKey: 'passwordTitle', descKey: 'passwordDesc',
+    params: [
+      { name: 'length', type: 'number', required: false, descKey: 'passwordParamLength' },
+      { name: 'symbols', type: 'string', required: false, descKey: 'passwordParamSymbols' },
+      { name: 'numbers', type: 'string', required: false, descKey: 'passwordParamNumbers' },
+      { name: 'uppercase', type: 'string', required: false, descKey: 'passwordParamUppercase' },
+    ],
+    curl: `curl "${API_BASE}/api/password?length=20&symbols=true"`,
+    response: `{
+  "success": true,
+  "password": "Kx7@mP2qLz9$vR4wB5!t",
+  "length": 20,
+  "options": { "symbols": true, "numbers": true, "uppercase": true }
+}`,
+  },
+  {
+    id: 'currency', route: '/api/currency', method: 'GET', price: '0.005',
+    titleKey: 'currencyTitle', descKey: 'currencyDesc',
+    params: [
+      { name: 'from', type: 'string', required: true, descKey: 'currencyParamFrom' },
+      { name: 'to', type: 'string', required: true, descKey: 'currencyParamTo' },
+      { name: 'amount', type: 'number', required: false, descKey: 'currencyParamAmount' },
+    ],
+    curl: `curl "${API_BASE}/api/currency?from=USD&to=EUR&amount=100"`,
+    response: `{
+  "success": true,
+  "from": "USD",
+  "to": "EUR",
+  "amount": 100,
+  "converted": 92.50,
+  "rate": 0.925,
+  "date": "2026-02-13"
+}`,
+  },
+  {
+    id: 'timestamp', route: '/api/timestamp', method: 'GET', price: '0.001',
+    titleKey: 'timestampTitle', descKey: 'timestampDesc',
+    params: [
+      { name: 'ts', type: 'number', required: false, descKey: 'timestampParamTs' },
+      { name: 'date', type: 'string', required: false, descKey: 'timestampParamDate' },
+    ],
+    curl: `curl "${API_BASE}/api/timestamp"`,
+    response: `{
+  "success": true,
+  "timestamp": 1739439600,
+  "timestamp_ms": 1739439600000,
+  "iso": "2026-02-13T10:30:00.000Z",
+  "utc": "Fri, 13 Feb 2026 10:30:00 GMT"
+}`,
+  },
+  {
+    id: 'lorem', route: '/api/lorem', method: 'GET', price: '0.001',
+    titleKey: 'loremTitle', descKey: 'loremDesc',
+    params: [
+      { name: 'paragraphs', type: 'number', required: false, descKey: 'loremParamParagraphs' },
+    ],
+    curl: `curl "${API_BASE}/api/lorem?paragraphs=2"`,
+    response: `{
+  "success": true,
+  "paragraphs": ["Lorem ipsum dolor sit amet...", "Sed do eiusmod tempor..."],
+  "count": 2,
+  "total_words": 150
+}`,
+  },
+  {
+    id: 'headers', route: '/api/headers', method: 'GET', price: '0.003',
+    titleKey: 'headersTitle', descKey: 'headersDesc',
+    params: [
+      { name: 'url', type: 'string', required: true, descKey: 'headersParamUrl' },
+    ],
+    curl: `curl "${API_BASE}/api/headers?url=https://example.com"`,
+    response: `{
+  "success": true,
+  "url": "https://example.com",
+  "status": 200,
+  "headers": { "content-type": "text/html", "server": "nginx" }
+}`,
+  },
+  {
+    id: 'markdown', route: '/api/markdown', method: 'GET', price: '0.001',
+    titleKey: 'markdownTitle', descKey: 'markdownDesc',
+    params: [
+      { name: 'text', type: 'string', required: true, descKey: 'markdownParamText' },
+    ],
+    curl: `curl "${API_BASE}/api/markdown?text=**bold**+_italic_"`,
+    response: `{
+  "success": true,
+  "html": "<p><strong>bold</strong> <em>italic</em></p>",
+  "input_length": 16,
+  "output_length": 42
+}`,
+  },
+  {
+    id: 'color', route: '/api/color', method: 'GET', price: '0.001',
+    titleKey: 'colorTitle', descKey: 'colorDesc',
+    params: [
+      { name: 'hex', type: 'string', required: false, descKey: 'colorParamHex' },
+      { name: 'rgb', type: 'string', required: false, descKey: 'colorParamRgb' },
+    ],
+    curl: `curl "${API_BASE}/api/color?hex=FF5733"`,
+    response: `{
+  "success": true,
+  "hex": "#ff5733",
+  "rgb": { "r": 255, "g": 87, "b": 51 },
+  "hsl": { "h": 9, "s": 100, "l": 60 },
+  "css_rgb": "rgb(255, 87, 51)"
+}`,
+  },
+  {
+    id: 'json-validate', route: '/api/json-validate', method: 'POST', price: '0.001',
+    titleKey: 'jsonValidateTitle', descKey: 'jsonValidateDesc',
+    params: [
+      { name: 'json', type: 'string', required: true, descKey: 'jsonValidateParamJson' },
+    ],
+    curl: `curl -X POST "${API_BASE}/api/json-validate" -H "Content-Type: application/json" -d '{"json":"{\\"key\\":\\"value\\"}"}'`,
+    response: `{
+  "success": true,
+  "valid": true,
+  "formatted": "{\\n  \\"key\\": \\"value\\"\\n}",
+  "type": "object",
+  "keys_count": 1
+}`,
+  },
+  {
+    id: 'useragent', route: '/api/useragent', method: 'GET', price: '0.001',
+    titleKey: 'useragentTitle', descKey: 'useragentDesc',
+    params: [
+      { name: 'ua', type: 'string', required: false, descKey: 'useragentParamUa' },
+    ],
+    curl: `curl "${API_BASE}/api/useragent"`,
+    response: `{
+  "success": true,
+  "user_agent": "curl/8.1.2",
+  "browser": "curl/8.1.2",
+  "os": "Unknown",
+  "is_mobile": false,
+  "is_bot": false
+}`,
+  },
+  {
+    id: 'wikipedia', route: '/api/wikipedia', method: 'GET', price: '0.005',
+    titleKey: 'wikipediaTitle', descKey: 'wikipediaDesc',
+    params: [
+      { name: 'q', type: 'string', required: true, descKey: 'wikipediaParamQ' },
+    ],
+    curl: `curl "${API_BASE}/api/wikipedia?q=Bitcoin"`,
+    response: `{
+  "success": true,
+  "title": "Bitcoin",
+  "extract": "Bitcoin is a cryptocurrency...",
+  "description": "Decentralized cryptocurrency",
+  "thumbnail": "https://upload.wikimedia.org/...",
+  "url": "https://en.wikipedia.org/wiki/Bitcoin"
+}`,
+  },
+  {
+    id: 'dictionary', route: '/api/dictionary', method: 'GET', price: '0.005',
+    titleKey: 'dictionaryTitle', descKey: 'dictionaryDesc',
+    params: [
+      { name: 'word', type: 'string', required: true, descKey: 'dictionaryParamWord' },
+    ],
+    curl: `curl "${API_BASE}/api/dictionary?word=hello"`,
+    response: `{
+  "success": true,
+  "word": "hello",
+  "phonetic": "/həˈloʊ/",
+  "meanings": [
+    {
+      "partOfSpeech": "interjection",
+      "definitions": ["Used as a greeting"]
+    }
+  ],
+  "sourceUrl": "https://en.wiktionary.org/wiki/hello"
+}`,
+  },
+  {
+    id: 'countries', route: '/api/countries', method: 'GET', price: '0.005',
+    titleKey: 'countriesTitle', descKey: 'countriesDesc',
+    params: [
+      { name: 'name', type: 'string', required: true, descKey: 'countriesParamName' },
+    ],
+    curl: `curl "${API_BASE}/api/countries?name=France"`,
+    response: `{
+  "success": true,
+  "name": "France",
+  "official": "French Republic",
+  "capital": "Paris",
+  "population": 67391582,
+  "region": "Europe",
+  "subregion": "Western Europe",
+  "currencies": ["Euro"],
+  "languages": ["French"],
+  "flag": "https://flagcdn.com/w320/fr.png",
+  "timezones": ["UTC+01:00"]
+}`,
+  },
+  {
+    id: 'github', route: '/api/github', method: 'GET', price: '0.005',
+    titleKey: 'githubTitle', descKey: 'githubDesc',
+    params: [
+      { name: 'user', type: 'string', required: false, descKey: 'githubParamUser' },
+      { name: 'repo', type: 'string', required: false, descKey: 'githubParamRepo' },
+    ],
+    curl: `curl "${API_BASE}/api/github?user=torvalds"`,
+    response: `{
+  "success": true,
+  "type": "user",
+  "login": "torvalds",
+  "name": "Linus Torvalds",
+  "bio": "Creator of Linux",
+  "public_repos": 5,
+  "followers": 200000,
+  "following": 0,
+  "avatar": "https://avatars.githubusercontent.com/...",
+  "url": "https://github.com/torvalds",
+  "created_at": "2011-09-03T15:26:22Z"
+}`,
+  },
+  {
+    id: 'npm', route: '/api/npm', method: 'GET', price: '0.005',
+    titleKey: 'npmTitle', descKey: 'npmDesc',
+    params: [
+      { name: 'package', type: 'string', required: true, descKey: 'npmParamPackage' },
+    ],
+    curl: `curl "${API_BASE}/api/npm?package=react"`,
+    response: `{
+  "success": true,
+  "name": "react",
+  "description": "React is a JavaScript library for building user interfaces.",
+  "latest_version": "18.3.1",
+  "license": "MIT",
+  "homepage": "https://react.dev",
+  "repository": "git+https://github.com/facebook/react.git",
+  "keywords": ["react", "frontend", "ui"],
+  "author": "Meta",
+  "modified": "2025-01-15T12:00:00.000Z"
+}`,
+  },
+  {
+    id: 'ip', route: '/api/ip', method: 'GET', price: '0.005',
+    titleKey: 'ipTitle', descKey: 'ipDesc',
+    params: [
+      { name: 'address', type: 'string', required: true, descKey: 'ipParamAddress' },
+    ],
+    curl: `curl "${API_BASE}/api/ip?address=8.8.8.8"`,
+    response: `{
+  "success": true,
+  "ip": "8.8.8.8",
+  "country": "United States",
+  "country_code": "US",
+  "region": "California",
+  "city": "Mountain View",
+  "zip": "94035",
+  "latitude": 37.386,
+  "longitude": -122.0838,
+  "timezone": "America/Los_Angeles",
+  "isp": "Google LLC",
+  "org": "Google Public DNS"
+}`,
+  },
+  {
+    id: 'qrcode', route: '/api/qrcode', method: 'GET', price: '0.005',
+    titleKey: 'qrcodeTitle', descKey: 'qrcodeDesc',
+    params: [
+      { name: 'text', type: 'string', required: true, descKey: 'qrcodeParamText' },
+      { name: 'size', type: 'number', required: false, descKey: 'qrcodeParamSize' },
+    ],
+    curl: `curl "${API_BASE}/api/qrcode?text=https://x402bazaar.org&size=200"`,
+    response: `[Binary PNG image data]`,
+  },
+  {
+    id: 'time', route: '/api/time', method: 'GET', price: '0.005',
+    titleKey: 'timeTitle', descKey: 'timeDesc',
+    params: [
+      { name: 'timezone', type: 'string', required: true, descKey: 'timeParamTimezone' },
+    ],
+    curl: `curl "${API_BASE}/api/time?timezone=Europe/Paris"`,
+    response: `{
+  "success": true,
+  "timezone": "Europe/Paris",
+  "datetime": "2026-02-13T10:30:00.000+01:00",
+  "utc_offset": "+01:00",
+  "day_of_week": 5,
+  "week_number": 7,
+  "abbreviation": "CET",
+  "dst": false
+}`,
+  },
+  {
+    id: 'holidays', route: '/api/holidays', method: 'GET', price: '0.005',
+    titleKey: 'holidaysTitle', descKey: 'holidaysDesc',
+    params: [
+      { name: 'country', type: 'string', required: true, descKey: 'holidaysParamCountry' },
+      { name: 'year', type: 'number', required: false, descKey: 'holidaysParamYear' },
+    ],
+    curl: `curl "${API_BASE}/api/holidays?country=FR&year=2026"`,
+    response: `{
+  "success": true,
+  "country": "FR",
+  "year": 2026,
+  "count": 11,
+  "holidays": [
+    {
+      "date": "2026-01-01",
+      "name": "Jour de l'an",
+      "name_en": "New Year's Day",
+      "fixed": true,
+      "types": ["Public"]
+    }
+  ]
+}`,
+  },
+  {
+    id: 'geocoding', route: '/api/geocoding', method: 'GET', price: '0.005',
+    titleKey: 'geocodingTitle', descKey: 'geocodingDesc',
+    params: [
+      { name: 'city', type: 'string', required: true, descKey: 'geocodingParamCity' },
+    ],
+    curl: `curl "${API_BASE}/api/geocoding?city=Paris"`,
+    response: `{
+  "success": true,
+  "query": "Paris",
+  "results": [
+    {
+      "name": "Paris",
+      "country": "France",
+      "country_code": "FR",
+      "latitude": 48.85341,
+      "longitude": 2.3488,
+      "population": 2138551,
+      "timezone": "Europe/Paris"
+    }
+  ]
+}`,
+  },
+  {
+    id: 'airquality', route: '/api/airquality', method: 'GET', price: '0.005',
+    titleKey: 'airqualityTitle', descKey: 'airqualityDesc',
+    params: [
+      { name: 'lat', type: 'number', required: true, descKey: 'airqualityParamLat' },
+      { name: 'lon', type: 'number', required: true, descKey: 'airqualityParamLon' },
+    ],
+    curl: `curl "${API_BASE}/api/airquality?lat=48.85&lon=2.35"`,
+    response: `{
+  "success": true,
+  "latitude": 48.85,
+  "longitude": 2.35,
+  "time": "2026-02-13T10:00",
+  "pm2_5": 12.5,
+  "pm10": 18.3,
+  "ozone": 45.2,
+  "nitrogen_dioxide": 23.1,
+  "carbon_monoxide": 250.5,
+  "european_aqi": 2,
+  "us_aqi": 45
+}`,
+  },
+  {
+    id: 'quote', route: '/api/quote', method: 'GET', price: '0.005',
+    titleKey: 'quoteTitle', descKey: 'quoteDesc',
+    params: [],
+    curl: `curl "${API_BASE}/api/quote"`,
+    response: `{
+  "success": true,
+  "id": 123,
+  "advice": "Don't compare yourself with anyone in this world. If you do so, you are insulting yourself."
+}`,
+  },
+  {
+    id: 'facts', route: '/api/facts', method: 'GET', price: '0.005',
+    titleKey: 'factsTitle', descKey: 'factsDesc',
+    params: [],
+    curl: `curl "${API_BASE}/api/facts"`,
+    response: `{
+  "success": true,
+  "fact": "Cats sleep 70% of their lives.",
+  "length": 32
+}`,
+  },
+  {
+    id: 'dogs', route: '/api/dogs', method: 'GET', price: '0.005',
+    titleKey: 'dogsTitle', descKey: 'dogsDesc',
+    params: [
+      { name: 'breed', type: 'string', required: false, descKey: 'dogsParamBreed' },
+    ],
+    curl: `curl "${API_BASE}/api/dogs?breed=husky"`,
+    response: `{
+  "success": true,
+  "image_url": "https://images.dog.ceo/breeds/husky/n02110185_1469.jpg",
+  "breed": "husky"
+}`,
+  },
 ];
 
 const STATIC_ENDPOINTS = {

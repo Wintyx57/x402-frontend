@@ -793,6 +793,193 @@ def my_function(query: str) -> dict:
       imageParamPrompt: "Image description (max 1000 chars)",
       imageParamSize: "Image size: 1024x1024, 1024x1792, or 1792x1024",
       imageParamQuality: "Quality: standard or hd",
+
+      // Translate
+      translateTitle: "Translate Text",
+      translateDesc: "Translate text between languages using MyMemory API.",
+      translateParamText: "Text to translate",
+      translateParamFrom: "Source language code (default: auto)",
+      translateParamTo: "Target language code (e.g. fr, es, de)",
+
+      // Summarize
+      summarizeTitle: "Summarize Text",
+      summarizeDesc: "Summarize long text into a shorter version.",
+      summarizeParamText: "Text to summarize (50-50000 chars)",
+      summarizeParamMax: "Max summary length in words (default: 200)",
+
+      // Code
+      codeTitle: "Execute Code",
+      codeDesc: "Execute code in multiple languages via Piston API.",
+      codeParamLang: "Programming language (python, javascript, go...)",
+      codeParamCode: "Code to execute",
+
+      // DNS
+      dnsTitle: "DNS Lookup",
+      dnsDesc: "Query DNS records for any domain.",
+      dnsParamDomain: "Domain to look up",
+      dnsParamType: "Record type: A, AAAA, MX, TXT, CNAME, NS (default: A)",
+
+      // QR Code Gen
+      qrcodeGenTitle: "QR Code Generator",
+      qrcodeGenDesc: "Generate QR codes from text or URLs.",
+      qrcodeGenParamData: "Data to encode in the QR code",
+      qrcodeGenParamSize: "QR code size in pixels (default: 300)",
+
+      // Readability
+      readabilityTitle: "Readability Extract",
+      readabilityDesc: "Extract clean article text from any URL.",
+      readabilityParamUrl: "URL to extract content from",
+
+      // Sentiment
+      sentimentTitle: "Sentiment Analysis",
+      sentimentDesc: "Analyze the sentiment of text (positive, negative, neutral).",
+      sentimentParamText: "Text to analyze (5-10000 chars)",
+
+      // Validate Email
+      validateEmailTitle: "Email Validation",
+      validateEmailDesc: "Validate email format and check MX records.",
+      validateEmailParamEmail: "Email address to validate",
+
+      // Hash
+      hashTitle: "Hash Generator",
+      hashDesc: "Generate cryptographic hashes (MD5, SHA-1, SHA-256, SHA-512).",
+      hashParamText: "Text to hash",
+      hashParamAlgo: "Algorithm: md5, sha1, sha256, sha512 (default: sha256)",
+
+      // UUID
+      uuidTitle: "UUID Generator",
+      uuidDesc: "Generate random UUID v4 identifiers.",
+      uuidParamCount: "Number of UUIDs to generate (default: 1, max: 100)",
+
+      // Base64
+      base64Title: "Base64 Encode/Decode",
+      base64Desc: "Encode or decode text in Base64.",
+      base64ParamText: "Text to encode or decode",
+      base64ParamMode: "Mode: encode or decode (default: encode)",
+
+      // Password
+      passwordTitle: "Password Generator",
+      passwordDesc: "Generate secure random passwords.",
+      passwordParamLength: "Password length (default: 16, range: 8-128)",
+      passwordParamSymbols: "Include symbols (default: true)",
+      passwordParamNumbers: "Include numbers (default: true)",
+      passwordParamUppercase: "Include uppercase (default: true)",
+
+      // Currency
+      currencyTitle: "Currency Converter",
+      currencyDesc: "Convert between currencies using ECB rates.",
+      currencyParamFrom: "Source currency code (e.g. USD)",
+      currencyParamTo: "Target currency code (e.g. EUR)",
+      currencyParamAmount: "Amount to convert (default: 1)",
+
+      // Timestamp
+      timestampTitle: "Timestamp Converter",
+      timestampDesc: "Convert between Unix timestamps and ISO dates.",
+      timestampParamTs: "Unix timestamp to convert (seconds or ms)",
+      timestampParamDate: "ISO 8601 date to convert",
+
+      // Lorem
+      loremTitle: "Lorem Ipsum Generator",
+      loremDesc: "Generate placeholder lorem ipsum text.",
+      loremParamParagraphs: "Number of paragraphs (default: 3, max: 20)",
+
+      // Headers
+      headersTitle: "HTTP Headers Inspector",
+      headersDesc: "Inspect HTTP response headers from any URL.",
+      headersParamUrl: "URL to inspect headers from",
+
+      // Markdown
+      markdownTitle: "Markdown to HTML",
+      markdownDesc: "Convert Markdown text to HTML.",
+      markdownParamText: "Markdown text to convert",
+
+      // Color
+      colorTitle: "Color Converter",
+      colorDesc: "Convert between HEX, RGB, and HSL color formats.",
+      colorParamHex: "Hex color code (e.g. FF5733)",
+      colorParamRgb: "RGB color (e.g. 255,87,51)",
+
+      // JSON Validate
+      jsonValidateTitle: "JSON Validator",
+      jsonValidateDesc: "Validate and format JSON data.",
+      jsonValidateParamJson: "JSON string or object to validate",
+
+      // User Agent
+      useragentTitle: "User Agent Parser",
+      useragentDesc: "Parse and analyze User-Agent strings.",
+      useragentParamUa: "User-Agent string to parse (default: request UA)",
+
+      // Wikipedia
+      wikipediaTitle: "Wikipedia Search",
+      wikipediaDesc: "Search Wikipedia and get article summaries.",
+      wikipediaParamQ: "Search query",
+
+      // Dictionary
+      dictionaryTitle: "Dictionary Lookup",
+      dictionaryDesc: "Look up word definitions, phonetics, and usage examples.",
+      dictionaryParamWord: "Word to look up",
+
+      // Countries
+      countriesTitle: "Country Information",
+      countriesDesc: "Get detailed information about any country.",
+      countriesParamName: "Country name to search",
+
+      // GitHub
+      githubTitle: "GitHub Profile",
+      githubDesc: "Get public profile information for any GitHub user.",
+      githubParamUser: "GitHub username",
+
+      // npm
+      npmTitle: "npm Package Info",
+      npmDesc: "Get information about any npm package.",
+      npmParamPackage: "npm package name",
+
+      // IP
+      ipTitle: "IP Geolocation",
+      ipDesc: "Get geolocation data for any IP address.",
+      ipParamAddress: "IP address to look up",
+
+      // QR Code
+      qrcodeTitle: "QR Code Generator",
+      qrcodeDesc: "Generate QR codes from text or URLs.",
+      qrcodeParamText: "Text or URL to encode",
+      qrcodeParamSize: "QR code size in pixels (default: 200)",
+
+      // Time
+      timeTitle: "World Time",
+      timeDesc: "Get the current time for any timezone.",
+      timeParamTimezone: "IANA timezone (e.g. Europe/Paris, America/New_York)",
+
+      // Holidays
+      holidaysTitle: "Public Holidays",
+      holidaysDesc: "Get public holidays for any country and year.",
+      holidaysParamCountry: "ISO 3166-1 alpha-2 country code (e.g. US, FR)",
+      holidaysParamYear: "Year (default: current year)",
+
+      // Geocoding
+      geocodingTitle: "Geocoding",
+      geocodingDesc: "Convert city names to geographic coordinates.",
+      geocodingParamCity: "City name to geocode",
+
+      // Air Quality
+      airqualityTitle: "Air Quality",
+      airqualityDesc: "Get current air quality index for coordinates.",
+      airqualityParamLat: "Latitude",
+      airqualityParamLon: "Longitude",
+
+      // Quote
+      quoteTitle: "Random Quote",
+      quoteDesc: "Get a random inspirational quote.",
+
+      // Facts
+      factsTitle: "Random Fact",
+      factsDesc: "Get a random interesting fact.",
+
+      // Dogs
+      dogsTitle: "Random Dog Photo",
+      dogsDesc: "Get a random dog photo URL.",
+      dogsParamBreed: "Dog breed (optional, lowercase)",
+
       mcpTitle: "MCP Server",
       mcpDesc: "The Model Context Protocol (MCP) server lets any AI assistant interact with x402 Bazaar — searching, paying, and calling APIs autonomously.",
       mcpToolsTitle: "Available Tools",
@@ -1756,6 +1943,193 @@ def my_function(query: str) -> dict:
       imageParamPrompt: "Description de l'image (max 1000 caracteres)",
       imageParamSize: "Taille : 1024x1024, 1024x1792 ou 1792x1024",
       imageParamQuality: "Qualite : standard ou hd",
+
+      // Translate
+      translateTitle: "Traduction de texte",
+      translateDesc: "Traduire du texte entre langues via MyMemory API.",
+      translateParamText: "Texte a traduire",
+      translateParamFrom: "Code langue source (defaut : auto)",
+      translateParamTo: "Code langue cible (ex : fr, es, de)",
+
+      // Summarize
+      summarizeTitle: "Resume de texte",
+      summarizeDesc: "Resumer un texte long en version courte.",
+      summarizeParamText: "Texte a resumer (50-50000 caracteres)",
+      summarizeParamMax: "Longueur max du resume en mots (defaut : 200)",
+
+      // Code
+      codeTitle: "Execution de code",
+      codeDesc: "Executer du code dans plusieurs langages via Piston API.",
+      codeParamLang: "Langage de programmation (python, javascript, go...)",
+      codeParamCode: "Code a executer",
+
+      // DNS
+      dnsTitle: "Requete DNS",
+      dnsDesc: "Interroger les enregistrements DNS d'un domaine.",
+      dnsParamDomain: "Domaine a consulter",
+      dnsParamType: "Type d'enregistrement : A, AAAA, MX, TXT, CNAME, NS (defaut : A)",
+
+      // QR Code Gen
+      qrcodeGenTitle: "Generateur de QR Code",
+      qrcodeGenDesc: "Generer des QR codes a partir de texte ou d'URLs.",
+      qrcodeGenParamData: "Donnees a encoder dans le QR code",
+      qrcodeGenParamSize: "Taille du QR code en pixels (defaut : 300)",
+
+      // Readability
+      readabilityTitle: "Extraction de contenu",
+      readabilityDesc: "Extraire le texte propre d'un article depuis une URL.",
+      readabilityParamUrl: "URL dont extraire le contenu",
+
+      // Sentiment
+      sentimentTitle: "Analyse de sentiment",
+      sentimentDesc: "Analyser le sentiment d'un texte (positif, negatif, neutre).",
+      sentimentParamText: "Texte a analyser (5-10000 caracteres)",
+
+      // Validate Email
+      validateEmailTitle: "Validation d'email",
+      validateEmailDesc: "Valider le format d'un email et verifier les enregistrements MX.",
+      validateEmailParamEmail: "Adresse email a valider",
+
+      // Hash
+      hashTitle: "Generateur de hash",
+      hashDesc: "Generer des hashes cryptographiques (MD5, SHA-1, SHA-256, SHA-512).",
+      hashParamText: "Texte a hasher",
+      hashParamAlgo: "Algorithme : md5, sha1, sha256, sha512 (defaut : sha256)",
+
+      // UUID
+      uuidTitle: "Generateur d'UUID",
+      uuidDesc: "Generer des identifiants UUID v4 aleatoires.",
+      uuidParamCount: "Nombre d'UUIDs a generer (defaut : 1, max : 100)",
+
+      // Base64
+      base64Title: "Encodage/Decodage Base64",
+      base64Desc: "Encoder ou decoder du texte en Base64.",
+      base64ParamText: "Texte a encoder ou decoder",
+      base64ParamMode: "Mode : encode ou decode (defaut : encode)",
+
+      // Password
+      passwordTitle: "Generateur de mots de passe",
+      passwordDesc: "Generer des mots de passe securises aleatoires.",
+      passwordParamLength: "Longueur du mot de passe (defaut : 16, plage : 8-128)",
+      passwordParamSymbols: "Inclure les symboles (defaut : true)",
+      passwordParamNumbers: "Inclure les chiffres (defaut : true)",
+      passwordParamUppercase: "Inclure les majuscules (defaut : true)",
+
+      // Currency
+      currencyTitle: "Convertisseur de devises",
+      currencyDesc: "Convertir entre devises avec les taux BCE.",
+      currencyParamFrom: "Code devise source (ex : USD)",
+      currencyParamTo: "Code devise cible (ex : EUR)",
+      currencyParamAmount: "Montant a convertir (defaut : 1)",
+
+      // Timestamp
+      timestampTitle: "Convertisseur de timestamp",
+      timestampDesc: "Convertir entre timestamps Unix et dates ISO.",
+      timestampParamTs: "Timestamp Unix a convertir (secondes ou ms)",
+      timestampParamDate: "Date ISO 8601 a convertir",
+
+      // Lorem
+      loremTitle: "Generateur Lorem Ipsum",
+      loremDesc: "Generer du texte placeholder lorem ipsum.",
+      loremParamParagraphs: "Nombre de paragraphes (defaut : 3, max : 20)",
+
+      // Headers
+      headersTitle: "Inspecteur de headers HTTP",
+      headersDesc: "Inspecter les headers de reponse HTTP d'une URL.",
+      headersParamUrl: "URL dont inspecter les headers",
+
+      // Markdown
+      markdownTitle: "Markdown vers HTML",
+      markdownDesc: "Convertir du texte Markdown en HTML.",
+      markdownParamText: "Texte Markdown a convertir",
+
+      // Color
+      colorTitle: "Convertisseur de couleurs",
+      colorDesc: "Convertir entre les formats HEX, RGB et HSL.",
+      colorParamHex: "Code couleur hex (ex : FF5733)",
+      colorParamRgb: "Couleur RGB (ex : 255,87,51)",
+
+      // JSON Validate
+      jsonValidateTitle: "Validateur JSON",
+      jsonValidateDesc: "Valider et formater des donnees JSON.",
+      jsonValidateParamJson: "Chaine JSON ou objet a valider",
+
+      // User Agent
+      useragentTitle: "Analyseur de User Agent",
+      useragentDesc: "Parser et analyser les chaines User-Agent.",
+      useragentParamUa: "Chaine User-Agent a parser (defaut : UA de la requete)",
+
+      // Wikipedia
+      wikipediaTitle: "Recherche Wikipedia",
+      wikipediaDesc: "Rechercher sur Wikipedia et obtenir des resumes d'articles.",
+      wikipediaParamQ: "Requete de recherche",
+
+      // Dictionary
+      dictionaryTitle: "Recherche dictionnaire",
+      dictionaryDesc: "Chercher des definitions, phonetique et exemples d'utilisation.",
+      dictionaryParamWord: "Mot a rechercher",
+
+      // Countries
+      countriesTitle: "Informations pays",
+      countriesDesc: "Obtenir des informations detaillees sur un pays.",
+      countriesParamName: "Nom du pays a rechercher",
+
+      // GitHub
+      githubTitle: "Profil GitHub",
+      githubDesc: "Obtenir les informations publiques d'un utilisateur GitHub.",
+      githubParamUser: "Nom d'utilisateur GitHub",
+
+      // npm
+      npmTitle: "Info package npm",
+      npmDesc: "Obtenir des informations sur un package npm.",
+      npmParamPackage: "Nom du package npm",
+
+      // IP
+      ipTitle: "Geolocalisation IP",
+      ipDesc: "Obtenir les donnees de geolocalisation d'une adresse IP.",
+      ipParamAddress: "Adresse IP a consulter",
+
+      // QR Code
+      qrcodeTitle: "Generateur de QR Code",
+      qrcodeDesc: "Generer des QR codes depuis du texte ou des URLs.",
+      qrcodeParamText: "Texte ou URL a encoder",
+      qrcodeParamSize: "Taille du QR code en pixels (defaut : 200)",
+
+      // Time
+      timeTitle: "Heure mondiale",
+      timeDesc: "Obtenir l'heure actuelle pour un fuseau horaire.",
+      timeParamTimezone: "Fuseau horaire IANA (ex : Europe/Paris, America/New_York)",
+
+      // Holidays
+      holidaysTitle: "Jours feries",
+      holidaysDesc: "Obtenir les jours feries d'un pays et d'une annee.",
+      holidaysParamCountry: "Code pays ISO 3166-1 alpha-2 (ex : US, FR)",
+      holidaysParamYear: "Annee (defaut : annee courante)",
+
+      // Geocoding
+      geocodingTitle: "Geocodage",
+      geocodingDesc: "Convertir des noms de villes en coordonnees geographiques.",
+      geocodingParamCity: "Nom de la ville a geocoder",
+
+      // Air Quality
+      airqualityTitle: "Qualite de l'air",
+      airqualityDesc: "Obtenir l'indice de qualite de l'air pour des coordonnees.",
+      airqualityParamLat: "Latitude",
+      airqualityParamLon: "Longitude",
+
+      // Quote
+      quoteTitle: "Citation aleatoire",
+      quoteDesc: "Obtenir une citation inspirante aleatoire.",
+
+      // Facts
+      factsTitle: "Fait aleatoire",
+      factsDesc: "Obtenir un fait interessant aleatoire.",
+
+      // Dogs
+      dogsTitle: "Photo de chien aleatoire",
+      dogsDesc: "Obtenir l'URL d'une photo de chien aleatoire.",
+      dogsParamBreed: "Race du chien (optionnel, minuscules)",
+
       mcpTitle: "Serveur MCP",
       mcpDesc: "Le serveur MCP permet a tout assistant IA d'interagir avec x402 Bazaar — rechercher, payer et appeler des APIs de maniere autonome.",
       mcpToolsTitle: "Outils disponibles",
