@@ -20,6 +20,10 @@
 }
 
 /* ========== BASE STYLES ========== */
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
@@ -27,6 +31,11 @@ body {
   color: #E8E4E0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
 
 /* ========== FOCUS VISIBLE (Accessibility) ========== */
@@ -224,3 +233,9 @@ pre.code-block .string { color: #34D399; }
 pre.code-block .comment { color: #6B6560; font-style: italic; }
 pre.code-block .function { color: #60A5FA; }
 pre.code-block .number { color: #FBBF24; }
+
+/* ========== SELECTION ========== */
+::selection {
+  background: rgba(255, 153, 0, 0.3);
+  color: #fff;
+}

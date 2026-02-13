@@ -27,7 +27,12 @@ export default function App() {
     <div className="min-h-screen overflow-x-hidden">
       <Navbar />
       <ErrorBoundary>
-        <Suspense fallback={<div className="flex items-center justify-center min-h-screen"><div className="glass-card rounded-lg p-8 animate-shimmer w-32 h-32" /></div>}>
+        <Suspense fallback={
+          <div className="flex flex-col items-center justify-center min-h-screen gap-4">
+            <div className="w-10 h-10 border-2 border-[#FF9900]/20 border-t-[#FF9900] rounded-full animate-spin-slow" />
+            <span className="text-gray-500 text-sm">Loading...</span>
+          </div>
+        }>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/services" element={<Services />} />
