@@ -383,8 +383,41 @@ export default function About() {
       {/* The Team */}
       <section ref={teamRef} className="reveal mb-10">
         <h2 className="text-2xl font-bold text-white mb-4">{t.about.teamTitle}</h2>
-        <div className="glass rounded-xl p-6 space-y-4 text-gray-300 text-sm leading-relaxed">
+        <div className="glass rounded-xl p-6 space-y-5 text-gray-300 text-sm leading-relaxed">
           <p>{t.about.teamDesc}</p>
+
+          {/* Founder card */}
+          <div className="glass-card rounded-xl p-5 border border-[#FF9900]/15">
+            <div className="flex items-start gap-4">
+              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#FF9900] to-[#FF6600] flex items-center justify-center text-white font-bold text-xl shrink-0">
+                R
+              </div>
+              <div className="flex-1 min-w-0">
+                <h3 className="text-white font-semibold text-base">{t.about.founderName || 'Robin'}</h3>
+                <p className="text-[#FF9900] text-xs font-medium mb-2">{t.about.founderRole || 'Founder & Lead Developer'}</p>
+                <p className="text-gray-400 text-xs leading-relaxed mb-3">{t.about.founderBio}</p>
+                <div className="flex items-center gap-3">
+                  <a href="https://github.com/Wintyx57" target="_blank" rel="noopener noreferrer"
+                     className="text-gray-500 hover:text-white transition-colors">
+                    <GitHubIcon className="w-4 h-4" />
+                  </a>
+                  <a href="https://x.com/x402bazaar" target="_blank" rel="noopener noreferrer"
+                     className="text-gray-500 hover:text-white transition-colors">
+                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                    </svg>
+                  </a>
+                  <a href="mailto:x402bazaar@gmail.com"
+                     className="text-gray-500 hover:text-white transition-colors">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div className="glass-card rounded-lg p-4 border border-[#FF9900]/10 flex items-center gap-3">
             <span className="text-3xl">🏆</span>
             <div>
