@@ -14,6 +14,9 @@ export const translations = {
       config: "Config",
       docs: "Docs",
       status: "Status",
+      pricing: "Pricing",
+      about: "About",
+      privacy: "Privacy Policy",
     },
     connect: {
       connectWallet: "Connect Wallet",
@@ -1218,6 +1221,9 @@ def my_function(query: str) -> dict:
       config: "Config",
       docs: "Docs",
       status: "Statut",
+      pricing: "Tarifs",
+      about: "A propos",
+      privacy: "Politique de confidentialite",
     },
     connect: {
       connectWallet: "Connecter Wallet",

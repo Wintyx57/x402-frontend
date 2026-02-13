@@ -61,6 +61,7 @@ export default function Home() {
   const [activityMap, setActivityMap] = useState({});
   const [heroSearch, setHeroSearch] = useState('');
   const [loading, setLoading] = useState(true);
+  const [avgLatency, setAvgLatency] = useState(null);
   const { t } = useTranslation();
   const navigate = useNavigate();
   const valueProRef = useReveal();
@@ -86,6 +87,12 @@ export default function Home() {
       setLoading(false);
     }).catch(() => { if (!signal.aborted) setLoading(false); });
     fetch(`${API_URL}/api/services/activity`, { signal }).then(r => r.json()).then(data => setActivityMap(data || {})).catch(() => {});
+    fetch(`${API_URL}/api/status`, { signal }).then(r => r.json()).then(data => {
+      if (data?.endpoints?.length) {
+        const latencies = data.endpoints.filter(e => e.latency > 0).map(e => e.latency);
+        if (latencies.length) setAvgLatency(Math.round(latencies.reduce((a, b) => a + b, 0) / latencies.length));
+      }
+    }).catch(() => {});
     return () => controller.abort();
   }, []);
 
@@ -229,12 +236,14 @@ export default function Home() {
               </div>
               <div className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wider">{t.home.liveApis}</div>
             </div>
-            <div className="text-center">
-              <div className="text-lg sm:text-xl font-bold text-white">
-                <CountUp end={200} suffix="ms" />
+            {avgLatency && (
+              <div className="text-center">
+                <div className="text-lg sm:text-xl font-bold text-white">
+                  <CountUp end={avgLatency} suffix="ms" />
+                </div>
+                <div className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wider">{t.home.avgTransaction}</div>
               </div>
-              <div className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wider">{t.home.avgTransaction}</div>
-            </div>
+            )}
             <div className="text-center">
               <div className="text-lg sm:text-xl font-bold text-[#34D399]">$0 Gas</div>
               <div className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wider">{t.home.onSkale}</div>
@@ -581,12 +590,14 @@ export default function Home() {
               </div>
               <div className="text-xs text-gray-500 mt-1">{t.home.categoriesCount}</div>
             </div>
-            <div className="text-center">
-              <div className="text-xl sm:text-3xl font-bold text-white">
-                <CountUp end={200} suffix="ms" />
+            {avgLatency && (
+              <div className="text-center">
+                <div className="text-xl sm:text-3xl font-bold text-white">
+                  <CountUp end={avgLatency} suffix="ms" />
+                </div>
+                <div className="text-xs text-gray-500 mt-1">{t.home.avgTransaction}</div>
               </div>
-              <div className="text-xs text-gray-500 mt-1">{t.home.avgTransaction}</div>
-            </div>
+            )}
             <div className="text-center">
               <div className="text-xl sm:text-3xl font-bold text-[#34D399]">$0 Gas</div>
               <div className="text-xs text-gray-500 mt-1">{t.home.onSkale}</div>

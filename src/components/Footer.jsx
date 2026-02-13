@@ -19,16 +19,17 @@ export default function Footer() {
             <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">{t.home.footerProduct}</h4>
             <div className="flex flex-col gap-2">
               <Link to="/services" className="text-xs text-gray-500 hover:text-white no-underline transition-colors py-1">{t.nav.services}</Link>
-              <Link to="/pricing" className="text-xs text-gray-500 hover:text-white no-underline transition-colors py-1">Pricing</Link>
-              <Link to="/about" className="text-xs text-gray-500 hover:text-white no-underline transition-colors py-1">About</Link>
+              <Link to="/pricing" className="text-xs text-gray-500 hover:text-white no-underline transition-colors py-1">{t.nav.pricing}</Link>
+              <Link to="/about" className="text-xs text-gray-500 hover:text-white no-underline transition-colors py-1">{t.nav.about}</Link>
               <Link to="/register" className="text-xs text-gray-500 hover:text-white no-underline transition-colors py-1">{t.nav.register}</Link>
               <Link to="/developers" className="text-xs text-gray-500 hover:text-white no-underline transition-colors py-1">{t.nav.developers}</Link>
-              <Link to="/privacy" className="text-xs text-gray-500 hover:text-white no-underline transition-colors py-1">Privacy Policy</Link>
+              <Link to="/privacy" className="text-xs text-gray-500 hover:text-white no-underline transition-colors py-1">{t.nav.privacy}</Link>
             </div>
           </div>
           <div>
             <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">{t.home.footerResources}</h4>
             <div className="flex flex-col gap-2">
+              <Link to="/status" className="text-xs text-gray-500 hover:text-white no-underline transition-colors py-1">{t.nav.status}</Link>
               <Link to="/integrate" className="text-xs text-gray-500 hover:text-white no-underline transition-colors py-1">{t.nav.integrate}</Link>
               <Link to="/blog" className="text-xs text-gray-500 hover:text-white no-underline transition-colors py-1">{t.blog.title}</Link>
               <a href="https://github.com/Wintyx57/x402-frontend" target="_blank" rel="noopener noreferrer" className="text-xs text-gray-500 hover:text-white no-underline transition-colors py-1">GitHub Frontend</a>
