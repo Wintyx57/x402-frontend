@@ -44,6 +44,7 @@ export default function Navbar() {
   const marketplaceLinks = [
     { to: '/services', label: t.nav.services },
     { to: '/register', label: t.nav.register },
+    { to: '/for-providers', label: t.nav.forProviders || 'For Providers' },
   ];
 
   const devLinks = [
@@ -56,6 +57,8 @@ export default function Navbar() {
     { to: '/faq', label: 'FAQ' },
     { to: '/config', label: t.nav.config || 'Config' },
     { to: '/status', label: t.nav.status || 'Status' },
+    { to: '/analytics', label: t.nav.analytics || 'Analytics' },
+    { to: '/compare', label: t.nav.compare || 'Compare' },
   ];
 
   return (

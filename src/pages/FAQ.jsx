@@ -54,6 +54,7 @@ export default function FAQ() {
   const ref2 = useReveal();
   const ref3 = useReveal();
   const ref4 = useReveal();
+  const ref5 = useReveal();
 
   // FAQPage JSON-LD Schema
   useEffect(() => {
@@ -71,6 +72,14 @@ export default function FAQ() {
         { '@type': 'Question', name: t.faq.q8, acceptedAnswer: { '@type': 'Answer', text: t.faq.a8 } },
         { '@type': 'Question', name: t.faq.q9, acceptedAnswer: { '@type': 'Answer', text: t.faq.a9 } },
         { '@type': 'Question', name: t.faq.q10, acceptedAnswer: { '@type': 'Answer', text: t.faq.a10 } },
+        { '@type': 'Question', name: t.faq.q11, acceptedAnswer: { '@type': 'Answer', text: t.faq.a11 } },
+        { '@type': 'Question', name: t.faq.q12, acceptedAnswer: { '@type': 'Answer', text: t.faq.a12 } },
+        { '@type': 'Question', name: t.faq.q13, acceptedAnswer: { '@type': 'Answer', text: t.faq.a13 } },
+        { '@type': 'Question', name: t.faq.q14, acceptedAnswer: { '@type': 'Answer', text: t.faq.a14 } },
+        { '@type': 'Question', name: t.faq.q15, acceptedAnswer: { '@type': 'Answer', text: t.faq.a15 } },
+        { '@type': 'Question', name: t.faq.q16, acceptedAnswer: { '@type': 'Answer', text: t.faq.a16 } },
+        { '@type': 'Question', name: t.faq.q17, acceptedAnswer: { '@type': 'Answer', text: t.faq.a17 } },
+        { '@type': 'Question', name: t.faq.q18, acceptedAnswer: { '@type': 'Answer', text: t.faq.a18 } },
       ]
     };
     let script = document.getElementById('faq-jsonld');
@@ -137,6 +146,23 @@ export default function FAQ() {
         <div className="space-y-3">
           <FAQItem question={t.faq.q9} answer={t.faq.a9} />
           <FAQItem question={t.faq.q10} answer={t.faq.a10} />
+        </div>
+      </section>
+
+      {/* Section: More Questions */}
+      <section ref={ref5} className="reveal mb-8">
+        <h2 className="text-lg font-semibold text-[#FF9900] mb-4">
+          {t.faq.sectionMore}
+        </h2>
+        <div className="space-y-3">
+          <FAQItem question={t.faq.q11} answer={t.faq.a11} />
+          <FAQItem question={t.faq.q12} answer={t.faq.a12} />
+          <FAQItem question={t.faq.q13} answer={t.faq.a13} />
+          <FAQItem question={t.faq.q14} answer={t.faq.a14} />
+          <FAQItem question={t.faq.q15} answer={t.faq.a15} />
+          <FAQItem question={t.faq.q16} answer={t.faq.a16} />
+          <FAQItem question={t.faq.q17} answer={t.faq.a17} />
+          <FAQItem question={t.faq.q18} answer={t.faq.a18} />
         </div>
       </section>
 

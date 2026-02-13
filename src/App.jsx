@@ -22,6 +22,9 @@ const Status = lazy(() => import('./pages/Status'));
 const Privacy = lazy(() => import('./pages/Privacy'));
 const Terms = lazy(() => import('./pages/Terms'));
 const Playground = lazy(() => import('./pages/Playground'));
+const Analytics = lazy(() => import('./pages/Analytics'));
+const Compare = lazy(() => import('./pages/Compare'));
+const ForProviders = lazy(() => import('./pages/ForProviders'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
 export default function App() {
@@ -53,6 +56,9 @@ export default function App() {
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/terms" element={<Terms />} />
             <Route path="/playground" element={<Playground />} />
+            <Route path="/analytics" element={<Analytics />} />
+            <Route path="/compare" element={<Compare />} />
+            <Route path="/for-providers" element={<ForProviders />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>

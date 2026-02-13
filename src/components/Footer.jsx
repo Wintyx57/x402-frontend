@@ -23,6 +23,7 @@ export default function Footer() {
               <Link to="/about" className="text-xs text-gray-500 hover:text-white no-underline transition-colors py-1">{t.nav.about}</Link>
               <Link to="/register" className="text-xs text-gray-500 hover:text-white no-underline transition-colors py-1">{t.nav.register}</Link>
               <Link to="/developers" className="text-xs text-gray-500 hover:text-white no-underline transition-colors py-1">{t.nav.developers}</Link>
+              <Link to="/for-providers" className="text-xs text-gray-500 hover:text-white no-underline transition-colors py-1">{t.nav.forProviders || 'For Providers'}</Link>
               <Link to="/privacy" className="text-xs text-gray-500 hover:text-white no-underline transition-colors py-1">{t.nav.privacy}</Link>
               <Link to="/terms" className="text-xs text-gray-500 hover:text-white no-underline transition-colors py-1">{t.nav.terms}</Link>
             </div>
@@ -33,6 +34,8 @@ export default function Footer() {
               <Link to="/status" className="text-xs text-gray-500 hover:text-white no-underline transition-colors py-1">{t.nav.status}</Link>
               <Link to="/integrate" className="text-xs text-gray-500 hover:text-white no-underline transition-colors py-1">{t.nav.integrate}</Link>
               <Link to="/playground" className="text-xs text-gray-500 hover:text-white no-underline transition-colors py-1">{t.nav.playground || 'Playground'}</Link>
+              <Link to="/analytics" className="text-xs text-gray-500 hover:text-white no-underline transition-colors py-1">{t.nav.analytics || 'Analytics'}</Link>
+              <Link to="/compare" className="text-xs text-gray-500 hover:text-white no-underline transition-colors py-1">{t.nav.compare || 'Compare'}</Link>
               <Link to="/blog" className="text-xs text-gray-500 hover:text-white no-underline transition-colors py-1">{t.blog.title}</Link>
               <a href="https://github.com/Wintyx57/x402-frontend" target="_blank" rel="noopener noreferrer" className="text-xs text-gray-500 hover:text-white no-underline transition-colors py-1">GitHub Frontend</a>
               <a href="https://github.com/Wintyx57/x402-backend" target="_blank" rel="noopener noreferrer" className="text-xs text-gray-500 hover:text-white no-underline transition-colors py-1">GitHub Backend</a>
