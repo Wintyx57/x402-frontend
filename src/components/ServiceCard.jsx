@@ -94,6 +94,11 @@ export default function ServiceCard({ service, lastActivity, healthStatus }) {
                 {t.serviceCard.native}
               </span>
             )}
+            {service.verified_status === 'reachable' && (
+              <span className="text-[11px] bg-emerald-500/10 text-emerald-400 px-1.5 py-0.5 rounded border border-emerald-500/20 shrink-0">
+                {t.serviceCard.autoTested}
+              </span>
+            )}
           </div>
           <span className="inline-block text-xs mt-0.5 text-gray-500 capitalize">
             {service.tags?.find(tag => !['x402-native', 'live'].includes(tag)) || service.tags?.[0]}

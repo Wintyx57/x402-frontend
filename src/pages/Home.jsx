@@ -81,7 +81,7 @@ export default function Home() {
   useEffect(() => {
     const controller = new AbortController();
     const signal = controller.signal;
-    fetch(`${API_URL}/api/stats`, { signal }).then(r => r.json()).then(setStats).catch(() => {});
+    fetch(`${API_URL}/api/public-stats`, { signal }).then(r => r.json()).then(setStats).catch(() => {});
     fetch(`${API_URL}/api/services`, { signal }).then(r => r.json()).then(data => {
       setServices(Array.isArray(data) ? data : []);
       setLoading(false);
@@ -572,13 +572,15 @@ export default function Home() {
           <div className="glass-card rounded-xl p-4 sm:p-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
             <div className="text-center">
               <div className="text-xl sm:text-3xl font-bold text-white">
-                <CountUp end={stats.totalServices} />
+                <CountUp end={stats.services || 0} />
               </div>
               <div className="text-xs text-gray-500 mt-1">{t.home.servicesListed}</div>
             </div>
             <div className="text-center">
-              <div className="text-xl sm:text-3xl font-bold text-[#FF9900]">{stats.walletBalance}</div>
-              <div className="text-xs text-gray-500 mt-1">USDC Balance</div>
+              <div className="text-xl sm:text-3xl font-bold text-[#FF9900]">
+                <CountUp end={stats.nativeEndpoints || 41} />
+              </div>
+              <div className="text-xs text-gray-500 mt-1">Native APIs</div>
             </div>
             <div className="text-center">
               <div className="text-xl sm:text-3xl font-bold gradient-text">{t.home.network}</div>
