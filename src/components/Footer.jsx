@@ -32,6 +32,7 @@ export default function Footer() {
             <div className="flex flex-col gap-2">
               <Link to="/status" className="text-xs text-gray-500 hover:text-white no-underline transition-colors py-1">{t.nav.status}</Link>
               <Link to="/integrate" className="text-xs text-gray-500 hover:text-white no-underline transition-colors py-1">{t.nav.integrate}</Link>
+              <Link to="/playground" className="text-xs text-gray-500 hover:text-white no-underline transition-colors py-1">{t.nav.playground || 'Playground'}</Link>
               <Link to="/blog" className="text-xs text-gray-500 hover:text-white no-underline transition-colors py-1">{t.blog.title}</Link>
               <a href="https://github.com/Wintyx57/x402-frontend" target="_blank" rel="noopener noreferrer" className="text-xs text-gray-500 hover:text-white no-underline transition-colors py-1">GitHub Frontend</a>
               <a href="https://github.com/Wintyx57/x402-backend" target="_blank" rel="noopener noreferrer" className="text-xs text-gray-500 hover:text-white no-underline transition-colors py-1">GitHub Backend</a>

@@ -52,6 +52,7 @@ export default function Navbar() {
     { to: '/integrate', label: t.nav.integrate },
     { to: '/developers', label: t.nav.developers },
     { to: '/demos', label: t.nav.demos || 'Demos' },
+    { to: '/playground', label: t.nav.playground || 'Playground' },
     { to: '/faq', label: 'FAQ' },
     { to: '/config', label: t.nav.config || 'Config' },
     { to: '/status', label: t.nav.status || 'Status' },
