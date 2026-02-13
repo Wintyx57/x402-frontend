@@ -4,8 +4,12 @@ import { parseUnits } from 'viem';
 import { API_URL, USDC_ABI, CHAIN_CONFIG } from '../config';
 import { useTranslation } from '../i18n/LanguageContext';
 import useSEO from '../hooks/useSEO';
+import { Link } from 'react-router-dom';
 
 const REGISTER_COST = 1;
+
+const CATEGORIES = ['ai', 'data', 'devtools', 'utility', 'social', 'finance', 'other'];
+const METHODS = ['GET', 'POST'];
 
 export default function Register() {
   const { address, isConnected, chain } = useAccount();
@@ -26,7 +30,7 @@ export default function Register() {
   ];
 
   const [form, setForm] = useState({
-    name: '', description: '', url: '', price: '', tags: ''
+    name: '', description: '', url: '', price: '', tags: '', category: 'utility', method: 'GET'
   });
   const [step, setStep] = useState('form');
   const [txHash, setTxHash] = useState(null);
@@ -37,20 +41,29 @@ export default function Register() {
   const { isSuccess: txConfirmed } = useWaitForTransactionReceipt({ hash: txHash });
 
   const validateForm = () => {
-    if (!form.name.trim() || form.name.length > 200) return 'Service name is required (max 200 chars)';
-    if (form.description && form.description.length > 1000) return 'Description too long (max 1000 chars)';
+    if (!form.name.trim() || form.name.length > 200) return t.register.errName || 'Service name is required (max 200 chars)';
+    if (form.description && form.description.length > 1000) return t.register.errDescLong || 'Description too long (max 1000 chars)';
     try {
       const parsed = new URL(form.url);
-      if (!['http:', 'https:'].includes(parsed.protocol)) return 'Only HTTP/HTTPS URLs are allowed';
+      if (!['http:', 'https:'].includes(parsed.protocol)) return t.register.errUrlProtocol || 'Only HTTP/HTTPS URLs are allowed';
     } catch {
-      return 'Invalid URL format';
+      return t.register.errUrlFormat || 'Invalid URL format';
     }
     const price = parseFloat(form.price);
-    if (isNaN(price) || price < 0.01 || price > 1000) return 'Price must be between 0.01 and 1000 USDC';
+    if (isNaN(price) || price < 0.001 || price > 1000) return t.register.errPrice || 'Price must be between 0.001 and 1000 USDC';
     const tags = form.tags.split(',').map(tag => tag.trim()).filter(Boolean);
-    if (tags.length > 10) return 'Maximum 10 tags allowed';
-    if (tags.some(tag => tag.length > 50)) return 'Each tag max 50 chars';
+    if (tags.length > 10) return t.register.errTagsMax || 'Maximum 10 tags allowed';
+    if (tags.some(tag => tag.length > 50)) return t.register.errTagLen || 'Each tag max 50 chars';
     return null;
+  };
+
+  // Build tags array with category included
+  const buildTags = () => {
+    const userTags = form.tags.split(',').map(tag => tag.trim()).filter(Boolean);
+    if (form.category && !userTags.includes(form.category)) {
+      userTags.unshift(form.category);
+    }
+    return userTags;
   };
 
   const handleSubmit = async (e) => {
@@ -80,7 +93,7 @@ export default function Register() {
           description: form.description,
           url: form.url,
           price: parseFloat(form.price),
-          tags: form.tags.split(',').map(tag => tag.trim()).filter(Boolean),
+          tags: buildTags(),
           ownerAddress: address,
         }),
       });
@@ -145,7 +158,7 @@ export default function Register() {
           description: form.description,
           url: form.url,
           price: parseFloat(form.price),
-          tags: form.tags.split(',').map(tag => tag.trim()).filter(Boolean),
+          tags: buildTags(),
           ownerAddress: address,
         }),
       });
@@ -170,8 +183,26 @@ export default function Register() {
 
   const isProcessing = step === 'paying' || step === 'registering';
 
+  // Preview data for the live card
+  const previewName = form.name.trim() || 'My API';
+  const previewDesc = form.description.trim() || (t.register.previewDescFallback || 'Your API description will appear here');
+  const previewPrice = parseFloat(form.price) || 0;
+  const previewTags = buildTags().slice(0, 3);
+  const previewInitial = previewName.charAt(0).toUpperCase();
+
+  // Category label mapping
+  const categoryLabels = {
+    ai: t.register.catAi || 'AI & ML',
+    data: t.register.catData || 'Data',
+    devtools: t.register.catDevtools || 'Dev Tools',
+    utility: t.register.catUtility || 'Utility',
+    social: t.register.catSocial || 'Social',
+    finance: t.register.catFinance || 'Finance',
+    other: t.register.catOther || 'Other',
+  };
+
   return (
-    <div className="max-w-xl mx-auto px-4 py-10">
+    <div className="max-w-4xl mx-auto px-4 py-10">
       <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2 animate-fade-in-up">{t.register.title}</h1>
       <p className="text-gray-500 mb-8 animate-fade-in-up delay-100">
         {t.register.subtitle.replace('{cost}', REGISTER_COST)}
@@ -181,108 +212,212 @@ export default function Register() {
         <div className="glass glow-orange rounded-xl p-8 text-center animate-fade-in-up">
           <div className="text-[#FF9900] text-2xl font-bold mb-3">{t.register.successTitle}</div>
           <p className="text-gray-400 text-sm mb-5">{result?.data?.name} {t.register.successDesc}</p>
-          {txHash && (
-            <a
-              href={`${(CHAIN_CONFIG[chain?.id] || CHAIN_CONFIG[8453]).explorer}/tx/${txHash}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="gradient-text font-medium text-sm no-underline"
-            >
-              {t.register.viewTx}
-            </a>
-          )}
+          <div className="flex flex-wrap justify-center gap-3">
+            {txHash && (
+              <a
+                href={`${(CHAIN_CONFIG[chain?.id] || CHAIN_CONFIG[8453]).explorer}/tx/${txHash}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="gradient-text font-medium text-sm no-underline"
+              >
+                {t.register.viewTx}
+              </a>
+            )}
+            <Link to="/services" className="text-sm text-gray-400 hover:text-white no-underline transition-colors">
+              {t.register.viewServices || 'View all services'} &rarr;
+            </Link>
+          </div>
         </div>
       ) : (
-        <form onSubmit={handleSubmit} className="space-y-5 animate-fade-in-up delay-200">
-          <div>
-            <label className="block text-sm text-gray-400 mb-1.5">{t.register.serviceName}</label>
-            <input
-              type="text" required value={form.name}
-              onChange={e => setForm({ ...form, name: e.target.value })}
-              placeholder={t.register.namePlaceholder}
-              className="w-full bg-[#1a1f2e] border border-white/10 rounded-lg px-4 py-2.5 text-white placeholder-gray-600
-                         focus:outline-none focus:border-[#FF9900]/40 transition-all duration-300"
-            />
-          </div>
-          <div>
-            <label className="block text-sm text-gray-400 mb-1.5">{t.register.description}</label>
-            <textarea
-              rows={3} value={form.description}
-              onChange={e => setForm({ ...form, description: e.target.value })}
-              placeholder={t.register.descPlaceholder}
-              className="w-full bg-[#1a1f2e] border border-white/10 rounded-lg px-4 py-2.5 text-white placeholder-gray-600
-                         focus:outline-none focus:border-[#FF9900]/40 transition-all duration-300 resize-none"
-            />
-          </div>
-          <div>
-            <label className="block text-sm text-gray-400 mb-1.5">{t.register.apiUrl}</label>
-            <input
-              type="url" required value={form.url}
-              onChange={e => setForm({ ...form, url: e.target.value })}
-              placeholder={t.register.urlPlaceholder}
-              className="w-full bg-[#1a1f2e] border border-white/10 rounded-lg px-4 py-2.5 text-white placeholder-gray-600
-                         focus:outline-none focus:border-[#FF9900]/40 transition-all duration-300"
-            />
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 animate-fade-in-up delay-200">
+          {/* Form — 3 cols */}
+          <form onSubmit={handleSubmit} className="space-y-5 lg:col-span-3">
             <div>
-              <label className="block text-sm text-gray-400 mb-1.5">{t.register.priceLabel}</label>
+              <label className="block text-sm text-gray-400 mb-1.5">{t.register.serviceName}</label>
               <input
-                type="number" step="0.01" min="0.01" required value={form.price}
-                onChange={e => setForm({ ...form, price: e.target.value })}
-                placeholder={t.register.pricePlaceholder}
+                type="text" required value={form.name}
+                onChange={e => setForm({ ...form, name: e.target.value })}
+                placeholder={t.register.namePlaceholder}
                 className="w-full bg-[#1a1f2e] border border-white/10 rounded-lg px-4 py-2.5 text-white placeholder-gray-600
                            focus:outline-none focus:border-[#FF9900]/40 transition-all duration-300"
               />
             </div>
             <div>
-              <label className="block text-sm text-gray-400 mb-1.5">{t.register.tagsLabel}</label>
+              <label className="block text-sm text-gray-400 mb-1.5">{t.register.description}</label>
+              <textarea
+                rows={3} value={form.description}
+                onChange={e => setForm({ ...form, description: e.target.value })}
+                placeholder={t.register.descPlaceholder}
+                className="w-full bg-[#1a1f2e] border border-white/10 rounded-lg px-4 py-2.5 text-white placeholder-gray-600
+                           focus:outline-none focus:border-[#FF9900]/40 transition-all duration-300 resize-none"
+              />
+            </div>
+            <div>
+              <label className="block text-sm text-gray-400 mb-1.5">{t.register.apiUrl}</label>
               <input
-                type="text" value={form.tags}
-                onChange={e => setForm({ ...form, tags: e.target.value })}
-                placeholder={t.register.tagsPlaceholder}
+                type="url" required value={form.url}
+                onChange={e => setForm({ ...form, url: e.target.value })}
+                placeholder={t.register.urlPlaceholder}
                 className="w-full bg-[#1a1f2e] border border-white/10 rounded-lg px-4 py-2.5 text-white placeholder-gray-600
                            focus:outline-none focus:border-[#FF9900]/40 transition-all duration-300"
               />
             </div>
-          </div>
 
-          {error && (
-            <div className="bg-red-500/10 border border-red-500/50 rounded-xl p-4 text-red-300 text-sm font-medium">
-              {error}
+            {/* Category + Method row */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm text-gray-400 mb-1.5">{t.register.categoryLabel || 'Category'}</label>
+                <select
+                  value={form.category}
+                  onChange={e => setForm({ ...form, category: e.target.value })}
+                  className="w-full bg-[#1a1f2e] border border-white/10 rounded-lg px-4 py-2.5 text-white
+                             focus:outline-none focus:border-[#FF9900]/40 transition-all duration-300 cursor-pointer"
+                >
+                  {CATEGORIES.map(cat => (
+                    <option key={cat} value={cat} className="bg-[#1a1f2e]">{categoryLabels[cat]}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm text-gray-400 mb-1.5">{t.register.methodLabel || 'HTTP Method'}</label>
+                <div className="flex gap-2">
+                  {METHODS.map(m => (
+                    <button
+                      key={m}
+                      type="button"
+                      onClick={() => setForm({ ...form, method: m })}
+                      className={`flex-1 py-2.5 rounded-lg text-sm font-mono font-medium transition-all duration-200 cursor-pointer border ${
+                        form.method === m
+                          ? 'bg-[#FF9900]/10 text-[#FF9900] border-[#FF9900]/30'
+                          : 'bg-[#1a1f2e] text-gray-500 border-white/10 hover:text-gray-300 hover:border-white/20'
+                      }`}
+                    >
+                      {m}
+                    </button>
+                  ))}
+                </div>
+              </div>
             </div>
-          )}
 
-          {isProcessing && paymentStep > 0 && (
-            <div className="flex flex-col items-center gap-3 py-4">
-              <div className="w-10 h-10 border-2 border-[#FF9900] border-t-transparent rounded-full animate-spin" />
-              <p className="text-white text-sm font-medium">{PAYMENT_STEPS[paymentStep]}</p>
-              <p className="text-gray-500 text-xs">Step {paymentStep} of 4</p>
+            {/* Price + Tags row */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm text-gray-400 mb-1.5">{t.register.priceLabel}</label>
+                <input
+                  type="number" step="0.001" min="0.001" required value={form.price}
+                  onChange={e => setForm({ ...form, price: e.target.value })}
+                  placeholder={t.register.pricePlaceholder}
+                  className="w-full bg-[#1a1f2e] border border-white/10 rounded-lg px-4 py-2.5 text-white placeholder-gray-600
+                             focus:outline-none focus:border-[#FF9900]/40 transition-all duration-300"
+                />
+              </div>
+              <div>
+                <label className="block text-sm text-gray-400 mb-1.5">{t.register.tagsLabel}</label>
+                <input
+                  type="text" value={form.tags}
+                  onChange={e => setForm({ ...form, tags: e.target.value })}
+                  placeholder={t.register.tagsPlaceholder}
+                  className="w-full bg-[#1a1f2e] border border-white/10 rounded-lg px-4 py-2.5 text-white placeholder-gray-600
+                             focus:outline-none focus:border-[#FF9900]/40 transition-all duration-300"
+                />
+              </div>
             </div>
-          )}
 
-          <button
-            type="submit"
-            disabled={isProcessing}
-            className="w-full gradient-btn disabled:opacity-40 text-white py-3 rounded-xl font-medium
-                       cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:glow-orange
-                       flex items-center justify-center gap-2"
-          >
-            {isProcessing && (
-              <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-              </svg>
+            {error && (
+              <div className="bg-red-500/10 border border-red-500/50 rounded-xl p-4 text-red-300 text-sm font-medium">
+                {error}
+              </div>
             )}
-            {step === 'paying' ? t.register.paying :
-             step === 'registering' ? t.register.confirming :
-             `${t.register.submitButton} (${REGISTER_COST} USDC)`}
-          </button>
 
-          {!isConnected && (
-            <p className="text-orange-400 text-sm text-center">{t.register.connectFirst}</p>
-          )}
-        </form>
+            {isProcessing && paymentStep > 0 && (
+              <div className="flex flex-col items-center gap-3 py-4">
+                <div className="w-10 h-10 border-2 border-[#FF9900] border-t-transparent rounded-full animate-spin" />
+                <p className="text-white text-sm font-medium">{PAYMENT_STEPS[paymentStep]}</p>
+                <p className="text-gray-500 text-xs">{t.register.stepOf || 'Step'} {paymentStep} / 4</p>
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={isProcessing}
+              className="w-full gradient-btn disabled:opacity-40 text-white py-3 rounded-xl font-medium
+                         cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:glow-orange
+                         flex items-center justify-center gap-2"
+            >
+              {isProcessing && (
+                <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                </svg>
+              )}
+              {step === 'paying' ? t.register.paying :
+               step === 'registering' ? t.register.confirming :
+               `${t.register.submitButton} (${REGISTER_COST} USDC)`}
+            </button>
+
+            {!isConnected && (
+              <p className="text-orange-400 text-sm text-center">{t.register.connectFirst}</p>
+            )}
+          </form>
+
+          {/* Live Preview Card — 2 cols */}
+          <div className="lg:col-span-2">
+            <div className="sticky top-20">
+              <p className="text-xs text-gray-500 uppercase tracking-wider mb-3 font-medium">{t.register.previewTitle || 'Live Preview'}</p>
+              <div className="glass-card rounded-xl p-4 transition-all duration-300">
+                {/* Top row: logo + name + price */}
+                <div className="flex items-start gap-3 mb-3">
+                  <div className="w-9 h-9 rounded-lg bg-[#232f3e] flex items-center justify-center shrink-0">
+                    <span className="text-sm font-bold text-[#FF9900]">{previewInitial}</span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <h3 className="text-white font-semibold text-sm leading-tight truncate">{previewName}</h3>
+                      <span className="text-[11px] bg-[#FF9900]/10 text-[#FF9900] px-1.5 py-0.5 rounded border border-[#FF9900]/20 shrink-0">
+                        {form.method}
+                      </span>
+                    </div>
+                    <span className="inline-block text-xs mt-0.5 text-gray-500 capitalize">{categoryLabels[form.category]}</span>
+                  </div>
+                  <span className={`shrink-0 font-mono text-xs font-bold px-2.5 py-1 rounded-lg ${
+                    previewPrice === 0
+                      ? 'bg-[#34D399]/10 text-[#34D399] border border-[#34D399]/20'
+                      : 'bg-[#FF9900]/10 text-[#FF9900] border border-[#FF9900]/20'
+                  }`}>
+                    {previewPrice > 0 ? `$${previewPrice}` : (t.serviceCard?.free || 'Free')}
+                  </span>
+                </div>
+
+                {/* Description */}
+                <p className="text-gray-500 text-xs mb-3 leading-relaxed line-clamp-2">{previewDesc}</p>
+
+                {/* Tags */}
+                <div className="flex flex-wrap gap-1 mb-3">
+                  {previewTags.map(tag => (
+                    <span key={tag} className="text-xs text-gray-500 bg-white/5 px-2 py-0.5 rounded-lg">{tag}</span>
+                  ))}
+                </div>
+
+                {/* Owner */}
+                <div className="flex items-center justify-between pt-2 border-t border-white/5">
+                  <span className="text-xs text-gray-600 font-mono">
+                    {address ? `${address.slice(0, 6)}...${address.slice(-4)}` : '0x...'}
+                  </span>
+                  <span className="text-xs text-[#FF9900]">{t.serviceCard?.viewApi || 'View API'} &rarr;</span>
+                </div>
+              </div>
+
+              {/* Checklist */}
+              <div className="mt-4 space-y-2">
+                <CheckItem done={form.name.trim().length > 0} label={t.register.checkName || 'Service name'} />
+                <CheckItem done={form.url.trim().length > 0 && form.url.startsWith('http')} label={t.register.checkUrl || 'Valid URL'} />
+                <CheckItem done={parseFloat(form.price) > 0} label={t.register.checkPrice || 'Price set'} />
+                <CheckItem done={form.description.trim().length > 0} label={t.register.checkDesc || 'Description'} />
+                <CheckItem done={isConnected} label={t.register.checkWallet || 'Wallet connected'} />
+              </div>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* What Happens Next */}
@@ -322,18 +457,42 @@ export default function Register() {
       {/* Template hint */}
       <div className="mt-8 glass rounded-xl p-5 border border-white/5 text-center">
         <p className="text-gray-400 text-sm mb-3">{t.register.templateHint}</p>
-        <a
-          href="https://github.com/Wintyx57/x402-fast-monetization-template"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 text-[#FF9900] text-sm font-medium no-underline hover:text-[#FEBD69] transition-colors"
-        >
-          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
-          </svg>
-          {t.register.templateLink} &rarr;
-        </a>
+        <div className="flex flex-wrap justify-center gap-3">
+          <a
+            href="https://github.com/Wintyx57/x402-fast-monetization-template"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-[#FF9900] text-sm font-medium no-underline hover:text-[#FEBD69] transition-colors"
+          >
+            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+            </svg>
+            {t.register.templateLink} &rarr;
+          </a>
+          <Link to="/for-providers" className="text-sm text-gray-400 hover:text-white no-underline transition-colors">
+            {t.register.learnMore || 'Learn more about listing'} &rarr;
+          </Link>
+        </div>
       </div>
+    </div>
+  );
+}
+
+function CheckItem({ done, label }) {
+  return (
+    <div className="flex items-center gap-2">
+      <div className={`w-4 h-4 rounded-full flex items-center justify-center transition-all duration-300 ${
+        done ? 'bg-[#34D399]/20 text-[#34D399]' : 'bg-white/5 text-gray-600'
+      }`}>
+        {done ? (
+          <svg className="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={3}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+          </svg>
+        ) : (
+          <span className="w-1.5 h-1.5 rounded-full bg-current" />
+        )}
+      </div>
+      <span className={`text-xs transition-colors duration-300 ${done ? 'text-gray-300' : 'text-gray-600'}`}>{label}</span>
     </div>
   );
 }
