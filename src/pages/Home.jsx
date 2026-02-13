@@ -211,6 +211,9 @@ export default function Home() {
             <Link to="/register" className="text-gray-400 underline hover:text-white transition-colors">
               {t.home.listApiCTA}
             </Link>
+            <Link to="/analytics" className="text-gray-400 underline hover:text-white transition-colors">
+              {t.home.viewAnalyticsCTA || 'View Analytics'}
+            </Link>
             <Link to="/developers" className="text-gray-400 underline hover:text-white transition-colors">
               {t.home.readDocsCTA}
             </Link>

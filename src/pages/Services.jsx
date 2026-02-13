@@ -12,6 +12,7 @@ export default function Services() {
   const [loading, setLoading] = useState(true);
   const [activityMap, setActivityMap] = useState({});
   const [healthMap, setHealthMap] = useState({});
+  const [uptimeMap, setUptimeMap] = useState({});
   const [searchParams, setSearchParams] = useSearchParams();
   const { t } = useTranslation();
 
@@ -56,6 +57,21 @@ export default function Services() {
     fetch(`${API_URL}/api/health-check`, { signal })
       .then(r => r.json())
       .then(data => setHealthMap(data || {}))
+      .catch(() => {});
+
+    fetch(`${API_URL}/api/status/uptime?period=7d`, { signal })
+      .then(r => r.json())
+      .then(data => {
+        if (data?.endpoints) {
+          const map = {};
+          for (const ep of data.endpoints) {
+            if (ep.uptime !== null) {
+              map[`${API_URL}${ep.endpoint}`] = ep.uptime;
+            }
+          }
+          setUptimeMap(map);
+        }
+      })
       .catch(() => {});
     return () => controller.abort();
   }, []);
@@ -269,7 +285,7 @@ export default function Services() {
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
                   {catServices.map((s, i) => (
                     <div key={s.id} className="animate-fade-in-up" style={{ animationDelay: `${Math.min(i, 7) * 50}ms` }}>
-                      <ServiceCard service={s} lastActivity={activityMap[s.url]} healthStatus={healthMap[s.url]} />
+                      <ServiceCard service={s} lastActivity={activityMap[s.url]} healthStatus={healthMap[s.url]} uptimePercent={uptimeMap[s.url]} />
                     </div>
                   ))}
                 </div>
@@ -294,7 +310,7 @@ export default function Services() {
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
                   {uncategorized.map((s, i) => (
                     <div key={s.id} className="animate-fade-in-up" style={{ animationDelay: `${Math.min(i, 7) * 50}ms` }}>
-                      <ServiceCard service={s} lastActivity={activityMap[s.url]} healthStatus={healthMap[s.url]} />
+                      <ServiceCard service={s} lastActivity={activityMap[s.url]} healthStatus={healthMap[s.url]} uptimePercent={uptimeMap[s.url]} />
                     </div>
                   ))}
                 </div>
@@ -307,7 +323,7 @@ export default function Services() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
           {sorted.map((s, i) => (
             <div key={s.id} className="animate-fade-in-up" style={{ animationDelay: `${Math.min(i, 11) * 50}ms` }}>
-              <ServiceCard service={s} lastActivity={activityMap[s.url]} healthStatus={healthMap[s.url]} />
+              <ServiceCard service={s} lastActivity={activityMap[s.url]} healthStatus={healthMap[s.url]} uptimePercent={uptimeMap[s.url]} />
             </div>
           ))}
         </div>

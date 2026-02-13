@@ -35,7 +35,15 @@ function timeAgo(dateStr, t) {
   return `${diffD}d ago`;
 }
 
-export default function ServiceCard({ service, lastActivity, healthStatus }) {
+function getQualityTier(uptimePercent) {
+  if (uptimePercent == null) return null;
+  if (uptimePercent >= 99) return { label: 'Gold', color: '#FBBF24', bg: '#FBBF24' };
+  if (uptimePercent >= 95) return { label: 'Silver', color: '#94A3B8', bg: '#94A3B8' };
+  if (uptimePercent >= 90) return { label: 'Bronze', color: '#CD7F32', bg: '#CD7F32' };
+  return null;
+}
+
+export default function ServiceCard({ service, lastActivity, healthStatus, uptimePercent }) {
   const { t } = useTranslation();
   const isFree = Number(service.price_usdc) === 0;
   const initial = service.name?.charAt(0)?.toUpperCase() || '?';
@@ -43,6 +51,7 @@ export default function ServiceCard({ service, lastActivity, healthStatus }) {
   const [imgError, setImgError] = useState(false);
   const [copied, setCopied] = useState(false);
   const isNative = service.url?.startsWith('https://x402-api.onrender.com');
+  const quality = getQualityTier(uptimePercent);
 
   const handleCopyPrompt = async (e) => {
     e.stopPropagation();
@@ -97,6 +106,19 @@ export default function ServiceCard({ service, lastActivity, healthStatus }) {
             {service.verified_status === 'reachable' && (
               <span className="text-[11px] bg-emerald-500/10 text-emerald-400 px-1.5 py-0.5 rounded border border-emerald-500/20 shrink-0">
                 {t.serviceCard.autoTested}
+              </span>
+            )}
+            {quality && (
+              <span
+                className="text-[11px] px-1.5 py-0.5 rounded shrink-0 font-medium"
+                style={{
+                  backgroundColor: `${quality.bg}15`,
+                  color: quality.color,
+                  border: `1px solid ${quality.bg}30`,
+                }}
+                title={`${uptimePercent}% uptime (7d)`}
+              >
+                {quality.label}
               </span>
             )}
           </div>
