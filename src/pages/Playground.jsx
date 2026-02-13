@@ -6,18 +6,18 @@ import CopyButton from '../components/CopyButton';
 import { API_URL } from '../config';
 
 const PLAYGROUND_APIS = [
-  { id: 'weather', route: '/weather', method: 'GET', price: '0.02', category: 'Data', params: [{ name: 'city', defaultValue: 'Paris', required: true }] },
-  { id: 'crypto', route: '/crypto', method: 'GET', price: '0.02', category: 'Finance', params: [{ name: 'symbol', defaultValue: 'bitcoin', required: true }] },
-  { id: 'joke', route: '/joke', method: 'GET', price: '0.01', category: 'Fun', params: [] },
-  { id: 'translate', route: '/translate', method: 'GET', price: '0.005', category: 'AI', params: [{ name: 'text', defaultValue: 'Hello world', required: true }, { name: 'to', defaultValue: 'fr', required: true }] },
-  { id: 'sentiment', route: '/sentiment', method: 'GET', price: '0.005', category: 'AI', params: [{ name: 'text', defaultValue: 'I love this product!', required: true }] },
-  { id: 'search', route: '/search', method: 'GET', price: '0.005', category: 'Data', params: [{ name: 'q', defaultValue: 'x402 protocol', required: true }] },
-  { id: 'wikipedia', route: '/wikipedia', method: 'GET', price: '0.005', category: 'Data', params: [{ name: 'q', defaultValue: 'Bitcoin', required: true }] },
-  { id: 'github', route: '/github', method: 'GET', price: '0.005', category: 'Developer', params: [{ name: 'username', defaultValue: 'Wintyx57', required: true }] },
-  { id: 'countries', route: '/countries', method: 'GET', price: '0.005', category: 'Data', params: [{ name: 'name', defaultValue: 'France', required: true }] },
-  { id: 'hash', route: '/hash', method: 'GET', price: '0.005', category: 'Developer', params: [{ name: 'text', defaultValue: 'hello', required: true }, { name: 'algo', defaultValue: 'sha256' }] },
-  { id: 'currency', route: '/currency', method: 'GET', price: '0.005', category: 'Finance', params: [{ name: 'from', defaultValue: 'USD', required: true }, { name: 'to', defaultValue: 'EUR', required: true }] },
-  { id: 'dns', route: '/dns', method: 'GET', price: '0.005', category: 'Developer', params: [{ name: 'domain', defaultValue: 'google.com', required: true }] },
+  { id: 'weather', route: '/api/weather', method: 'GET', price: '0.02', category: 'Data', params: [{ name: 'city', defaultValue: 'Paris', required: true }] },
+  { id: 'crypto', route: '/api/crypto', method: 'GET', price: '0.02', category: 'Finance', params: [{ name: 'coin', defaultValue: 'bitcoin', required: true }] },
+  { id: 'joke', route: '/api/joke', method: 'GET', price: '0.01', category: 'Fun', params: [] },
+  { id: 'translate', route: '/api/translate', method: 'GET', price: '0.005', category: 'AI', params: [{ name: 'text', defaultValue: 'Hello world', required: true }, { name: 'to', defaultValue: 'fr', required: true }] },
+  { id: 'sentiment', route: '/api/sentiment', method: 'GET', price: '0.005', category: 'AI', params: [{ name: 'text', defaultValue: 'I love this product!', required: true }] },
+  { id: 'search', route: '/api/search', method: 'GET', price: '0.005', category: 'Data', params: [{ name: 'q', defaultValue: 'x402 protocol', required: true }] },
+  { id: 'wikipedia', route: '/api/wikipedia', method: 'GET', price: '0.005', category: 'Data', params: [{ name: 'q', defaultValue: 'Bitcoin', required: true }] },
+  { id: 'github', route: '/api/github', method: 'GET', price: '0.005', category: 'Developer', params: [{ name: 'user', defaultValue: 'Wintyx57', required: true }] },
+  { id: 'countries', route: '/api/countries', method: 'GET', price: '0.005', category: 'Data', params: [{ name: 'name', defaultValue: 'France', required: true }] },
+  { id: 'hash', route: '/api/hash', method: 'GET', price: '0.001', category: 'Developer', params: [{ name: 'text', defaultValue: 'hello', required: true }, { name: 'algo', defaultValue: 'sha256' }] },
+  { id: 'currency', route: '/api/currency', method: 'GET', price: '0.005', category: 'Finance', params: [{ name: 'from', defaultValue: 'USD', required: true }, { name: 'to', defaultValue: 'EUR', required: true }] },
+  { id: 'dns', route: '/api/dns', method: 'GET', price: '0.003', category: 'Developer', params: [{ name: 'domain', defaultValue: 'google.com', required: true }] },
 ];
 
 function highlightJSON(json) {
