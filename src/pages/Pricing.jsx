@@ -23,7 +23,7 @@ export default function Pricing() {
   const providerRef = useReveal();
   const faqRef = useReveal();
 
-  // All 41 native API endpoints grouped by price tier
+  // All 61 native API endpoints grouped by price tier
   const pricingTiers = [
     {
       name: 'tierPremium',
@@ -86,6 +86,11 @@ export default function Pricing() {
         'Readability',
         'Sentiment Analysis',
         'Currency Converter',
+        'News Feed',
+        'Stock Price',
+        'Reddit Data',
+        'YouTube Info',
+        'WHOIS Lookup',
       ]
     },
     {
@@ -99,6 +104,9 @@ export default function Pricing() {
         'QR Code Generator',
         'Email Validation',
         'HTTP Headers',
+        'Hacker News',
+        'SSL Certificate Check',
+        'URL Shortener',
       ]
     },
     {
@@ -118,6 +126,18 @@ export default function Pricing() {
         'Color Converter',
         'JSON Validator',
         'User Agent Parser',
+        'Regex Tester',
+        'Text Diff',
+        'Math Expression',
+        'Unit Converter',
+        'CSV to JSON',
+        'JWT Decoder',
+        'Cron Parser',
+        'Password Strength',
+        'Phone Validator',
+        'URL Parser',
+        'HTML to Text',
+        'HTTP Status Codes',
       ]
     },
   ];

@@ -678,6 +678,342 @@ const NATIVE_ENDPOINTS = [
   "breed": "husky"
 }`,
   },
+  // --- BATCH 3: DATA & SOCIAL (session 21) ---
+  {
+    id: 'news', route: '/api/news', method: 'GET', price: '0.005',
+    titleKey: 'newsTitle', descKey: 'newsDesc',
+    params: [
+      { name: 'topic', type: 'string', required: true, descKey: 'newsParamTopic' },
+      { name: 'lang', type: 'string', required: false, descKey: 'newsParamLang' },
+    ],
+    curl: `curl "${API_BASE}/api/news?topic=artificial+intelligence&lang=en"`,
+    response: `{
+  "success": true,
+  "topic": "artificial intelligence",
+  "articles": [
+    { "title": "AI Breakthrough in 2026", "source": "TechCrunch", "link": "https://...", "pubDate": "2026-02-13" }
+  ],
+  "count": 10
+}`,
+  },
+  {
+    id: 'stocks', route: '/api/stocks', method: 'GET', price: '0.005',
+    titleKey: 'stocksTitle', descKey: 'stocksDesc',
+    params: [
+      { name: 'symbol', type: 'string', required: true, descKey: 'stocksParamSymbol' },
+    ],
+    curl: `curl "${API_BASE}/api/stocks?symbol=AAPL"`,
+    response: `{
+  "success": true,
+  "symbol": "AAPL",
+  "name": "Apple Inc.",
+  "price": 245.32,
+  "change": 3.21,
+  "changePercent": 1.33,
+  "marketState": "REGULAR",
+  "exchange": "NASDAQ"
+}`,
+  },
+  {
+    id: 'reddit', route: '/api/reddit', method: 'GET', price: '0.005',
+    titleKey: 'redditTitle', descKey: 'redditDesc',
+    params: [
+      { name: 'subreddit', type: 'string', required: true, descKey: 'redditParamSubreddit' },
+      { name: 'sort', type: 'string', required: false, descKey: 'redditParamSort' },
+      { name: 'limit', type: 'number', required: false, descKey: 'redditParamLimit' },
+    ],
+    curl: `curl "${API_BASE}/api/reddit?subreddit=programming&sort=hot&limit=5"`,
+    response: `{
+  "success": true,
+  "subreddit": "programming",
+  "sort": "hot",
+  "posts": [
+    { "title": "Why Rust is Taking Over", "author": "u/dev123", "score": 1523, "comments": 234, "url": "https://..." }
+  ],
+  "count": 5
+}`,
+  },
+  {
+    id: 'hn', route: '/api/hn', method: 'GET', price: '0.003',
+    titleKey: 'hnTitle', descKey: 'hnDesc',
+    params: [
+      { name: 'type', type: 'string', required: false, descKey: 'hnParamType' },
+      { name: 'limit', type: 'number', required: false, descKey: 'hnParamLimit' },
+    ],
+    curl: `curl "${API_BASE}/api/hn?type=top&limit=5"`,
+    response: `{
+  "success": true,
+  "type": "top",
+  "stories": [
+    { "title": "Show HN: x402 Bazaar", "url": "https://x402bazaar.org", "score": 342, "by": "wintyx", "comments": 89 }
+  ],
+  "count": 5
+}`,
+  },
+  {
+    id: 'youtube', route: '/api/youtube', method: 'GET', price: '0.005',
+    titleKey: 'youtubeTitle', descKey: 'youtubeDesc',
+    params: [
+      { name: 'url', type: 'string', required: true, descKey: 'youtubeParamUrl' },
+    ],
+    curl: `curl "${API_BASE}/api/youtube?url=https://youtube.com/watch?v=dQw4w9WgXcQ"`,
+    response: `{
+  "success": true,
+  "title": "Rick Astley - Never Gonna Give You Up",
+  "author_name": "Rick Astley",
+  "thumbnail_url": "https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg",
+  "html": "<iframe ...></iframe>"
+}`,
+  },
+  {
+    id: 'whois', route: '/api/whois', method: 'GET', price: '0.005',
+    titleKey: 'whoisTitle', descKey: 'whoisDesc',
+    params: [
+      { name: 'domain', type: 'string', required: true, descKey: 'whoisParamDomain' },
+    ],
+    curl: `curl "${API_BASE}/api/whois?domain=google.com"`,
+    response: `{
+  "success": true,
+  "domain": "google.com",
+  "registrar": "MarkMonitor Inc.",
+  "registered": "1997-09-15",
+  "expires": "2028-09-14",
+  "nameservers": ["ns1.google.com", "ns2.google.com"],
+  "status": ["clientDeleteProhibited"]
+}`,
+  },
+  {
+    id: 'ssl-check', route: '/api/ssl-check', method: 'GET', price: '0.003',
+    titleKey: 'sslCheckTitle', descKey: 'sslCheckDesc',
+    params: [
+      { name: 'domain', type: 'string', required: true, descKey: 'sslCheckParamDomain' },
+    ],
+    curl: `curl "${API_BASE}/api/ssl-check?domain=google.com"`,
+    response: `{
+  "success": true,
+  "domain": "google.com",
+  "issuer": "Google Trust Services",
+  "validFrom": "2026-01-15",
+  "validTo": "2026-04-15",
+  "daysRemaining": 61,
+  "protocol": "TLSv1.3"
+}`,
+  },
+  {
+    id: 'regex', route: '/api/regex', method: 'GET', price: '0.001',
+    titleKey: 'regexTitle', descKey: 'regexDesc',
+    params: [
+      { name: 'pattern', type: 'string', required: true, descKey: 'regexParamPattern' },
+      { name: 'text', type: 'string', required: true, descKey: 'regexParamText' },
+      { name: 'flags', type: 'string', required: false, descKey: 'regexParamFlags' },
+    ],
+    curl: `curl "${API_BASE}/api/regex?pattern=\\d%2B&text=abc123def456&flags=g"`,
+    response: `{
+  "success": true,
+  "pattern": "\\\\d+",
+  "flags": "g",
+  "matches": [
+    { "match": "123", "index": 3, "groups": [] },
+    { "match": "456", "index": 9, "groups": [] }
+  ],
+  "count": 2
+}`,
+  },
+  {
+    id: 'diff', route: '/api/diff', method: 'GET', price: '0.001',
+    titleKey: 'diffTitle', descKey: 'diffDesc',
+    params: [
+      { name: 'text1', type: 'string', required: true, descKey: 'diffParamText1' },
+      { name: 'text2', type: 'string', required: true, descKey: 'diffParamText2' },
+    ],
+    curl: `curl "${API_BASE}/api/diff?text1=hello+world&text2=hello+earth"`,
+    response: `{
+  "success": true,
+  "changes": [
+    { "type": "equal", "value": "hello " },
+    { "type": "removed", "value": "world" },
+    { "type": "added", "value": "earth" }
+  ],
+  "stats": { "added": 1, "removed": 1, "equal": 1 }
+}`,
+  },
+  {
+    id: 'math', route: '/api/math', method: 'GET', price: '0.001',
+    titleKey: 'mathTitle', descKey: 'mathDesc',
+    params: [
+      { name: 'expr', type: 'string', required: true, descKey: 'mathParamExpr' },
+    ],
+    curl: `curl "${API_BASE}/api/math?expr=2*pi%2Bsqrt(16)"`,
+    response: `{
+  "success": true,
+  "expression": "2*pi+sqrt(16)",
+  "result": 10.283185307179586
+}`,
+  },
+  // --- BATCH 4: UTILITY (session 21) ---
+  {
+    id: 'unit-convert', route: '/api/unit-convert', method: 'GET', price: '0.001',
+    titleKey: 'unitConvertTitle', descKey: 'unitConvertDesc',
+    params: [
+      { name: 'value', type: 'number', required: true, descKey: 'unitConvertParamValue' },
+      { name: 'from', type: 'string', required: true, descKey: 'unitConvertParamFrom' },
+      { name: 'to', type: 'string', required: true, descKey: 'unitConvertParamTo' },
+    ],
+    curl: `curl "${API_BASE}/api/unit-convert?value=100&from=km&to=miles"`,
+    response: `{
+  "success": true,
+  "value": 100,
+  "from": "km",
+  "to": "miles",
+  "result": 62.1371,
+  "category": "length"
+}`,
+  },
+  {
+    id: 'csv-to-json', route: '/api/csv-to-json', method: 'GET', price: '0.001',
+    titleKey: 'csvToJsonTitle', descKey: 'csvToJsonDesc',
+    params: [
+      { name: 'csv', type: 'string', required: true, descKey: 'csvToJsonParamCsv' },
+    ],
+    curl: `curl "${API_BASE}/api/csv-to-json?csv=name,age%0AAlice,30%0ABob,25"`,
+    response: `{
+  "success": true,
+  "rows": [
+    { "name": "Alice", "age": "30" },
+    { "name": "Bob", "age": "25" }
+  ],
+  "count": 2,
+  "columns": ["name", "age"]
+}`,
+  },
+  {
+    id: 'jwt-decode', route: '/api/jwt-decode', method: 'GET', price: '0.001',
+    titleKey: 'jwtDecodeTitle', descKey: 'jwtDecodeDesc',
+    params: [
+      { name: 'token', type: 'string', required: true, descKey: 'jwtDecodeParamToken' },
+    ],
+    curl: `curl "${API_BASE}/api/jwt-decode?token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.abc"`,
+    response: `{
+  "success": true,
+  "header": { "alg": "HS256" },
+  "payload": { "sub": "1234567890" },
+  "expired": false
+}`,
+  },
+  {
+    id: 'cron-parse', route: '/api/cron-parse', method: 'GET', price: '0.001',
+    titleKey: 'cronParseTitle', descKey: 'cronParseDesc',
+    params: [
+      { name: 'expr', type: 'string', required: true, descKey: 'cronParseParamExpr' },
+    ],
+    curl: `curl "${API_BASE}/api/cron-parse?expr=0+9+*+*+1-5"`,
+    response: `{
+  "success": true,
+  "expression": "0 9 * * 1-5",
+  "description": "At 09:00, Monday through Friday",
+  "fields": {
+    "minute": "0",
+    "hour": "9",
+    "dayOfMonth": "*",
+    "month": "*",
+    "dayOfWeek": "1-5"
+  }
+}`,
+  },
+  {
+    id: 'password-strength', route: '/api/password-strength', method: 'GET', price: '0.001',
+    titleKey: 'passwordStrengthTitle', descKey: 'passwordStrengthDesc',
+    params: [
+      { name: 'password', type: 'string', required: true, descKey: 'passwordStrengthParamPassword' },
+    ],
+    curl: `curl "${API_BASE}/api/password-strength?password=MyP@ssw0rd!2026"`,
+    response: `{
+  "success": true,
+  "score": 85,
+  "strength": "strong",
+  "entropy": 72.5,
+  "checks": { "length": true, "uppercase": true, "lowercase": true, "numbers": true, "symbols": true },
+  "suggestions": []
+}`,
+  },
+  {
+    id: 'phone-validate', route: '/api/phone-validate', method: 'GET', price: '0.001',
+    titleKey: 'phoneValidateTitle', descKey: 'phoneValidateDesc',
+    params: [
+      { name: 'phone', type: 'string', required: true, descKey: 'phoneValidateParamPhone' },
+    ],
+    curl: `curl "${API_BASE}/api/phone-validate?phone=%2B33612345678"`,
+    response: `{
+  "success": true,
+  "phone": "+33612345678",
+  "valid": true,
+  "countryCode": "33",
+  "country": "France",
+  "type": "mobile",
+  "formatted": "+33 6 12 34 56 78"
+}`,
+  },
+  {
+    id: 'url-parse', route: '/api/url-parse', method: 'GET', price: '0.001',
+    titleKey: 'urlParseTitle', descKey: 'urlParseDesc',
+    params: [
+      { name: 'url', type: 'string', required: true, descKey: 'urlParseParamUrl' },
+    ],
+    curl: `curl "${API_BASE}/api/url-parse?url=https://example.com:8080/path?q=test%23hash"`,
+    response: `{
+  "success": true,
+  "protocol": "https:",
+  "hostname": "example.com",
+  "port": "8080",
+  "pathname": "/path",
+  "search": "?q=test",
+  "hash": "#hash",
+  "params": { "q": "test" }
+}`,
+  },
+  {
+    id: 'url-shorten', route: '/api/url-shorten', method: 'GET', price: '0.003',
+    titleKey: 'urlShortenTitle', descKey: 'urlShortenDesc',
+    params: [
+      { name: 'url', type: 'string', required: true, descKey: 'urlShortenParamUrl' },
+    ],
+    curl: `curl "${API_BASE}/api/url-shorten?url=https://x402bazaar.org/docs"`,
+    response: `{
+  "success": true,
+  "original": "https://x402bazaar.org/docs",
+  "short": "https://is.gd/abc123"
+}`,
+  },
+  {
+    id: 'html-to-text', route: '/api/html-to-text', method: 'GET', price: '0.001',
+    titleKey: 'htmlToTextTitle', descKey: 'htmlToTextDesc',
+    params: [
+      { name: 'html', type: 'string', required: true, descKey: 'htmlToTextParamHtml' },
+    ],
+    curl: `curl "${API_BASE}/api/html-to-text?html=<h1>Title</h1><p>Content</p>"`,
+    response: `{
+  "success": true,
+  "text": "Title\\nContent",
+  "links": [],
+  "images": [],
+  "wordCount": 2
+}`,
+  },
+  {
+    id: 'http-status', route: '/api/http-status', method: 'GET', price: '0.001',
+    titleKey: 'httpStatusTitle', descKey: 'httpStatusDesc',
+    params: [
+      { name: 'code', type: 'number', required: true, descKey: 'httpStatusParamCode' },
+    ],
+    curl: `curl "${API_BASE}/api/http-status?code=404"`,
+    response: `{
+  "success": true,
+  "code": 404,
+  "name": "Not Found",
+  "description": "The server cannot find the requested resource.",
+  "category": "Client Error"
+}`,
+  },
 ];
 
 const STATIC_ENDPOINTS = {

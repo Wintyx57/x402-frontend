@@ -18,6 +18,14 @@ const PLAYGROUND_APIS = [
   { id: 'hash', route: '/api/hash', method: 'GET', price: '0.001', category: 'Developer', params: [{ name: 'text', defaultValue: 'hello', required: true }, { name: 'algo', defaultValue: 'sha256' }] },
   { id: 'currency', route: '/api/currency', method: 'GET', price: '0.005', category: 'Finance', params: [{ name: 'from', defaultValue: 'USD', required: true }, { name: 'to', defaultValue: 'EUR', required: true }] },
   { id: 'dns', route: '/api/dns', method: 'GET', price: '0.003', category: 'Developer', params: [{ name: 'domain', defaultValue: 'google.com', required: true }] },
+  { id: 'stocks', route: '/api/stocks', method: 'GET', price: '0.005', category: 'Finance', params: [{ name: 'symbol', defaultValue: 'AAPL', required: true }] },
+  { id: 'news', route: '/api/news', method: 'GET', price: '0.005', category: 'Data', params: [{ name: 'topic', defaultValue: 'artificial intelligence', required: true }] },
+  { id: 'reddit', route: '/api/reddit', method: 'GET', price: '0.005', category: 'Social', params: [{ name: 'subreddit', defaultValue: 'programming', required: true }] },
+  { id: 'math', route: '/api/math', method: 'GET', price: '0.001', category: 'Utility', params: [{ name: 'expr', defaultValue: '2*pi+sqrt(16)', required: true }] },
+  { id: 'regex', route: '/api/regex', method: 'GET', price: '0.001', category: 'Developer', params: [{ name: 'pattern', defaultValue: '\\d+', required: true }, { name: 'text', defaultValue: 'abc123def456', required: true }, { name: 'flags', defaultValue: 'g' }] },
+  { id: 'password-strength', route: '/api/password-strength', method: 'GET', price: '0.001', category: 'Security', params: [{ name: 'password', defaultValue: 'MyP@ssw0rd!2026', required: true }] },
+  { id: 'unit-convert', route: '/api/unit-convert', method: 'GET', price: '0.001', category: 'Utility', params: [{ name: 'value', defaultValue: '100', required: true }, { name: 'from', defaultValue: 'km', required: true }, { name: 'to', defaultValue: 'miles', required: true }] },
+  { id: 'url-shorten', route: '/api/url-shorten', method: 'GET', price: '0.003', category: 'Utility', params: [{ name: 'url', defaultValue: 'https://x402bazaar.org/docs', required: true }] },
 ];
 
 function highlightJSON(json) {
