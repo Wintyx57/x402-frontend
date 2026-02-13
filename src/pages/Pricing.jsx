@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '../i18n/LanguageContext';
 import { useReveal } from '../hooks/useReveal';
@@ -12,10 +12,14 @@ export default function Pricing() {
     title: 'Pricing',
     description: 'x402 Bazaar pricing — pay per API call with USDC stablecoins. No subscriptions, no minimums. From $0.001 to $0.05 per call.'
   });
+  const [selectedTier, setSelectedTier] = useState(3);
+  const [callCount, setCallCount] = useState(100);
+  const [useSkale, setUseSkale] = useState(false);
   const howRef = useReveal();
   const pricingRef = useReveal();
   const marketplaceRef = useReveal();
   const networkRef = useReveal();
+  const calculatorRef = useReveal();
   const providerRef = useReveal();
   const faqRef = useReveal();
 
@@ -293,6 +297,133 @@ export default function Pricing() {
             </div>
             <p className="text-gray-400 text-sm leading-relaxed">{t.pricing.skaleDesc}</p>
           </div>
+        </div>
+      </section>
+
+      {/* Cost Calculator */}
+      <section ref={calculatorRef} className="reveal mb-10">
+        <h2 className="text-2xl font-bold text-white mb-2">{t.pricing.calculatorTitle}</h2>
+        <p className="text-gray-400 text-sm mb-5">{t.pricing.calculatorDesc}</p>
+        <div className="glass rounded-xl p-6 space-y-5">
+          {/* Tier Select */}
+          <div>
+            <label className="text-xs text-gray-400 font-medium mb-2 block">{t.pricing.calcTierLabel}</label>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              {pricingTiers.map((tier, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setSelectedTier(idx)}
+                  className={`px-3 py-2 rounded-lg text-xs font-medium transition-all border ${
+                    selectedTier === idx
+                      ? 'border-[#FF9900] bg-[#FF9900]/10 text-[#FF9900]'
+                      : 'border-white/10 text-gray-400 hover:border-white/20'
+                  }`}
+                >
+                  {t.pricing[tier.name]} ({tier.price})
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Call Count */}
+          <div>
+            <label className="text-xs text-gray-400 font-medium mb-2 block">{t.pricing.calcCallsLabel}</label>
+            <div className="flex gap-2 mb-3">
+              {[10, 100, 1000, 10000].map(n => (
+                <button
+                  key={n}
+                  onClick={() => setCallCount(n)}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all border ${
+                    callCount === n
+                      ? 'border-[#FF9900] bg-[#FF9900]/10 text-[#FF9900]'
+                      : 'border-white/10 text-gray-400 hover:border-white/20'
+                  }`}
+                >
+                  {n.toLocaleString()}
+                </button>
+              ))}
+            </div>
+            <input
+              type="number"
+              min="1"
+              max="1000000"
+              value={callCount}
+              onChange={e => setCallCount(Math.max(1, Math.min(1000000, parseInt(e.target.value) || 1)))}
+              className="w-full glass px-4 py-2 rounded-lg text-white text-sm bg-transparent border border-white/10 focus:border-[#FF9900]/50 focus:outline-none"
+            />
+          </div>
+
+          {/* Network Toggle */}
+          <div>
+            <label className="text-xs text-gray-400 font-medium mb-2 block">{t.pricing.calcNetworkLabel}</label>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setUseSkale(false)}
+                className={`flex-1 px-4 py-2.5 rounded-lg text-sm font-medium transition-all border ${
+                  !useSkale
+                    ? 'border-blue-500 bg-blue-500/10 text-blue-400'
+                    : 'border-white/10 text-gray-400 hover:border-white/20'
+                }`}
+              >
+                Base (~$0.001/tx)
+              </button>
+              <button
+                onClick={() => setUseSkale(true)}
+                className={`flex-1 px-4 py-2.5 rounded-lg text-sm font-medium transition-all border ${
+                  useSkale
+                    ? 'border-green-500 bg-green-500/10 text-green-400'
+                    : 'border-white/10 text-gray-400 hover:border-white/20'
+                }`}
+              >
+                SKALE ($0/tx)
+              </button>
+            </div>
+          </div>
+
+          {/* Results */}
+          {(() => {
+            const tierPrice = parseFloat(pricingTiers[selectedTier].price.replace('$', ''));
+            const apiCost = tierPrice * callCount;
+            const gasCost = useSkale ? 0 : 0.001 * callCount;
+            const total = apiCost + gasCost;
+            const tierName = t.pricing[pricingTiers[selectedTier].name];
+            const exampleEndpoint = pricingTiers[selectedTier].endpoints[0];
+
+            return (
+              <div className="glass-card rounded-lg p-5 border border-[#FF9900]/10">
+                <div className="grid grid-cols-3 gap-4 mb-4">
+                  <div className="text-center">
+                    <p className="text-xs text-gray-500 mb-1">{t.pricing.calcApiCost}</p>
+                    <p className="text-lg font-bold text-white">${apiCost.toFixed(2)}</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-xs text-gray-500 mb-1">{t.pricing.calcGasCost}</p>
+                    <p className={`text-lg font-bold ${useSkale ? 'text-green-400' : 'text-blue-400'}`}>
+                      ${gasCost.toFixed(2)}
+                    </p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-xs text-gray-500 mb-1">{t.pricing.calcTotal}</p>
+                    <p className="text-lg font-bold text-[#FF9900]">${total.toFixed(2)}</p>
+                  </div>
+                </div>
+                <p className="text-xs text-gray-400 text-center">
+                  {callCount.toLocaleString()} {t.pricing.calcCalls} {exampleEndpoint} @ {pricingTiers[selectedTier].price} = ${apiCost.toFixed(2)} API
+                  {!useSkale && ` + $${gasCost.toFixed(2)} gas`} = ${total.toFixed(2)}
+                </p>
+                {!useSkale && (
+                  <div className="mt-3 text-center">
+                    <button
+                      onClick={() => setUseSkale(true)}
+                      className="text-xs text-green-400 font-medium hover:underline"
+                    >
+                      {t.pricing.calcSkaleSave}
+                    </button>
+                  </div>
+                )}
+              </div>
+            );
+          })()}
         </div>
       </section>
 

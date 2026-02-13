@@ -33,6 +33,7 @@ export default function About() {
   const blockchainRef = useReveal();
   const openSourceRef = useReveal();
   const securityRef = useReveal();
+  const slaRef = useReveal();
   const identityRef = useReveal();
   const teamRef = useReveal();
   const contactRef = useReveal();
@@ -261,6 +262,80 @@ export default function About() {
               </div>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* SLA */}
+      <section ref={slaRef} className="reveal mb-10">
+        <h2 className="text-2xl font-bold text-white mb-2">{t.about.slaTitle}</h2>
+        <p className="text-gray-400 text-sm mb-5">{t.about.slaDesc}</p>
+        <div className="grid sm:grid-cols-2 gap-3">
+          {[
+            {
+              title: t.about.sla1Title,
+              desc: t.about.sla1Desc,
+              color: 'text-green-400',
+              bg: 'bg-green-500/5',
+              border: 'border-green-500/20',
+              icon: (
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              ),
+            },
+            {
+              title: t.about.sla2Title,
+              desc: t.about.sla2Desc,
+              color: 'text-blue-400',
+              bg: 'bg-blue-500/5',
+              border: 'border-blue-500/20',
+              icon: (
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+              ),
+            },
+            {
+              title: t.about.sla3Title,
+              desc: t.about.sla3Desc,
+              color: 'text-orange-400',
+              bg: 'bg-orange-500/5',
+              border: 'border-orange-500/20',
+              icon: (
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              ),
+            },
+            {
+              title: t.about.sla4Title,
+              desc: t.about.sla4Desc,
+              color: 'text-violet-400',
+              bg: 'bg-violet-500/5',
+              border: 'border-violet-500/20',
+              icon: (
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                </svg>
+              ),
+            },
+          ].map((item) => (
+            <div key={item.title} className={`glass-card rounded-lg p-4 flex gap-3 border ${item.border}`}>
+              <div className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 ${item.color} ${item.bg}`}>
+                {item.icon}
+              </div>
+              <div>
+                <h3 className="text-white font-semibold text-sm mb-1">{item.title}</h3>
+                <p className="text-gray-500 text-xs leading-relaxed">{item.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="glass-card rounded-lg p-4 mt-4 border border-white/5">
+          <p className="text-xs text-gray-500">
+            <span className="text-[#FF9900] font-medium">{t.about.slaNote}</span> {t.about.slaNoteDesc}
+          </p>
         </div>
       </section>
 
