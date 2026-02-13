@@ -23,6 +23,7 @@ export default function Footer() {
               <Link to="/about" className="text-xs text-gray-500 hover:text-white no-underline transition-colors py-1">About</Link>
               <Link to="/register" className="text-xs text-gray-500 hover:text-white no-underline transition-colors py-1">{t.nav.register}</Link>
               <Link to="/developers" className="text-xs text-gray-500 hover:text-white no-underline transition-colors py-1">{t.nav.developers}</Link>
+              <Link to="/privacy" className="text-xs text-gray-500 hover:text-white no-underline transition-colors py-1">Privacy Policy</Link>
             </div>
           </div>
           <div>
