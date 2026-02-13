@@ -74,7 +74,7 @@ export default function ServiceCard({ service, lastActivity, healthStatus, uptim
           {domain && !imgError ? (
             <img
               src={`https://www.google.com/s2/favicons?domain=${domain}&sz=64`}
-              alt=""
+              alt={service.name}
               className="w-6 h-6 object-contain"
               onError={() => setImgError(true)}
               loading="lazy"

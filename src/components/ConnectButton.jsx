@@ -32,9 +32,16 @@ export default function ConnectButton() {
         setDropdownOpen(false);
       }
     }
+    function handleKeyDown(e) {
+      if (e.key === 'Escape') setDropdownOpen(false);
+    }
     if (dropdownOpen) {
       document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);
+      document.addEventListener('keydown', handleKeyDown);
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+        document.removeEventListener('keydown', handleKeyDown);
+      };
     }
   }, [dropdownOpen]);
 
@@ -86,6 +93,7 @@ export default function ConnectButton() {
       <button
         onClick={() => setDropdownOpen((prev) => !prev)}
         aria-expanded={dropdownOpen}
+        aria-haspopup="true"
         className="glass text-gray-300 text-xs sm:text-sm px-2 sm:px-3 py-2.5 min-h-[44px] rounded-lg font-mono cursor-pointer
                    transition-all duration-200 hover:border-white/15 flex items-center gap-2"
       >

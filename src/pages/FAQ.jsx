@@ -4,8 +4,9 @@ import { useReveal } from '../hooks/useReveal';
 import useSEO from '../hooks/useSEO';
 import { Link } from 'react-router-dom';
 
-function FAQItem({ question, answer }) {
+function FAQItem({ question, answer, id }) {
   const [isOpen, setIsOpen] = useState(false);
+  const panelId = `faq-answer-${id}`;
 
   return (
     <div className={`glass-card rounded-lg transition-all duration-200 ${
@@ -14,6 +15,7 @@ function FAQItem({ question, answer }) {
       <button
         onClick={() => setIsOpen(!isOpen)}
         aria-expanded={isOpen}
+        aria-controls={panelId}
         className="w-full text-left p-5 flex items-start justify-between gap-4 cursor-pointer bg-transparent border-none"
       >
         <h3 className="text-white font-medium text-base flex-1">{question}</h3>
@@ -34,6 +36,8 @@ function FAQItem({ question, answer }) {
         </svg>
       </button>
       <div
+        id={panelId}
+        role="region"
         className={`overflow-hidden transition-all duration-300 ${
           isOpen ? 'max-h-96 px-5 pb-5' : 'max-h-0'
         }`}
@@ -109,9 +113,9 @@ export default function FAQ() {
           {t.faq.sectionGeneral}
         </h2>
         <div className="space-y-3">
-          <FAQItem question={t.faq.q1} answer={t.faq.a1} />
-          <FAQItem question={t.faq.q2} answer={t.faq.a2} />
-          <FAQItem question={t.faq.q3} answer={t.faq.a3} />
+          <FAQItem id="1" question={t.faq.q1} answer={t.faq.a1} />
+          <FAQItem id="2" question={t.faq.q2} answer={t.faq.a2} />
+          <FAQItem id="3" question={t.faq.q3} answer={t.faq.a3} />
         </div>
       </section>
 
@@ -121,9 +125,9 @@ export default function FAQ() {
           {t.faq.sectionPayments}
         </h2>
         <div className="space-y-3">
-          <FAQItem question={t.faq.q4} answer={t.faq.a4} />
-          <FAQItem question={t.faq.q5} answer={t.faq.a5} />
-          <FAQItem question={t.faq.q6} answer={t.faq.a6} />
+          <FAQItem id="4" question={t.faq.q4} answer={t.faq.a4} />
+          <FAQItem id="5" question={t.faq.q5} answer={t.faq.a5} />
+          <FAQItem id="6" question={t.faq.q6} answer={t.faq.a6} />
         </div>
       </section>
 
@@ -133,8 +137,8 @@ export default function FAQ() {
           {t.faq.sectionTechnical}
         </h2>
         <div className="space-y-3">
-          <FAQItem question={t.faq.q7} answer={t.faq.a7} />
-          <FAQItem question={t.faq.q8} answer={t.faq.a8} />
+          <FAQItem id="7" question={t.faq.q7} answer={t.faq.a7} />
+          <FAQItem id="8" question={t.faq.q8} answer={t.faq.a8} />
         </div>
       </section>
 
@@ -144,8 +148,8 @@ export default function FAQ() {
           {t.faq.sectionProviders}
         </h2>
         <div className="space-y-3">
-          <FAQItem question={t.faq.q9} answer={t.faq.a9} />
-          <FAQItem question={t.faq.q10} answer={t.faq.a10} />
+          <FAQItem id="9" question={t.faq.q9} answer={t.faq.a9} />
+          <FAQItem id="10" question={t.faq.q10} answer={t.faq.a10} />
         </div>
       </section>
 
@@ -155,14 +159,14 @@ export default function FAQ() {
           {t.faq.sectionMore}
         </h2>
         <div className="space-y-3">
-          <FAQItem question={t.faq.q11} answer={t.faq.a11} />
-          <FAQItem question={t.faq.q12} answer={t.faq.a12} />
-          <FAQItem question={t.faq.q13} answer={t.faq.a13} />
-          <FAQItem question={t.faq.q14} answer={t.faq.a14} />
-          <FAQItem question={t.faq.q15} answer={t.faq.a15} />
-          <FAQItem question={t.faq.q16} answer={t.faq.a16} />
-          <FAQItem question={t.faq.q17} answer={t.faq.a17} />
-          <FAQItem question={t.faq.q18} answer={t.faq.a18} />
+          <FAQItem id="11" question={t.faq.q11} answer={t.faq.a11} />
+          <FAQItem id="12" question={t.faq.q12} answer={t.faq.a12} />
+          <FAQItem id="13" question={t.faq.q13} answer={t.faq.a13} />
+          <FAQItem id="14" question={t.faq.q14} answer={t.faq.a14} />
+          <FAQItem id="15" question={t.faq.q15} answer={t.faq.a15} />
+          <FAQItem id="16" question={t.faq.q16} answer={t.faq.a16} />
+          <FAQItem id="17" question={t.faq.q17} answer={t.faq.a17} />
+          <FAQItem id="18" question={t.faq.q18} answer={t.faq.a18} />
         </div>
       </section>
 
