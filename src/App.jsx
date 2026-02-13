@@ -18,6 +18,7 @@ const FAQ = lazy(() => import('./pages/FAQ'));
 const Demos = lazy(() => import('./pages/Demos'));
 const Config = lazy(() => import('./pages/Config'));
 const Docs = lazy(() => import('./pages/Docs'));
+const Status = lazy(() => import('./pages/Status'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
 export default function App() {
@@ -40,6 +41,7 @@ export default function App() {
             <Route path="/demos" element={<Demos />} />
             <Route path="/config" element={<Config />} />
             <Route path="/docs" element={<Docs />} />
+            <Route path="/status" element={<Status />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>

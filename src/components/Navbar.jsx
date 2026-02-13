@@ -54,6 +54,7 @@ export default function Navbar() {
     { to: '/demos', label: t.nav.demos || 'Demos' },
     { to: '/faq', label: 'FAQ' },
     { to: '/config', label: t.nav.config || 'Config' },
+    { to: '/status', label: t.nav.status || 'Status' },
   ];
 
   return (
