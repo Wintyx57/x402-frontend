@@ -10,21 +10,118 @@ export default function Pricing() {
   const { t } = useTranslation();
   useSEO({
     title: 'Pricing',
-    description: 'x402 Bazaar pricing — pay per API call with USDC stablecoins. No subscriptions, no minimums. From $0.001 to $0.10 per call.'
+    description: 'x402 Bazaar pricing — pay per API call with USDC stablecoins. No subscriptions, no minimums. From $0.001 to $0.05 per call.'
   });
   const howRef = useReveal();
   const pricingRef = useReveal();
+  const marketplaceRef = useReveal();
   const networkRef = useReveal();
   const providerRef = useReveal();
   const faqRef = useReveal();
 
-  const nativeEndpoints = [
-    { name: t.pricing.serviceWebSearch, price: '$0.005', desc: t.pricing.serviceWebSearchDesc },
-    { name: t.pricing.serviceWebScraper, price: '$0.005', desc: t.pricing.serviceWebScraperDesc },
-    { name: t.pricing.serviceTwitter, price: '$0.005', desc: t.pricing.serviceTwitterDesc },
-    { name: t.pricing.serviceWeather, price: '$0.02', desc: t.pricing.serviceWeatherDesc },
-    { name: t.pricing.serviceCrypto, price: '$0.02', desc: t.pricing.serviceCryptoDesc },
-    { name: t.pricing.serviceJoke, price: '$0.01', desc: t.pricing.serviceJokeDesc },
+  // All 41 native API endpoints grouped by price tier
+  const pricingTiers = [
+    {
+      name: 'tierPremium',
+      price: '$0.05',
+      color: 'from-purple-500 to-pink-500',
+      borderColor: 'border-purple-500/20',
+      bgColor: 'bg-purple-500/5',
+      endpoints: [
+        'Image Generation (DALL-E 3)',
+      ]
+    },
+    {
+      name: 'tierStandardPlus',
+      price: '$0.02',
+      color: 'from-orange-500 to-red-500',
+      borderColor: 'border-orange-500/20',
+      bgColor: 'bg-orange-500/5',
+      endpoints: [
+        'Weather',
+        'Crypto Prices',
+      ]
+    },
+    {
+      name: 'tierStandard',
+      price: '$0.01',
+      color: 'from-blue-500 to-cyan-500',
+      borderColor: 'border-blue-500/20',
+      bgColor: 'bg-blue-500/5',
+      endpoints: [
+        'Random Joke',
+        'Text Summarization',
+      ]
+    },
+    {
+      name: 'tierBase',
+      price: '$0.005',
+      color: 'from-green-500 to-emerald-500',
+      borderColor: 'border-green-500/20',
+      bgColor: 'bg-green-500/5',
+      endpoints: [
+        'Web Search',
+        'Web Scraper',
+        'Twitter/X',
+        'Wikipedia',
+        'Dictionary',
+        'Countries',
+        'GitHub',
+        'NPM Registry',
+        'IP Geolocation',
+        'QR Code',
+        'World Time',
+        'Public Holidays',
+        'Geocoding',
+        'Air Quality',
+        'Random Quote',
+        'Random Facts',
+        'Dog Images',
+        'Translation',
+        'Code Execution',
+        'Readability',
+        'Sentiment Analysis',
+        'Currency Converter',
+      ]
+    },
+    {
+      name: 'tierUtility',
+      price: '$0.003',
+      color: 'from-teal-500 to-cyan-500',
+      borderColor: 'border-teal-500/20',
+      bgColor: 'bg-teal-500/5',
+      endpoints: [
+        'DNS Lookup',
+        'QR Code Generator',
+        'Email Validation',
+        'HTTP Headers',
+      ]
+    },
+    {
+      name: 'tierMicro',
+      price: '$0.001',
+      color: 'from-gray-500 to-slate-500',
+      borderColor: 'border-gray-500/20',
+      bgColor: 'bg-gray-500/5',
+      endpoints: [
+        'Hash Generator',
+        'UUID Generator',
+        'Base64',
+        'Password Generator',
+        'Timestamp Converter',
+        'Lorem Ipsum',
+        'Markdown to HTML',
+        'Color Converter',
+        'JSON Validator',
+        'User Agent Parser',
+      ]
+    },
+  ];
+
+  const marketplaceFees = [
+    { name: 'marketplaceFeesList', price: '$0.05' },
+    { name: 'marketplaceFeesSearch', price: '$0.05' },
+    { name: 'marketplaceFeesRegister', price: '$1.00' },
   ];
 
   const faqs = [
@@ -62,9 +159,71 @@ export default function Pricing() {
         </div>
       </section>
 
-      {/* Pricing Table */}
+      {/* Pricing Table - All 41 Endpoints */}
       <section ref={pricingRef} className="reveal mb-10">
         <h2 className="text-2xl font-bold text-white mb-4">{t.pricing.nativeEndpointsTitle}</h2>
+        <div className="glass rounded-xl overflow-hidden">
+          <div className="space-y-0">
+            {pricingTiers.map((tier, idx) => (
+              <div key={idx} className={`border-b border-white/5 last:border-b-0`}>
+                {/* Tier Header */}
+                <div className={`flex items-center justify-between px-4 sm:px-6 py-3 bg-gradient-to-r ${tier.color} bg-opacity-10`}>
+                  <div className="flex items-center gap-3">
+                    <h3 className="text-white font-bold text-sm sm:text-base">{t.pricing[tier.name]}</h3>
+                    <span className="text-gray-400 text-xs">
+                      {tier.endpoints.length} {tier.endpoints.length === 1 ? 'endpoint' : 'endpoints'}
+                    </span>
+                  </div>
+                  <div className="text-[#FF9900] font-bold text-base sm:text-lg">{tier.price}</div>
+                </div>
+
+                {/* Endpoints - Compact layout for large tiers */}
+                {tier.endpoints.length > 10 ? (
+                  // Compact pill layout for Base (22) and Micro (10) tiers
+                  <div className={`px-4 sm:px-6 py-4 ${tier.bgColor}`}>
+                    <div className="flex flex-wrap gap-2">
+                      {tier.endpoints.map((endpoint, i) => (
+                        <span
+                          key={i}
+                          className="glass px-3 py-1.5 rounded-full text-gray-300 text-xs font-medium hover:border-[#FF9900]/30 transition-colors"
+                        >
+                          {endpoint}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  // Row layout for smaller tiers
+                  <div className={tier.bgColor}>
+                    {tier.endpoints.map((endpoint, i) => (
+                      <div
+                        key={i}
+                        className={`flex items-center px-4 sm:px-6 py-3 ${i !== tier.endpoints.length - 1 ? 'border-b border-white/5' : ''} hover:bg-white/5 transition-colors`}
+                      >
+                        <div className="flex items-center gap-2">
+                          <span className="text-white font-medium text-sm">{endpoint}</span>
+                          <span className="glass px-2 py-0.5 rounded text-[#FF9900] text-xs">x402</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/* Footer Note */}
+          <div className="px-4 sm:px-6 py-4 bg-white/5 border-t border-white/10">
+            <p className="text-gray-500 text-xs">
+              {t.pricing.tableNote} {t.pricing.allEndpointsNote}
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Marketplace Fees */}
+      <section ref={marketplaceRef} className="reveal mb-10">
+        <h2 className="text-2xl font-bold text-white mb-4">{t.pricing.marketplaceFeesTitle}</h2>
         <div className="glass rounded-xl overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
@@ -72,34 +231,21 @@ export default function Pricing() {
                 <tr className="text-left border-b border-white/10 bg-white/5">
                   <th className="px-4 sm:px-6 py-3 text-gray-400 font-semibold text-xs">{t.pricing.thService}</th>
                   <th className="px-4 sm:px-6 py-3 text-gray-400 font-semibold text-xs text-right">{t.pricing.thPrice}</th>
-                  <th className="px-4 sm:px-6 py-3 text-gray-400 font-semibold text-xs hidden sm:table-cell">{t.pricing.thDescription}</th>
                 </tr>
               </thead>
               <tbody>
-                {nativeEndpoints.map((endpoint, i) => (
-                  <tr key={i} className="border-b border-white/5 hover:bg-white/5 transition-colors">
+                {marketplaceFees.map((fee, i) => (
+                  <tr key={i} className="border-b border-white/5 last:border-b-0 hover:bg-white/5 transition-colors">
                     <td className="px-4 sm:px-6 py-4">
-                      <div className="flex items-center gap-2">
-                        <span className="text-white font-medium">{endpoint.name}</span>
-                        <span className="glass px-2 py-0.5 rounded text-[#FF9900] text-xs">x402</span>
-                      </div>
-                      <p className="text-gray-500 text-xs mt-1 sm:hidden">{endpoint.desc}</p>
+                      <span className="text-white font-medium">{t.pricing[fee.name]}</span>
                     </td>
                     <td className="px-4 sm:px-6 py-4 text-right">
-                      <span className="text-[#FF9900] font-semibold">{endpoint.price}</span>
-                    </td>
-                    <td className="px-4 sm:px-6 py-4 text-gray-400 text-xs hidden sm:table-cell">
-                      {endpoint.desc}
+                      <span className="text-[#FF9900] font-semibold">{fee.price}</span>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
-          </div>
-          <div className="px-4 sm:px-6 py-4 bg-white/5 border-t border-white/10">
-            <p className="text-gray-500 text-xs">
-              {t.pricing.tableNote}
-            </p>
           </div>
         </div>
       </section>
