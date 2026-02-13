@@ -1,8 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from '../i18n/LanguageContext';
 import { useReveal } from '../hooks/useReveal';
 import useSEO from '../hooks/useSEO';
 import { API_URL } from '../config';
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Tooltip, Legend, ArcElement } from 'chart.js';
+import { Bar, Doughnut } from 'react-chartjs-2';
+
+ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend, ArcElement);
 
 function StatCard({ label, value, sub, icon, color = '#FF9900' }) {
   return (
@@ -17,42 +21,63 @@ function StatCard({ label, value, sub, icon, color = '#FF9900' }) {
   );
 }
 
-function TopEndpointsTable({ endpoints, t }) {
+function TopEndpointsChart({ endpoints, t }) {
   if (!endpoints || endpoints.length === 0) return null;
-  const max = endpoints[0]?.count || 1;
+
+  const data = {
+    labels: endpoints.map(ep => ep.endpoint.length > 20 ? ep.endpoint.slice(0, 18) + '...' : ep.endpoint),
+    datasets: [{
+      label: t.analytics.callsLabel || 'Calls',
+      data: endpoints.map(ep => ep.count),
+      backgroundColor: endpoints.map((_, i) => {
+        const colors = ['#FF9900', '#FF9900CC', '#FF990099', '#FF990066', '#FF990044', '#FF990033', '#FF990022', '#FF990011'];
+        return colors[i] || colors[colors.length - 1];
+      }),
+      borderRadius: 6,
+      borderSkipped: false,
+    }],
+  };
+
+  const options = {
+    indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#1a2332',
+        borderColor: 'rgba(255,255,255,0.1)',
+        borderWidth: 1,
+        titleColor: '#fff',
+        bodyColor: '#9CA3AF',
+      },
+    },
+    scales: {
+      x: {
+        grid: { color: 'rgba(255,255,255,0.05)' },
+        ticks: { color: '#6B7280', font: { size: 11 } },
+      },
+      y: {
+        grid: { display: false },
+        ticks: { color: '#D1D5DB', font: { size: 11 } },
+      },
+    },
+  };
 
   return (
     <div className="glass-card rounded-xl p-5">
       <h3 className="text-sm font-semibold text-white mb-4">{t.analytics.topServicesTitle}</h3>
-      <div className="space-y-3">
-        {endpoints.map((ep, i) => (
-          <div key={ep.endpoint} className="flex items-center gap-3">
-            <span className="text-xs text-gray-500 w-5 text-right">{i + 1}.</span>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center justify-between mb-1">
-                <span className="text-sm text-white truncate">{ep.endpoint}</span>
-                <span className="text-xs text-gray-400 ml-2 shrink-0">{ep.count}</span>
-              </div>
-              <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
-                <div
-                  className="h-full rounded-full transition-all duration-500"
-                  style={{
-                    width: `${(ep.count / max) * 100}%`,
-                    background: `linear-gradient(90deg, #FF9900, #FF9900${i > 2 ? '60' : ''})`,
-                  }}
-                />
-              </div>
-            </div>
-          </div>
-        ))}
+      <div style={{ height: `${Math.max(endpoints.length * 36, 200)}px` }}>
+        <Bar data={data} options={options} />
       </div>
     </div>
   );
 }
 
 function MonitoringStatus({ monitoring, uptimePercent, t }) {
-  const statusColor = monitoring?.overall === 'healthy' ? '#34D399'
-    : monitoring?.overall === 'degraded' ? '#FBBF24' : '#EF4444';
+  const isOperational = monitoring?.overall === 'operational' || monitoring?.overall === 'healthy';
+  const isDegraded = monitoring?.overall === 'degraded';
+  const statusColor = isOperational ? '#34D399' : isDegraded ? '#FBBF24' : '#EF4444';
 
   return (
     <div className="glass-card rounded-xl p-5">
@@ -64,7 +89,7 @@ function MonitoringStatus({ monitoring, uptimePercent, t }) {
           {monitoring?.online}/{monitoring?.total} {t.analytics.endpointsOnline || 'endpoints online'}
         </span>
       </div>
-      {uptimePercent !== null && (
+      {uptimePercent !== null && uptimePercent !== undefined && (
         <div>
           <div className="flex items-center justify-between mb-1">
             <span className="text-xs text-gray-400">{t.analytics.uptimeLabel || 'Uptime (24h)'}</span>
@@ -92,6 +117,78 @@ function MonitoringStatus({ monitoring, uptimePercent, t }) {
   );
 }
 
+function PaymentsDoughnut({ totalPayments, apiCalls, t }) {
+  if (!totalPayments && !apiCalls) return null;
+
+  const data = {
+    labels: [t.analytics.totalPayments || 'Payments', t.analytics.totalApiCalls || 'API Calls'],
+    datasets: [{
+      data: [totalPayments || 0, apiCalls || 0],
+      backgroundColor: ['#60A5FA', '#FF9900'],
+      borderWidth: 0,
+      hoverOffset: 8,
+    }],
+  };
+
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: { color: '#9CA3AF', font: { size: 11 }, padding: 16, usePointStyle: true },
+      },
+      tooltip: {
+        backgroundColor: '#1a2332',
+        borderColor: 'rgba(255,255,255,0.1)',
+        borderWidth: 1,
+        titleColor: '#fff',
+        bodyColor: '#9CA3AF',
+      },
+    },
+    cutout: '65%',
+  };
+
+  return (
+    <div className="glass-card rounded-xl p-5">
+      <h3 className="text-sm font-semibold text-white mb-4">{t.analytics.activityBreakdown || 'Activity Breakdown'}</h3>
+      <div style={{ height: '220px' }}>
+        <Doughnut data={data} options={options} />
+      </div>
+    </div>
+  );
+}
+
+function RecentActivity({ activities, t }) {
+  if (!activities || activities.length === 0) return null;
+
+  const typeEmoji = { payment: '\uD83D\uDCB0', api_call: '\u26A1', register: '\uD83C\uDD95', '402': '\uD83D\uDD12', error: '\u274C' };
+  const typeColor = { payment: 'text-blue-400', api_call: 'text-[#FF9900]', register: 'text-green-400', '402': 'text-yellow-400', error: 'text-red-400' };
+
+  return (
+    <div className="glass-card rounded-xl p-5">
+      <h3 className="text-sm font-semibold text-white mb-4">{t.analytics.recentActivityTitle || 'Recent Activity'}</h3>
+      <div className="space-y-2.5 max-h-[300px] overflow-y-auto">
+        {activities.map((a, i) => (
+          <div key={i} className="flex items-center gap-3 text-xs">
+            <span>{typeEmoji[a.type] || '\u2022'}</span>
+            <span className={`font-medium uppercase w-16 shrink-0 ${typeColor[a.type] || 'text-gray-400'}`}>
+              {a.type}
+            </span>
+            <span className="text-gray-300 truncate flex-1">{a.detail?.slice(0, 50)}</span>
+            {a.amount > 0 && (
+              <span className="text-blue-400 shrink-0">${Number(a.amount).toFixed(3)}</span>
+            )}
+            <span className="text-gray-600 shrink-0">
+              {a.time ? new Date(a.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function Analytics() {
   const { t } = useTranslation();
   useSEO({
@@ -102,18 +199,27 @@ export default function Analytics() {
   const ref1 = useReveal();
   const ref2 = useReveal();
   const ref3 = useReveal();
+  const ref4 = useReveal();
 
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const res = await fetch(`${API_URL}/api/public-stats`);
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000);
+        const res = await fetch(`${API_URL}/api/public-stats`, { signal: controller.signal });
+        clearTimeout(timeoutId);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
         setStats(data);
-      } catch {
-        /* ignore */
+        setError(null);
+      } catch (err) {
+        if (err.name !== 'AbortError') {
+          setError(err.message);
+        }
       } finally {
         setLoading(false);
       }
@@ -121,6 +227,22 @@ export default function Analytics() {
     fetchStats();
     const interval = setInterval(fetchStats, 60000);
     return () => clearInterval(interval);
+  }, []);
+
+  // Fetch recent activity (separate call to public-stats doesn't include it, use the full endpoint)
+  const [recentActivity, setRecentActivity] = useState([]);
+  useEffect(() => {
+    const fetchActivity = async () => {
+      try {
+        const res = await fetch(`${API_URL}/api/activity`);
+        if (res.ok) {
+          const data = await res.json();
+          // /api/activity returns array of {type, detail, amount, time, txHash}
+          setRecentActivity(Array.isArray(data) ? data.slice(0, 15) : []);
+        }
+      } catch { /* ignore */ }
+    };
+    fetchActivity();
   }, []);
 
   return (
@@ -138,8 +260,20 @@ export default function Analytics() {
       </div>
 
       {loading ? (
-        <div className="flex items-center justify-center py-20">
+        <div className="flex flex-col items-center justify-center py-20 gap-4">
           <div className="w-8 h-8 border-2 border-[#FF9900]/20 border-t-[#FF9900] rounded-full animate-spin" />
+          <p className="text-xs text-gray-500">{t.analytics.loadingLabel || 'Loading analytics...'}</p>
+        </div>
+      ) : error && !stats ? (
+        <div className="glass-card rounded-xl p-8 text-center">
+          <p className="text-gray-400 mb-2">{t.analytics.errorLabel || 'Unable to load analytics'}</p>
+          <p className="text-xs text-gray-600">{error}</p>
+          <button
+            onClick={() => { setLoading(true); setError(null); window.location.reload(); }}
+            className="mt-4 px-4 py-2 text-xs text-[#FF9900] border border-[#FF9900]/20 rounded-lg hover:bg-[#FF9900]/10 transition-colors cursor-pointer"
+          >
+            {t.analytics.retryLabel || 'Retry'}
+          </button>
         </div>
       ) : !stats ? (
         <div className="glass-card rounded-xl p-8 text-center">
@@ -178,18 +312,28 @@ export default function Analytics() {
             />
           </div>
 
-          {/* Monitoring + Top endpoints */}
+          {/* Charts row: Monitoring + Top Endpoints */}
           <div ref={ref2} className="reveal grid md:grid-cols-2 gap-4 mb-8">
             <MonitoringStatus
               monitoring={stats.monitoring}
               uptimePercent={stats.uptimePercent}
               t={t}
             />
-            <TopEndpointsTable endpoints={stats.topEndpoints} t={t} />
+            <TopEndpointsChart endpoints={stats.topEndpoints} t={t} />
+          </div>
+
+          {/* Charts row 2: Doughnut + Recent Activity */}
+          <div ref={ref3} className="reveal grid md:grid-cols-2 gap-4 mb-8">
+            <PaymentsDoughnut
+              totalPayments={stats.totalPayments}
+              apiCalls={stats.apiCalls}
+              t={t}
+            />
+            <RecentActivity activities={recentActivity} t={t} />
           </div>
 
           {/* Platform info */}
-          <div ref={ref3} className="reveal grid sm:grid-cols-3 gap-4">
+          <div ref={ref4} className="reveal grid sm:grid-cols-3 gap-4">
             <div className="glass-card rounded-xl p-5 text-center">
               <div className="text-3xl font-bold text-[#FF9900] mb-1">$0.003</div>
               <div className="text-xs text-gray-400">{t.analytics.cheapestCall || 'Cheapest API call'}</div>
