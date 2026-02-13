@@ -215,6 +215,7 @@ export const translations = {
       subtitle: "See how AI agents use x402 Bazaar to chain multiple APIs autonomously.",
       featuredTitle: "Autonomous Agent Demo",
       featuredDesc: "An AI agent that discovers services, pays USDC automatically, and chains multiple API calls to complete complex tasks — all without human intervention.",
+      scenariosTitle: "Multi-API Scenarios",
       scenario1Title: "Research Agent",
       scenario1Desc: "Searches the web, scrapes relevant pages, and compiles a summary report on any topic.",
       scenario1Flow: "search → scrape → summarize",
@@ -232,6 +233,11 @@ export const translations = {
       scenario4Flow: "crypto → weather → search → report",
       scenario4Cost: "$0.045 per analysis",
       ctaButton: "Build Your Own Agent",
+    },
+    notFound: {
+      title: "Page not found",
+      desc: "The page you are looking for does not exist or has been moved.",
+      back: "Back to Home",
     },
     analytics: {
       title: "Marketplace Analytics",
@@ -1701,6 +1707,7 @@ def my_function(query: str) -> dict:
       subtitle: "Decouvrez comment les agents IA utilisent x402 Bazaar pour chainer plusieurs APIs de maniere autonome.",
       featuredTitle: "Demo Agent Autonome",
       featuredDesc: "Un agent IA qui decouvre des services, paie en USDC automatiquement et chaine plusieurs appels API pour completer des taches complexes — sans intervention humaine.",
+      scenariosTitle: "Scenarios Multi-API",
       scenario1Title: "Agent de Recherche",
       scenario1Desc: "Recherche sur le web, scrape les pages pertinentes et compile un rapport de synthese sur n'importe quel sujet.",
       scenario1Flow: "search → scrape → resume",
@@ -1718,6 +1725,11 @@ def my_function(query: str) -> dict:
       scenario4Flow: "crypto → meteo → search → rapport",
       scenario4Cost: "$0.045 par analyse",
       ctaButton: "Creez votre propre Agent",
+    },
+    notFound: {
+      title: "Page introuvable",
+      desc: "La page que vous recherchez n'existe pas ou a ete deplacee.",
+      back: "Retour a l'accueil",
     },
     analytics: {
       title: "Analytiques du Marketplace",

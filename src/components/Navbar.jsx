@@ -43,22 +43,21 @@ export default function Navbar() {
 
   const marketplaceLinks = [
     { to: '/services', label: t.nav.services },
+    { to: '/pricing', label: t.nav.pricing },
     { to: '/register', label: t.nav.register },
     { to: '/for-providers', label: t.nav.forProviders || 'For Providers' },
+    { to: '/compare', label: t.nav.compare || 'Compare' },
   ];
 
   const devLinks = [
     { to: '/docs', label: t.nav.docs || 'Docs' },
-    { to: '/mcp', label: 'MCP' },
-    { to: '/integrate', label: t.nav.integrate },
-    { to: '/developers', label: t.nav.developers },
-    { to: '/demos', label: t.nav.demos || 'Demos' },
     { to: '/playground', label: t.nav.playground || 'Playground' },
-    { to: '/faq', label: 'FAQ' },
-    { to: '/config', label: t.nav.config || 'Config' },
+    { to: '/integrate', label: t.nav.integrate },
+    { to: '/mcp', label: 'MCP' },
+    { to: '/developers', label: t.nav.developers },
     { to: '/status', label: t.nav.status || 'Status' },
     { to: '/analytics', label: t.nav.analytics || 'Analytics' },
-    { to: '/compare', label: t.nav.compare || 'Compare' },
+    { to: '/faq', label: 'FAQ' },
   ];
 
   return (

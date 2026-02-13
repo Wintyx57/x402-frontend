@@ -75,7 +75,7 @@ export default function Home() {
 
   useSEO({
     title: 'API Marketplace for AI Agents',
-    description: 'The first API marketplace where AI agents pay per call with USDC. 70+ services, instant payments via x402 protocol on Base.'
+    description: 'The first API marketplace where AI agents pay per call with USDC. 60+ native APIs, instant payments via x402 protocol on Base.'
   });
 
   useEffect(() => {
@@ -199,11 +199,11 @@ export default function Home() {
               {t.home.exploreCTA}
             </Link>
             <Link
-              to="/services"
+              to="/docs"
               className="glass-card text-gray-300 text-base font-medium px-8 py-3.5 rounded-xl no-underline
                          transition-all duration-200 hover:border-[#FF9900]/30 hover:text-white"
             >
-              {t.home.browseApisCTA} →
+              {t.home.readDocsCTA} →
             </Link>
           </div>
 
@@ -592,7 +592,7 @@ export default function Home() {
             </div>
             <div className="text-center">
               <div className="text-xl sm:text-3xl font-bold text-[#FF9900]">
-                <CountUp end={stats.nativeEndpoints || 41} />
+                <CountUp end={stats.nativeEndpoints || 61} />
               </div>
               <div className="text-xs text-gray-500 mt-1">Native APIs</div>
             </div>

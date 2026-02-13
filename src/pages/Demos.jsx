@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { useTranslation } from '../i18n/LanguageContext';
 import { useReveal } from '../hooks/useReveal';
 import useSEO from '../hooks/useSEO';
@@ -66,7 +65,7 @@ export default function Demos() {
       {/* Multi-API Scenarios Grid */}
       <section ref={scenariosRef}>
         <h2 className="text-2xl font-bold text-white mb-6 text-center">
-          Multi-API Scenarios
+          {t.demos.scenariosTitle}
         </h2>
 
         <div className="grid gap-6 md:grid-cols-2">

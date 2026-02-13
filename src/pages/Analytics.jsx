@@ -152,7 +152,7 @@ export default function Analytics() {
             <StatCard
               label={t.analytics.totalServices}
               value={stats.services || 0}
-              sub={`${stats.nativeEndpoints || 41} ${t.analytics.nativeLabel || 'native endpoints'}`}
+              sub={`${stats.nativeEndpoints || 61} ${t.analytics.nativeLabel || 'native endpoints'}`}
               icon="&#9632;"
             />
             <StatCard
@@ -172,7 +172,7 @@ export default function Analytics() {
             <StatCard
               label={t.analytics.integrationsLabel || 'Integrations'}
               value={stats.integrations || 6}
-              sub={`${stats.tests || 333} ${t.analytics.testsLabel || 'tests passing'}`}
+              sub={`${stats.tests || 416} ${t.analytics.testsLabel || 'tests passing'}`}
               icon="&#10003;"
               color="#A78BFA"
             />

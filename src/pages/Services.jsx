@@ -35,7 +35,7 @@ export default function Services() {
 
   useSEO({
     title: 'API Services',
-    description: 'Browse 70+ API services available for AI agents. Weather, crypto, search, image generation and more — pay per call with USDC.'
+    description: 'Browse 60+ API services available for AI agents. Weather, crypto, search, image generation and more — pay per call with USDC.'
   });
 
   useEffect(() => {
