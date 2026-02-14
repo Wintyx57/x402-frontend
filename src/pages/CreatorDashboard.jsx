@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAccount } from 'wagmi';
-import { useAppKit } from '@reown/appkit/react';
+import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { useTranslation } from '../i18n/LanguageContext';
 import { useReveal } from '../hooks/useReveal';
 import useSEO from '../hooks/useSEO';
@@ -68,7 +68,7 @@ export default function CreatorDashboard() {
 
   const ref1 = useReveal();
   const { address, isConnected } = useAccount();
-  const { open } = useAppKit();
+  const { openConnectModal } = useConnectModal();
 
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -147,7 +147,7 @@ export default function CreatorDashboard() {
             {cd.connectDesc || 'Connect the wallet you used when registering your APIs to automatically view all your services, revenue, and statistics.'}
           </p>
           <button
-            onClick={() => open()}
+            onClick={() => openConnectModal?.()}
             className="gradient-btn px-8 py-3 rounded-lg text-white text-sm font-medium cursor-pointer
                        hover:opacity-90 transition-opacity"
           >
