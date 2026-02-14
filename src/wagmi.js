@@ -1,5 +1,13 @@
 import { getDefaultConfig } from '@rainbow-me/rainbowkit';
 import { base, baseSepolia } from 'wagmi/chains';
+import {
+  metaMaskWallet,
+  coinbaseWallet,
+  trustWallet,
+  rainbowWallet,
+  walletConnectWallet,
+  injectedWallet,
+} from '@rainbow-me/rainbowkit/wallets';
 
 // SKALE Europa custom chain definition
 export const skaleEuropa = {
@@ -19,4 +27,22 @@ export const config = getDefaultConfig({
   projectId: '2437e069335d816faf9cfca4e2702ddf',
   chains: [base, baseSepolia, skaleEuropa],
   ssr: false,
+  wallets: [
+    {
+      groupName: 'Popular',
+      wallets: [
+        metaMaskWallet,
+        coinbaseWallet,
+        trustWallet,
+        rainbowWallet,
+      ],
+    },
+    {
+      groupName: 'Other',
+      wallets: [
+        walletConnectWallet,
+        injectedWallet,
+      ],
+    },
+  ],
 });

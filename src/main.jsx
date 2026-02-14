@@ -17,7 +17,7 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider theme={darkTheme({ accentColor: '#FF9900', accentColorForeground: 'white', borderRadius: 'medium' })} modalSize="compact">
+        <RainbowKitProvider locale="en" theme={darkTheme({ accentColor: '#FF9900', accentColorForeground: 'white', borderRadius: 'medium' })} modalSize="compact">
           <BrowserRouter>
             <ThemeProvider>
               <LanguageProvider>
