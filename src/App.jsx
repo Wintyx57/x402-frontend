@@ -25,11 +25,15 @@ const Playground = lazy(() => import('./pages/Playground'));
 const Analytics = lazy(() => import('./pages/Analytics'));
 const Compare = lazy(() => import('./pages/Compare'));
 const ForProviders = lazy(() => import('./pages/ForProviders'));
+const Budget = lazy(() => import('./pages/Budget'));
+const Creators = lazy(() => import('./pages/Creators'));
+const CreatorDashboard = lazy(() => import('./pages/CreatorDashboard'));
+const CreatorOnboarding = lazy(() => import('./pages/CreatorOnboarding'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
 export default function App() {
   return (
-    <div className="min-h-screen overflow-x-hidden">
+    <div className="min-h-screen overflow-x-hidden transition-colors duration-300">
       <Navbar />
       <ErrorBoundary>
         <Suspense fallback={
@@ -59,6 +63,10 @@ export default function App() {
             <Route path="/analytics" element={<Analytics />} />
             <Route path="/compare" element={<Compare />} />
             <Route path="/for-providers" element={<ForProviders />} />
+            <Route path="/budget" element={<Budget />} />
+            <Route path="/creators" element={<Creators />} />
+            <Route path="/creators/dashboard" element={<CreatorDashboard />} />
+            <Route path="/creators/onboarding" element={<CreatorOnboarding />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>

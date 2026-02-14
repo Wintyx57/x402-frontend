@@ -24,6 +24,7 @@ export default function Footer() {
               <Link to="/playground" className="text-xs text-gray-500 hover:text-white no-underline transition-colors py-1">{t.nav.playground || 'Playground'}</Link>
               <Link to="/register" className="text-xs text-gray-500 hover:text-white no-underline transition-colors py-1">{t.nav.register}</Link>
               <Link to="/for-providers" className="text-xs text-gray-500 hover:text-white no-underline transition-colors py-1">{t.nav.forProviders || 'For Providers'}</Link>
+              <Link to="/creators" className="text-xs text-gray-500 hover:text-white no-underline transition-colors py-1">{t.nav.creators || 'Creators'}</Link>
               <Link to="/compare" className="text-xs text-gray-500 hover:text-white no-underline transition-colors py-1">{t.nav.compare || 'Compare'}</Link>
             </div>
           </div>

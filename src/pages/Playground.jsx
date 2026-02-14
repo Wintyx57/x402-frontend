@@ -178,7 +178,7 @@ export default function Playground() {
   ];
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-[#0a0e17] to-[#131921] pt-28 pb-16 px-4">
+    <main data-page-gradient className="min-h-screen bg-gradient-to-b from-[#0a0e17] to-[#131921] pt-28 pb-16 px-4">
       <div className="max-w-6xl mx-auto">
         {/* Hero */}
         <div ref={heroRef} className="reveal-section text-center mb-12">
@@ -261,7 +261,10 @@ export default function Playground() {
                              disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
                 >
                   {loading
-                    ? (pg.sending || 'Sending...')
+                    ? <span className="flex items-center justify-center gap-2">
+                        <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin-slow" />
+                        {pg.sending || 'Sending...'}
+                      </span>
                     : `${pg.sendRequest || 'Send Request'} — ${selectedApi.method} ${selectedApi.route}`
                   }
                 </button>

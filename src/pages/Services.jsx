@@ -4,6 +4,7 @@ import { API_URL } from '../config';
 import { useTranslation } from '../i18n/LanguageContext';
 import useSEO from '../hooks/useSEO';
 import ServiceCard from '../components/ServiceCard';
+import { ServiceCardSkeleton } from '../components/Skeleton';
 import CategoryIcon from '../components/CategoryIcon';
 import { CATEGORIES, CATEGORY_LABELS } from '../data/categories';
 
@@ -278,8 +279,10 @@ export default function Services() {
       {/* Grid */}
       {loading ? (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-          {[...Array(12)].map((_, i) => (
-            <div key={i} className="glass-card rounded-lg p-4 animate-shimmer h-44" />
+          {Array.from({ length: 12 }, (_, i) => (
+            <div key={i} className="animate-fade-in-up" style={{ animationDelay: `${i * 50}ms` }}>
+              <ServiceCardSkeleton />
+            </div>
           ))}
         </div>
       ) : sorted.length === 0 ? (

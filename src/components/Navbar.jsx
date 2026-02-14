@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation, useSearchParams } from 'react-router-do
 import { useTranslation } from '../i18n/LanguageContext';
 import ConnectButton from './ConnectButton';
 import LanguageToggle from './LanguageToggle';
+import DarkModeToggle from './DarkModeToggle';
 
 export default function Navbar() {
   const { t } = useTranslation();
@@ -46,6 +47,7 @@ export default function Navbar() {
     { to: '/pricing', label: t.nav.pricing },
     { to: '/register', label: t.nav.register },
     { to: '/for-providers', label: t.nav.forProviders || 'For Providers' },
+    { to: '/creators', label: t.nav.creators || 'Creators' },
     { to: '/compare', label: t.nav.compare || 'Compare' },
   ];
 
@@ -57,6 +59,7 @@ export default function Navbar() {
     { to: '/developers', label: t.nav.developers },
     { to: '/status', label: t.nav.status || 'Status' },
     { to: '/analytics', label: t.nav.analytics || 'Analytics' },
+    { to: '/budget', label: t.nav.budget || 'Budget' },
     { to: '/faq', label: 'FAQ' },
   ];
 
@@ -90,6 +93,7 @@ export default function Navbar() {
 
           {/* Right actions */}
           <div className="flex items-center gap-2 shrink-0">
+            <DarkModeToggle />
             <LanguageToggle />
             <ConnectButton />
 
@@ -114,7 +118,7 @@ export default function Navbar() {
         </div>
 
         {/* Nav links strip — desktop */}
-        <div className="hidden md:block border-t border-white/5 bg-[#232f3e]">
+        <div data-nav-strip className="hidden md:block border-t border-white/5 bg-[#232f3e]">
           <div className="max-w-7xl mx-auto px-4 flex items-center gap-1 h-10 overflow-x-auto">
             <span className="text-[11px] uppercase tracking-wider text-gray-500 font-medium px-2 shrink-0">{t.nav.marketplace}</span>
             {marketplaceLinks.map(({ to, label }) => {
@@ -166,7 +170,7 @@ export default function Navbar() {
         <div className={`md:hidden overflow-hidden transition-all duration-300 ${
           mobileOpen ? 'max-h-[32rem] opacity-100' : 'max-h-0 opacity-0'
         }`}>
-          <div className="border-t border-white/6 px-4 py-3 flex flex-col gap-1 bg-[#131921]">
+          <div data-nav-mobile className="border-t border-white/6 px-4 py-3 flex flex-col gap-1 bg-[#131921]">
             {/* Mobile search bar — visible only on small screens */}
             <form onSubmit={handleSearch} className="sm:hidden mb-2">
               <div className="relative flex items-center">
