@@ -41,10 +41,12 @@ createAppKit({
     onramp: false,
     swaps: false,
   },
-  // Reduce initial wallet list load
-  allWallets: 'HIDE',
+  // Show all wallets so mobile users can find their installed wallet app
+  allWallets: 'SHOW',
   // Enable mobile deep linking and WalletConnect
   enableWalletConnect: true,
+  // Enable injected provider detection (in-app wallet browsers like MetaMask Mobile)
+  enableInjected: true,
 });
 
 export const config = wagmiAdapter.wagmiConfig;
