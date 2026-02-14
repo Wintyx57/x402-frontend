@@ -1,5 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useAccount } from 'wagmi';
+import { useAppKit } from '@reown/appkit/react';
 import { useTranslation } from '../i18n/LanguageContext';
 import { useReveal } from '../hooks/useReveal';
 import useSEO from '../hooks/useSEO';
@@ -7,7 +9,7 @@ import { API_URL } from '../config';
 
 function ServiceRow({ service, t }) {
   const cd = t.creatorDashboard || {};
-  const price = parseFloat(service.price) || 0;
+  const price = parseFloat(service.price_usdc || service.price) || 0;
   const tags = service.tags || [];
   const date = service.created_at
     ? new Date(service.created_at).toLocaleDateString()
@@ -65,38 +67,43 @@ export default function CreatorDashboard() {
   });
 
   const ref1 = useReveal();
+  const { address, isConnected } = useAccount();
+  const { open } = useAppKit();
 
-  const [wallet, setWallet] = useState('');
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [searched, setSearched] = useState(false);
+  const [fetched, setFetched] = useState(false);
 
-  const handleSearch = async (e) => {
-    e.preventDefault();
-    const trimmed = wallet.trim();
-    if (!trimmed || !trimmed.startsWith('0x') || trimmed.length !== 42) {
-      setError(cd.invalidWallet || 'Please enter a valid Ethereum address (0x...)');
-      return;
+  // Auto-fetch when wallet connects
+  useEffect(() => {
+    if (isConnected && address) {
+      fetchMyServices(address);
+    } else {
+      setServices([]);
+      setFetched(false);
+      setError(null);
     }
+  }, [isConnected, address]);
 
+  const fetchMyServices = async (walletAddr) => {
     setLoading(true);
     setError(null);
-    setSearched(true);
+    setFetched(true);
 
     try {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 15000);
-      const res = await fetch(`${API_URL}/services`, { signal: controller.signal });
+      const res = await fetch(`${API_URL}/api/services`, { signal: controller.signal });
       clearTimeout(timeoutId);
 
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
       const data = await res.json();
-      const allServices = data.services || data || [];
+      const allServices = Array.isArray(data) ? data : (data.data || data.services || []);
       const mine = allServices.filter(
-        s => s.ownerAddress?.toLowerCase() === trimmed.toLowerCase() ||
-             s.owner_address?.toLowerCase() === trimmed.toLowerCase()
+        s => s.owner_address?.toLowerCase() === walletAddr.toLowerCase() ||
+             s.ownerAddress?.toLowerCase() === walletAddr.toLowerCase()
       );
       setServices(mine);
     } catch (err) {
@@ -108,7 +115,7 @@ export default function CreatorDashboard() {
     }
   };
 
-  const totalRevenuePotential = services.reduce((acc, s) => acc + (parseFloat(s.price) || 0) * 0.95, 0);
+  const totalRevenuePotential = services.reduce((acc, s) => acc + (parseFloat(s.price_usdc || s.price) || 0) * 0.95, 0);
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-12">
@@ -122,38 +129,64 @@ export default function CreatorDashboard() {
           <span className="text-xs text-gray-400">{cd.title || 'Dashboard'}</span>
         </div>
         <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">{cd.title || 'Creator Dashboard'}</h1>
-        <p className="text-gray-400 text-sm">{cd.subtitle || 'Enter your wallet address to view your registered APIs and revenue.'}</p>
+        <p className="text-gray-400 text-sm">
+          {isConnected
+            ? (cd.connectedAs || 'Connected as') + ` ${address.slice(0, 6)}...${address.slice(-4)}`
+            : (cd.subtitle || 'Connect your wallet to view your registered APIs and revenue.')}
+        </p>
       </div>
 
-      {/* Wallet input */}
-      <form onSubmit={handleSearch} className="mb-8 animate-fade-in-up delay-100">
-        <label className="block text-sm text-gray-400 mb-2" htmlFor="wallet-input">{cd.walletLabel || 'Wallet Address'}</label>
-        <div className="flex gap-3">
-          <input
-            id="wallet-input"
-            type="text"
-            value={wallet}
-            onChange={(e) => setWallet(e.target.value)}
-            placeholder="0x..."
-            className="flex-1 bg-[#1a1f2e] border border-white/10 rounded-lg px-4 py-2.5 text-white placeholder-gray-600
-                       focus:outline-none focus:border-[#FF9900]/40 transition-all duration-300 font-mono text-sm"
-          />
+      {/* Not connected: prompt to connect */}
+      {!isConnected && (
+        <div className="glass-card rounded-xl p-8 text-center animate-fade-in-up delay-100">
+          <svg className="w-14 h-14 text-gray-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+          <h3 className="text-white font-semibold text-lg mb-2">{cd.connectTitle || 'Connect Your Wallet'}</h3>
+          <p className="text-gray-400 text-sm max-w-md mx-auto mb-6">
+            {cd.connectDesc || 'Connect the wallet you used when registering your APIs to automatically view all your services, revenue, and statistics.'}
+          </p>
           <button
-            type="submit"
-            disabled={loading}
-            className="gradient-btn px-6 py-2.5 rounded-lg text-white text-sm font-medium cursor-pointer
-                       hover:opacity-90 transition-opacity disabled:opacity-40 shrink-0"
+            onClick={() => open()}
+            className="gradient-btn px-8 py-3 rounded-lg text-white text-sm font-medium cursor-pointer
+                       hover:opacity-90 transition-opacity"
           >
-            {loading ? (cd.searching || 'Searching...') : (cd.searchBtn || 'Search')}
+            {cd.connectBtn || 'Connect Wallet'}
+          </button>
+          <div className="flex flex-wrap justify-center gap-4 mt-6">
+            <Link to="/creators/onboarding" className="text-xs text-[#FF9900] no-underline hover:text-[#FEBD69] transition-colors font-medium">
+              {cd.readGuide || 'Read the onboarding guide'} &rarr;
+            </Link>
+            <Link to="/register" className="text-xs text-gray-400 no-underline hover:text-white transition-colors">
+              {cd.registerNew || 'Register a new API'} &rarr;
+            </Link>
+          </div>
+        </div>
+      )}
+
+      {/* Loading spinner */}
+      {isConnected && loading && (
+        <div className="flex flex-col items-center justify-center py-12 gap-3">
+          <div className="w-8 h-8 border-2 border-[#FF9900]/20 border-t-[#FF9900] rounded-full animate-spin" />
+          <p className="text-xs text-gray-500">{cd.loadingApis || 'Loading your APIs...'}</p>
+        </div>
+      )}
+
+      {/* Error */}
+      {error && (
+        <div className="glass-card rounded-xl p-6 text-center mb-6">
+          <p className="text-red-400 text-sm mb-3">{error}</p>
+          <button
+            onClick={() => fetchMyServices(address)}
+            className="text-xs text-[#FF9900] font-medium cursor-pointer hover:text-[#FEBD69] transition-colors"
+          >
+            {cd.retry || 'Retry'}
           </button>
         </div>
-        {error && (
-          <p className="text-red-400 text-xs mt-2">{error}</p>
-        )}
-      </form>
+      )}
 
       {/* Results */}
-      {searched && !loading && (
+      {isConnected && fetched && !loading && !error && (
         <div ref={ref1} className="reveal">
           {services.length === 0 ? (
             <div className="glass-card rounded-xl p-8 text-center">
@@ -211,35 +244,6 @@ export default function CreatorDashboard() {
               </div>
             </>
           )}
-        </div>
-      )}
-
-      {/* Loading spinner */}
-      {loading && (
-        <div className="flex flex-col items-center justify-center py-12 gap-3">
-          <div className="w-8 h-8 border-2 border-[#FF9900]/20 border-t-[#FF9900] rounded-full animate-spin" />
-          <p className="text-xs text-gray-500">{cd.loadingApis || 'Loading your APIs...'}</p>
-        </div>
-      )}
-
-      {/* Guide section */}
-      {!searched && (
-        <div className="glass-card rounded-xl p-6 text-center animate-fade-in-up delay-200">
-          <svg className="w-10 h-10 text-gray-600 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          <h3 className="text-white font-semibold text-sm mb-2">{cd.guideTitle || 'How to use this dashboard'}</h3>
-          <p className="text-gray-400 text-xs leading-relaxed max-w-md mx-auto mb-4">
-            {cd.guideDesc || 'Enter the wallet address you used when registering your APIs. We will show all services associated with that address, along with pricing and revenue details.'}
-          </p>
-          <div className="flex flex-wrap justify-center gap-3">
-            <Link to="/creators/onboarding" className="text-xs text-[#FF9900] no-underline hover:text-[#FEBD69] transition-colors font-medium">
-              {cd.readGuide || 'Read the onboarding guide'} &rarr;
-            </Link>
-            <Link to="/register" className="text-xs text-gray-400 no-underline hover:text-white transition-colors">
-              {cd.registerNew || 'Register a new API'} &rarr;
-            </Link>
-          </div>
         </div>
       )}
     </div>
