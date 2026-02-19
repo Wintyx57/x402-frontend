@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, memo } from 'react';
 import { useTranslation } from '../i18n/LanguageContext';
 
 function getDomain(url) {
@@ -43,7 +43,7 @@ function getQualityTier(uptimePercent) {
   return null;
 }
 
-export default function ServiceCard({ service, lastActivity, healthStatus, uptimePercent }) {
+function ServiceCard({ service, lastActivity, healthStatus, uptimePercent }) {
   const { t } = useTranslation();
   const isFree = Number(service.price_usdc) === 0;
   const initial = service.name?.charAt(0)?.toUpperCase() || '?';
@@ -211,3 +211,6 @@ export default function ServiceCard({ service, lastActivity, healthStatus, uptim
     </div>
   );
 }
+
+ServiceCard.displayName = 'ServiceCard';
+export default memo(ServiceCard);

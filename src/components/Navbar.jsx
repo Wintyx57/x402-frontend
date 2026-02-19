@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useState, memo } from 'react';
 import { Link, useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { useTranslation } from '../i18n/LanguageContext';
 import ConnectButton from './ConnectButton';
 import LanguageToggle from './LanguageToggle';
 import DarkModeToggle from './DarkModeToggle';
 
-export default function Navbar() {
+function Navbar() {
   const { t } = useTranslation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [localSearch, setLocalSearch] = useState('');
@@ -231,3 +231,6 @@ export default function Navbar() {
     </>
   );
 }
+
+Navbar.displayName = 'Navbar';
+export default memo(Navbar);
