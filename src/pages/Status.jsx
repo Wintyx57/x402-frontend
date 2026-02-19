@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { API_URL } from '../config';
 import { useTranslation } from '../i18n/LanguageContext';
 import useSEO from '../hooks/useSEO';
+import { useStatus as useStatusQuery } from '../hooks/useStatus';
 
 const REFRESH_INTERVAL = 60000; // 60s
 
@@ -64,26 +65,16 @@ function UptimeBar({ uptime }) {
 
 export default function Status() {
   const { t } = useTranslation();
-  const [status, setStatus] = useState(null);
+  const { data: status, isLoading: statusLoading, error: statusError, dataUpdatedAt } = useStatusQuery();
   const [uptime, setUptime] = useState(null);
   const [period, setPeriod] = useState('24h');
-  const [loading, setLoading] = useState(true);
-  const [lastRefresh, setLastRefresh] = useState(null);
+  const loading = statusLoading;
+  const lastRefresh = dataUpdatedAt ? new Date(dataUpdatedAt) : null;
 
   useSEO({
     title: t.status?.pageTitle || 'System Status - x402 Bazaar',
     description: t.status?.pageDesc || 'Real-time status of all 41 API endpoints on x402 Bazaar.',
   });
-
-  const fetchStatus = useCallback(async () => {
-    try {
-      const res = await fetch(`${API_URL}/api/status`);
-      const data = await res.json();
-      if (data.success) setStatus(data);
-    } catch { /* ignore */ }
-    setLoading(false);
-    setLastRefresh(new Date());
-  }, []);
 
   const fetchUptime = useCallback(async () => {
     try {
@@ -92,16 +83,6 @@ export default function Status() {
       if (data.success) setUptime(data);
     } catch { /* ignore */ }
   }, [period]);
-
-  useEffect(() => {
-    fetchStatus();
-    fetchUptime();
-    const interval = setInterval(() => {
-      fetchStatus();
-      fetchUptime();
-    }, REFRESH_INTERVAL);
-    return () => clearInterval(interval);
-  }, [fetchStatus, fetchUptime]);
 
   useEffect(() => {
     fetchUptime();
@@ -125,6 +106,12 @@ export default function Status() {
 
           {/* Overall badge */}
           <StatusBadge overall={status?.overall || 'unknown'} />
+
+          {statusError && (
+            <div className="mt-4 bg-red-500/10 border border-red-500/30 rounded-lg p-3 text-sm text-red-400">
+              Failed to load status data. Auto-retrying...
+            </div>
+          )}
         </div>
 
         {/* Stats row */}

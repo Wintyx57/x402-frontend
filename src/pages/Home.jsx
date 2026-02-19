@@ -4,6 +4,8 @@ import { API_URL } from '../config';
 import { useTranslation } from '../i18n/LanguageContext';
 import { useReveal } from '../hooks/useReveal';
 import useSEO from '../hooks/useSEO';
+import { useServices } from '../hooks/useServices';
+import { usePublicStats } from '../hooks/usePublicStats';
 import ServiceCard from '../components/ServiceCard';
 import CategoryIcon from '../components/CategoryIcon';
 import GitHubIcon from '../components/icons/GitHubIcon';
@@ -56,11 +58,11 @@ function CountUp({ end, duration = 2000, suffix = '' }) {
 }
 
 export default function Home() {
-  const [stats, setStats] = useState(null);
-  const [services, setServices] = useState([]);
+  const { data: stats } = usePublicStats();
+  const { data: servicesData, isLoading: loading, error: servicesError } = useServices();
+  const services = Array.isArray(servicesData) ? servicesData : [];
   const [activityMap, setActivityMap] = useState({});
   const [heroSearch, setHeroSearch] = useState('');
-  const [loading, setLoading] = useState(true);
   const [avgLatency, setAvgLatency] = useState(null);
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -81,11 +83,6 @@ export default function Home() {
   useEffect(() => {
     const controller = new AbortController();
     const signal = controller.signal;
-    fetch(`${API_URL}/api/public-stats`, { signal }).then(r => r.json()).then(setStats).catch(() => {});
-    fetch(`${API_URL}/api/services`, { signal }).then(r => r.json()).then(data => {
-      setServices(Array.isArray(data) ? data : []);
-      setLoading(false);
-    }).catch(() => { if (!signal.aborted) setLoading(false); });
     fetch(`${API_URL}/api/services/activity`, { signal }).then(r => r.json()).then(data => setActivityMap(data || {})).catch(() => {});
     fetch(`${API_URL}/api/status`, { signal }).then(r => r.json()).then(data => {
       if (data?.endpoints?.length) {
@@ -254,6 +251,15 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Error banner */}
+      {servicesError && (
+        <div className="max-w-3xl mx-auto px-4 mb-6">
+          <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-3 text-center text-sm text-red-400">
+            Failed to load services. Please try again later.
+          </div>
+        </div>
+      )}
 
       {/* ===== COMPATIBLE WITH ===== */}
       <section ref={compatibleRef} className="reveal max-w-4xl mx-auto px-4 mb-16">

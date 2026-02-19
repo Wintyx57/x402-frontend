@@ -3,14 +3,15 @@ import { useSearchParams } from 'react-router-dom';
 import { API_URL } from '../config';
 import { useTranslation } from '../i18n/LanguageContext';
 import useSEO from '../hooks/useSEO';
+import { useServices } from '../hooks/useServices';
 import ServiceCard from '../components/ServiceCard';
 import { ServiceCardSkeleton } from '../components/Skeleton';
 import CategoryIcon from '../components/CategoryIcon';
 import { CATEGORIES, CATEGORY_LABELS } from '../data/categories';
 
 export default function Services() {
-  const [services, setServices] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { data: servicesData, isLoading: loading, error: servicesError } = useServices();
+  const services = Array.isArray(servicesData) ? servicesData : [];
   const [activityMap, setActivityMap] = useState({});
   const [healthMap, setHealthMap] = useState({});
   const [uptimeMap, setUptimeMap] = useState({});
@@ -42,13 +43,6 @@ export default function Services() {
   useEffect(() => {
     const controller = new AbortController();
     const signal = controller.signal;
-    fetch(`${API_URL}/api/services`, { signal })
-      .then(r => r.json())
-      .then(data => {
-        setServices(Array.isArray(data) ? data : []);
-        setLoading(false);
-      })
-      .catch(() => { if (!signal.aborted) setLoading(false); });
 
     fetch(`${API_URL}/api/services/activity`, { signal })
       .then(r => r.json())
@@ -273,6 +267,13 @@ export default function Services() {
           >
             {t.services.clearFilters}
           </button>
+        </div>
+      )}
+
+      {/* Error banner */}
+      {servicesError && (
+        <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-3 text-center text-sm text-red-400 mb-4">
+          Failed to load services. Please try again later.
         </div>
       )}
 

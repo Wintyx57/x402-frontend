@@ -1,7 +1,8 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from '../i18n/LanguageContext';
 import { useReveal } from '../hooks/useReveal';
 import useSEO from '../hooks/useSEO';
+import { usePublicStats } from '../hooks/usePublicStats';
 import { API_URL } from '../config';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Tooltip, Legend, ArcElement } from 'chart.js';
 import { Bar, Doughnut } from 'react-chartjs-2';
@@ -201,48 +202,26 @@ export default function Analytics() {
   const ref3 = useReveal();
   const ref4 = useReveal();
 
-  const [stats, setStats] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 15000);
-        const res = await fetch(`${API_URL}/api/public-stats`, { signal: controller.signal });
-        clearTimeout(timeoutId);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
-        setStats(data);
-        setError(null);
-      } catch (err) {
-        if (err.name !== 'AbortError') {
-          setError(err.message);
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchStats();
-    const interval = setInterval(fetchStats, 60000);
-    return () => clearInterval(interval);
-  }, []);
+  const { data: stats, isLoading: loading, error: statsError, refetch } = usePublicStats({
+    refetchInterval: 60000,
+  });
+  const error = statsError?.message || null;
 
   // Fetch recent activity (separate call to public-stats doesn't include it, use the full endpoint)
   const [recentActivity, setRecentActivity] = useState([]);
   useEffect(() => {
+    const controller = new AbortController();
     const fetchActivity = async () => {
       try {
-        const res = await fetch(`${API_URL}/api/activity`);
+        const res = await fetch(`${API_URL}/api/activity`, { signal: controller.signal });
         if (res.ok) {
           const data = await res.json();
-          // /api/activity returns array of {type, detail, amount, time, txHash}
           setRecentActivity(Array.isArray(data) ? data.slice(0, 15) : []);
         }
       } catch { /* ignore */ }
     };
     fetchActivity();
+    return () => controller.abort();
   }, []);
 
   return (
@@ -269,7 +248,7 @@ export default function Analytics() {
           <p className="text-gray-400 mb-2">{t.analytics.errorLabel || 'Unable to load analytics'}</p>
           <p className="text-xs text-gray-600">{error}</p>
           <button
-            onClick={() => { setLoading(true); setError(null); window.location.reload(); }}
+            onClick={() => refetch()}
             className="mt-4 px-4 py-2 text-xs text-[#FF9900] border border-[#FF9900]/20 rounded-lg hover:bg-[#FF9900]/10 transition-colors cursor-pointer"
           >
             {t.analytics.retryLabel || 'Retry'}
