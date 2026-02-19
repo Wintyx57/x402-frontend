@@ -3,6 +3,7 @@ import { useTranslation } from '../i18n/LanguageContext';
 import { useReveal } from '../hooks/useReveal';
 import useSEO from '../hooks/useSEO';
 import CopyButton from '../components/CopyButton';
+import ChainSelector from '../components/ChainSelector';
 import { API_URL } from '../config';
 
 const PLAYGROUND_APIS = [
@@ -201,6 +202,7 @@ export default function Playground() {
         <div ref={mainRef} className="reveal-section grid lg:grid-cols-[340px_1fr] gap-6">
           {/* Left column */}
           <div className="space-y-6">
+            <ChainSelector />
             {/* API Selector */}
             <div className="bg-white/[0.03] border border-white/8 rounded-xl p-4">
               <h3 className="text-sm font-semibold text-white mb-3">{pg.selectApi || 'Select an API'}</h3>

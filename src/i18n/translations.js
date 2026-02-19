@@ -36,6 +36,12 @@ export const translations = {
       addressCopied: "Copied!",
       disconnect: "Disconnect",
     },
+    chainSelector: {
+      title: "Select Network",
+      gasLabel: "Gas",
+      free: "FREE",
+      switchingTo: "Switching...",
+    },
     serviceCard: {
       verifiedOnChain: "Verified on-chain",
       verified: "Verified",
@@ -1718,6 +1724,12 @@ def my_function(query: str) -> dict:
       copyAddress: "Copier l'adresse",
       addressCopied: "Copié !",
       disconnect: "Déconnecter",
+    },
+    chainSelector: {
+      title: "Choisir le réseau",
+      gasLabel: "Gas",
+      free: "GRATUIT",
+      switchingTo: "Changement...",
     },
     serviceCard: {
       verifiedOnChain: "Vérifié on-chain",

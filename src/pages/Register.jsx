@@ -5,6 +5,7 @@ import { API_URL, USDC_ABI, CHAIN_CONFIG } from '../config';
 import { useTranslation } from '../i18n/LanguageContext';
 import useSEO from '../hooks/useSEO';
 import { Link } from 'react-router-dom';
+import ChainSelector from '../components/ChainSelector';
 
 const REGISTER_COST = 1;
 
@@ -232,6 +233,7 @@ export default function Register() {
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 animate-fade-in-up delay-200">
           {/* Form — 3 cols */}
           <form onSubmit={handleSubmit} className="space-y-5 lg:col-span-3">
+            <ChainSelector />
             <div>
               <label className="block text-sm text-gray-400 mb-1.5">{t.register.serviceName}</label>
               <input
