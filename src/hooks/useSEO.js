@@ -3,11 +3,15 @@ import { useLocation } from 'react-router-dom';
 
 const SITE_NAME = 'x402 Bazaar';
 const BASE_URL = 'https://x402bazaar.org';
+const DEFAULT_OG_IMAGE = 'https://x402bazaar.org/og-image.png';
 
-export default function useSEO({ title, description }) {
+export default function useSEO({ title, description, keywords, ogImage, noindex } = {}) {
     const { pathname } = useLocation();
-    const fullTitle = title ? `${title} | ${SITE_NAME}` : SITE_NAME;
+    const fullTitle = title
+        ? (title.includes('x402 Bazaar') ? title : `${title} | ${SITE_NAME}`)
+        : SITE_NAME;
     const url = `${BASE_URL}${pathname}`;
+    const image = ogImage || DEFAULT_OG_IMAGE;
 
     useEffect(() => {
         document.title = fullTitle;
@@ -27,9 +31,26 @@ export default function useSEO({ title, description }) {
             setMeta('property', 'og:description', description);
             setMeta('name', 'twitter:description', description);
         }
+        if (keywords) setMeta('name', 'keywords', keywords);
+
+        // noindex for private/thin pages
+        let robotsEl = document.querySelector('meta[name="robots"]');
+        if (noindex) {
+            if (!robotsEl) {
+                robotsEl = document.createElement('meta');
+                robotsEl.setAttribute('name', 'robots');
+                document.head.appendChild(robotsEl);
+            }
+            robotsEl.setAttribute('content', 'noindex, nofollow');
+        } else if (robotsEl) {
+            robotsEl.remove();
+        }
+
         setMeta('property', 'og:title', fullTitle);
         setMeta('property', 'og:url', url);
+        setMeta('property', 'og:image', image);
         setMeta('name', 'twitter:title', fullTitle);
+        setMeta('name', 'twitter:image', image);
 
         let canonical = document.querySelector('link[rel="canonical"]');
         if (!canonical) {
@@ -56,5 +77,5 @@ export default function useSEO({ title, description }) {
             document.head.appendChild(bcScript);
         }
         bcScript.textContent = JSON.stringify(breadcrumb);
-    }, [fullTitle, description, url, pathname, title]);
+    }, [fullTitle, description, keywords, ogImage, noindex, url, pathname, title, image]);
 }

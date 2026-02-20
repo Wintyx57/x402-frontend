@@ -99,8 +99,9 @@ export default function MCP() {
   const reveal = useReveal();
 
   useSEO({
-    title: 'MCP Server Setup',
-    description: 'Set up the x402 Bazaar MCP server for Claude Desktop, Cursor or VS Code. One-command install with npx.'
+    title: 'MCP Server — Connect Claude & Cursor to x402 APIs',
+    description: 'Use x402 Bazaar as an MCP server. Connect Claude, Cursor or VS Code to 60+ paid APIs. AI agents pay autonomously with USDC on Base.',
+    keywords: 'MCP server x402, Claude MCP marketplace, Cursor MCP integration, AI agent MCP tools, Model Context Protocol payments',
   });
 
   return (

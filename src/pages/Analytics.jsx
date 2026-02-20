@@ -195,6 +195,7 @@ export default function Analytics() {
   useSEO({
     title: t.analytics.title,
     description: 'Real-time public analytics for x402 Bazaar — API calls, uptime, services, and marketplace activity.',
+    noindex: true,
   });
 
   const ref1 = useReveal();

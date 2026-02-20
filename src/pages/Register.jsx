@@ -18,8 +18,9 @@ export default function Register() {
   const { t } = useTranslation();
 
   useSEO({
-    title: 'Register Your API',
-    description: 'List your API on x402 Bazaar. Set your price in USDC, get instant payments from AI agents via the x402 protocol.'
+    title: 'List Your API — Earn USDC from AI Agents',
+    description: 'Publish your API on x402 Bazaar and get paid per call in USDC by AI agents. 95% revenue, instant payments, no subscription model.',
+    keywords: 'monetize API x402, earn USDC from API, AI agent revenue, HTTP 402 provider, list API marketplace',
   });
 
   const PAYMENT_STEPS = [

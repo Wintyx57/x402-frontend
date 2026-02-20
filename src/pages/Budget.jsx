@@ -141,6 +141,7 @@ export default function Budget() {
   useSEO({
     title: b.title || 'Agent Budget Dashboard',
     description: 'Monitor and control AI agent spending with Budget Guardian. Set daily, weekly, or monthly USDC limits with real-time alerts.',
+    noindex: true,
   });
 
   const heroRef = useReveal();

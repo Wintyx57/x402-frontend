@@ -1,6 +1,20 @@
 User-agent: *
 Allow: /
 Disallow: /config
+Disallow: /analytics
+Disallow: /budget
+Disallow: /creator-dashboard
+Disallow: /creator-onboarding
 Crawl-delay: 1
+
+User-agent: GPTBot
+Allow: /
+Disallow: /config
+Disallow: /analytics
+Disallow: /budget
+
+User-agent: ClaudeBot
+Allow: /
+
 Sitemap: https://x402bazaar.org/sitemap.xml
 Host: https://x402bazaar.org

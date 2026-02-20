@@ -36,8 +36,9 @@ export default function Services() {
   };
 
   useSEO({
-    title: 'API Services',
-    description: 'Browse 60+ API services available for AI agents. Weather, crypto, search, image generation and more — pay per call with USDC.'
+    title: 'API Catalog — 60+ Services for AI Agents',
+    description: 'Browse 60+ APIs for AI agents: weather, crypto prices, image generation, web search. Pay per call with USDC via x402 protocol on Base.',
+    keywords: 'AI agent API catalog, pay-per-call API, USDC micropayments, x402 services, HTTP 402 marketplace, LangChain APIs',
   });
 
   useEffect(() => {

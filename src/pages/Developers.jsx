@@ -8,8 +8,9 @@ import GitHubIcon from '../components/icons/GitHubIcon';
 
 export default function Developers() {
   useSEO({
-    title: 'Developer Documentation',
-    description: 'Complete API documentation for x402 Bazaar. Endpoints, authentication, payment flow and code examples.'
+    title: 'Developer Docs — x402 Protocol Integration Guide',
+    description: 'Integrate x402 protocol in your app. REST API docs, code examples in Python & Node.js, HTTP 402 payment flow, LangChain & AutoGPT plugins.',
+    keywords: 'x402 protocol integration, HTTP 402 API docs, AI agent payment API, USDC payment flow, LangChain x402, npx x402-bazaar',
   });
   const baseUrl = API_URL === 'http://localhost:3000' ? 'https://x402-api.onrender.com' : API_URL;
   const { t } = useTranslation();

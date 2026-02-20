@@ -121,7 +121,8 @@ export default function Config() {
 
   useSEO({
     title: 'Config Generator',
-    description: 'Generate your MCP configuration for x402 Bazaar. Interactive form with JSON preview and one-click copy.'
+    description: 'Generate your MCP configuration for x402 Bazaar. Interactive form with JSON preview and one-click copy.',
+    noindex: true,
   });
 
   const detectedOs = useMemo(() => detectOS(), []);

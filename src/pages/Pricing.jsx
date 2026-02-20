@@ -9,8 +9,9 @@ import GitHubIcon from '../components/icons/GitHubIcon';
 export default function Pricing() {
   const { t } = useTranslation();
   useSEO({
-    title: 'Pricing',
-    description: 'x402 Bazaar pricing — pay per API call with USDC stablecoins. No subscriptions, no minimums. From $0.001 to $0.05 per call.'
+    title: 'Pricing — Pay Per Call from $0.001 USDC',
+    description: 'x402 Bazaar pay-per-call pricing: $0.001 to $0.05 per API call in USDC. No subscription, no minimum. Zero gas on SKALE network.',
+    keywords: 'API pay per call pricing, USDC micropayments cost, x402 protocol fees, Base blockchain API, zero gas SKALE, AI agent budget',
   });
   const [selectedTier, setSelectedTier] = useState(3);
   const [callCount, setCallCount] = useState(100);

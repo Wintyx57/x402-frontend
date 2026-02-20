@@ -29,6 +29,7 @@ const Budget = lazy(() => import('./pages/Budget'));
 const Creators = lazy(() => import('./pages/Creators'));
 const CreatorDashboard = lazy(() => import('./pages/CreatorDashboard'));
 const CreatorOnboarding = lazy(() => import('./pages/CreatorOnboarding'));
+const Quickstart = lazy(() => import('./pages/Quickstart'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
 export default function App() {
@@ -67,6 +68,7 @@ export default function App() {
             <Route path="/creators" element={<Creators />} />
             <Route path="/creators/dashboard" element={<CreatorDashboard />} />
             <Route path="/creators/onboarding" element={<CreatorOnboarding />} />
+            <Route path="/quickstart" element={<Quickstart />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>

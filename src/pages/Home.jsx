@@ -76,8 +76,9 @@ export default function Home() {
   const statsRef = useReveal();
 
   useSEO({
-    title: 'API Marketplace for AI Agents',
-    description: 'The first API marketplace where AI agents pay per call with USDC. 60+ native APIs, instant payments via x402 protocol on Base.'
+    title: 'x402 Bazaar — AI Agent API Marketplace',
+    description: 'The first marketplace where AI agents pay APIs per call with USDC. 60+ services on Base & SKALE via HTTP 402 protocol. Zero gas fees.',
+    keywords: 'x402 protocol, AI agent payments, micropayments API, USDC marketplace, HTTP 402, Base blockchain, MCP server',
   });
 
   useEffect(() => {
