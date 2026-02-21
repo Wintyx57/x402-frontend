@@ -1,19 +1,12 @@
 import { useState } from 'react';
 
-export default function DocsSidebar({ sections, activeSection, onNavigate }) {
-  const [drawerOpen, setDrawerOpen] = useState(false);
-
-  const handleClick = (id) => {
-    onNavigate(id);
-    setDrawerOpen(false);
-  };
-
-  const NavLinks = () => (
+function NavLinks({ sections, activeSection, onClickItem }) {
+  return (
     <nav className="flex flex-col gap-1">
       {sections.map(({ id, label }) => (
         <button
           key={id}
-          onClick={() => handleClick(id)}
+          onClick={() => onClickItem(id)}
           className={`text-left text-sm px-3 py-2 rounded-lg transition-all duration-200 cursor-pointer border-none ${
             activeSection === id
               ? 'text-[#FF9900] bg-[#FF9900]/10 font-medium'
@@ -25,13 +18,22 @@ export default function DocsSidebar({ sections, activeSection, onNavigate }) {
       ))}
     </nav>
   );
+}
+
+export default function DocsSidebar({ sections, activeSection, onNavigate }) {
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  const handleClick = (id) => {
+    onNavigate(id);
+    setDrawerOpen(false);
+  };
 
   return (
     <>
       {/* Desktop sidebar */}
       <aside className="hidden md:block w-56 shrink-0">
         <div className="sticky top-20">
-          <NavLinks />
+          <NavLinks sections={sections} activeSection={activeSection} onClickItem={handleClick} />
         </div>
       </aside>
 
@@ -65,7 +67,7 @@ export default function DocsSidebar({ sections, activeSection, onNavigate }) {
                 ✕
               </button>
             </div>
-            <NavLinks />
+            <NavLinks sections={sections} activeSection={activeSection} onClickItem={handleClick} />
           </div>
         </div>
       )}

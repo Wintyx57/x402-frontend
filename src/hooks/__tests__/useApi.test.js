@@ -187,9 +187,9 @@ describe('useApi', () => {
   });
 
   it('should abort on unmount', async () => {
-    let resolvePromise;
+    let _resolvePromise;
     globalThis.fetch.mockImplementation(
-      () => new Promise((resolve) => { resolvePromise = resolve; })
+      () => new Promise((resolve) => { _resolvePromise = resolve; })
     );
 
     const { result, unmount } = renderHook(() => useApi());

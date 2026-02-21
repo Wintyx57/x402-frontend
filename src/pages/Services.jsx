@@ -102,6 +102,7 @@ export default function Services() {
     if (sourceFilter === 'native' && !s.url?.startsWith('https://x402-api.onrender.com')) return false;
     if (sourceFilter === 'community' && s.url?.startsWith('https://x402-api.onrender.com')) return false;
     return true;
+  // eslint-disable-next-line react-hooks/preserve-manual-memoization
   }), [services, search, priceFilter, category, maxPrice, sourceFilter]);
 
   // Sort

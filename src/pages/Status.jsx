@@ -85,6 +85,7 @@ export default function Status() {
   }, [period]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchUptime();
   }, [period, fetchUptime]);
 

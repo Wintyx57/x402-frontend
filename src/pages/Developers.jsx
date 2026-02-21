@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { API_URL } from '../config';
 import { useTranslation } from '../i18n/LanguageContext';
 import { useReveal } from '../hooks/useReveal';

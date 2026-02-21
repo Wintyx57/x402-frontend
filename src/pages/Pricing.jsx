@@ -407,7 +407,6 @@ export default function Pricing() {
             const apiCost = tierPrice * callCount;
             const gasCost = useSkale ? 0 : 0.001 * callCount;
             const total = apiCost + gasCost;
-            const tierName = t.pricing[pricingTiers[selectedTier].name];
             const exampleEndpoint = pricingTiers[selectedTier].endpoints[0];
 
             return (

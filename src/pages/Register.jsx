@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { parseUnits } from 'viem';
 import { API_URL, USDC_ABI, CHAIN_CONFIG } from '../config';
@@ -40,7 +40,7 @@ export default function Register() {
   const [error, setError] = useState(null);
   const [paymentStep, setPaymentStep] = useState(0);
 
-  const { isSuccess: txConfirmed } = useWaitForTransactionReceipt({ hash: txHash });
+  useWaitForTransactionReceipt({ hash: txHash });
 
   const validateForm = () => {
     if (!form.name.trim() || form.name.length > 200) return t.register.errName || 'Service name is required (max 200 chars)';
@@ -142,7 +142,7 @@ export default function Register() {
             confirmed = true;
             break;
           }
-        } catch {}
+        } catch { /* polling receipt — erreur non critique */ }
       }
 
       if (!confirmed) throw new Error('Transaction not confirmed after 60s');

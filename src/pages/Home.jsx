@@ -151,7 +151,7 @@ export default function Home() {
           <div className="animate-fade-in-up delay-150 mb-8">
             <div className="inline-flex items-center gap-3 bg-[#0d1117] border border-[#FF9900]/20 rounded-xl px-5 py-3 font-mono text-sm
                             hover:border-[#FF9900]/40 transition-all duration-300 group cursor-pointer"
-                 onClick={() => { try { navigator.clipboard.writeText('npx x402-bazaar init'); } catch {} }}
+                 onClick={() => { try { navigator.clipboard.writeText('npx x402-bazaar init'); } catch { /* clipboard non critique */ } }}
             >
               <span className="text-gray-500">$</span>
               <span className="text-[#FF9900] font-medium">npx x402-bazaar init</span>

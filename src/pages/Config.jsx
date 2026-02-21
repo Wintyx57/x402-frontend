@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { useTranslation } from '../i18n/LanguageContext';
 import { useReveal } from '../hooks/useReveal';
 import useSEO from '../hooks/useSEO';
