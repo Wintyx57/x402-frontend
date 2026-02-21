@@ -1,3 +1,5 @@
+import * as Sentry from '@sentry/react';
+import { browserTracingIntegration, replayIntegration } from '@sentry/react';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { WagmiProvider } from 'wagmi';
@@ -10,6 +12,18 @@ import { ThemeProvider } from './context/ThemeContext';
 import App from './App.jsx';
 import '@rainbow-me/rainbowkit/styles.css';
 import './index.css';
+
+if (import.meta.env.PROD) {
+  Sentry.init({
+    dsn: import.meta.env.VITE_SENTRY_DSN,
+    integrations: [
+      browserTracingIntegration(),
+      replayIntegration(),
+    ],
+    tracesSampleRate: 0.1,
+    replaysOnErrorSampleRate: 1.0,
+  });
+}
 
 const queryClient = new QueryClient();
 
