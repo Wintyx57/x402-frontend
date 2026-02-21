@@ -4,8 +4,17 @@ if (import.meta.env.PROD && API_URL.includes('localhost')) {
   console.warn('[x402] API_URL contains localhost in production. Set VITE_API_URL to the production API URL.');
 }
 
+interface ChainConfig {
+  key: string;
+  label: string;
+  rpcUrl: string;
+  usdcContract: string;
+  explorer: string;
+  gas: string;
+}
+
 // Chain configuration map (chainId -> config)
-export const CHAIN_CONFIG = {
+export const CHAIN_CONFIG: Record<number, ChainConfig> = {
   // Base Mainnet
   8453: {
     key: 'base',
@@ -54,4 +63,4 @@ export const USDC_ABI = [
     inputs: [{ name: 'account', type: 'address' }],
     outputs: [{ name: '', type: 'uint256' }],
   },
-];
+] as const;

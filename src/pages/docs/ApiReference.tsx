@@ -1,7 +1,9 @@
+interface Props { d: Record<string, string>; endpointsRaw?: unknown; apiData?: unknown; parsed?: unknown; }
+
 import { PriceBadge } from './shared';
 import { NATIVE_ENDPOINTS } from './data';
 
-export default function ApiReference({ d, endpointsRaw, apiData, parsed }) {
+export default function ApiReference({ d, endpointsRaw, apiData, parsed }: Props) {
   return (
     <section id="api-reference">
       <h2 className="text-2xl font-bold text-white mb-6">{d.apiRefTitle || 'API Reference'}</h2>

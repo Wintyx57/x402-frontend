@@ -1,6 +1,9 @@
 import SharedCopyButton from '../../components/CopyButton';
 
-export function DocsCodeBlock({ code }) {
+interface DocsCodeBlockProps { code: string; }
+interface PriceBadgeProps { price?: string; freeLabel?: string; }
+
+export function DocsCodeBlock({ code }: DocsCodeBlockProps) {
   return (
     <div className="relative group">
       <SharedCopyButton text={code} copiedLabel="Copied" />
@@ -11,7 +14,7 @@ export function DocsCodeBlock({ code }) {
   );
 }
 
-export function PriceBadge({ price, freeLabel }) {
+export function PriceBadge({ price, freeLabel }: PriceBadgeProps) {
   return (
     <span className={`text-xs font-mono font-bold px-2 py-0.5 rounded ${
       price ? 'bg-[#FF9900]/10 text-[#FF9900]' : 'bg-[#34D399]/10 text-[#34D399]'

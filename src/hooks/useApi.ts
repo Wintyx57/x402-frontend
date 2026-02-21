@@ -1,15 +1,23 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { API_URL } from '../config';
 
+interface UseApiReturn<T = unknown> {
+  execute: (endpoint: string, options?: RequestInit & { timeout?: number }) => Promise<T>;
+  loading: boolean;
+  error: string | null;
+  data: T | null;
+  reset: () => void;
+}
+
 /**
  * Custom hook for API calls with loading, error, retry, and abort controller.
  * Use for mutations and one-off fetches. For cached GET requests, prefer React Query hooks.
  */
-export function useApi() {
+export function useApi<T = unknown>(): UseApiReturn<T> {
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [data, setData] = useState(null);
-  const abortControllerRef = useRef(null);
+  const [error, setError] = useState<string | null>(null);
+  const [data, setData] = useState<T | null>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -20,7 +28,7 @@ export function useApi() {
     };
   }, []);
 
-  const execute = useCallback(async (endpoint, options = {}) => {
+  const execute = useCallback(async (endpoint: string, options: RequestInit & { timeout?: number } = {}): Promise<T> => {
     // Abort any previous in-flight request
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
@@ -50,11 +58,11 @@ export function useApi() {
         throw new Error(body.error || body.message || `Request failed (${res.status})`);
       }
 
-      const result = await res.json();
+      const result: T = await res.json();
       setData(result);
       setLoading(false);
       return result;
-    } catch (err) {
+    } catch (err: any) {
       clearTimeout(timeoutId);
       if (err.name === 'AbortError') {
         setError('Request timed out. Please try again.');

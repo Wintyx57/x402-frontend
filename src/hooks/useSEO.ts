@@ -5,7 +5,15 @@ const SITE_NAME = 'x402 Bazaar';
 const BASE_URL = 'https://x402bazaar.org';
 const DEFAULT_OG_IMAGE = 'https://x402bazaar.org/og-image.png';
 
-export default function useSEO({ title, description, keywords, ogImage, noindex } = {}) {
+interface SEOOptions {
+  title?: string;
+  description?: string;
+  keywords?: string;
+  ogImage?: string;
+  noindex?: boolean;
+}
+
+export default function useSEO({ title, description, keywords, ogImage, noindex }: SEOOptions = {}) {
     const { pathname } = useLocation();
     const fullTitle = title
         ? (title.includes('x402 Bazaar') ? title : `${title} | ${SITE_NAME}`)
@@ -16,8 +24,8 @@ export default function useSEO({ title, description, keywords, ogImage, noindex 
     useEffect(() => {
         document.title = fullTitle;
 
-        const setMeta = (attr, key, value) => {
-            let el = document.querySelector(`meta[${attr}="${key}"]`);
+        const setMeta = (attr: string, key: string, value: string) => {
+            let el = document.querySelector(`meta[${attr}="${key}"]`) as HTMLMetaElement | null;
             if (!el) {
                 el = document.createElement('meta');
                 el.setAttribute(attr, key);
@@ -34,7 +42,7 @@ export default function useSEO({ title, description, keywords, ogImage, noindex 
         if (keywords) setMeta('name', 'keywords', keywords);
 
         // noindex for private/thin pages
-        let robotsEl = document.querySelector('meta[name="robots"]');
+        let robotsEl = document.querySelector('meta[name="robots"]') as HTMLMetaElement | null;
         if (noindex) {
             if (!robotsEl) {
                 robotsEl = document.createElement('meta');
@@ -52,7 +60,7 @@ export default function useSEO({ title, description, keywords, ogImage, noindex 
         setMeta('name', 'twitter:title', fullTitle);
         setMeta('name', 'twitter:image', image);
 
-        let canonical = document.querySelector('link[rel="canonical"]');
+        let canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
         if (!canonical) {
             canonical = document.createElement('link');
             canonical.setAttribute('rel', 'canonical');
@@ -69,7 +77,7 @@ export default function useSEO({ title, description, keywords, ogImage, noindex 
                 ...(pathname !== '/' ? [{ '@type': 'ListItem', position: 2, name: title || pathname.slice(1), item: url }] : [])
             ]
         };
-        let bcScript = document.getElementById('breadcrumb-jsonld');
+        let bcScript = document.getElementById('breadcrumb-jsonld') as HTMLScriptElement | null;
         if (!bcScript) {
             bcScript = document.createElement('script');
             bcScript.id = 'breadcrumb-jsonld';

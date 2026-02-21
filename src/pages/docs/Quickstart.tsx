@@ -1,8 +1,10 @@
+interface Props { d: Record<string, string>; }
+
 import { DocsCodeBlock } from './shared';
 
 const API_BASE = 'https://x402-api.onrender.com';
 
-export default function Quickstart({ d }) {
+export default function Quickstart({ d }: Props) {
   return (
     <section id="quickstart">
       <div className="flex items-center gap-3 mb-6">

@@ -9,7 +9,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { config } from './wagmi';
 import { LanguageProvider } from './i18n/LanguageContext';
 import { ThemeProvider } from './context/ThemeContext';
-import App from './App.jsx';
+import App from './App';
 import '@rainbow-me/rainbowkit/styles.css';
 import './index.css';
 

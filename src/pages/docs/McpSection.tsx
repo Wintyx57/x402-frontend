@@ -1,8 +1,10 @@
+interface Props { d: Record<string, string>; lang: string; }
+
 import { Link } from 'react-router-dom';
 import { DocsCodeBlock } from './shared';
 import { MCP_TOOLS } from './data';
 
-export default function McpSection({ d, lang }) {
+export default function McpSection({ d, lang }: Props) {
   return (
     <section id="mcp">
       <h2 className="text-2xl font-bold text-white mb-3">{d.mcpTitle || 'MCP Server'}</h2>

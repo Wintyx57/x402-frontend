@@ -1,8 +1,10 @@
+interface Props { d: Record<string, string>; }
+
 import { DocsCodeBlock } from './shared';
 
 const API_BASE = 'https://x402-api.onrender.com';
 
-export default function SecuritySection({ d }) {
+export default function SecuritySection({ d }: Props) {
   return (
     <section id="security">
       <h2 className="text-2xl font-bold text-white mb-6">{d.securityTitle || 'Security'}</h2>

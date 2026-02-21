@@ -1,4 +1,9 @@
-export const CATEGORIES = [
+interface Category {
+  key: string;
+  tag: string | null;
+}
+
+export const CATEGORIES: Category[] = [
   { key: 'all', tag: null },
   { key: 'ai', tag: 'ai' },
   { key: 'finance', tag: 'finance' },
@@ -13,7 +18,7 @@ export const CATEGORIES = [
   { key: 'fun', tag: 'fun' },
 ];
 
-export const CATEGORY_LABELS = {
+export const CATEGORY_LABELS: Record<string, string> = {
   all: 'categoryAll',
   ai: 'categoryAi',
   finance: 'categoryFinance',
@@ -28,4 +33,4 @@ export const CATEGORY_LABELS = {
   fun: 'categoryFun',
 };
 
-export const VALID_CATEGORIES = CATEGORIES.filter(c => c.tag).map(c => c.tag);
+export const VALID_CATEGORIES = CATEGORIES.filter(c => c.tag).map(c => c.tag) as string[];

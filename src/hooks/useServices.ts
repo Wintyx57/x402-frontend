@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import { API_URL } from '../config';
 
 async function fetchServices() {
@@ -7,7 +7,7 @@ async function fetchServices() {
   return res.json();
 }
 
-export function useServices(options = {}) {
+export function useServices(options: Omit<UseQueryOptions, 'queryKey' | 'queryFn'> = {}) {
   return useQuery({
     queryKey: ['services'],
     queryFn: fetchServices,

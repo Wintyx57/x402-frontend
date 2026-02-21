@@ -1,7 +1,9 @@
+interface Props { d: Record<string, string>; }
+
 import { Link } from 'react-router-dom';
 import { DocsCodeBlock } from './shared';
 
-export default function IntegrationSection({ d }) {
+export default function IntegrationSection({ d }: Props) {
   return (
     <section id="integration">
       <h2 className="text-2xl font-bold text-white mb-3">{d.integrationTitle || 'Integration'}</h2>

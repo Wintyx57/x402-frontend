@@ -1,6 +1,8 @@
+interface Props { d: Record<string, string>; }
+
 import { DocsCodeBlock } from './shared';
 
-export default function Protocol({ d }) {
+export default function Protocol({ d }: Props) {
   return (
     <section id="protocol">
       <h2 className="text-2xl font-bold text-white mb-6">{d.protocolTitle || 'The x402 Protocol'}</h2>

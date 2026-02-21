@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
-export function useScrollSpy(sectionIds) {
-  const [activeId, setActiveId] = useState(sectionIds[0] || '');
+export function useScrollSpy(sectionIds: string[]): string {
+  const [activeId, setActiveId] = useState<string>(sectionIds[0] || '');
 
   useEffect(() => {
     const observer = new IntersectionObserver(

@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import { API_URL } from '../config';
 
 async function fetchStatus() {
@@ -7,7 +7,7 @@ async function fetchStatus() {
   return res.json();
 }
 
-export function useStatus(options = {}) {
+export function useStatus(options: Omit<UseQueryOptions, 'queryKey' | 'queryFn'> = {}) {
   return useQuery({
     queryKey: ['status'],
     queryFn: fetchStatus,

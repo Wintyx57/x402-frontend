@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import { API_URL } from '../config';
 
 async function fetchPublicStats() {
@@ -7,7 +7,7 @@ async function fetchPublicStats() {
   return res.json();
 }
 
-export function usePublicStats(options = {}) {
+export function usePublicStats(options: Omit<UseQueryOptions, 'queryKey' | 'queryFn'> = {}) {
   return useQuery({
     queryKey: ['publicStats'],
     queryFn: fetchPublicStats,

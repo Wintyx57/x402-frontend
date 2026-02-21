@@ -8,9 +8,10 @@ import {
   walletConnectWallet,
   injectedWallet,
 } from '@rainbow-me/rainbowkit/wallets';
+import type { Chain } from 'wagmi/chains';
 
 // SKALE Europa custom chain definition
-export const skaleEuropa = {
+export const skaleEuropa: Chain = {
   id: 2046399126,
   name: 'SKALE Europa',
   nativeCurrency: { name: 'sFUEL', symbol: 'sFUEL', decimals: 18 },

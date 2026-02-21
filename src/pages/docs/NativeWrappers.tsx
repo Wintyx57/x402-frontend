@@ -1,7 +1,9 @@
+interface Props { d: Record<string, string>; }
+
 import { DocsCodeBlock, PriceBadge } from './shared';
 import { NATIVE_ENDPOINTS } from './data';
 
-export default function NativeWrappers({ d }) {
+export default function NativeWrappers({ d }: Props) {
   return (
     <section id="native-wrappers">
       <h2 className="text-2xl font-bold text-white mb-2">{d.nativeTitle || 'Native Wrappers'}</h2>
