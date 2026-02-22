@@ -25,13 +25,14 @@ export const skaleEuropa: Chain = {
 
 export const config = getDefaultConfig({
   appName: 'x402 Bazaar',
-  projectId: '2437e069335d816faf9cfca4e2702ddf',
+  projectId: import.meta.env.VITE_WALLETCONNECT_PROJECT_ID || '2437e069335d816faf9cfca4e2702ddf',
   chains: [base, baseSepolia, skaleEuropa],
   ssr: false,
   wallets: [
     {
       groupName: 'Popular',
       wallets: [
+        injectedWallet,
         metaMaskWallet,
         coinbaseWallet,
         trustWallet,
@@ -42,7 +43,6 @@ export const config = getDefaultConfig({
       groupName: 'Other',
       wallets: [
         walletConnectWallet,
-        injectedWallet,
       ],
     },
   ],
