@@ -35,10 +35,11 @@ export default function AutomationTab({ adminFetch }: Props) {
     try {
       const [s, q] = await Promise.all([
         adminFetch<SchedulerData>('/scheduler').catch(() => null),
-        adminFetch<{ queue?: QueueEntry[]; items?: QueueEntry[] }>('/queue').catch(() => ({ queue: [] })),
+        adminFetch<{ queue?: QueueEntry[]; items?: QueueEntry[] } | null>('/queue').catch(() => null),
       ]);
       setScheduler(s);
-      setQueue(q?.queue || q?.items || []);
+      const qData = q as { queue?: QueueEntry[]; items?: QueueEntry[] } | null;
+      setQueue(qData?.queue || qData?.items || []);
     } finally {
       setLoading(false);
     }
