@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Trophy } from 'lucide-react';
 import { useTranslation } from '../i18n/LanguageContext';
 import { useReveal } from '../hooks/useReveal';
 import useSEO from '../hooks/useSEO';
@@ -419,7 +420,9 @@ export default function About() {
           </div>
 
           <div className="glass-card rounded-lg p-4 border border-[#FF9900]/10 flex items-center gap-3">
-            <span className="text-3xl">🏆</span>
+            <div className="w-10 h-10 rounded-lg bg-[#FF9900]/10 flex items-center justify-center text-[#FF9900] shrink-0">
+              <Trophy className="w-5 h-5" />
+            </div>
             <div>
               <h3 className="text-white font-semibold text-sm">{t.about.teamHackathon}</h3>
               <p className="text-gray-500 text-xs">{t.about.teamHackathonDesc}</p>

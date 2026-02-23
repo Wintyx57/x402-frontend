@@ -1,7 +1,9 @@
+import type { ReactNode } from 'react';
+
 interface Props {
   label: string;
   value: string | number;
-  icon: string;
+  icon: ReactNode;
   color?: string;
   loading?: boolean;
 }
@@ -9,7 +11,7 @@ interface Props {
 export default function StatCard({ label, value, icon, color = 'text-[#FF9900]', loading }: Props) {
   return (
     <div className="glass-card rounded-xl p-4 text-center">
-      <div className="text-lg mb-1">{icon}</div>
+      <div className="flex justify-center mb-1 text-gray-400">{icon}</div>
       {loading ? (
         <div className="h-8 w-16 mx-auto rounded animate-shimmer" />
       ) : (

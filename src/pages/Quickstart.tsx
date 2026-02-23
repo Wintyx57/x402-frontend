@@ -1,9 +1,22 @@
+import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
+import { Bot, Code, CircleDollarSign, Package, BookOpen, Plug } from 'lucide-react';
 import useSEO from '../hooks/useSEO';
 
-const paths = [
+interface PathItem {
+  icon: ReactNode;
+  title: string;
+  description: string;
+  steps: { code: boolean; text: string; suffix?: string }[];
+  primaryLabel: string;
+  primaryHref: string;
+  secondaryLabel: string;
+  secondaryHref: string;
+}
+
+const paths: PathItem[] = [
   {
-    icon: '🤖',
+    icon: <Bot className="w-7 h-7" />,
     title: 'I have an AI Agent',
     description: 'Connect your agent to 60+ APIs. Pay per call with USDC, no API keys needed.',
     steps: [
@@ -17,7 +30,7 @@ const paths = [
     secondaryHref: '/services',
   },
   {
-    icon: '💻',
+    icon: <Code className="w-7 h-7" />,
     title: "I'm a Developer",
     description: 'Integrate x402 protocol in your app. Call paid APIs or build your own payment layer.',
     steps: [
@@ -31,7 +44,7 @@ const paths = [
     secondaryHref: '/playground',
   },
   {
-    icon: '💰',
+    icon: <CircleDollarSign className="w-7 h-7" />,
     title: 'I have an API to monetize',
     description: 'List your API and earn USDC from AI agents. 95% revenue, instant on-chain settlement.',
     steps: [
@@ -46,10 +59,18 @@ const paths = [
   },
 ];
 
-const quickLinks = [
-  { icon: '📦', label: 'Install CLI', text: 'npx x402-bazaar init', isCode: true, href: null },
-  { icon: '📚', label: 'API Reference', text: 'API Reference', isCode: false, href: '/developers' },
-  { icon: '💬', label: 'MCP Setup', text: 'MCP Setup', isCode: false, href: '/mcp' },
+interface QuickLink {
+  icon: ReactNode;
+  label: string;
+  text: string;
+  isCode: boolean;
+  href: string | null;
+}
+
+const quickLinks: QuickLink[] = [
+  { icon: <Package className="w-4 h-4" />, label: 'Install CLI', text: 'npx x402-bazaar init', isCode: true, href: null },
+  { icon: <BookOpen className="w-4 h-4" />, label: 'API Reference', text: 'API Reference', isCode: false, href: '/developers' },
+  { icon: <Plug className="w-4 h-4" />, label: 'MCP Setup', text: 'MCP Setup', isCode: false, href: '/mcp' },
 ];
 
 export default function Quickstart() {
@@ -85,7 +106,9 @@ export default function Quickstart() {
             >
               {/* Header */}
               <div>
-                <div className="text-4xl mb-3">{path.icon}</div>
+                <div className="w-12 h-12 rounded-xl bg-[#FF9900]/10 flex items-center justify-center text-[#FF9900] mb-3">
+                  {path.icon}
+                </div>
                 <h2 className="text-xl font-semibold mb-2">{path.title}</h2>
                 <p className="text-gray-400 text-sm leading-relaxed">{path.description}</p>
               </div>
@@ -147,7 +170,7 @@ export default function Quickstart() {
                   to={item.href}
                   className="flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-5 py-2.5 hover:bg-white/10 hover:border-white/20 transition-colors text-sm text-white"
                 >
-                  <span>{item.icon}</span>
+                  <span className="text-gray-400">{item.icon}</span>
                   <span>{item.text}</span>
                 </Link>
               ) : (
@@ -155,7 +178,7 @@ export default function Quickstart() {
                   key={item.label}
                   className="flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-5 py-2.5 text-sm"
                 >
-                  <span>{item.icon}</span>
+                  <span className="text-gray-400">{item.icon}</span>
                   <code className="text-[#FF9900] font-mono">{item.text}</code>
                 </div>
               )

@@ -2,6 +2,7 @@ import { useTranslation } from '../i18n/LanguageContext';
 import { useReveal } from '../hooks/useReveal';
 import useSEO from '../hooks/useSEO';
 import { Link } from 'react-router-dom';
+import { Search, Radar, Sparkles, TrendingUp, Coins } from 'lucide-react';
 
 export default function Demos() {
   const { t } = useTranslation();
@@ -71,7 +72,9 @@ export default function Demos() {
         <div className="grid gap-6 md:grid-cols-2">
           {/* Card 1 - Research Agent */}
           <div className="glass-card rounded-xl p-6">
-            <div className="text-3xl mb-3">🔍</div>
+            <div className="w-10 h-10 rounded-lg bg-[#FF9900]/10 flex items-center justify-center text-[#FF9900] mb-3">
+              <Search className="w-5 h-5" />
+            </div>
             <h3 className="text-white font-semibold text-base mb-2">
               {t.demos.scenario1Title}
             </h3>
@@ -81,14 +84,16 @@ export default function Demos() {
             <div className="text-xs text-gray-500 bg-white/5 rounded-lg px-3 py-2 font-mono">
               {t.demos.scenario1Flow}
             </div>
-            <div className="text-xs text-[#34D399] font-mono mt-3">
-              💰 {t.demos.scenario1Cost}
+            <div className="text-xs text-[#34D399] font-mono mt-3 flex items-center gap-1">
+              <Coins className="w-3.5 h-3.5" /> {t.demos.scenario1Cost}
             </div>
           </div>
 
           {/* Card 2 - Social Monitor */}
           <div className="glass-card rounded-xl p-6">
-            <div className="text-3xl mb-3">🐦</div>
+            <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-400 mb-3">
+              <Radar className="w-5 h-5" />
+            </div>
             <h3 className="text-white font-semibold text-base mb-2">
               {t.demos.scenario2Title}
             </h3>
@@ -98,14 +103,16 @@ export default function Demos() {
             <div className="text-xs text-gray-500 bg-white/5 rounded-lg px-3 py-2 font-mono">
               {t.demos.scenario2Flow}
             </div>
-            <div className="text-xs text-[#34D399] font-mono mt-3">
-              💰 {t.demos.scenario2Cost}
+            <div className="text-xs text-[#34D399] font-mono mt-3 flex items-center gap-1">
+              <Coins className="w-3.5 h-3.5" /> {t.demos.scenario2Cost}
             </div>
           </div>
 
           {/* Card 3 - Content Creator */}
           <div className="glass-card rounded-xl p-6">
-            <div className="text-3xl mb-3">✨</div>
+            <div className="w-10 h-10 rounded-lg bg-violet-500/10 flex items-center justify-center text-violet-400 mb-3">
+              <Sparkles className="w-5 h-5" />
+            </div>
             <h3 className="text-white font-semibold text-base mb-2">
               {t.demos.scenario3Title}
             </h3>
@@ -115,14 +122,16 @@ export default function Demos() {
             <div className="text-xs text-gray-500 bg-white/5 rounded-lg px-3 py-2 font-mono">
               {t.demos.scenario3Flow}
             </div>
-            <div className="text-xs text-[#34D399] font-mono mt-3">
-              💰 {t.demos.scenario3Cost}
+            <div className="text-xs text-[#34D399] font-mono mt-3 flex items-center gap-1">
+              <Coins className="w-3.5 h-3.5" /> {t.demos.scenario3Cost}
             </div>
           </div>
 
           {/* Card 4 - Financial Analyst */}
           <div className="glass-card rounded-xl p-6">
-            <div className="text-3xl mb-3">📊</div>
+            <div className="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400 mb-3">
+              <TrendingUp className="w-5 h-5" />
+            </div>
             <h3 className="text-white font-semibold text-base mb-2">
               {t.demos.scenario4Title}
             </h3>
@@ -132,8 +141,8 @@ export default function Demos() {
             <div className="text-xs text-gray-500 bg-white/5 rounded-lg px-3 py-2 font-mono">
               {t.demos.scenario4Flow}
             </div>
-            <div className="text-xs text-[#34D399] font-mono mt-3">
-              💰 {t.demos.scenario4Cost}
+            <div className="text-xs text-[#34D399] font-mono mt-3 flex items-center gap-1">
+              <Coins className="w-3.5 h-3.5" /> {t.demos.scenario4Cost}
             </div>
           </div>
         </div>

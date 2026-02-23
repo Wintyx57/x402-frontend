@@ -3,8 +3,8 @@ import { useTranslation } from '../i18n/LanguageContext';
 import { CHAIN_CONFIG } from '../config';
 
 const CHAINS = [
-  { id: 8453, label: 'Base', gas: '~$0.001', icon: '🔵', free: false },
-  { id: 2046399126, label: 'SKALE Europa', gas: 'FREE', icon: '🟢', free: true },
+  { id: 8453, label: 'Base', gas: '~$0.001', color: 'bg-blue-500', free: false },
+  { id: 2046399126, label: 'SKALE Europa', gas: 'FREE', color: 'bg-green-500', free: true },
 ];
 
 export default function ChainSelector() {
@@ -48,7 +48,7 @@ export default function ChainSelector() {
               } disabled:opacity-50`}
             >
               <div className="flex items-center gap-1.5 font-medium">
-                <span>{c.icon}</span>
+                <span className={`w-2.5 h-2.5 rounded-full ${c.color} shrink-0`} />
                 <span>{c.label}</span>
                 {isActive && (
                   <span className="w-1.5 h-1.5 rounded-full bg-[#34D399] ml-0.5" />

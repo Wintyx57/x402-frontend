@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { Activity, BarChart3, ClipboardList, Clock, CheckCircle2, XCircle } from 'lucide-react';
 import StatCard from './StatCard';
 import StatusIndicator from './StatusIndicator';
 import PlatformBadge from './PlatformBadge';
@@ -79,10 +80,10 @@ export default function OverviewTab({ adminFetch }: Props) {
 
       {/* KPI Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard icon="●" label="Status" value={agentOnline ? 'ONLINE' : 'OFFLINE'} color={agentOnline ? 'text-emerald-400' : 'text-red-400'} loading={loading} />
-        <StatCard icon="📊" label="24h Posts" value={stats?.last24h ?? '—'} loading={loading} />
-        <StatCard icon="📋" label="Queue" value={stats?.queueSize != null ? `${stats.queueSize} pending` : '—'} loading={loading} />
-        <StatCard icon="⏱" label="Uptime" value={formatUptime(health?.uptime)} loading={loading} />
+        <StatCard icon={<Activity className="w-5 h-5" />} label="Status" value={agentOnline ? 'ONLINE' : 'OFFLINE'} color={agentOnline ? 'text-emerald-400' : 'text-red-400'} loading={loading} />
+        <StatCard icon={<BarChart3 className="w-5 h-5" />} label="24h Posts" value={stats?.last24h ?? '—'} loading={loading} />
+        <StatCard icon={<ClipboardList className="w-5 h-5" />} label="Queue" value={stats?.queueSize != null ? `${stats.queueSize} pending` : '—'} loading={loading} />
+        <StatCard icon={<Clock className="w-5 h-5" />} label="Uptime" value={formatUptime(health?.uptime)} loading={loading} />
       </div>
 
       {/* Scheduler Status */}
@@ -142,9 +143,10 @@ export default function OverviewTab({ adminFetch }: Props) {
                     {new Date(a.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </span>
                   <span className="text-gray-300 capitalize">{a.platform}</span>
-                  <span className={a.status === 'success' || a.status === 'published' ? 'text-emerald-400' : 'text-red-400'}>
-                    {a.status === 'success' || a.status === 'published' ? '✓' : '✗'}
-                  </span>
+                  {a.status === 'success' || a.status === 'published'
+                    ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                    : <XCircle className="w-3.5 h-3.5 text-red-400 shrink-0" />
+                  }
                   {a.message && <span className="text-gray-500 truncate">{a.message}</span>}
                 </div>
               ))}
