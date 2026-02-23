@@ -2,6 +2,7 @@ import { useTranslation } from '../i18n/LanguageContext';
 import { useReveal } from '../hooks/useReveal';
 import useSEO from '../hooks/useSEO';
 import { Link } from 'react-router-dom';
+import { Coins, Globe, Wrench, Zap, TrendingUp, Link2 } from 'lucide-react';
 import CopyButton from '../components/CopyButton';
 
 const SPEC_EXAMPLE = `{
@@ -39,12 +40,12 @@ export default function ForProviders() {
   ];
 
   const benefits = [
-    { icon: '&#128176;', title: p.benefit1Title || '95% Revenue Share', desc: p.benefit1Desc || 'Keep 95% of every payment. Only 5% platform fee — far less than RapidAPI\'s 25%.' },
-    { icon: '&#127760;', title: p.benefit2Title || 'Global AI Audience', desc: p.benefit2Desc || 'Reach thousands of AI agents using Claude, ChatGPT, LangChain, Auto-GPT and more.' },
-    { icon: '&#128736;', title: p.benefit3Title || 'Zero Infrastructure', desc: p.benefit3Desc || 'We handle hosting, payment processing, monitoring, and documentation. You just keep your API running.' },
-    { icon: '&#9889;', title: p.benefit4Title || 'Instant Payments', desc: p.benefit4Desc || 'Get paid in USDC on Base mainnet. No invoicing, no net-30. Payments are instant and on-chain.' },
-    { icon: '&#128200;', title: p.benefit5Title || 'Analytics & Monitoring', desc: p.benefit5Desc || 'Real-time monitoring (5-min checks), uptime tracking, and Telegram alerts for your API.' },
-    { icon: '&#128279;', title: p.benefit6Title || '6 Platform Integrations', desc: p.benefit6Desc || 'Your API is accessible from MCP (Claude), ChatGPT Actions, CLI, LangChain, Telegram, and Auto-GPT.' },
+    { icon: <Coins className="w-5 h-5" />, title: p.benefit1Title || '95% Revenue Share', desc: p.benefit1Desc || 'Keep 95% of every payment. Only 5% platform fee — far less than RapidAPI\'s 25%.' },
+    { icon: <Globe className="w-5 h-5" />, title: p.benefit2Title || 'Global AI Audience', desc: p.benefit2Desc || 'Reach thousands of AI agents using Claude, ChatGPT, LangChain, Auto-GPT and more.' },
+    { icon: <Wrench className="w-5 h-5" />, title: p.benefit3Title || 'Zero Infrastructure', desc: p.benefit3Desc || 'We handle hosting, payment processing, monitoring, and documentation. You just keep your API running.' },
+    { icon: <Zap className="w-5 h-5" />, title: p.benefit4Title || 'Instant Payments', desc: p.benefit4Desc || 'Get paid in USDC on Base mainnet. No invoicing, no net-30. Payments are instant and on-chain.' },
+    { icon: <TrendingUp className="w-5 h-5" />, title: p.benefit5Title || 'Analytics & Monitoring', desc: p.benefit5Desc || 'Real-time monitoring (5-min checks), uptime tracking, and Telegram alerts for your API.' },
+    { icon: <Link2 className="w-5 h-5" />, title: p.benefit6Title || '6 Platform Integrations', desc: p.benefit6Desc || 'Your API is accessible from MCP (Claude), ChatGPT Actions, CLI, LangChain, Telegram, and Auto-GPT.' },
   ];
 
   return (
@@ -66,7 +67,9 @@ export default function ForProviders() {
       <div ref={ref1} className="reveal grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-12">
         {benefits.map((b, i) => (
           <div key={i} className="glass-card rounded-xl p-5">
-            <div className="text-2xl mb-2" dangerouslySetInnerHTML={{ __html: b.icon }} />
+            <div className="w-10 h-10 rounded-lg bg-[#FF9900]/10 flex items-center justify-center text-[#FF9900] mb-2">
+              {b.icon}
+            </div>
             <h3 className="text-white font-semibold text-sm mb-1">{b.title}</h3>
             <p className="text-gray-400 text-xs leading-relaxed">{b.desc}</p>
           </div>
