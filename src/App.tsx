@@ -31,6 +31,7 @@ const CreatorDashboard = lazy(() => import('./pages/CreatorDashboard'));
 const CreatorOnboarding = lazy(() => import('./pages/CreatorOnboarding'));
 const Quickstart = lazy(() => import('./pages/Quickstart'));
 const AdminCommunityAgent = lazy(() => import('./pages/AdminCommunityAgent'));
+const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
 export default function App() {
@@ -70,6 +71,7 @@ export default function App() {
             <Route path="/creators/dashboard" element={<CreatorDashboard />} />
             <Route path="/creators/onboarding" element={<CreatorOnboarding />} />
             <Route path="/quickstart" element={<Quickstart />} />
+            <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/admin/community-agent" element={<AdminCommunityAgent />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
