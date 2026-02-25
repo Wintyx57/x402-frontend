@@ -25,7 +25,7 @@ export const skaleEuropa: Chain = {
 
 export const config = getDefaultConfig({
   appName: 'x402 Bazaar',
-  projectId: import.meta.env.VITE_WALLETCONNECT_PROJECT_ID || '2437e069335d816faf9cfca4e2702ddf',
+  projectId: import.meta.env.VITE_WALLETCONNECT_PROJECT_ID || '',
   chains: [base, baseSepolia, skaleEuropa],
   ssr: false,
   wallets: [
