@@ -2,28 +2,44 @@
 
 Thanks for your interest in contributing!
 
-## Quick Start
+## Getting Started
 
-1. Fork the repo
-2. Clone your fork
-3. Install dependencies: `npm install`
+1. Fork and clone the repo
+2. Install dependencies: `npm install`
+3. Copy environment config: `cp .env.example .env`
 4. Start dev server: `npm run dev`
+5. Build for production: `npm run build`
+6. Run tests: `npm test`
 
-## Project Structure
+## Development
 
-- `src/pages/` -- Page components (Home, Services, Register, etc.)
-- `src/components/` -- Reusable components (Navbar, ServiceCard, etc.)
-- `src/i18n/` -- Translations (EN + FR)
-- `src/hooks/` -- Custom React hooks
-- `public/` -- Static assets (sitemap, robots.txt, etc.)
+- **Stack**: React 19, TypeScript 5.9, Vite 7, Tailwind CSS 4
+- **Tests**: Vitest
+- **Styling**: Tailwind utility classes, glassmorphism theme in `index.css`
+- **i18n**: All user-facing strings in `src/i18n/translations.js` (EN + FR)
 
-## Guidelines
+## Making Changes
 
-- All user-facing text must use translation keys (see `src/i18n/translations.js`)
-- Add translations for BOTH English and French
-- Follow existing Tailwind patterns and color scheme
-- Test responsive design (mobile + desktop)
-- Run `npm run build` before submitting
+1. Create a feature branch: `git checkout -b feat/my-feature`
+2. Make your changes
+3. Ensure `npm run build` passes
+4. Add translations for any new user-facing strings
+5. Commit with a descriptive message
+6. Open a Pull Request
+
+## Code Conventions
+
+- Use TypeScript (`.tsx` / `.ts`) for all new files
+- Use React Query for API calls
+- Use `useSEO` hook for page meta tags
+- Follow existing component patterns
+
+## Reporting Issues
+
+Please include:
+- Browser and version
+- Steps to reproduce
+- Screenshots if UI-related
 
 ## License
 

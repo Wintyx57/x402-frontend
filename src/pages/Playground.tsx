@@ -296,6 +296,7 @@ export default function Playground() {
                 {response ? (
                   <>
                     <CopyButton text={jsonStr} label={pg.copy || 'Copy'} copiedLabel={pg.copied || 'Copied'} />
+                    {/* SAFE: highlightJSON escapes &, <, > before wrapping in spans */}
                     <pre
                       className="p-4 text-xs leading-relaxed overflow-x-auto max-h-[500px] overflow-y-auto font-mono"
                       dangerouslySetInnerHTML={{ __html: highlightJSON(jsonStr) }}

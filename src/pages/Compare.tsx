@@ -91,15 +91,15 @@ export default function Compare() {
       {/* Why x402 wins */}
       <div ref={ref2} className="reveal grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-10">
         {[
-          { icon: '&#128640;', title: c.win1Title || 'Agent-First', desc: c.win1Desc || 'The only marketplace designed for autonomous AI agents. No credit card needed — agents pay with USDC wallets.' },
-          { icon: '&#128176;', title: c.win2Title || 'Pay Per Call', desc: c.win2Desc || 'No subscriptions, no minimums. Your agent pays exactly what it uses — $0.003 to $0.05 per call.' },
-          { icon: '&#128274;', title: c.win3Title || 'Transparent', desc: c.win3Desc || 'Every payment is on-chain, verifiable, auditable. No hidden fees, no surprise bills.' },
-          { icon: '&#9889;', title: c.win4Title || 'Fast Onboarding', desc: c.win4Desc || '2 minutes to start. One CLI command: npx x402-bazaar init. No account creation needed.' },
-          { icon: '&#128181;', title: c.win5Title || '95% Revenue', desc: c.win5Desc || 'API creators keep 95% of revenue vs 75% on RapidAPI. Better economics for everyone.' },
-          { icon: '&#127760;', title: c.win6Title || 'Multi-Chain', desc: c.win6Desc || 'Base mainnet + SKALE (zero gas). Choose the network that fits your needs.' },
+          { icon: '\u{1F680}', title: c.win1Title || 'Agent-First', desc: c.win1Desc || 'The only marketplace designed for autonomous AI agents. No credit card needed — agents pay with USDC wallets.' },
+          { icon: '\u{1F4B0}', title: c.win2Title || 'Pay Per Call', desc: c.win2Desc || 'No subscriptions, no minimums. Your agent pays exactly what it uses — $0.003 to $0.05 per call.' },
+          { icon: '\u{1F512}', title: c.win3Title || 'Transparent', desc: c.win3Desc || 'Every payment is on-chain, verifiable, auditable. No hidden fees, no surprise bills.' },
+          { icon: '\u26A1', title: c.win4Title || 'Fast Onboarding', desc: c.win4Desc || '2 minutes to start. One CLI command: npx x402-bazaar init. No account creation needed.' },
+          { icon: '\u{1F4B5}', title: c.win5Title || '95% Revenue', desc: c.win5Desc || 'API creators keep 95% of revenue vs 75% on RapidAPI. Better economics for everyone.' },
+          { icon: '\u{1F310}', title: c.win6Title || 'Multi-Chain', desc: c.win6Desc || 'Base mainnet + SKALE (zero gas). Choose the network that fits your needs.' },
         ].map((item, i) => (
           <div key={i} className="glass-card rounded-xl p-5">
-            <div className="text-2xl mb-2" dangerouslySetInnerHTML={{ __html: item.icon }} />
+            <div className="text-2xl mb-2">{item.icon}</div>
             <h3 className="text-white font-semibold text-sm mb-1">{item.title}</h3>
             <p className="text-gray-400 text-xs leading-relaxed">{item.desc}</p>
           </div>

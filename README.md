@@ -12,6 +12,8 @@
   </p>
 </p>
 
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg) ![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6) ![React](https://img.shields.io/badge/React-19-61DAFB) ![Vercel](https://img.shields.io/badge/deploy-Vercel-black) ![Website](https://img.shields.io/website?url=https%3A%2F%2Fx402bazaar.org)
+
 <!-- screenshot here -->
 
 ---
