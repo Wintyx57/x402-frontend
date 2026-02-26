@@ -17,14 +17,16 @@ function CountUp({ end, duration = 2000, suffix = '', prefix = '' }: {
 }) {
   const [count, setCount] = useState(0);
   const ref = useRef<HTMLSpanElement>(null);
-  const hasAnimated = useRef(false);
+  const lastEnd = useRef(0);
+  const isVisible = useRef(false);
 
   useEffect(() => {
     const element = ref.current;
-    if (!element || hasAnimated.current) return;
+    if (!element) return;
     const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting && !hasAnimated.current) {
-        hasAnimated.current = true;
+      isVisible.current = entry.isIntersecting;
+      if (entry.isIntersecting && end > 0 && end !== lastEnd.current) {
+        lastEnd.current = end;
         const increment = end / (duration / 16);
         let current = 0;
         const timer = setInterval(() => {
@@ -32,11 +34,25 @@ function CountUp({ end, duration = 2000, suffix = '', prefix = '' }: {
           if (current >= end) { setCount(end); clearInterval(timer); }
           else { setCount(Math.floor(current)); }
         }, 16);
-        return () => clearInterval(timer);
       }
     }, { threshold: 0.3 });
     observer.observe(element);
     return () => observer.disconnect();
+  }, [end, duration]);
+
+  // Re-animate when end changes while already visible
+  useEffect(() => {
+    if (isVisible.current && end > 0 && end !== lastEnd.current) {
+      lastEnd.current = end;
+      const increment = end / (duration / 16);
+      let current = 0;
+      const timer = setInterval(() => {
+        current += increment;
+        if (current >= end) { setCount(end); clearInterval(timer); }
+        else { setCount(Math.floor(current)); }
+      }, 16);
+      return () => clearInterval(timer);
+    }
   }, [end, duration]);
 
   return <span ref={ref}>{prefix}{count}{suffix}</span>;
