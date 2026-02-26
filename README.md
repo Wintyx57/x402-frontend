@@ -14,8 +14,6 @@
 
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg) ![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6) ![React](https://img.shields.io/badge/React-19-61DAFB) ![Vercel](https://img.shields.io/badge/deploy-Vercel-black) ![Website](https://img.shields.io/website?url=https%3A%2F%2Fx402bazaar.org)
 
-<!-- screenshot here -->
-
 ---
 
 ## What is x402 Bazaar?
@@ -53,43 +51,62 @@ Open [http://localhost:5173](http://localhost:5173) in your browser.
 |-------|------|-------------|
 | `/` | Home | Hero with CLI one-liner, live stats, service categories, how-it-works flow |
 | `/services` | Services | Searchable service catalog with glass cards, sorting, x402 Native badges |
+| `/services/:id` | Service Detail | Individual service page with full description and reviews |
 | `/register` | Register | Service registration form with USDC payment flow |
 | `/developers` | Developers | API documentation, protocol reference, code examples |
-| `/integrate` | Integrate | Agent integration guide (JavaScript + Python, `payAndRequest` pattern) |
+| `/integrate` | Integrate | Integration guides for MCP, ChatGPT, LangChain, and CLI |
 | `/mcp` | MCP | MCP server installation for Claude Desktop, Cursor, VS Code, Claude Code |
+| `/playground` | Playground | Interactive API playground to test endpoints live |
+| `/compare` | Compare | Side-by-side price comparison across services |
+| `/docs` | Docs | Full platform documentation |
+| `/status` | Status | Service uptime and health monitoring |
+| `/analytics` | Analytics | Public usage analytics and traffic stats |
+| `/budget` | Budget | Budget calculator for API cost planning |
+| `/faq` | FAQ | Frequently asked questions |
+| `/creators` | Creators | Guide and benefits for API creators/providers |
+| `/quickstart` | Quickstart | Quick start guide to integrate x402 in minutes |
 
 ## Project Structure
 
 ```
 src/
-  main.jsx                 Entry point (WagmiProvider, QueryClient, BrowserRouter, LanguageProvider)
-  App.jsx                  Route definitions
-  config.js                API URL + USDC contract ABI
-  wagmi.js                 Wallet config (Base + Base Sepolia, injected + coinbaseWallet)
+  main.tsx                 Entry point (WagmiProvider, QueryClient, BrowserRouter, LanguageProvider)
+  App.tsx                  Route definitions
+  config.ts                API URL + USDC contract ABI
+  wagmi.ts                 Wallet config (Base + Base Sepolia, injected + coinbaseWallet)
   index.css                Tailwind v4 + custom utilities (glass, glow, gradients, animations)
 
   i18n/
-    translations.js        EN + FR translation strings (~110 keys per language)
-    LanguageContext.jsx     React Context + useTranslation() hook + localStorage
+    translations.ts        EN + FR translation strings (~110 keys per language)
+    LanguageContext.tsx     React Context + useTranslation() hook + localStorage
 
   components/
-    Navbar.jsx             Sticky glass navbar + burger menu mobile + language toggle
-    ConnectButton.jsx      Wallet connect/disconnect + responsive compact mode
-    ServiceCard.jsx        Glass card with glow hover + x402 Native badge
-    CategoryIcon.jsx       Category icon mapper for service cards
-    LanguageToggle.jsx     FR/EN toggle pill
-    ScrollToTop.jsx        Scroll reset on route change
+    Navbar.tsx             Sticky glass navbar + 3 dropdowns + burger menu mobile + language toggle
+    ConnectButton.tsx      Wallet connect/disconnect + responsive compact mode
+    ServiceCard.tsx        Glass card with glow hover + x402 Native badge
+    CategoryIcon.tsx       Category icon mapper for service cards
+    LanguageToggle.tsx     FR/EN toggle pill
+    ScrollToTop.tsx        Scroll reset on route change
 
   pages/
-    Home.jsx               Hero glow orbs, animated stats, categories, how-it-works
-    Services.jsx           Service grid + glass search input + skeleton loading
-    Register.jsx           Glass form + USDC payment flow + validation
-    Developers.jsx         API docs with scroll reveal + code examples
-    Integrate.jsx          Agent integration guide (JS + Python, use cases)
-    MCP.jsx                MCP server setup guide (CLI + manual accordion)
+    Home.tsx               Hero glow orbs, animated stats, categories, how-it-works
+    Services.tsx           Service grid + glass search input + skeleton loading
+    Register.tsx           Glass form + USDC payment flow + validation
+    Developers.tsx         API docs with scroll reveal + code examples
+    Integrate.tsx          Agent integration guide (JS + Python, use cases)
+    MCP.tsx                MCP server setup guide (CLI + manual accordion)
+    Playground.tsx         Interactive API playground
+    Compare.tsx            Side-by-side price comparison
+    Docs.tsx               Full platform documentation
+    Status.tsx             Service uptime monitoring
+    Analytics.tsx          Public usage analytics
+    Budget.tsx             Budget calculator
+    FAQ.tsx                Frequently asked questions
+    Creators.tsx           Guide for API providers
+    Quickstart.tsx         Quick start guide
 
   hooks/
-    useReveal.js           IntersectionObserver for scroll animations
+    useReveal.ts           IntersectionObserver for scroll animations
 ```
 
 ## Tech Stack
@@ -120,6 +137,7 @@ npm run dev       # Start dev server (localhost:5173)
 npm run build     # Production build to dist/
 npm run preview   # Preview production build locally
 npm run lint      # Run ESLint
+npm run test      # Run test suite (Vitest)
 ```
 
 ## Deployment
@@ -132,13 +150,7 @@ The frontend auto-deploys to Vercel on every push to `main`.
 
 ## Contributing
 
-Contributions are welcome. Please open an issue to discuss proposed changes before submitting a PR.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+Contributions are welcome. See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines on how to get started, coding standards, and the pull request process.
 
 ## Links
 

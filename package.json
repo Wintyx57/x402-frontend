@@ -2,6 +2,8 @@
   "name": "x402-frontend",
   "private": true,
   "version": "1.0.0",
+  "description": "React + TypeScript frontend for x402 Bazaar API marketplace",
+  "license": "MIT",
   "type": "module",
   "engines": {
     "node": ">=20.0.0"
