@@ -136,7 +136,7 @@ export default function Home() {
       {/* ===== HERO ===== */}
       <section className="relative py-16 sm:py-24 px-4 overflow-hidden">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px]
-                        bg-[#FF9900]/8 rounded-full blur-[120px] animate-glow-pulse pointer-events-none" />
+                        bg-[#FF9900]/20 rounded-full blur-[120px] animate-glow-pulse pointer-events-none" />
 
         <div className="relative z-10 max-w-3xl mx-auto text-center">
           <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 animate-fade-in-up">
