@@ -1,22 +1,121 @@
-import { useState, memo } from 'react';
+import { useState, useEffect, useRef, useCallback, memo } from 'react';
 import { Link, useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { useTranslation } from '../i18n/LanguageContext';
 import ConnectButton from './ConnectButton';
 import LanguageToggle from './LanguageToggle';
 import DarkModeToggle from './DarkModeToggle';
 
+type DropdownId = 'marketplace' | 'providers' | 'dev' | null;
+
+interface NavLink {
+  to: string;
+  label: string;
+}
+
+interface NavDropdownProps {
+  id: DropdownId;
+  label: string;
+  links: NavLink[];
+  openDropdown: DropdownId;
+  setOpenDropdown: (id: DropdownId) => void;
+  pathname: string;
+}
+
+function NavDropdown({ id, label, links, openDropdown, setOpenDropdown, pathname }: NavDropdownProps) {
+  const isOpen = openDropdown === id;
+  const hasActive = links.some(l => pathname === l.to || pathname.startsWith(l.to + '/'));
+
+  return (
+    <div className="relative">
+      <button
+        onClick={() => setOpenDropdown(isOpen ? null : id)}
+        onMouseEnter={() => setOpenDropdown(id)}
+        className={`flex items-center gap-1 text-xs font-medium px-3 py-1.5 rounded transition-colors duration-200 whitespace-nowrap cursor-pointer
+          ${hasActive ? 'text-[#FF9900]' : 'text-gray-300 hover:text-white hover:bg-white/5'}
+          ${isOpen ? 'bg-white/5' : ''}`}
+        aria-expanded={isOpen}
+        aria-haspopup="menu"
+      >
+        {label}
+        <svg
+          className={`w-3 h-3 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+          fill="none" stroke="currentColor" viewBox="0 0 24 24"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+
+      {isOpen && (
+        <div
+          role="menu"
+          className="absolute top-full left-0 mt-1 min-w-[180px] bg-[#1a1f2e] border border-white/10 rounded-lg shadow-xl
+                     py-1 z-50 animate-fade-in"
+          onMouseLeave={() => setOpenDropdown(null)}
+        >
+          {links.map(({ to, label: linkLabel }) => {
+            const isActive = pathname === to || pathname.startsWith(to + '/');
+            return (
+              <Link
+                key={to}
+                to={to}
+                role="menuitem"
+                onClick={() => setOpenDropdown(null)}
+                className={`block text-sm no-underline px-4 py-2 transition-colors duration-150 ${
+                  isActive
+                    ? 'text-[#FF9900] bg-[#FF9900]/10'
+                    : 'text-gray-300 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                {linkLabel}
+              </Link>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function Navbar() {
   const { t } = useTranslation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [localSearch, setLocalSearch] = useState('');
+  const [openDropdown, setOpenDropdown] = useState<DropdownId>(null);
+  const [mobileAccordion, setMobileAccordion] = useState<DropdownId>(null);
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
+  const navStripRef = useRef<HTMLDivElement>(null);
 
   const onServicesPage = pathname === '/services' || pathname.startsWith('/services/');
   const searchValue = onServicesPage ? (searchParams.get('q') || '') : localSearch;
 
   const closeMobile = () => setMobileOpen(false);
+
+  // Close dropdown on click outside or Escape
+  const handleClickOutside = useCallback((e: MouseEvent) => {
+    if (navStripRef.current && !navStripRef.current.contains(e.target as Node)) {
+      setOpenDropdown(null);
+    }
+  }, []);
+
+  const handleEscape = useCallback((e: KeyboardEvent) => {
+    if (e.key === 'Escape') setOpenDropdown(null);
+  }, []);
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleEscape);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, [handleClickOutside, handleEscape]);
+
+  // Close dropdown on route change
+  useEffect(() => {
+    setOpenDropdown(null);
+  }, [pathname]);
 
   const handleSearchChange = (e) => {
     const val = e.target.value;
@@ -42,18 +141,29 @@ function Navbar() {
     }
   };
 
-  const marketplaceLinks = [
+  const marketplaceLinks: NavLink[] = [
     { to: '/services', label: t.nav.services },
     { to: '/pricing', label: t.nav.pricing },
-    { to: '/register', label: t.nav.register },
-    { to: '/for-providers', label: t.nav.forProviders || 'For Providers' },
+    { to: '/compare', label: t.nav.compare || 'Compare' },
   ];
 
-  const devLinks = [
+  const providerLinks: NavLink[] = [
+    { to: '/register', label: t.nav.register },
+    { to: '/for-providers', label: t.nav.forProviders || 'For Providers' },
+    { to: '/creators', label: t.nav.creators || 'Creators' },
+  ];
+
+  const devLinks: NavLink[] = [
     { to: '/quickstart', label: 'Quickstart' },
     { to: '/mcp', label: 'MCP' },
-    { to: '/developers', label: t.nav.developers },
+    { to: '/docs', label: t.nav.docs || 'Docs' },
     { to: '/playground', label: t.nav.playground || 'Playground' },
+  ];
+
+  const dropdownGroups = [
+    { id: 'marketplace' as DropdownId, label: t.nav.marketplace, links: marketplaceLinks },
+    { id: 'providers' as DropdownId, label: 'Providers', links: providerLinks },
+    { id: 'dev' as DropdownId, label: t.nav.forDevelopers, links: devLinks },
   ];
 
   return (
@@ -66,7 +176,7 @@ function Navbar() {
             <span className="hidden sm:inline text-white text-lg font-light">Bazaar</span>
           </Link>
 
-          {/* Search bar — hidden on small screens to avoid pushing burger off-view */}
+          {/* Search bar */}
           <form onSubmit={handleSearch} className="hidden sm:flex flex-1 max-w-xl mx-auto">
             <div className="relative flex items-center w-full">
               <input
@@ -110,61 +220,29 @@ function Navbar() {
           </div>
         </div>
 
-        {/* Nav links strip — desktop */}
-        <div data-nav-strip className="hidden md:block border-t border-white/5 bg-[#232f3e]">
-          <div className="max-w-7xl mx-auto px-4 flex items-center gap-1 h-10 overflow-x-auto">
-            <span className="text-[11px] uppercase tracking-wider text-gray-500 font-medium px-2 shrink-0">{t.nav.marketplace}</span>
-            {marketplaceLinks.map(({ to, label }) => {
-              const isActive = pathname === to || pathname.startsWith(to + '/');
-              return (
-                <Link
-                  key={to}
-                  to={to}
-                  className={`text-xs font-medium no-underline px-3 py-1.5 rounded transition-colors duration-200 whitespace-nowrap ${
-                    isActive
-                      ? 'text-[#FF9900] bg-[#FF9900]/10'
-                      : 'text-gray-300 hover:text-white hover:bg-white/5'
-                  }`}
-                >
-                  {label}
-                </Link>
-              );
-            })}
-            <div className="w-px h-4 bg-white/10 mx-2" />
-            <span className="text-[11px] uppercase tracking-wider text-gray-500 font-medium px-2 shrink-0">{t.nav.forDevelopers}</span>
-            {devLinks.map(({ to, label }) => {
-              const isActive = pathname === to || pathname.startsWith(to + '/');
-              return (
-                <Link
-                  key={to}
-                  to={to}
-                  className={`text-xs font-medium no-underline px-3 py-1.5 rounded transition-colors duration-200 whitespace-nowrap ${
-                    isActive
-                      ? 'text-[#FF9900] bg-[#FF9900]/10'
-                      : 'text-gray-300 hover:text-white hover:bg-white/5'
-                  }`}
-                >
-                  {label}
-                </Link>
-              );
-            })}
-            <div className="w-px h-4 bg-white/10 mx-2" />
-            <Link
-              to="/services"
-              className="text-gray-400 hover:text-[#FF9900] text-xs no-underline px-3 py-1.5 rounded
-                         transition-colors duration-200 hover:bg-white/5 whitespace-nowrap"
-            >
-              {t.nav.allCategories}
-            </Link>
+        {/* Nav strip — desktop dropdowns */}
+        <div ref={navStripRef} data-nav-strip className="hidden md:block border-t border-white/5 bg-[#232f3e]">
+          <div className="max-w-7xl mx-auto px-4 flex items-center gap-1 h-10">
+            {dropdownGroups.map(({ id, label, links }) => (
+              <NavDropdown
+                key={id}
+                id={id}
+                label={label}
+                links={links}
+                openDropdown={openDropdown}
+                setOpenDropdown={setOpenDropdown}
+                pathname={pathname}
+              />
+            ))}
           </div>
         </div>
 
-        {/* Mobile menu */}
+        {/* Mobile menu — accordion */}
         <div className={`md:hidden overflow-hidden transition-all duration-300 ${
-          mobileOpen ? 'max-h-[32rem] opacity-100' : 'max-h-0 opacity-0'
+          mobileOpen ? 'max-h-[40rem] opacity-100' : 'max-h-0 opacity-0'
         }`}>
           <div data-nav-mobile className="border-t border-white/6 px-4 py-3 flex flex-col gap-1 bg-[#131921]">
-            {/* Mobile search bar — visible only on small screens */}
+            {/* Mobile search bar */}
             <form onSubmit={handleSearch} className="sm:hidden mb-2">
               <div className="relative flex items-center">
                 <input
@@ -181,41 +259,52 @@ function Navbar() {
                 </svg>
               </div>
             </form>
-            <span className="text-[11px] uppercase tracking-wider text-gray-500 font-medium px-3 pt-1 pb-1">{t.nav.marketplace}</span>
-            {marketplaceLinks.map(({ to, label }) => {
-              const isActive = pathname === to || pathname.startsWith(to + '/');
+
+            {dropdownGroups.map(({ id, label, links }) => {
+              const isAccordionOpen = mobileAccordion === id;
+              const hasActive = links.some(l => pathname === l.to || pathname.startsWith(l.to + '/'));
               return (
-                <Link
-                  key={to}
-                  to={to}
-                  onClick={closeMobile}
-                  className={`text-sm no-underline px-3 py-2.5 rounded-lg transition-colors duration-200 ${
-                    isActive
-                      ? 'text-[#FF9900] bg-[#FF9900]/10'
-                      : 'text-gray-300 hover:text-white hover:bg-white/5'
-                  }`}
-                >
-                  {label}
-                </Link>
-              );
-            })}
-            <div className="h-px bg-white/6 mx-3 my-1" />
-            <span className="text-[11px] uppercase tracking-wider text-gray-500 font-medium px-3 pt-1 pb-1">{t.nav.forDevelopers}</span>
-            {devLinks.map(({ to, label }) => {
-              const isActive = pathname === to || pathname.startsWith(to + '/');
-              return (
-                <Link
-                  key={to}
-                  to={to}
-                  onClick={closeMobile}
-                  className={`text-sm no-underline px-3 py-2.5 rounded-lg transition-colors duration-200 ${
-                    isActive
-                      ? 'text-[#FF9900] bg-[#FF9900]/10'
-                      : 'text-gray-300 hover:text-white hover:bg-white/5'
-                  }`}
-                >
-                  {label}
-                </Link>
+                <div key={id}>
+                  <button
+                    onClick={() => setMobileAccordion(isAccordionOpen ? null : id)}
+                    className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium
+                      transition-colors duration-200 cursor-pointer
+                      ${hasActive ? 'text-[#FF9900]' : 'text-gray-300 hover:text-white hover:bg-white/5'}
+                      ${isAccordionOpen ? 'bg-white/5' : ''}`}
+                    aria-expanded={isAccordionOpen}
+                  >
+                    {label}
+                    <svg
+                      className={`w-4 h-4 transition-transform duration-200 ${isAccordionOpen ? 'rotate-180' : ''}`}
+                      fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                  <div className={`overflow-hidden transition-all duration-200 ${
+                    isAccordionOpen ? 'max-h-48 opacity-100' : 'max-h-0 opacity-0'
+                  }`}>
+                    <div className="pl-3 flex flex-col gap-0.5 pb-1">
+                      {links.map(({ to, label: linkLabel }) => {
+                        const isActive = pathname === to || pathname.startsWith(to + '/');
+                        return (
+                          <Link
+                            key={to}
+                            to={to}
+                            onClick={closeMobile}
+                            className={`text-sm no-underline px-3 py-2 rounded-lg transition-colors duration-200 ${
+                              isActive
+                                ? 'text-[#FF9900] bg-[#FF9900]/10'
+                                : 'text-gray-400 hover:text-white hover:bg-white/5'
+                            }`}
+                          >
+                            {linkLabel}
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
               );
             })}
           </div>
