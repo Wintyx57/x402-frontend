@@ -376,19 +376,19 @@ export default function Home() {
             </div>
             <div className="glass-card rounded-xl p-4 text-center">
               <div className="text-2xl sm:text-3xl font-bold text-white mb-1">
-                <CountUp end={stats?.totalPayments || 164} suffix="+" />
+                <CountUp end={stats?.totalPayments || 0} suffix="+" />
               </div>
               <div className="text-xs text-gray-500 uppercase tracking-wider">{t.home.statPayments}</div>
             </div>
             <div className="glass-card rounded-xl p-4 text-center">
               <div className="text-2xl sm:text-3xl font-bold text-[#34D399] mb-1">
-                <CountUp end={stats?.externalProviders || 5} />
+                <CountUp end={stats?.externalProviders || 0} />
               </div>
               <div className="text-xs text-gray-500 uppercase tracking-wider">{t.home.statProviders}</div>
             </div>
             <div className="glass-card rounded-xl p-4 text-center">
               <div className="text-2xl sm:text-3xl font-bold text-[#60A5FA] mb-1">
-                <CountUp end={7} />
+                <CountUp end={stats?.integrations || 0} />
               </div>
               <div className="text-xs text-gray-500 uppercase tracking-wider">{t.home.statIntegrations}</div>
             </div>
@@ -542,19 +542,19 @@ export default function Home() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-10 mb-10">
             <div className="animate-fade-in-up">
               <div className="text-4xl font-bold gradient-text mb-2">
-                <CountUp end={stats?.totalPayments || 164} suffix="+" />
+                <CountUp end={stats?.totalPayments || 0} suffix="+" />
               </div>
               <p className="text-gray-400 text-sm">{t.home.tractionPayments}</p>
             </div>
             <div className="animate-fade-in-up" style={{ animationDelay: '100ms' }}>
               <div className="text-4xl font-bold text-[#34D399] mb-2">
-                <CountUp end={stats?.externalProviders || 5} />
+                <CountUp end={stats?.externalProviders || 0} />
               </div>
               <p className="text-gray-400 text-sm">{t.home.tractionProviders}</p>
             </div>
             <div className="animate-fade-in-up" style={{ animationDelay: '200ms' }}>
               <div className="text-4xl font-bold text-[#60A5FA] mb-2">
-                <CountUp end={19} prefix="$" suffix="+ USDC" />
+                <CountUp end={stats?.usdcVolume || 0} prefix="$" suffix=" USDC" />
               </div>
               <p className="text-gray-400 text-sm">{t.home.tractionVolume}</p>
             </div>
@@ -579,7 +579,7 @@ export default function Home() {
 
           {/* External providers badges */}
           <div className="flex flex-wrap items-center justify-center gap-3 mt-8 animate-fade-in-up" style={{ animationDelay: '400ms' }}>
-            {['Interzoid', 'AgentsHere', 'Railway Provider'].map(name => (
+            {(stats?.externalProviderNames || []).map((name: string) => (
               <span
                 key={name}
                 className="text-xs font-medium px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-gray-400"
