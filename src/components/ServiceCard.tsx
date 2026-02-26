@@ -1,5 +1,7 @@
 import { useState, memo } from 'react';
+import { Link } from 'react-router-dom';
 import { useTranslation } from '../i18n/LanguageContext';
+import StarRating from './StarRating';
 
 function getDomain(url) {
   try {
@@ -43,7 +45,7 @@ function getQualityTier(uptimePercent) {
   return null;
 }
 
-function ServiceCard({ service, lastActivity, healthStatus, uptimePercent }) {
+function ServiceCard({ service, lastActivity, healthStatus, uptimePercent, reviewStats = null }) {
   const { t } = useTranslation();
   const isFree = Number(service.price_usdc) === 0;
   const initial = service.name?.charAt(0)?.toUpperCase() || '?';
@@ -136,6 +138,16 @@ function ServiceCard({ service, lastActivity, healthStatus, uptimePercent }) {
         </span>
       </div>
 
+      {/* Star rating (if reviews exist) */}
+      {reviewStats && reviewStats.count > 0 && (
+        <div className="flex items-center gap-1.5 mb-2">
+          <StarRating rating={reviewStats.average} size="sm" />
+          <span className="text-[10px] text-gray-500">
+            {reviewStats.average} ({reviewStats.count})
+          </span>
+        </div>
+      )}
+
       {/* Description */}
       <p className="text-gray-500 text-xs mb-3 leading-relaxed line-clamp-2" title={service.description}>
         {service.description}
@@ -193,6 +205,14 @@ function ServiceCard({ service, lastActivity, healthStatus, uptimePercent }) {
               {copied ? t.serviceCard.copied : t.serviceCard.useWithAI}
             </button>
           )}
+          <Link
+            to={`/services/${service.id}`}
+            className="text-xs font-medium text-gray-500 hover:text-white no-underline min-h-[44px] sm:min-h-0 flex items-center
+                       opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-200"
+            onClick={e => e.stopPropagation()}
+          >
+            Reviews
+          </Link>
           {isValidServiceUrl(service.url) ? (
             <a
               href={service.url}
