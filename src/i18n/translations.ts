@@ -142,6 +142,7 @@ export const translations = {
       heroSubtitleNew: "Pay-per-call with USDC. No API keys. No subscriptions. Just HTTP 402.",
       badgeBase: "Built on Base",
       badgeX402: "Powered by x402",
+      badgeSkale: "SKALE Zero Gas",
       badgeOpenSource: "Open Source",
       cliCopyLabel: "Copy CLI command",
       // New stats keys
@@ -1740,6 +1741,7 @@ def my_function(query: str) -> dict:
       heroSubtitleNew: "Paiement par appel en USDC. Pas de cles API. Pas d'abonnements. Juste HTTP 402.",
       badgeBase: "Construit sur Base",
       badgeX402: "Propulse par x402",
+      badgeSkale: "SKALE Zero Gas",
       badgeOpenSource: "Open Source",
       cliCopyLabel: "Copier la commande CLI",
       // Nouvelles stats

@@ -308,6 +308,11 @@ export default function Home() {
               <span className="w-1.5 h-1.5 rounded-full bg-[#FF9900] inline-block" />
               {t.home.badgeX402}
             </span>
+            <span className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1 rounded-full
+                             bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block" />
+              {t.home.badgeSkale}
+            </span>
             <a
               href="https://github.com/Wintyx57/x402-bazaar"
               target="_blank"
