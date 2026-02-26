@@ -152,13 +152,18 @@ The frontend auto-deploys to Vercel on every push to `main`.
 
 Contributions are welcome. See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines on how to get started, coding standards, and the pull request process.
 
-## Links
+## Ecosystem
 
-- **Website:** [x402bazaar.org](https://x402bazaar.org)
-- **Backend repo:** [github.com/Wintyx57/x402-backend](https://github.com/Wintyx57/x402-backend)
-- **CLI:** `npx x402-bazaar init` | [npm](https://www.npmjs.com/package/x402-bazaar)
-- **Live API:** [x402-api.onrender.com](https://x402-api.onrender.com)
-- **Dashboard:** [x402-api.onrender.com/dashboard](https://x402-api.onrender.com/dashboard)
+| Repository | Description |
+|---|---|
+| **[x402-backend](https://github.com/Wintyx57/x402-backend)** | API server, 69 native endpoints, payment middleware, MCP server |
+| **[x402-frontend](https://github.com/Wintyx57/x402-frontend)** | React + TypeScript UI (this repo) |
+| **[x402-bazaar-cli](https://github.com/Wintyx57/x402-bazaar-cli)** | `npx x402-bazaar` -- CLI with 7 commands |
+| **[x402-sdk](https://github.com/Wintyx57/x402-sdk)** | TypeScript SDK for AI agents |
+| **[x402-langchain](https://github.com/Wintyx57/x402-langchain)** | Python LangChain tools |
+| **[x402-fast-monetization-template](https://github.com/Wintyx57/x402-fast-monetization-template)** | FastAPI template to monetize any Python function |
+
+**Live:** [x402bazaar.org](https://x402bazaar.org) | **API:** [x402-api.onrender.com](https://x402-api.onrender.com) | **CLI:** `npx x402-bazaar init`
 
 ## License
 
