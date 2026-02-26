@@ -27,20 +27,56 @@ if (import.meta.env.PROD) {
 
 const queryClient = new QueryClient();
 
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <WagmiProvider config={config}>
-      <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider locale="en" theme={darkTheme({ accentColor: '#FF9900', accentColorForeground: 'white', borderRadius: 'medium' })} modalSize="compact">
-          <BrowserRouter>
-            <ThemeProvider>
-              <LanguageProvider>
-                <App />
-              </LanguageProvider>
-            </ThemeProvider>
-          </BrowserRouter>
-        </RainbowKitProvider>
-      </QueryClientProvider>
-    </WagmiProvider>
-  </StrictMode>,
-);
+const root = document.getElementById('root');
+
+function renderError(err: unknown) {
+  if (root) {
+    root.innerHTML = `
+      <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:#0a0a0f;color:#E8E4E0;font-family:Inter,system-ui,sans-serif;padding:2rem">
+        <div style="max-width:600px;text-align:center">
+          <div style="width:56px;height:56px;border-radius:50%;background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.2);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem">
+            <svg width="28" height="28" fill="none" stroke="#F87171" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/></svg>
+          </div>
+          <h2 style="font-size:1.25rem;font-weight:700;margin-bottom:0.5rem">x402 Bazaar — Loading Error</h2>
+          <p style="color:#9ca3af;font-size:0.875rem;margin-bottom:1rem">The application failed to initialize. This may be caused by browser extensions or security settings.</p>
+          <pre style="background:#1a1f2e;border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:1rem;text-align:left;font-size:0.75rem;color:#F87171;overflow-x:auto;margin-bottom:1rem;font-family:'JetBrains Mono',monospace">${String(err)}</pre>
+          <button onclick="location.reload()" style="background:linear-gradient(135deg,#FF9900,#e68a00);color:white;border:none;padding:0.625rem 1.5rem;border-radius:8px;font-size:0.875rem;font-weight:500;cursor:pointer">Refresh Page</button>
+        </div>
+      </div>
+    `;
+  }
+}
+
+try {
+  createRoot(root!).render(
+    <StrictMode>
+      <WagmiProvider config={config}>
+        <QueryClientProvider client={queryClient}>
+          <RainbowKitProvider locale="en" theme={darkTheme({ accentColor: '#FF9900', accentColorForeground: 'white', borderRadius: 'medium' })} modalSize="compact">
+            <BrowserRouter>
+              <ThemeProvider>
+                <LanguageProvider>
+                  <App />
+                </LanguageProvider>
+              </ThemeProvider>
+            </BrowserRouter>
+          </RainbowKitProvider>
+        </QueryClientProvider>
+      </WagmiProvider>
+    </StrictMode>,
+  );
+} catch (err) {
+  console.error('Fatal initialization error:', err);
+  renderError(err);
+}
+
+// Catch unhandled errors that crash React tree
+window.addEventListener('error', (event) => {
+  if (root && !root.hasChildNodes()) {
+    renderError(event.error || event.message);
+  }
+});
+
+window.addEventListener('unhandledrejection', (event) => {
+  console.error('Unhandled promise rejection:', event.reason);
+});
