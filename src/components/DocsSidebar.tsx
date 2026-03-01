@@ -1,9 +1,14 @@
 import { useState } from 'react';
 
-function NavLinks({ sections, activeSection, onClickItem }) {
+interface NavSection {
+  id: string;
+  label: string;
+}
+
+function NavLinks({ sections, activeSection, onClickItem }: { sections: NavSection[]; activeSection: string; onClickItem: (id: string) => void }) {
   return (
     <nav className="flex flex-col gap-1">
-      {sections.map(({ id, label }) => (
+      {sections.map(({ id, label }: NavSection) => (
         <button
           key={id}
           onClick={() => onClickItem(id)}
@@ -20,10 +25,10 @@ function NavLinks({ sections, activeSection, onClickItem }) {
   );
 }
 
-export default function DocsSidebar({ sections, activeSection, onNavigate }) {
+export default function DocsSidebar({ sections, activeSection, onNavigate }: { sections: NavSection[]; activeSection: string; onNavigate: (id: string) => void }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  const handleClick = (id) => {
+  const handleClick = (id: string) => {
     onNavigate(id);
     setDrawerOpen(false);
   };

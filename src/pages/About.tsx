@@ -9,8 +9,8 @@ import GitHubIcon from '../components/icons/GitHubIcon';
 
 export default function About() {
   const { t } = useTranslation();
-  const [serviceCount, setServiceCount] = useState('...');
-  const [catCount, setCatCount] = useState('...');
+  const [serviceCount, setServiceCount] = useState<string | number>('...');
+  const [catCount, setCatCount] = useState<string | number>('...');
 
   useSEO({
     title: 'About',
@@ -22,8 +22,8 @@ export default function About() {
     fetch(`${API_URL}/api/services`, { signal: controller.signal }).then(r => r.json()).then(data => {
       const list = Array.isArray(data) ? data : [];
       setServiceCount(list.length);
-      const cats = new Set();
-      list.forEach(s => (s.tags || []).forEach(tag => { if (tag !== 'x402-native' && tag !== 'live') cats.add(tag); }));
+      const cats = new Set<string>();
+      list.forEach((s: Record<string, any>) => (s.tags || []).forEach((tag: string) => { if (tag !== 'x402-native' && tag !== 'live') cats.add(tag); }));
       setCatCount(cats.size);
     }).catch(() => {});
     return () => controller.abort();

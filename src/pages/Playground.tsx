@@ -29,7 +29,7 @@ const PLAYGROUND_APIS = [
   { id: 'url-shorten', route: '/api/url-shorten', method: 'GET', price: '0.003', category: 'Utility', free: true, params: [{ name: 'url', defaultValue: 'https://x402bazaar.org/docs', required: true }] },
 ];
 
-function highlightJSON(json) {
+function highlightJSON(json: string): string {
   if (typeof json !== 'string') return '';
   return json
     .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
@@ -40,7 +40,7 @@ function highlightJSON(json) {
     .replace(/\bnull\b/g, '<span style="color:#6B7280">null</span>');
 }
 
-function generateCode(api, params, tab) {
+function generateCode(api: Record<string, any>, params: Record<string, string>, tab: string): string {
   const qs = api.params.length > 0
     ? '?' + api.params.map(p => `${p.name}=${encodeURIComponent(params[p.name] || p.defaultValue)}`).join('&')
     : '';

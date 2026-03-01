@@ -4,7 +4,7 @@ import { useTranslation } from '../i18n/LanguageContext';
 import { useReveal } from '../hooks/useReveal';
 import useSEO from '../hooks/useSEO';
 
-function StepCard({ step, isOpen, onToggle }) {
+function StepCard({ step, isOpen, onToggle }: { step: Record<string, any>; isOpen: boolean; onToggle: () => void }) {
   return (
     <div className="glass-card rounded-xl overflow-hidden transition-all">
       <button
@@ -35,7 +35,7 @@ function StepCard({ step, isOpen, onToggle }) {
             <p className="text-gray-400 text-xs leading-relaxed mb-3">{step.desc}</p>
             {step.details && (
               <ul className="space-y-2">
-                {step.details.map((d, i) => (
+                {step.details.map((d: string, i: number) => (
                   <li key={i} className="flex items-start gap-2 text-xs text-gray-400">
                     <svg className="w-3.5 h-3.5 text-[#34D399] shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />

@@ -62,7 +62,7 @@ const ICONS = {
   ),
 };
 
-export default function CategoryIcon({ category, className = 'w-4 h-4' }) {
+export default function CategoryIcon({ category, className = 'w-4 h-4' }: { category: keyof typeof ICONS; className?: string }) {
   return (
     <span className={`inline-block text-[#FF9900] ${className}`}>
       {ICONS[category] || ICONS.all}

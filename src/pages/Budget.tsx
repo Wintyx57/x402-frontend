@@ -6,7 +6,7 @@ import { API_URL } from '../config';
 
 const PERIODS = ['daily', 'weekly', 'monthly'];
 
-function ProgressBar({ label, spent, limit, thresholds = [50, 75, 90] }) {
+function ProgressBar({ label, spent, limit, thresholds = [50, 75, 90] }: { label: string; spent: number; limit: number; thresholds?: number[] }) {
   const percent = limit > 0 ? Math.min((spent / limit) * 100, 100) : 0;
   const color =
     percent >= 90 ? '#EF4444' :
@@ -58,8 +58,8 @@ function ProgressBar({ label, spent, limit, thresholds = [50, 75, 90] }) {
   );
 }
 
-function AlertBadge({ level, triggered }) {
-  const colors = {
+function AlertBadge({ level, triggered }: { level: number; triggered: boolean }) {
+  const colors: Record<number, { bg: string; text: string; border: string }> = {
     50: { bg: 'bg-[#FF9900]/10', text: 'text-[#FF9900]', border: 'border-[#FF9900]/30' },
     75: { bg: 'bg-[#FBBF24]/10', text: 'text-[#FBBF24]', border: 'border-[#FBBF24]/30' },
     90: { bg: 'bg-[#EF4444]/10', text: 'text-[#EF4444]', border: 'border-[#EF4444]/30' },
@@ -76,7 +76,7 @@ function AlertBadge({ level, triggered }) {
   );
 }
 
-function BudgetStatusCard({ budget, t }) {
+function BudgetStatusCard({ budget, t }: { budget: Record<string, any> | null; t: Record<string, any> }) {
   const b = t.budget;
   if (!budget) return null;
 
@@ -153,11 +153,11 @@ export default function Budget() {
   const [period, setPeriod] = useState('daily');
   const [checkAmount, setCheckAmount] = useState('0.01');
 
-  const [budgetData, setBudgetData] = useState(null);
-  const [checkResult, setCheckResult] = useState(null);
+  const [budgetData, setBudgetData] = useState<Record<string, any> | null>(null);
+  const [checkResult, setCheckResult] = useState<Record<string, any> | null>(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
   const isValidWallet = /^0x[a-fA-F0-9]{40}$/.test(wallet);
 
@@ -184,8 +184,9 @@ export default function Budget() {
       if (!data.budget) {
         setSuccess(b.noBudgetSet || 'No budget set for this wallet.');
       }
-    } catch (err) {
-      setError(err.name === 'AbortError' ? (b.timeout || 'Request timed out') : err.message);
+    } catch (err: unknown) {
+      const errMsg = err instanceof Error ? (err.name === 'AbortError' ? (b.timeout || 'Request timed out') : err.message) : String(err);
+      setError(errMsg);
     } finally {
       setLoading(false);
     }
@@ -218,8 +219,9 @@ export default function Budget() {
       const data = await res.json();
       setBudgetData(data.budget);
       setSuccess(b.budgetSetSuccess || 'Budget set successfully!');
-    } catch (err) {
-      setError(err.name === 'AbortError' ? (b.timeout || 'Request timed out') : err.message);
+    } catch (err: unknown) {
+      const errMsg = err instanceof Error ? (err.name === 'AbortError' ? (b.timeout || 'Request timed out') : err.message) : String(err);
+      setError(errMsg);
     } finally {
       setLoading(false);
     }
@@ -242,8 +244,9 @@ export default function Budget() {
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       setBudgetData(null);
       setSuccess(b.budgetRemoved || 'Budget removed.');
-    } catch (err) {
-      setError(err.name === 'AbortError' ? (b.timeout || 'Request timed out') : err.message);
+    } catch (err: unknown) {
+      const errMsg = err instanceof Error ? (err.name === 'AbortError' ? (b.timeout || 'Request timed out') : err.message) : String(err);
+      setError(errMsg);
     } finally {
       setLoading(false);
     }
@@ -272,8 +275,9 @@ export default function Budget() {
       const data = await res.json();
       setCheckResult(data);
       if (data.budget) setBudgetData(data.budget);
-    } catch (err) {
-      setError(err.name === 'AbortError' ? (b.timeout || 'Request timed out') : err.message);
+    } catch (err: unknown) {
+      const errMsg = err instanceof Error ? (err.name === 'AbortError' ? (b.timeout || 'Request timed out') : err.message) : String(err);
+      setError(errMsg);
     } finally {
       setLoading(false);
     }

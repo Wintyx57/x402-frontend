@@ -9,7 +9,15 @@ import { Bar, Doughnut } from 'react-chartjs-2';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend, ArcElement);
 
-function StatCard({ label, value, sub, icon, color = '#FF9900' }) {
+interface StatCardProps {
+  label: string;
+  value: string | number;
+  sub?: string;
+  icon: React.ReactNode;
+  color?: string;
+}
+
+function StatCard({ label, value, sub, icon, color = '#FF9900' }: StatCardProps) {
   return (
     <div className="glass-card rounded-xl p-5 flex flex-col gap-2">
       <div className="flex items-center gap-2 text-gray-400 text-xs font-medium uppercase tracking-wider">
@@ -22,15 +30,20 @@ function StatCard({ label, value, sub, icon, color = '#FF9900' }) {
   );
 }
 
-function TopEndpointsChart({ endpoints, t }) {
+interface Endpoint {
+  endpoint: string;
+  count: number;
+}
+
+function TopEndpointsChart({ endpoints, t }: { endpoints: Endpoint[]; t: Record<string, any> }) {
   if (!endpoints || endpoints.length === 0) return null;
 
   const data = {
-    labels: endpoints.map(ep => ep.endpoint.length > 20 ? ep.endpoint.slice(0, 18) + '...' : ep.endpoint),
+    labels: endpoints.map((ep: Endpoint) => ep.endpoint.length > 20 ? ep.endpoint.slice(0, 18) + '...' : ep.endpoint),
     datasets: [{
       label: t.analytics.callsLabel || 'Calls',
-      data: endpoints.map(ep => ep.count),
-      backgroundColor: endpoints.map((_, i) => {
+      data: endpoints.map((ep: Endpoint) => ep.count),
+      backgroundColor: endpoints.map((_: Endpoint, i: number) => {
         const colors = ['#FF9900', '#FF9900CC', '#FF990099', '#FF990066', '#FF990044', '#FF990033', '#FF990022', '#FF990011'];
         return colors[i] || colors[colors.length - 1];
       }),
@@ -40,7 +53,7 @@ function TopEndpointsChart({ endpoints, t }) {
   };
 
   const options = {
-    indexAxis: 'y',
+    indexAxis: 'y' as const,
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
@@ -75,7 +88,7 @@ function TopEndpointsChart({ endpoints, t }) {
   );
 }
 
-function MonitoringStatus({ monitoring, uptimePercent, t }) {
+function MonitoringStatus({ monitoring, uptimePercent, t }: { monitoring: Record<string, any>; uptimePercent: number | null; t: Record<string, any> }) {
   const isOperational = monitoring?.overall === 'operational' || monitoring?.overall === 'healthy';
   const isDegraded = monitoring?.overall === 'degraded';
   const statusColor = isOperational ? '#34D399' : isDegraded ? '#FBBF24' : '#EF4444';
@@ -118,7 +131,7 @@ function MonitoringStatus({ monitoring, uptimePercent, t }) {
   );
 }
 
-function PaymentsDoughnut({ totalPayments, apiCalls, t }) {
+function PaymentsDoughnut({ totalPayments, apiCalls, t }: { totalPayments: number | null; apiCalls: number | null; t: Record<string, any> }) {
   if (!totalPayments && !apiCalls) return null;
 
   const data = {
@@ -136,7 +149,7 @@ function PaymentsDoughnut({ totalPayments, apiCalls, t }) {
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        position: 'bottom',
+        position: 'bottom' as const,
         labels: { color: '#9CA3AF', font: { size: 11 }, padding: 16, usePointStyle: true },
       },
       tooltip: {
@@ -160,24 +173,31 @@ function PaymentsDoughnut({ totalPayments, apiCalls, t }) {
   );
 }
 
-function RecentActivity({ activities, t }) {
+interface Activity {
+  type: string;
+  detail?: string;
+  amount?: number;
+  time?: string;
+}
+
+function RecentActivity({ activities, t }: { activities: Activity[] | null; t: Record<string, any> }) {
   if (!activities || activities.length === 0) return null;
 
-  const typeEmoji = { payment: '\uD83D\uDCB0', api_call: '\u26A1', register: '\uD83C\uDD95', '402': '\uD83D\uDD12', error: '\u274C' };
-  const typeColor = { payment: 'text-blue-400', api_call: 'text-[#FF9900]', register: 'text-green-400', '402': 'text-yellow-400', error: 'text-red-400' };
+  const typeEmoji: Record<string, string> = { payment: '\uD83D\uDCB0', api_call: '\u26A1', register: '\uD83C\uDD95', '402': '\uD83D\uDD12', error: '\u274C' };
+  const typeColor: Record<string, string> = { payment: 'text-blue-400', api_call: 'text-[#FF9900]', register: 'text-green-400', '402': 'text-yellow-400', error: 'text-red-400' };
 
   return (
     <div className="glass-card rounded-xl p-5">
       <h3 className="text-sm font-semibold text-white mb-4">{t.analytics.recentActivityTitle || 'Recent Activity'}</h3>
       <div className="space-y-2.5 max-h-[300px] overflow-y-auto">
-        {activities.map((a, i) => (
+        {activities.map((a: Activity, i: number) => (
           <div key={i} className="flex items-center gap-3 text-xs">
             <span>{typeEmoji[a.type] || '\u2022'}</span>
             <span className={`font-medium uppercase w-16 shrink-0 ${typeColor[a.type] || 'text-gray-400'}`}>
               {a.type}
             </span>
             <span className="text-gray-300 truncate flex-1">{a.detail?.slice(0, 50)}</span>
-            {a.amount > 0 && (
+            {(a.amount ?? 0) > 0 && (
               <span className="text-blue-400 shrink-0">${Number(a.amount).toFixed(3)}</span>
             )}
             <span className="text-gray-600 shrink-0">
@@ -209,7 +229,7 @@ export default function Analytics() {
   const error = statsError?.message || null;
 
   // Fetch recent activity (separate call to public-stats doesn't include it, use the full endpoint)
-  const [recentActivity, setRecentActivity] = useState([]);
+  const [recentActivity, setRecentActivity] = useState<Activity[]>([]);
   useEffect(() => {
     const controller = new AbortController();
     const fetchActivity = async () => {
@@ -242,17 +262,17 @@ export default function Analytics() {
       {loading ? (
         <div className="flex flex-col items-center justify-center py-20 gap-4">
           <div className="w-8 h-8 border-2 border-[#FF9900]/20 border-t-[#FF9900] rounded-full animate-spin" />
-          <p className="text-xs text-gray-500">{t.analytics.loadingLabel || 'Loading analytics...'}</p>
+          <p className="text-xs text-gray-500">{(t.analytics as any).loadingLabel || 'Loading analytics...'}</p>
         </div>
       ) : error && !stats ? (
         <div className="glass-card rounded-xl p-8 text-center">
-          <p className="text-gray-400 mb-2">{t.analytics.errorLabel || 'Unable to load analytics'}</p>
+          <p className="text-gray-400 mb-2">{(t.analytics as any).errorLabel || 'Unable to load analytics'}</p>
           <p className="text-xs text-gray-600">{error}</p>
           <button
             onClick={() => refetch()}
             className="mt-4 px-4 py-2 text-xs text-[#FF9900] border border-[#FF9900]/20 rounded-lg hover:bg-[#FF9900]/10 transition-colors cursor-pointer"
           >
-            {t.analytics.retryLabel || 'Retry'}
+            {(t.analytics as any).retryLabel || 'Retry'}
           </button>
         </div>
       ) : !stats ? (
@@ -305,8 +325,8 @@ export default function Analytics() {
           {/* Charts row 2: Doughnut + Recent Activity */}
           <div ref={ref3} className="reveal grid md:grid-cols-2 gap-4 mb-8">
             <PaymentsDoughnut
-              totalPayments={stats.totalPayments}
-              apiCalls={stats.apiCalls}
+              totalPayments={stats.totalPayments || null}
+              apiCalls={stats.apiCalls || null}
               t={t}
             />
             <RecentActivity activities={recentActivity} t={t} />

@@ -13,17 +13,25 @@ import McpSection from './docs/McpSection';
 import IntegrationSection from './docs/IntegrationSection';
 import SecuritySection from './docs/SecuritySection';
 
-function parseEndpoints(raw) {
-  const marketplace = [];
-  const native = [];
+interface Endpoint {
+  method: string;
+  route: string;
+  price: string | null;
+  description: string;
+}
+
+function parseEndpoints(raw: Record<string, unknown>): { marketplace: Endpoint[]; native: Endpoint[] } {
+  const marketplace: Endpoint[] = [];
+  const native: Endpoint[] = [];
   Object.entries(raw).forEach(([key, desc]) => {
     const match = key.match(/^(GET|POST)\s+(.+)$/);
     if (!match) return;
     const method = match[1];
     const route = match[2];
-    const priceMatch = desc.match(/\((\d+(?:\.\d+)?)\s*USDC\)/);
+    const descStr = String(desc);
+    const priceMatch = descStr.match(/\((\d+(?:\.\d+)?)\s*USDC\)/);
     const price = priceMatch ? priceMatch[1] : null;
-    const description = desc.replace(/\s*\(\d+(?:\.\d+)?\s*USDC\)/, '').trim();
+    const description = descStr.replace(/\s*\(\d+(?:\.\d+)?\s*USDC\)/, '').trim();
     const entry = { method, route, price, description };
     if (route.startsWith('/api/')) native.push(entry);
     else marketplace.push(entry);
@@ -34,7 +42,7 @@ function parseEndpoints(raw) {
 export default function Docs() {
   const { t, lang } = useTranslation();
   const d = t.docs || {};
-  const [endpointsRaw, setEndpointsRaw] = useState(undefined);
+  const [endpointsRaw, setEndpointsRaw] = useState<Record<string, unknown> | null | undefined>(undefined);
   const activeSection = useScrollSpy(SECTION_IDS);
 
   useSEO({
@@ -63,7 +71,7 @@ export default function Docs() {
     }
   }, []);
 
-  const handleNavigate = (id) => {
+  const handleNavigate = (id: string) => {
     if (!SECTION_IDS.includes(id)) return;
     const el = document.getElementById(id);
     if (el) {

@@ -1,6 +1,5 @@
 import { useAccount, useSwitchChain } from 'wagmi';
 import { useTranslation } from '../i18n/LanguageContext';
-import { CHAIN_CONFIG } from '../config';
 
 const CHAINS = [
   { id: 8453, label: 'Base', gas: '~$0.001', color: 'bg-blue-500', free: false },

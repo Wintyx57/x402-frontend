@@ -117,7 +117,7 @@ function Navbar() {
     setOpenDropdown(null);
   }, [pathname]);
 
-  const handleSearchChange = (e) => {
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     if (onServicesPage) {
       const params = new URLSearchParams(searchParams);
@@ -132,7 +132,7 @@ function Navbar() {
     }
   };
 
-  const handleSearch = (e) => {
+  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (onServicesPage) return;
     if (localSearch.trim()) {

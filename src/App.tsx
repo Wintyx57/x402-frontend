@@ -11,7 +11,8 @@ const Register = lazy(() => import('./pages/Register'));
 const Integrate = lazy(() => import('./pages/Integrate'));
 const Developers = lazy(() => import('./pages/Developers'));
 const MCP = lazy(() => import('./pages/MCP'));
-const Blog = lazy(() => import('./pages/Blog'));
+const BlogList = lazy(() => import('./pages/BlogList'));
+const BlogArticle = lazy(() => import('./pages/BlogArticle'));
 const About = lazy(() => import('./pages/About'));
 const Pricing = lazy(() => import('./pages/Pricing'));
 const FAQ = lazy(() => import('./pages/FAQ'));
@@ -53,7 +54,8 @@ export default function App() {
             <Route path="/integrate" element={<Integrate />} />
             <Route path="/developers" element={<Developers />} />
             <Route path="/mcp" element={<MCP />} />
-            <Route path="/blog" element={<Blog />} />
+            <Route path="/blog" element={<BlogList />} />
+            <Route path="/blog/:slug" element={<BlogArticle />} />
             <Route path="/about" element={<About />} />
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/faq" element={<FAQ />} />

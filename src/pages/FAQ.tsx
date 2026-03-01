@@ -4,7 +4,7 @@ import { useReveal } from '../hooks/useReveal';
 import useSEO from '../hooks/useSEO';
 import { Link } from 'react-router-dom';
 
-function FAQItem({ question, answer, id }) {
+function FAQItem({ question, answer, id }: { question: string; answer: string; id: string }) {
   const [isOpen, setIsOpen] = useState(false);
   const panelId = `faq-answer-${id}`;
 
@@ -86,14 +86,16 @@ export default function FAQ() {
         { '@type': 'Question', name: t.faq.q18, acceptedAnswer: { '@type': 'Answer', text: t.faq.a18 } },
       ]
     };
-    let script = document.getElementById('faq-jsonld');
+    let script = document.getElementById('faq-jsonld') as HTMLScriptElement | null;
     if (!script) {
       script = document.createElement('script');
       script.id = 'faq-jsonld';
       script.type = 'application/ld+json';
       document.head.appendChild(script);
     }
-    script.textContent = JSON.stringify(faqSchema);
+    if (script) {
+      script.textContent = JSON.stringify(faqSchema);
+    }
     return () => {
       const s = document.getElementById('faq-jsonld');
       if (s) s.remove();

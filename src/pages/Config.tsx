@@ -18,12 +18,12 @@ function detectOS() {
   return 'linux';
 }
 
-function getInstallDir(os) {
+function getInstallDir(os: string): string {
   if (os === 'windows') return 'C:\\Users\\<you>\\x402-bazaar';
   return '~/.x402-bazaar';
 }
 
-function getConfigPath(env, os) {
+function getConfigPath(env: string, os: string): string {
   const paths = {
     'claude-desktop': {
       windows: '%APPDATA%\\Claude\\claude_desktop_config.json',
@@ -54,7 +54,7 @@ function getConfigPath(env, os) {
   return paths[env]?.[os] || 'mcp-config.json';
 }
 
-function generateConfig({ env, serverUrl, maxBudget, network, withWallet, apiKey, apiSecret, installDir }) {
+function generateConfig({ env, serverUrl, maxBudget, network, withWallet, apiKey, apiSecret, installDir }: { env: string; serverUrl: string; maxBudget: string; network: string; withWallet: boolean; apiKey?: string; apiSecret?: string; installDir: string }): Record<string, any> {
   const mcpServerPath = installDir + (installDir.includes('\\') ? '\\mcp-server.mjs' : '/mcp-server.mjs');
   const seedPath = installDir + (installDir.includes('\\') ? '\\agent-seed.json' : '/agent-seed.json');
 
@@ -92,7 +92,7 @@ function generateConfig({ env, serverUrl, maxBudget, network, withWallet, apiKey
   };
 }
 
-function ConfigCopyButton({ text, labels }) {
+function ConfigCopyButton({ text, labels }: { text: string; labels: Record<string, string> }) {
   const [copied, setCopied] = useState(false);
   const handleCopy = async () => {
     try {

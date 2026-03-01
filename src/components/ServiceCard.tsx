@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from '../i18n/LanguageContext';
 import StarRating from './StarRating';
 
-function getDomain(url) {
+function getDomain(url: string): string | null {
   try {
     const parsed = new URL(url);
     if (!['http:', 'https:'].includes(parsed.protocol)) return null;
@@ -14,7 +14,7 @@ function getDomain(url) {
   }
 }
 
-function isValidServiceUrl(url) {
+function isValidServiceUrl(url: string): boolean {
   try {
     const parsed = new URL(url);
     return ['http:', 'https:'].includes(parsed.protocol);
@@ -23,7 +23,7 @@ function isValidServiceUrl(url) {
   }
 }
 
-function timeAgo(dateStr, t) {
+function timeAgo(dateStr: string | null, t: Record<string, any>): string | null {
   if (!dateStr) return null;
   const now = Date.now();
   const then = new Date(dateStr).getTime();
@@ -37,7 +37,13 @@ function timeAgo(dateStr, t) {
   return `${diffD}d ago`;
 }
 
-function getQualityTier(uptimePercent) {
+interface QualityTier {
+  label: string;
+  color: string;
+  bg: string;
+}
+
+function getQualityTier(uptimePercent: number | null): QualityTier | null {
   if (uptimePercent == null) return null;
   if (uptimePercent >= 99) return { label: 'Gold', color: '#FBBF24', bg: '#FBBF24' };
   if (uptimePercent >= 95) return { label: 'Silver', color: '#94A3B8', bg: '#94A3B8' };
@@ -45,7 +51,20 @@ function getQualityTier(uptimePercent) {
   return null;
 }
 
-function ServiceCard({ service, lastActivity, healthStatus, uptimePercent, reviewStats = null }) {
+interface ReviewStats {
+  count: number;
+  average: number;
+}
+
+interface ServiceCardProps {
+  service: Record<string, any>;
+  lastActivity: string | null;
+  healthStatus: 'online' | 'offline' | null;
+  uptimePercent: number | null;
+  reviewStats?: ReviewStats | null;
+}
+
+function ServiceCard({ service, lastActivity, healthStatus, uptimePercent, reviewStats = null }: ServiceCardProps) {
   const { t } = useTranslation();
   const isFree = Number(service.price_usdc) === 0;
   const initial = service.name?.charAt(0)?.toUpperCase() || '?';
@@ -55,7 +74,7 @@ function ServiceCard({ service, lastActivity, healthStatus, uptimePercent, revie
   const isNative = service.url?.startsWith('https://x402-api.onrender.com');
   const quality = getQualityTier(uptimePercent);
 
-  const handleCopyPrompt = async (e) => {
+  const handleCopyPrompt = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     const prompt = `Use x402 Bazaar to call "${service.name}" at ${service.url}${isFree ? ' (free)' : ` (costs ${service.price_usdc} USDC)`}`;
     try {
@@ -126,7 +145,7 @@ function ServiceCard({ service, lastActivity, healthStatus, uptimePercent, revie
             )}
           </div>
           <span className="inline-block text-xs mt-0.5 text-gray-500 capitalize">
-            {service.tags?.find(tag => !['x402-native', 'live'].includes(tag)) || service.tags?.[0]}
+            {service.tags?.find((tag: string) => !['x402-native', 'live'].includes(tag)) || service.tags?.[0]}
           </span>
         </div>
         <span className={`shrink-0 font-mono text-xs font-bold px-2.5 py-1 rounded-lg ${
@@ -163,7 +182,7 @@ function ServiceCard({ service, lastActivity, healthStatus, uptimePercent, revie
 
       {/* Tags */}
       <div className="flex flex-wrap gap-1 mb-3">
-        {service.tags?.slice(0, 3).map(tag => (
+        {service.tags?.slice(0, 3).map((tag: string) => (
           <span key={tag} className="text-xs text-gray-500 bg-white/5 px-2 py-0.5 rounded-lg">
             {tag}
           </span>
