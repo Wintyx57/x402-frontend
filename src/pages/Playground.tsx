@@ -7,26 +7,26 @@ import ChainSelector from '../components/ChainSelector';
 import { API_URL } from '../config';
 
 const PLAYGROUND_APIS = [
-  { id: 'weather', route: '/api/weather', method: 'GET', price: '0.02', category: 'Data', params: [{ name: 'city', defaultValue: 'Paris', required: true }] },
-  { id: 'crypto', route: '/api/crypto', method: 'GET', price: '0.02', category: 'Finance', params: [{ name: 'coin', defaultValue: 'bitcoin', required: true }] },
-  { id: 'joke', route: '/api/joke', method: 'GET', price: '0.01', category: 'Fun', params: [] },
-  { id: 'translate', route: '/api/translate', method: 'GET', price: '0.005', category: 'AI', params: [{ name: 'text', defaultValue: 'Hello world', required: true }, { name: 'to', defaultValue: 'fr', required: true }] },
-  { id: 'sentiment', route: '/api/sentiment', method: 'GET', price: '0.005', category: 'AI', params: [{ name: 'text', defaultValue: 'I love this product!', required: true }] },
-  { id: 'search', route: '/api/search', method: 'GET', price: '0.005', category: 'Data', params: [{ name: 'q', defaultValue: 'x402 protocol', required: true }] },
-  { id: 'wikipedia', route: '/api/wikipedia', method: 'GET', price: '0.005', category: 'Data', params: [{ name: 'q', defaultValue: 'Bitcoin', required: true }] },
-  { id: 'github', route: '/api/github', method: 'GET', price: '0.005', category: 'Developer', params: [{ name: 'user', defaultValue: 'Wintyx57', required: true }] },
-  { id: 'countries', route: '/api/countries', method: 'GET', price: '0.005', category: 'Data', params: [{ name: 'name', defaultValue: 'France', required: true }] },
-  { id: 'hash', route: '/api/hash', method: 'GET', price: '0.001', category: 'Developer', params: [{ name: 'text', defaultValue: 'hello', required: true }, { name: 'algo', defaultValue: 'sha256' }] },
-  { id: 'currency', route: '/api/currency', method: 'GET', price: '0.005', category: 'Finance', params: [{ name: 'from', defaultValue: 'USD', required: true }, { name: 'to', defaultValue: 'EUR', required: true }] },
-  { id: 'dns', route: '/api/dns', method: 'GET', price: '0.003', category: 'Developer', params: [{ name: 'domain', defaultValue: 'google.com', required: true }] },
-  { id: 'stocks', route: '/api/stocks', method: 'GET', price: '0.005', category: 'Finance', params: [{ name: 'symbol', defaultValue: 'AAPL', required: true }] },
-  { id: 'news', route: '/api/news', method: 'GET', price: '0.005', category: 'Data', params: [{ name: 'topic', defaultValue: 'artificial intelligence', required: true }] },
-  { id: 'reddit', route: '/api/reddit', method: 'GET', price: '0.005', category: 'Social', params: [{ name: 'subreddit', defaultValue: 'programming', required: true }] },
-  { id: 'math', route: '/api/math', method: 'GET', price: '0.001', category: 'Utility', params: [{ name: 'expr', defaultValue: '2*pi+sqrt(16)', required: true }] },
-  { id: 'regex', route: '/api/regex', method: 'GET', price: '0.001', category: 'Developer', params: [{ name: 'pattern', defaultValue: '\\d+', required: true }, { name: 'text', defaultValue: 'abc123def456', required: true }, { name: 'flags', defaultValue: 'g' }] },
-  { id: 'password-strength', route: '/api/password-strength', method: 'GET', price: '0.001', category: 'Security', params: [{ name: 'password', defaultValue: 'MyP@ssw0rd!2026', required: true }] },
-  { id: 'unit-convert', route: '/api/unit-convert', method: 'GET', price: '0.001', category: 'Utility', params: [{ name: 'value', defaultValue: '100', required: true }, { name: 'from', defaultValue: 'km', required: true }, { name: 'to', defaultValue: 'miles', required: true }] },
-  { id: 'url-shorten', route: '/api/url-shorten', method: 'GET', price: '0.003', category: 'Utility', params: [{ name: 'url', defaultValue: 'https://x402bazaar.org/docs', required: true }] },
+  { id: 'weather', route: '/api/weather', method: 'GET', price: '0.02', category: 'Data', free: false, params: [{ name: 'city', defaultValue: 'Paris', required: true }] },
+  { id: 'crypto', route: '/api/crypto', method: 'GET', price: '0.02', category: 'Finance', free: false, params: [{ name: 'coin', defaultValue: 'bitcoin', required: true }] },
+  { id: 'joke', route: '/api/joke', method: 'GET', price: '0.01', category: 'Fun', free: false, params: [] },
+  { id: 'translate', route: '/api/translate', method: 'GET', price: '0.005', category: 'AI', free: true, params: [{ name: 'text', defaultValue: 'Hello world', required: true }, { name: 'to', defaultValue: 'fr', required: true }] },
+  { id: 'sentiment', route: '/api/sentiment', method: 'GET', price: '0.005', category: 'AI', free: true, params: [{ name: 'text', defaultValue: 'I love this product!', required: true }] },
+  { id: 'search', route: '/api/search', method: 'GET', price: '0.005', category: 'Data', free: true, params: [{ name: 'q', defaultValue: 'x402 protocol', required: true }] },
+  { id: 'wikipedia', route: '/api/wikipedia', method: 'GET', price: '0.005', category: 'Data', free: true, params: [{ name: 'q', defaultValue: 'Bitcoin', required: true }] },
+  { id: 'github', route: '/api/github', method: 'GET', price: '0.005', category: 'Developer', free: true, params: [{ name: 'user', defaultValue: 'Wintyx57', required: true }] },
+  { id: 'countries', route: '/api/countries', method: 'GET', price: '0.005', category: 'Data', free: true, params: [{ name: 'name', defaultValue: 'France', required: true }] },
+  { id: 'hash', route: '/api/hash', method: 'GET', price: '0.001', category: 'Developer', free: true, params: [{ name: 'text', defaultValue: 'hello', required: true }, { name: 'algo', defaultValue: 'sha256' }] },
+  { id: 'currency', route: '/api/currency', method: 'GET', price: '0.005', category: 'Finance', free: true, params: [{ name: 'from', defaultValue: 'USD', required: true }, { name: 'to', defaultValue: 'EUR', required: true }] },
+  { id: 'dns', route: '/api/dns', method: 'GET', price: '0.003', category: 'Developer', free: true, params: [{ name: 'domain', defaultValue: 'google.com', required: true }] },
+  { id: 'stocks', route: '/api/stocks', method: 'GET', price: '0.005', category: 'Finance', free: true, params: [{ name: 'symbol', defaultValue: 'AAPL', required: true }] },
+  { id: 'news', route: '/api/news', method: 'GET', price: '0.005', category: 'Data', free: true, params: [{ name: 'topic', defaultValue: 'artificial intelligence', required: true }] },
+  { id: 'reddit', route: '/api/reddit', method: 'GET', price: '0.005', category: 'Social', free: true, params: [{ name: 'subreddit', defaultValue: 'programming', required: true }] },
+  { id: 'math', route: '/api/math', method: 'GET', price: '0.001', category: 'Utility', free: true, params: [{ name: 'expr', defaultValue: '2*pi+sqrt(16)', required: true }] },
+  { id: 'regex', route: '/api/regex', method: 'GET', price: '0.001', category: 'Developer', free: true, params: [{ name: 'pattern', defaultValue: '\\d+', required: true }, { name: 'text', defaultValue: 'abc123def456', required: true }, { name: 'flags', defaultValue: 'g' }] },
+  { id: 'password-strength', route: '/api/password-strength', method: 'GET', price: '0.001', category: 'Security', free: true, params: [{ name: 'password', defaultValue: 'MyP@ssw0rd!2026', required: true }] },
+  { id: 'unit-convert', route: '/api/unit-convert', method: 'GET', price: '0.001', category: 'Utility', free: true, params: [{ name: 'value', defaultValue: '100', required: true }, { name: 'from', defaultValue: 'km', required: true }, { name: 'to', defaultValue: 'miles', required: true }] },
+  { id: 'url-shorten', route: '/api/url-shorten', method: 'GET', price: '0.003', category: 'Utility', free: true, params: [{ name: 'url', defaultValue: 'https://x402bazaar.org/docs', required: true }] },
 ];
 
 function highlightJSON(json) {
@@ -181,6 +181,19 @@ export default function Playground() {
   return (
     <main data-page-gradient className="min-h-screen bg-gradient-to-b from-[#0a0e17] to-[#131921] pt-28 pb-16 px-4">
       <div className="max-w-6xl mx-auto">
+        {/* Demo Mode Banner */}
+        <div className="mb-6 bg-green-500/10 border border-green-500/30 rounded-xl p-4">
+          <div className="flex items-start gap-3">
+            <span className="text-xl mt-0.5">🟢</span>
+            <div>
+              <p className="text-sm text-green-300 font-medium">Free endpoints are marked with 🟢</p>
+              <p className="text-xs text-green-200/70 mt-1">
+                Try them without a wallet! Paid endpoints return HTTP 402 — see the payment flow in action.
+              </p>
+            </div>
+          </div>
+        </div>
+
         {/* Hero */}
         <div ref={heroRef} className="reveal-section text-center mb-12">
           <span className="inline-block px-3 py-1 rounded-full text-xs font-medium bg-[#FF9900]/10 text-[#FF9900] border border-[#FF9900]/20 mb-4">
@@ -217,7 +230,10 @@ export default function Playground() {
                         : 'bg-white/[0.02] border-white/6 text-gray-400 hover:bg-white/5 hover:text-white'
                     }`}
                   >
-                    <div className="font-medium capitalize truncate">{api.id}</div>
+                    <div className="font-medium capitalize truncate flex items-center gap-1.5">
+                      {api.free && <span className="text-green-400">🟢</span>}
+                      {api.id}
+                    </div>
                     <span className={`text-[10px] mt-0.5 inline-block ${
                       selectedApi?.id === api.id ? 'text-[#FF9900]' : 'text-gray-500'
                     }`}>${api.price}</span>
@@ -344,6 +360,22 @@ export default function Playground() {
                 </div>
               </div>
             )}
+
+            {/* Testnet Info */}
+            <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-4">
+              <div className="flex items-start gap-3">
+                <span className="text-xl mt-0.5">🧪</span>
+                <div>
+                  <p className="text-sm text-blue-300 font-medium">Want to test with fake USDC?</p>
+                  <p className="text-xs text-blue-200/70 mt-1">
+                    Use Base Sepolia testnet:
+                  </p>
+                  <code className="block text-xs text-blue-200 font-mono mt-2 bg-blue-500/5 px-2 py-1.5 rounded border border-blue-500/20">
+                    npx x402-bazaar init --chain base-sepolia
+                  </code>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
