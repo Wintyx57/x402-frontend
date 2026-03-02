@@ -117,9 +117,10 @@ function Navbar() {
   useEffect(() => {
     if (prevPathnameRef.current !== pathname) {
       prevPathnameRef.current = pathname;
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setOpenDropdown(null);
     }
-  });
+  }, [pathname]);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;

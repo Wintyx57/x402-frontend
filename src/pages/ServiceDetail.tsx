@@ -53,7 +53,9 @@ export default function ServiceDetail() {
     if (!id) return;
 
     // Reset state for new ID
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setService(null);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setError(null);
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoadingService(true);
@@ -85,6 +87,7 @@ export default function ServiceDetail() {
   }, [id]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     loadReviews();
   }, [id]); // loadReviews depends on id, so call when id changes
 
