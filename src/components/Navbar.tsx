@@ -113,7 +113,8 @@ function Navbar() {
   }, [handleClickOutside, handleEscape]);
 
   // Close dropdown on route change
-  useLayoutEffect(() => {
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(() => {
     setOpenDropdown(null);
   }, [pathname]);
 
