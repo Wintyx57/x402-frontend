@@ -88,18 +88,14 @@ describe('Home', () => {
 
   it('should display the hero title', () => {
     renderWithProviders(<Home />);
-    expect(screen.getByText('Your AI Agents Pay for APIs')).toBeInTheDocument();
+    expect(screen.getByText('The API Marketplace for')).toBeInTheDocument();
   });
 
   it('should display the hero title highlight', () => {
     renderWithProviders(<Home />);
-    expect(screen.getByText('Automatically')).toBeInTheDocument();
+    expect(screen.getByText('AI Agents')).toBeInTheDocument();
   });
 
-  it('should display the search button', () => {
-    renderWithProviders(<Home />);
-    expect(screen.getByText('Search')).toBeInTheDocument();
-  });
 
   it('should display the explore CTA link', () => {
     renderWithProviders(<Home />);

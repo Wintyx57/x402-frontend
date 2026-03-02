@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { API_URL } from '../config';
 import { useTranslation } from '../i18n/LanguageContext';
 import { useReveal } from '../hooks/useReveal';
@@ -160,7 +160,6 @@ export default function Home() {
   const [avgLatency, setAvgLatency] = useState<number | null>(null);
   const [copied, setCopied] = useState(false);
   const { t } = useTranslation();
-  const navigate = useNavigate();
 
   // Reveal refs
   const howRef = useReveal();
@@ -331,13 +330,13 @@ export default function Home() {
 
           {/* Headline */}
           <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold text-white mb-4 animate-fade-in-up delay-100 leading-tight">
-            {t.home.heroTitleNew}{' '}
-            <span className="gradient-text">{t.home.heroTitleHighlightNew}</span>
+            {t.home.heroTitle}{' '}
+            <span className="gradient-text">{t.home.heroTitleHighlight}</span>
           </h1>
 
           {/* Subline */}
           <p className="text-gray-400 text-base sm:text-lg max-w-2xl mx-auto mb-8 animate-fade-in-up delay-200">
-            {t.home.heroSubtitleNew}
+            {t.home.heroSubtitle}
           </p>
 
           {/* CTA buttons */}
