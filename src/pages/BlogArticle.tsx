@@ -69,7 +69,7 @@ function parseMarkdown(markdown: string): string {
 
   // Unordered lists
   html = html.replace(
-    /^\- (.*?)$/gm,
+    /^- (.*?)$/gm,
     '<li class="list-disc ml-6">$1</li>'
   );
   html = html.replace(
@@ -133,6 +133,12 @@ export default function BlogArticle() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // SEO Hook au niveau du composant
+  useSEO({
+    title: metadata.title || 'Article',
+    description: metadata.title || 'Read the latest article from x402 Bazaar'
+  });
+
   // Article list for navigation
   const articles = [
     { slug: '01-introduction', title: 'x402 Bazaar: 69 APIs Your AI Agents Can Pay For with USDC' },
@@ -171,11 +177,6 @@ export default function BlogArticle() {
           setMetadata(metaData);
           const html = parseMarkdown(markdown);
           setContent(html);
-
-          useSEO({
-            title: metaData.title || 'Article',
-            description: metaData.title || 'Read the latest article from x402 Bazaar'
-          });
         }
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load article');

@@ -157,7 +157,6 @@ export default function Home() {
   const { data: servicesData, isLoading: loading, error: servicesError } = useServices();
   const services = Array.isArray(servicesData) ? servicesData : [];
   const [activityMap, setActivityMap] = useState<Record<string, string>>({});
-  const [heroSearch, setHeroSearch] = useState('');
   const [avgLatency, setAvgLatency] = useState<number | null>(null);
   const [copied, setCopied] = useState(false);
   const { t } = useTranslation();
@@ -199,11 +198,6 @@ export default function Home() {
     return () => controller.abort();
   }, []);
 
-  const handleHeroSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (heroSearch.trim()) navigate(`/services?q=${encodeURIComponent(heroSearch.trim())}`);
-  };
-
   const handleCopy = () => {
     try { navigator.clipboard.writeText('npx x402-bazaar init'); } catch { /* non-critique */ }
     setCopied(true);
@@ -224,12 +218,6 @@ export default function Home() {
   const freeServices = services.filter(s => Number(s.price_usdc) === 0).slice(0, 4);
   const paidServices = services.filter(s => Number(s.price_usdc) > 0).sort((a, b) => Number(b.price_usdc) - Number(a.price_usdc)).slice(0, 4);
   const nativeCount = services.filter(s => s.url?.startsWith('https://x402-api.onrender.com')).length;
-
-  const interp = (str: string, vars: Record<string, string | number>) => {
-    let result = str;
-    Object.entries(vars).forEach(([key, val]) => { result = result.replace(`{${key}}`, String(val)); });
-    return result;
-  };
 
   // Integration platform data
   const integrations = [
