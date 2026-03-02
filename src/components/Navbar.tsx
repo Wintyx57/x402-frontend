@@ -113,10 +113,13 @@ function Navbar() {
   }, [handleClickOutside, handleEscape]);
 
   // Close dropdown on route change
-  // eslint-disable-next-line react-hooks/set-state-in-effect
+  const prevPathnameRef = useRef(pathname);
   useEffect(() => {
-    setOpenDropdown(null);
-  }, [pathname]);
+    if (prevPathnameRef.current !== pathname) {
+      prevPathnameRef.current = pathname;
+      setOpenDropdown(null);
+    }
+  });
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;

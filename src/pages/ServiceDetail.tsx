@@ -51,7 +51,13 @@ export default function ServiceDetail() {
 
   useEffect(() => {
     if (!id) return;
+
+    // Reset state for new ID
+    setService(null);
+    setError(null);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoadingService(true);
+
     fetch(`${API_URL}/api/services`)
       .then(r => r.json())
       .then((data: Service[]) => {
@@ -78,7 +84,9 @@ export default function ServiceDetail() {
       .finally(() => setLoadingReviews(false));
   }, [id]);
 
-  useEffect(() => { loadReviews(); }, [loadReviews]);
+  useEffect(() => {
+    loadReviews();
+  }, [id]); // loadReviews depends on id, so call when id changes
 
   if (loadingService) {
     return (
