@@ -23,7 +23,7 @@ function isValidServiceUrl(url: string): boolean {
   }
 }
 
-function timeAgo(dateStr: string | null, t: Record<string, any>): string | null {
+function timeAgo(dateStr: string | null, t: { serviceCard: { activeNow?: string } }): string | null {
   if (!dateStr) return null;
   const now = Date.now();
   const then = new Date(dateStr).getTime();

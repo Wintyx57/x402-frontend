@@ -30,7 +30,7 @@ export default function ConfigTab({ adminFetch }: Props) {
       .then(setSettings)
       .catch(() => {})
       .finally(() => setLoading(false));
-  }, []);
+  }, [adminFetch]);
 
   const togglePlatform = (platform: string, field: 'enabled' | 'autoPublish') => {
     if (!settings?.platforms) return;
@@ -52,8 +52,8 @@ export default function ConfigTab({ adminFetch }: Props) {
     try {
       await adminFetch('/settings', { method: 'POST', body: JSON.stringify(settings) });
       setMessage({ type: 'success', text: 'Settings saved' });
-    } catch (err: any) {
-      setMessage({ type: 'error', text: err.message });
+    } catch (err) {
+      setMessage({ type: 'error', text: err instanceof Error ? err.message : 'Unknown error' });
     } finally {
       setSaving(false);
     }

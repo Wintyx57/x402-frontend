@@ -100,7 +100,7 @@ export default function LogsTab({ adminFetch }: Props) {
   useEffect(() => {
     startSSE();
     return () => { abortRef.current?.abort(); };
-  }, []);
+  }, [startSSE]);
 
   const filtered = logs.filter(l => {
     if (levelFilter !== 'all' && l.level !== levelFilter) return false;

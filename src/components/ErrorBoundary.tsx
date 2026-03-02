@@ -22,7 +22,7 @@ export default class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBo
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     console.error('ErrorBoundary caught:', error, errorInfo);
     if (import.meta.env.PROD && Sentry) {
-      Sentry.captureException(error, { extra: errorInfo as Record<string, any> });
+      Sentry.captureException(error, { extra: errorInfo as Record<string, unknown> });
     }
   }
 

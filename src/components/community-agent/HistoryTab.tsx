@@ -26,7 +26,7 @@ export default function HistoryTab({ adminFetch }: Props) {
       .then(data => setHistory(data?.history || data?.items || (Array.isArray(data) ? data as HistoryEntry[] : [])))
       .catch(() => {})
       .finally(() => setLoading(false));
-  }, []);
+  }, [adminFetch]);
 
   const platforms = [...new Set(history.map(h => h.platform))];
 

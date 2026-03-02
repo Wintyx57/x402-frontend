@@ -45,7 +45,7 @@ export default function AutomationTab({ adminFetch }: Props) {
     }
   };
 
-  useEffect(() => { fetchData(); }, []);
+  useEffect(() => { fetchData(); }, [fetchData]);
 
   const schedulerAction = async (action: string) => {
     setActionLoading(action);
