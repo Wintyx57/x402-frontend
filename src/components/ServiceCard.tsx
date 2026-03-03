@@ -59,12 +59,12 @@ interface ReviewStats {
 interface ServiceCardProps {
   service: Record<string, any>;
   lastActivity: string | null;
-  healthStatus: 'online' | 'offline' | null;
-  uptimePercent: number | null;
+  healthStatus?: 'online' | 'offline' | null;
+  uptimePercent?: number | null;
   reviewStats?: ReviewStats | null;
 }
 
-function ServiceCard({ service, lastActivity, healthStatus, uptimePercent, reviewStats = null }: ServiceCardProps) {
+function ServiceCard({ service, lastActivity, healthStatus = null, uptimePercent = null, reviewStats = null }: ServiceCardProps) {
   const { t } = useTranslation();
   const isFree = Number(service.price_usdc) === 0;
   const initial = service.name?.charAt(0)?.toUpperCase() || '?';

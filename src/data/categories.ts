@@ -33,4 +33,6 @@ export const CATEGORY_LABELS: Record<string, string> = {
   fun: 'categoryFun',
 };
 
-export const VALID_CATEGORIES = CATEGORIES.filter(c => c.tag).map(c => c.tag) as string[];
+export type CategoryKey = 'ai' | 'finance' | 'data' | 'developer' | 'media' | 'security' | 'location' | 'communication' | 'seo' | 'scraping' | 'fun';
+
+export const VALID_CATEGORIES = CATEGORIES.filter(c => c.tag).map(c => c.tag) as CategoryKey[];

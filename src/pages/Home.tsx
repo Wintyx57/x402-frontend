@@ -250,7 +250,7 @@ export default function Home() {
   const categoryCounts: Record<string, number> = {};
   services.forEach(s => {
     (s.tags || []).forEach((tag: string) => {
-      if (VALID_CATEGORIES.includes(tag)) categoryCounts[tag] = (categoryCounts[tag] || 0) + 1;
+      if ((VALID_CATEGORIES as string[]).includes(tag)) categoryCounts[tag] = (categoryCounts[tag] || 0) + 1;
     });
   });
   const categories = services.length > 0
