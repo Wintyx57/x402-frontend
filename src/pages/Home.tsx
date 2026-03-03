@@ -399,7 +399,7 @@ export default function Home() {
 
               {/* Subline */}
               <p className="text-gray-400 text-base sm:text-lg max-w-2xl mb-8 animate-fade-in-up delay-200">
-                {t.home.heroSubtitle}
+                {t.home.heroSubtitle.replace('{count}', String(services.length))}
               </p>
 
               {/* CTA buttons */}
