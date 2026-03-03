@@ -89,6 +89,13 @@ function IntegrationBadge({ label, icon, href }: { label: string; icon: React.Re
     </div>
   );
   if (href) {
+    if (href.startsWith('http')) {
+      return (
+        <a href={href} className="no-underline" aria-label={label} target="_blank" rel="noopener noreferrer">
+          {inner}
+        </a>
+      );
+    }
     return (
       <Link to={href} className="no-underline" aria-label={label}>
         {inner}
@@ -280,6 +287,18 @@ export default function Home() {
       icon: (
         <svg className="w-6 h-6 text-gray-400 group-hover:text-[#FF9900] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      ),
+    },
+    {
+      label: 'n8n',
+      href: 'https://www.npmjs.com/package/x402-bazaar-n8n',
+      icon: (
+        <svg className="w-6 h-6 text-gray-400 group-hover:text-[#FF9900] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="6" cy="12" r="2" strokeWidth={2} />
+          <circle cx="18" cy="6" r="2" strokeWidth={2} />
+          <circle cx="18" cy="18" r="2" strokeWidth={2} />
+          <path strokeLinecap="round" strokeWidth={2} d="M8 12h4m2-3l-2 3 2 3" />
         </svg>
       ),
     },
