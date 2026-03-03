@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { API_URL } from '../config';
 import { useTranslation } from '../i18n/LanguageContext';
@@ -78,6 +78,42 @@ function FloatingGrid() {
 }
 
 // ---- Integration badge ----
+// ---- Hero video playlist (alternates between 2 clips) ----
+const HERO_VIDEOS = ['/hero-1.mp4', '/hero-2.mp4'];
+
+function HeroVideo() {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [idx, setIdx] = useState(0);
+
+  const playNext = useCallback(() => {
+    setIdx((prev) => (prev + 1) % HERO_VIDEOS.length);
+  }, []);
+
+  useEffect(() => {
+    const vid = videoRef.current;
+    if (!vid) return;
+    vid.src = HERO_VIDEOS[idx];
+    vid.play().catch(() => {});
+  }, [idx]);
+
+  return (
+    <div className="w-full lg:w-1/2 animate-fade-in-up">
+      <div className="relative aspect-video rounded-2xl overflow-hidden border border-white/10
+                      bg-[#0d1117] shadow-[0_0_40px_rgba(255,153,0,0.08)]">
+        <video
+          ref={videoRef}
+          className="w-full h-full object-cover"
+          autoPlay
+          muted
+          playsInline
+          onEnded={playNext}
+        />
+        <div className="absolute inset-0 rounded-2xl border border-[#FF9900]/10 pointer-events-none" />
+      </div>
+    </div>
+  );
+}
+
 function IntegrationBadge({ label, icon, href }: { label: string; icon: React.ReactNode; href?: string }) {
   const inner = (
     <div className="flex flex-col items-center gap-2 group">
@@ -321,35 +357,8 @@ export default function Home() {
           {/* Split layout: video left + content right */}
           <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
 
-            {/* LEFT — Video */}
-            <div className="w-full lg:w-1/2 animate-fade-in-up">
-              <div className="relative aspect-video rounded-2xl overflow-hidden border border-white/10
-                              bg-[#0d1117] shadow-[0_0_40px_rgba(255,153,0,0.08)]">
-                {/* Video element — replace src with your Nano Banana video URL */}
-                <video
-                  className="w-full h-full object-cover"
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  poster="/video-poster.webp"
-                >
-                  <source src="/hero-demo.mp4" type="video/mp4" />
-                </video>
-                {/* Placeholder overlay — shown when no video loaded */}
-                <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-[#0d1117] to-[#161B22]
-                                pointer-events-none [video:not([src=''])~&]:hidden">
-                  <div className="w-16 h-16 rounded-full border-2 border-[#FF9900]/30 flex items-center justify-center mb-3">
-                    <svg className="w-7 h-7 text-[#FF9900]/60" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M8 5v14l11-7z" />
-                    </svg>
-                  </div>
-                  <span className="text-gray-500 text-xs">Demo coming soon</span>
-                </div>
-                {/* Orange glow border effect */}
-                <div className="absolute inset-0 rounded-2xl border border-[#FF9900]/10 pointer-events-none" />
-              </div>
-            </div>
+            {/* LEFT — Video playlist */}
+            <HeroVideo />
 
             {/* RIGHT — Content */}
             <div className="w-full lg:w-1/2 text-center lg:text-left">
