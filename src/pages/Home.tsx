@@ -317,84 +317,121 @@ export default function Home() {
         {/* Animated grid */}
         <FloatingGrid />
 
-        <div className="relative z-10 max-w-4xl mx-auto text-center">
-          {/* Badges */}
-          <div className="flex flex-wrap items-center justify-center gap-2 mb-6 animate-fade-in-up">
-            <span className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1 rounded-full
-                             bg-blue-500/10 border border-blue-500/20 text-blue-400">
-              <span className="w-1.5 h-1.5 rounded-full bg-blue-400 inline-block" />
-              {t.home.badgeBase}
-            </span>
-            <span className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1 rounded-full
-                             bg-[#FF9900]/10 border border-[#FF9900]/20 text-[#FF9900]">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#FF9900] inline-block" />
-              {t.home.badgeX402}
-            </span>
-            <span className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1 rounded-full
-                             bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block" />
-              {t.home.badgeSkale}
-            </span>
-            <a
-              href="https://github.com/Wintyx57/x402-bazaar"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1 rounded-full
-                         bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:border-white/20 transition-colors no-underline"
-            >
-              <GitHubIcon />
-              {t.home.badgeOpenSource}
-            </a>
+        <div className="relative z-10 max-w-6xl mx-auto">
+          {/* Split layout: video left + content right */}
+          <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
+
+            {/* LEFT — Video */}
+            <div className="w-full lg:w-1/2 animate-fade-in-up">
+              <div className="relative aspect-video rounded-2xl overflow-hidden border border-white/10
+                              bg-[#0d1117] shadow-[0_0_40px_rgba(255,153,0,0.08)]">
+                {/* Video element — replace src with your Nano Banana video URL */}
+                <video
+                  className="w-full h-full object-cover"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  poster="/video-poster.webp"
+                >
+                  <source src="/hero-demo.mp4" type="video/mp4" />
+                </video>
+                {/* Placeholder overlay — shown when no video loaded */}
+                <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-[#0d1117] to-[#161B22]
+                                pointer-events-none [video:not([src=''])~&]:hidden">
+                  <div className="w-16 h-16 rounded-full border-2 border-[#FF9900]/30 flex items-center justify-center mb-3">
+                    <svg className="w-7 h-7 text-[#FF9900]/60" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M8 5v14l11-7z" />
+                    </svg>
+                  </div>
+                  <span className="text-gray-500 text-xs">Demo coming soon</span>
+                </div>
+                {/* Orange glow border effect */}
+                <div className="absolute inset-0 rounded-2xl border border-[#FF9900]/10 pointer-events-none" />
+              </div>
+            </div>
+
+            {/* RIGHT — Content */}
+            <div className="w-full lg:w-1/2 text-center lg:text-left">
+              {/* Badges */}
+              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2 mb-6 animate-fade-in-up">
+                <span className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1 rounded-full
+                                 bg-blue-500/10 border border-blue-500/20 text-blue-400">
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-400 inline-block" />
+                  {t.home.badgeBase}
+                </span>
+                <span className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1 rounded-full
+                                 bg-[#FF9900]/10 border border-[#FF9900]/20 text-[#FF9900]">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#FF9900] inline-block" />
+                  {t.home.badgeX402}
+                </span>
+                <span className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1 rounded-full
+                                 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block" />
+                  {t.home.badgeSkale}
+                </span>
+                <a
+                  href="https://github.com/Wintyx57/x402-bazaar"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1 rounded-full
+                             bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:border-white/20 transition-colors no-underline"
+                >
+                  <GitHubIcon />
+                  {t.home.badgeOpenSource}
+                </a>
+              </div>
+
+              {/* Headline */}
+              <h1 className="text-3xl sm:text-5xl md:text-5xl lg:text-5xl font-bold text-white mb-4 animate-fade-in-up delay-100 leading-tight">
+                {t.home.heroTitle}{' '}
+                <span className="gradient-text">{t.home.heroTitleHighlight}</span>
+              </h1>
+
+              {/* Subline */}
+              <p className="text-gray-400 text-base sm:text-lg max-w-2xl mb-8 animate-fade-in-up delay-200">
+                {t.home.heroSubtitle}
+              </p>
+
+              {/* CTA buttons */}
+              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 mb-8 animate-fade-in-up delay-200">
+                <Link
+                  to="/services"
+                  className="gradient-btn text-white text-base font-semibold px-10 py-3.5 rounded-xl no-underline
+                             transition-all duration-200 hover:brightness-110 hover:scale-[1.02] animate-pulse-glow"
+                >
+                  {t.home.exploreCTA}
+                </Link>
+                <Link
+                  to="/register"
+                  className="glass-card text-gray-300 text-base font-medium px-8 py-3.5 rounded-xl no-underline
+                             transition-all duration-200 hover:border-[#FF9900]/30 hover:text-white"
+                >
+                  {t.home.listApiCTA} →
+                </Link>
+              </div>
+
+              {/* CLI snippet */}
+              <div className="animate-fade-in-up delay-300 mb-8">
+                <button
+                  onClick={handleCopy}
+                  aria-label={t.home.cliCopyLabel}
+                  className="inline-flex items-center gap-3 bg-[#0d1117] border border-[#FF9900]/20 rounded-xl px-5 py-3 font-mono text-sm
+                             hover:border-[#FF9900]/40 transition-all duration-300 group cursor-pointer"
+                >
+                  <span className="text-gray-500 select-none">$</span>
+                  <span className="text-[#FF9900] font-medium">npx x402-bazaar init</span>
+                  <span className="text-gray-500 group-hover:text-[#FF9900] transition-colors">
+                    {copied ? <IconCheck /> : <IconCopy />}
+                  </span>
+                </button>
+                <p className="text-gray-500 text-xs mt-2">{t.home.cliHint}</p>
+              </div>
+            </div>
           </div>
 
-          {/* Headline */}
-          <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold text-white mb-4 animate-fade-in-up delay-100 leading-tight">
-            {t.home.heroTitle}{' '}
-            <span className="gradient-text">{t.home.heroTitleHighlight}</span>
-          </h1>
-
-          {/* Subline */}
-          <p className="text-gray-400 text-base sm:text-lg max-w-2xl mx-auto mb-8 animate-fade-in-up delay-200">
-            {t.home.heroSubtitle}
-          </p>
-
-          {/* CTA buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-8 animate-fade-in-up delay-200">
-            <Link
-              to="/services"
-              className="gradient-btn text-white text-base font-semibold px-10 py-3.5 rounded-xl no-underline
-                         transition-all duration-200 hover:brightness-110 hover:scale-[1.02] animate-pulse-glow"
-            >
-              {t.home.exploreCTA}
-            </Link>
-            <Link
-              to="/register"
-              className="glass-card text-gray-300 text-base font-medium px-8 py-3.5 rounded-xl no-underline
-                         transition-all duration-200 hover:border-[#FF9900]/30 hover:text-white"
-            >
-              {t.home.listApiCTA} →
-            </Link>
-          </div>
-
-          {/* CLI snippet */}
-          <div className="animate-fade-in-up delay-300 mb-10">
-            <button
-              onClick={handleCopy}
-              aria-label={t.home.cliCopyLabel}
-              className="inline-flex items-center gap-3 bg-[#0d1117] border border-[#FF9900]/20 rounded-xl px-5 py-3 font-mono text-sm
-                         hover:border-[#FF9900]/40 transition-all duration-300 group cursor-pointer"
-            >
-              <span className="text-gray-500 select-none">$</span>
-              <span className="text-[#FF9900] font-medium">npx x402-bazaar init</span>
-              <span className="text-gray-500 group-hover:text-[#FF9900] transition-colors">
-                {copied ? <IconCheck /> : <IconCopy />}
-              </span>
-            </button>
-            <p className="text-gray-500 text-xs mt-2">{t.home.cliHint}</p>
-          </div>
-
-          {/* Live stats */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 animate-fade-in-up delay-300">
+          {/* Live stats — full width below split */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 mt-12 animate-fade-in-up delay-300">
             <div className="glass-card rounded-xl p-4 text-center">
               <div className="text-2xl sm:text-3xl font-bold gradient-text mb-1">
                 {loading ? <span className="inline-block w-10 h-7 animate-shimmer rounded" /> : <CountUp end={services.length} suffix="+" />}
