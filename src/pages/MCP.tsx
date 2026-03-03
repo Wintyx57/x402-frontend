@@ -80,7 +80,7 @@ const ides = [
   { id: 'claude-code', name: 'Claude Code CLI', icon: <TerminalIcon /> },
 ];
 
-function MCPCodeBlock({ code }) {
+function MCPCodeBlock({ code, language: _language }: { code: any; language?: string }) {
   return (
     <div className="relative group">
       <SharedCopyButton text={code} copiedLabel="Copied" />

@@ -4,9 +4,7 @@ import { useTranslation } from '../i18n/LanguageContext';
 import useSEO from '../hooks/useSEO';
 import { useStatus as useStatusQuery } from '../hooks/useStatus';
 
-const REFRESH_INTERVAL = 60000; // 60s
-
-function StatusBadge({ overall }) {
+function StatusBadge({ overall }: { overall: string }) {
   const { t } = useTranslation();
   const config = {
     operational: { color: 'bg-emerald-500', text: t.status?.operational || 'All Systems Operational', ring: 'ring-emerald-500/30' },
@@ -14,7 +12,7 @@ function StatusBadge({ overall }) {
     major_outage: { color: 'bg-red-500', text: t.status?.majorOutage || 'Major Outage', ring: 'ring-red-500/30' },
     unknown: { color: 'bg-gray-500', text: t.status?.unknown || 'Checking...', ring: 'ring-gray-500/30' },
   };
-  const c = config[overall] || config.unknown;
+  const c = (config as Record<string, any>)[overall] || config.unknown;
 
   return (
     <div className={`inline-flex items-center gap-3 px-6 py-3 rounded-full glass-card ring-2 ${c.ring}`}>
@@ -24,7 +22,7 @@ function StatusBadge({ overall }) {
   );
 }
 
-function EndpointCard({ ep, t }) {
+function EndpointCard({ ep, t }: { ep: any; t: any }) {
   const isOnline = ep.status === 'online';
   return (
     <div className="glass-card rounded-lg p-4 flex items-center gap-3 hover:bg-white/5 transition-colors">
@@ -45,7 +43,7 @@ function EndpointCard({ ep, t }) {
   );
 }
 
-function UptimeBar({ uptime }) {
+function UptimeBar({ uptime }: { uptime: any }) {
   const pct = uptime ?? 0;
   let color = 'bg-emerald-500';
   if (pct < 99) color = 'bg-amber-500';
@@ -65,8 +63,9 @@ function UptimeBar({ uptime }) {
 
 export default function Status() {
   const { t } = useTranslation();
-  const { data: status, isLoading: statusLoading, error: statusError, dataUpdatedAt } = useStatusQuery();
-  const [uptime, setUptime] = useState(null);
+  const { data: statusRaw, isLoading: statusLoading, error: statusError, dataUpdatedAt } = useStatusQuery();
+  const status = statusRaw as Record<string, any> | undefined;
+  const [uptime, setUptime] = useState<Record<string, any> | null>(null);
   const [period, setPeriod] = useState('24h');
   const loading = statusLoading;
   const lastRefresh = dataUpdatedAt ? new Date(dataUpdatedAt) : null;
@@ -171,8 +170,8 @@ export default function Status() {
           </div>
         ) : status?.endpoints?.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {status.endpoints.map((ep) => {
-              const uptimeData = uptime?.endpoints?.find((u) => u.endpoint === ep.endpoint);
+            {status?.endpoints.map((ep: any) => {
+              const uptimeData = uptime?.endpoints?.find((u: any) => u.endpoint === ep.endpoint);
               return (
                 <div key={ep.endpoint}>
                   <EndpointCard ep={ep} t={t} />

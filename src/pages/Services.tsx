@@ -12,9 +12,9 @@ import { CATEGORIES, CATEGORY_LABELS } from '../data/categories';
 export default function Services() {
   const { data: servicesData, isLoading: loading, error: servicesError } = useServices();
   const services = Array.isArray(servicesData) ? servicesData : [];
-  const [activityMap, setActivityMap] = useState({});
-  const [healthMap, setHealthMap] = useState({});
-  const [uptimeMap, setUptimeMap] = useState({});
+  const [activityMap, setActivityMap] = useState<Record<string, any>>({});
+  const [healthMap, setHealthMap] = useState<Record<string, any>>({});
+  const [uptimeMap, setUptimeMap] = useState<Record<string, any>>({});
   const [searchParams, setSearchParams] = useSearchParams();
   const { t } = useTranslation();
 
@@ -25,7 +25,7 @@ export default function Services() {
   const maxPrice = parseFloat(searchParams.get('maxPrice') || '1');
   const sourceFilter = searchParams.get('source') || 'all';
 
-  const setParam = (key, value) => {
+  const setParam = (key: string, value: string) => {
     const params = new URLSearchParams(searchParams);
     if (value && value !== 'all' && value !== 'name') {
       params.set(key, value);
@@ -59,7 +59,7 @@ export default function Services() {
       .then(r => r.json())
       .then(data => {
         if (data?.endpoints) {
-          const map = {};
+          const map: Record<string, any> = {};
           for (const ep of data.endpoints) {
             if (ep.uptime !== null) {
               map[`${API_URL}${ep.endpoint}`] = ep.uptime;
@@ -74,22 +74,22 @@ export default function Services() {
 
   // Helper: find the primary category of a service (first tag matching a known category)
   const categoryTags = CATEGORIES.filter(c => c.tag).map(c => c.tag);
-  const getCategory = (s) => s.tags?.find(t => categoryTags.includes(t)) || null;
+  const getCategory = (s: any) => s.tags?.find((t: string) => categoryTags.includes(t)) || null;
 
   // Count per category
-  const categoryCounts = { all: services.length };
-  services.forEach(s => {
+  const categoryCounts: Record<string, number> = { all: services.length };
+  services.forEach((s: any) => {
     const cat = getCategory(s);
     if (cat) categoryCounts[cat] = (categoryCounts[cat] || 0) + 1;
   });
 
   // Filter
-  const filtered = useMemo(() => services.filter(s => {
+  const filtered = useMemo(() => services.filter((s: any) => {
     if (search) {
       const q = search.toLowerCase();
       const match = s.name.toLowerCase().includes(q) ||
         s.description?.toLowerCase().includes(q) ||
-        s.tags?.some(tag => tag.toLowerCase().includes(q));
+        s.tags?.some((tag: string) => tag.toLowerCase().includes(q));
       if (!match) return false;
     }
     if (priceFilter === 'free' && Number(s.price_usdc) !== 0) return false;
@@ -110,7 +110,7 @@ export default function Services() {
     switch (sort) {
       case 'price-asc': return Number(a.price_usdc) - Number(b.price_usdc);
       case 'price-desc': return Number(b.price_usdc) - Number(a.price_usdc);
-      case 'newest': return new Date(b.created_at) - new Date(a.created_at);
+      case 'newest': return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
       default: return a.name.localeCompare(b.name);
     }
   }), [filtered, sort]);
@@ -245,8 +245,8 @@ export default function Services() {
                   : 'bg-white/[0.02] text-gray-500 hover:text-gray-300 hover:bg-white/5 border border-transparent'
               }`}
             >
-              <CategoryIcon category={cat.key} className="w-3.5 h-3.5" />
-              <span>{t.services[CATEGORY_LABELS[cat.key]]}</span>
+              <CategoryIcon category={cat.key as any} className="w-3.5 h-3.5" />
+              <span>{(t.services as Record<string, any>)[CATEGORY_LABELS[cat.key]]}</span>
               <span className={`text-xs ${isActive ? 'text-gray-400' : 'text-gray-600'}`}>
                 {count}
               </span>
@@ -301,9 +301,9 @@ export default function Services() {
             return (
               <section key={cat.key}>
                 <div className="flex items-center gap-2.5 mb-4">
-                  <CategoryIcon category={cat.key} className="w-5 h-5" />
+                  <CategoryIcon category={cat.key as any} className="w-5 h-5" />
                   <h2 className="text-lg font-semibold text-white">
-                    {t.services[CATEGORY_LABELS[cat.key]]}
+                    {(t.services as Record<string, any>)[CATEGORY_LABELS[cat.key]]}
                   </h2>
                   <span className="text-xs text-gray-500 bg-white/5 px-2 py-0.5 rounded-full">
                     {catServices.length}

@@ -42,7 +42,7 @@ function highlightJSON(json: string): string {
 
 function generateCode(api: Record<string, any>, params: Record<string, string>, tab: string): string {
   const qs = api.params.length > 0
-    ? '?' + api.params.map(p => `${p.name}=${encodeURIComponent(params[p.name] || p.defaultValue)}`).join('&')
+    ? '?' + api.params.map((p: Record<string, any>) => `${p.name}=${encodeURIComponent(params[p.name] || p.defaultValue)}`).join('&')
     : '';
   const url = `https://x402-api.onrender.com${api.route}${qs}`;
 
@@ -115,16 +115,16 @@ export default function Playground() {
   const heroRef = useReveal();
   const mainRef = useReveal();
 
-  const [selectedApi, setSelectedApi] = useState(null);
-  const [params, setParams] = useState({});
-  const [response, setResponse] = useState(null);
+  const [selectedApi, setSelectedApi] = useState<Record<string, any> | null>(null);
+  const [params, setParams] = useState<Record<string, string>>({});
+  const [response, setResponse] = useState<Record<string, any> | null>(null);
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('curl');
 
-  const handleSelectApi = useCallback((api) => {
+  const handleSelectApi = useCallback((api: Record<string, any>) => {
     setSelectedApi(api);
-    const defaults = {};
-    api.params.forEach(p => { defaults[p.name] = p.defaultValue; });
+    const defaults: Record<string, string> = {};
+    api.params.forEach((p: Record<string, any>) => { defaults[p.name] = p.defaultValue; });
     setParams(defaults);
     setResponse(null);
   }, []);
@@ -135,7 +135,7 @@ export default function Playground() {
     setResponse(null);
 
     const qs = selectedApi.params.length > 0
-      ? '?' + selectedApi.params.map(p => `${p.name}=${encodeURIComponent(params[p.name] || '')}`).join('&')
+      ? '?' + selectedApi.params.map((p: Record<string, any>) => `${p.name}=${encodeURIComponent(params[p.name] || '')}`).join('&')
       : '';
     const url = `${API_URL}${selectedApi.route}${qs}`;
 
@@ -150,12 +150,13 @@ export default function Playground() {
       let body;
       try { body = await res.json(); } catch { body = { error: 'Non-JSON response' }; }
       setResponse({ status: res.status, statusText: res.statusText, body, duration, url });
-    } catch (err) {
+    } catch (err: unknown) {
       clearTimeout(timeout);
       const duration = Math.round(performance.now() - start);
+      const e = err as Record<string, any>;
       setResponse({
         status: 0, statusText: 'Network Error',
-        body: { error: err.name === 'AbortError' ? 'Request timed out (15s)' : err.message },
+        body: { error: e.name === 'AbortError' ? 'Request timed out (15s)' : e.message },
         duration, url
       });
     } finally {
@@ -163,7 +164,7 @@ export default function Playground() {
     }
   }, [selectedApi, params, loading]);
 
-  const statusColor = (status) => {
+  const statusColor = (status: number) => {
     if (status === 402) return 'bg-[#FF9900]/20 text-[#FF9900] border-[#FF9900]/30';
     if (status >= 200 && status < 300) return 'bg-green-500/20 text-green-400 border-green-500/30';
     if (status >= 400) return 'bg-red-500/20 text-red-400 border-red-500/30';
@@ -247,7 +248,7 @@ export default function Playground() {
               <div className="bg-white/[0.03] border border-white/8 rounded-xl p-4">
                 <h3 className="text-sm font-semibold text-white mb-3">{pg.parameters || 'Parameters'}</h3>
                 <div className="space-y-3">
-                  {selectedApi.params.map(p => (
+                  {selectedApi.params.map((p: Record<string, any>) => (
                     <div key={p.name}>
                       <div className="flex items-center gap-2 mb-1">
                         <label className="text-xs text-gray-400 font-mono">{p.name}</label>
@@ -259,7 +260,7 @@ export default function Playground() {
                       </div>
                       <input
                         type="text"
-                        value={params[p.name] || ''}
+                        value={(params as Record<string, string>)[p.name] || ''}
                         onChange={e => setParams(prev => ({ ...prev, [p.name]: e.target.value }))}
                         className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white
                                    placeholder-gray-600 focus:outline-none focus:border-[#FF9900]/50 transition-colors"
@@ -267,7 +268,7 @@ export default function Playground() {
                       />
                     </div>
                   ))}
-                  {selectedApi.params.length === 0 && (
+                  {(selectedApi.params as any[]).length === 0 && (
                     <p className="text-xs text-gray-500 italic">{pg.noParams || 'No parameters needed'}</p>
                   )}
                 </div>

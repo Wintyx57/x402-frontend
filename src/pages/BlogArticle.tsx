@@ -126,8 +126,8 @@ function parseMarkdown(markdown: string): string {
 
 export default function BlogArticle() {
   const { slug } = useParams<{ slug: string }>();
-  const _navigate = useNavigate();
-  const _t = useTranslation();
+  useNavigate();
+  useTranslation();
   const [content, setContent] = useState<string>('');
   const [metadata, setMetadata] = useState<{ title?: string; date?: string; author?: string }>({});
   const [loading, setLoading] = useState(true);

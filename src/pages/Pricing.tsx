@@ -194,7 +194,7 @@ export default function Pricing() {
                 {/* Tier Header */}
                 <div className={`flex items-center justify-between px-4 sm:px-6 py-3 bg-gradient-to-r ${tier.color} bg-opacity-10`}>
                   <div className="flex items-center gap-3">
-                    <h3 className="text-white font-bold text-sm sm:text-base">{t.pricing[tier.name]}</h3>
+                    <h3 className="text-white font-bold text-sm sm:text-base">{(t.pricing as Record<string, any>)[tier.name]}</h3>
                     <span className="text-gray-400 text-xs">
                       {tier.endpoints.length} {tier.endpoints.length === 1 ? 'endpoint' : 'endpoints'}
                     </span>
@@ -262,7 +262,7 @@ export default function Pricing() {
                 {marketplaceFees.map((fee, i) => (
                   <tr key={i} className="border-b border-white/5 last:border-b-0 hover:bg-white/5 transition-colors">
                     <td className="px-4 sm:px-6 py-4">
-                      <span className="text-white font-medium">{t.pricing[fee.name]}</span>
+                      <span className="text-white font-medium">{(t.pricing as Record<string, any>)[fee.name]}</span>
                     </td>
                     <td className="px-4 sm:px-6 py-4 text-right">
                       <span className="text-[#FF9900] font-semibold">{fee.price}</span>
@@ -340,7 +340,7 @@ export default function Pricing() {
                       : 'border-white/10 text-gray-400 hover:border-white/20'
                   }`}
                 >
-                  {t.pricing[tier.name]} ({tier.price})
+                  {(t.pricing as Record<string, any>)[tier.name]} ({tier.price})
                 </button>
               ))}
             </div>

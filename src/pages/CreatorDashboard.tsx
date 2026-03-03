@@ -7,7 +7,7 @@ import { useReveal } from '../hooks/useReveal';
 import useSEO from '../hooks/useSEO';
 import { API_URL } from '../config';
 
-function ServiceRow({ service, t }) {
+function ServiceRow({ service, t }: { service: any; t: any }) {
   const cd = t.creatorDashboard || {};
   const price = parseFloat(service.price_usdc || service.price) || 0;
   const tags = service.tags || [];
@@ -41,7 +41,7 @@ function ServiceRow({ service, t }) {
       {/* Tags */}
       {tags.length > 0 && (
         <div className="flex flex-wrap gap-1 mb-3">
-          {tags.slice(0, 5).map(tag => (
+          {tags.slice(0, 5).map((tag: string) => (
             <span key={tag} className="text-xs text-gray-500 bg-white/5 px-2 py-0.5 rounded-lg">{tag}</span>
           ))}
         </div>
@@ -70,9 +70,9 @@ export default function CreatorDashboard() {
   const { address, isConnected } = useAccount();
   const { openConnectModal } = useConnectModal();
 
-  const [services, setServices] = useState([]);
+  const [services, setServices] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const [fetched, setFetched] = useState(false);
 
   // Auto-fetch when wallet connects
@@ -86,7 +86,7 @@ export default function CreatorDashboard() {
     }
   }, [isConnected, address]);
 
-  const fetchMyServices = async (walletAddr) => {
+  const fetchMyServices = async (walletAddr: string) => {
     setLoading(true);
     setError(null);
     setFetched(true);
@@ -102,12 +102,13 @@ export default function CreatorDashboard() {
       const data = await res.json();
       const allServices = Array.isArray(data) ? data : (data.data || data.services || []);
       const mine = allServices.filter(
-        s => s.owner_address?.toLowerCase() === walletAddr.toLowerCase() ||
+        (s: any) => s.owner_address?.toLowerCase() === walletAddr.toLowerCase() ||
              s.ownerAddress?.toLowerCase() === walletAddr.toLowerCase()
       );
       setServices(mine);
-    } catch (err) {
-      if (err.name !== 'AbortError') {
+    } catch (err: unknown) {
+      const e = err as Record<string, any>;
+      if (e.name !== 'AbortError') {
         setError(cd.fetchError || 'Failed to load services. Please try again.');
       }
     } finally {
@@ -131,7 +132,7 @@ export default function CreatorDashboard() {
         <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">{cd.title || 'Creator Dashboard'}</h1>
         <p className="text-gray-400 text-sm">
           {isConnected
-            ? (cd.connectedAs || 'Connected as') + ` ${address.slice(0, 6)}...${address.slice(-4)}`
+            ? (cd.connectedAs || 'Connected as') + ` ${address?.slice(0, 6)}...${address?.slice(-4)}`
             : (cd.subtitle || 'Connect your wallet to view your registered APIs and revenue.')}
         </p>
       </div>
@@ -177,7 +178,7 @@ export default function CreatorDashboard() {
         <div className="glass-card rounded-xl p-6 text-center mb-6">
           <p className="text-red-400 text-sm mb-3">{error}</p>
           <button
-            onClick={() => fetchMyServices(address)}
+            onClick={() => address && fetchMyServices(address)}
             className="text-xs text-[#FF9900] font-medium cursor-pointer hover:text-[#FEBD69] transition-colors"
           >
             {cd.retry || 'Retry'}

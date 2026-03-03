@@ -35,12 +35,12 @@ export default function Register() {
     name: '', description: '', url: '', price: '', tags: '', category: 'utility', method: 'GET'
   });
   const [step, setStep] = useState('form');
-  const [txHash, setTxHash] = useState(null);
-  const [result, setResult] = useState(null);
-  const [error, setError] = useState(null);
+  const [txHash, setTxHash] = useState<`0x${string}` | null>(null);
+  const [result, setResult] = useState<Record<string, any> | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [paymentStep, setPaymentStep] = useState(0);
 
-  const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash: txHash });
+  const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash: txHash ?? undefined });
 
   const validateForm = () => {
     if (!form.name.trim() || form.name.length > 200) return t.register.errName || 'Service name is required (max 200 chars)';
@@ -68,19 +68,19 @@ export default function Register() {
     return userTags;
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     if (isProcessing) return;
     setError(null);
 
     if (!isConnected) {
-      setError(t.register.connectError);
+      setError(t.register.connectError as string);
       return;
     }
 
     const validationError = validateForm();
     if (validationError) {
-      setError(validationError);
+      setError(validationError as string);
       return;
     }
 
@@ -107,12 +107,12 @@ export default function Register() {
       const { payment_details } = await res402.json();
 
       // Resolve USDC contract and RPC from user's current chain
-      const currentChainConfig = CHAIN_CONFIG[chain?.id] || CHAIN_CONFIG[8453];
+      const currentChainConfig = CHAIN_CONFIG[(chain?.id as number) ?? 8453] || CHAIN_CONFIG[8453];
       const usdcContract = currentChainConfig.usdcContract;
 
       setPaymentStep(2);
       const hash = await writeContractAsync({
-        address: usdcContract,
+        address: usdcContract as `0x${string}`,
         abi: USDC_ABI,
         functionName: 'transfer',
         args: [
@@ -174,10 +174,11 @@ export default function Register() {
       setResult(data);
       setStep('done');
       setPaymentStep(0);
-    } catch (err) {
+    } catch (err: unknown) {
+      const e = err as Record<string, any>;
       const safeMessages = ['Transaction not confirmed', 'User rejected', 'Unexpected response'];
-      const isSafe = safeMessages.some(m => err.message?.includes(m));
-      setError(isSafe ? err.message : 'Registration failed. Please try again.');
+      const isSafe = safeMessages.some(m => e.message?.includes(m));
+      setError(isSafe ? e.message : 'Registration failed. Please try again.');
       setStep('error');
       setPaymentStep(0);
     }
@@ -193,7 +194,7 @@ export default function Register() {
   const previewInitial = previewName.charAt(0).toUpperCase();
 
   // Category label mapping
-  const categoryLabels = {
+  const categoryLabels: Record<string, string> = {
     ai: t.register.catAi || 'AI & ML',
     data: t.register.catData || 'Data',
     devtools: t.register.catDevtools || 'Dev Tools',
@@ -207,7 +208,7 @@ export default function Register() {
     <div className="max-w-4xl mx-auto px-4 py-10">
       <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2 animate-fade-in-up">{t.register.title}</h1>
       <p className="text-gray-500 mb-8 animate-fade-in-up delay-100">
-        {t.register.subtitle.replace('{cost}', REGISTER_COST)}
+        {t.register.subtitle.replace('{cost}', String(REGISTER_COST))}
       </p>
 
       {step === 'done' ? (
@@ -217,7 +218,7 @@ export default function Register() {
           <div className="flex flex-wrap justify-center gap-3">
             {txHash && (
               <a
-                href={`${(CHAIN_CONFIG[chain?.id] || CHAIN_CONFIG[8453]).explorer}/tx/${txHash}`}
+                href={`${(CHAIN_CONFIG[(chain?.id as number) ?? 8453] || CHAIN_CONFIG[8453]).explorer}/tx/${txHash}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="gradient-text font-medium text-sm no-underline"
@@ -493,7 +494,7 @@ export default function Register() {
   );
 }
 
-function CheckItem({ done, label }) {
+function CheckItem({ done, label }: { done: boolean; label: string }) {
   return (
     <div className="flex items-center gap-2">
       <div className={`w-4 h-4 rounded-full flex items-center justify-center transition-all duration-300 ${

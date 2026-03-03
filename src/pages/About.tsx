@@ -64,7 +64,7 @@ export default function About() {
         <h2 className="text-2xl font-bold text-white mb-4">{t.about.howItWorksTitle}</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {[
-            { num: '1', title: t.about.step1Title, desc: t.about.step1Desc.replace('{count}', serviceCount).replace('{catCount}', catCount), icon: 'search' },
+            { num: '1', title: t.about.step1Title, desc: t.about.step1Desc.replace('{count}', String(serviceCount)).replace('{catCount}', String(catCount)), icon: 'search' },
             { num: '2', title: t.about.step2Title, desc: t.about.step2Desc, icon: 'payment' },
             { num: '3', title: t.about.step3Title, desc: t.about.step3Desc, icon: 'check' },
             { num: '4', title: t.about.step4Title, desc: t.about.step4Desc, icon: 'earn' },

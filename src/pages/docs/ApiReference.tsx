@@ -1,4 +1,4 @@
-interface Props { d: Record<string, string>; endpointsRaw?: unknown; apiData?: unknown; parsed?: unknown; }
+interface Props { d: Record<string, string>; endpointsRaw?: unknown; apiData?: Record<string, any>; parsed?: unknown; }
 
 import { PriceBadge } from './shared';
 import { NATIVE_ENDPOINTS } from './data';
@@ -29,7 +29,7 @@ export default function ApiReference({ d, endpointsRaw, apiData, parsed }: Props
             </tr>
           </thead>
           <tbody className="text-gray-300">
-            {apiData.marketplace.map((ep, i) => (
+            {(apiData?.marketplace || []).map((ep: any, i: number) => (
               <tr key={i} className="border-b border-white/5">
                 <td className="py-3 pr-4 font-mono text-xs">{ep.method}</td>
                 <td className="py-3 pr-4 font-mono text-blue-400">{ep.route}</td>
@@ -53,7 +53,7 @@ export default function ApiReference({ d, endpointsRaw, apiData, parsed }: Props
             </tr>
           </thead>
           <tbody className="text-gray-300">
-            {(parsed ? apiData.native : NATIVE_ENDPOINTS).map((ep, i) => (
+            {(parsed ? (apiData?.native || []) : NATIVE_ENDPOINTS).map((ep: any, i: number) => (
               <tr key={i} className="border-b border-white/5">
                 <td className="py-3 pr-4 font-mono text-xs">{ep.method}</td>
                 <td className="py-3 pr-4 font-mono text-blue-400">{parsed ? ep.route : ep.route}</td>

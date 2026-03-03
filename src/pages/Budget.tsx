@@ -374,7 +374,7 @@ export default function Budget() {
                             : 'bg-white/[0.02] border-white/6 text-gray-400 hover:bg-white/5 hover:text-white'
                         }`}
                       >
-                        {b[`period_${p}`] || p}
+                        {(b as Record<string, any>)[`period_${p}`] || p}
                       </button>
                     ))}
                   </div>

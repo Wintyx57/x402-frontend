@@ -51,14 +51,14 @@ function getConfigPath(env: string, os: string): string {
       linux: 'mcp-config.json',
     },
   };
-  return paths[env]?.[os] || 'mcp-config.json';
+  return (paths as Record<string, Record<string, string>>)[env]?.[os] || 'mcp-config.json';
 }
 
 function generateConfig({ env, serverUrl, maxBudget, network, withWallet, apiKey, apiSecret, installDir }: { env: string; serverUrl: string; maxBudget: string; network: string; withWallet: boolean; apiKey?: string; apiSecret?: string; installDir: string }): Record<string, any> {
   const mcpServerPath = installDir + (installDir.includes('\\') ? '\\mcp-server.mjs' : '/mcp-server.mjs');
   const seedPath = installDir + (installDir.includes('\\') ? '\\agent-seed.json' : '/agent-seed.json');
 
-  const envVars = {
+  const envVars: Record<string, string> = {
     X402_SERVER_URL: serverUrl,
     MAX_BUDGET_USDC: maxBudget,
     NETWORK: network,

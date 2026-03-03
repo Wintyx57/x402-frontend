@@ -34,7 +34,7 @@ function CrossIcon() {
   );
 }
 
-function renderValue(val) {
+function renderValue(val: any) {
   if (val === true) return <CheckIcon />;
   if (val === false) return <CrossIcon />;
   return <span className="text-sm text-white font-medium">{val}</span>;
@@ -81,7 +81,7 @@ export default function Compare() {
             key={key}
             className={`grid grid-cols-3 px-5 py-3.5 items-center ${i % 2 === 0 ? 'bg-white/[0.02]' : ''} ${i < FEATURES.length - 1 ? 'border-b border-white/5' : ''}`}
           >
-            <div className="text-sm text-gray-300">{c[`feature_${key}`] || key}</div>
+            <div className="text-sm text-gray-300">{(c as Record<string, any>)[`feature_${key}`] || key}</div>
             <div className="flex justify-center">{renderValue(x402)}</div>
             <div className="flex justify-center">{renderValue(rapidapi)}</div>
           </div>
