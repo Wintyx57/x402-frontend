@@ -5,6 +5,7 @@ export default function LanguageToggle() {
   return (
     <button
       onClick={toggleLang}
+      aria-label="Switch language"
       className="flex items-center glass rounded-full px-1 py-0.5 min-h-[44px] sm:min-h-0 text-xs font-medium cursor-pointer
                  transition-all duration-200 hover:border-white/15"
     >

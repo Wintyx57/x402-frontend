@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useId } from 'react';
 
 interface StarRatingProps {
   rating: number;
@@ -15,6 +15,7 @@ const SIZE_MAP = {
 
 export default function StarRating({ rating, size = 'md', interactive = false, onChange }: StarRatingProps) {
   const [hover, setHover] = useState(0);
+  const uniqueId = useId();
 
   const displayed = interactive ? (hover || rating) : rating;
 
@@ -55,7 +56,7 @@ export default function StarRating({ rating, size = 'md', interactive = false, o
               />
               {/* Filled portion */}
               {(filled || partial) && (
-                <clipPath id={`clip-star-${star}`}>
+                <clipPath id={`clip-star-${uniqueId}-${star}`}>
                   <rect x="0" y="0" width={partial ? `${(displayed - (star - 1)) * 24}` : '24'} height="24" />
                 </clipPath>
               )}
@@ -66,7 +67,7 @@ export default function StarRating({ rating, size = 'md', interactive = false, o
                   stroke="#FBBF24"
                   strokeWidth="1.5"
                   strokeLinejoin="round"
-                  clipPath={partial ? `url(#clip-star-${star})` : undefined}
+                  clipPath={partial ? `url(#clip-star-${uniqueId}-${star})` : undefined}
                 />
               )}
             </svg>

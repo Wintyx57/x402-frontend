@@ -40,7 +40,7 @@ export default function Register() {
   const [error, setError] = useState(null);
   const [paymentStep, setPaymentStep] = useState(0);
 
-  useWaitForTransactionReceipt({ hash: txHash });
+  const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash: txHash });
 
   const validateForm = () => {
     if (!form.name.trim() || form.name.length > 200) return t.register.errName || 'Service name is required (max 200 chars)';
@@ -357,6 +357,18 @@ export default function Register() {
                step === 'registering' ? t.register.confirming :
                `${t.register.submitButton} (${REGISTER_COST} USDC)`}
             </button>
+
+            {isConfirming && (
+              <div className="flex items-center gap-2 text-yellow-600">
+                <span className="animate-spin">⏳</span>
+                Confirming on-chain...
+              </div>
+            )}
+            {isConfirmed && (
+              <div className="text-green-600 font-medium">
+                ✅ Transaction confirmed!
+              </div>
+            )}
 
             {!isConnected && (
               <p className="text-orange-400 text-sm text-center">{t.register.connectFirst}</p>

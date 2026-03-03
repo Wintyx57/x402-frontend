@@ -3,8 +3,9 @@ Allow: /
 Disallow: /config
 Disallow: /analytics
 Disallow: /budget
-Disallow: /creator-dashboard
-Disallow: /creator-onboarding
+Disallow: /creators/dashboard
+Disallow: /creators/onboarding
+Disallow: /admin
 Crawl-delay: 1
 
 User-agent: GPTBot

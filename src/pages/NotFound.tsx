@@ -4,7 +4,7 @@ import useSEO from '../hooks/useSEO';
 
 export default function NotFound() {
   const { t } = useTranslation();
-  useSEO({ title: '404' });
+  useSEO({ title: '404', noindex: true });
 
   return (
     <div className="flex items-center justify-center min-h-[70vh] px-4">
