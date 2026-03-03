@@ -328,7 +328,7 @@ export default function Home() {
     },
     {
       label: 'n8n',
-      href: 'https://www.npmjs.com/package/x402-bazaar-n8n',
+      href: 'https://www.npmjs.com/package/@wintyx/n8n-nodes-x402-bazaar',
       icon: (
         <svg className="w-6 h-6 text-gray-400 group-hover:text-[#FF9900] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <circle cx="6" cy="12" r="2" strokeWidth={2} />
