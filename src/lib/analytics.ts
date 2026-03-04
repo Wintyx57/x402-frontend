@@ -1,0 +1,6 @@
+// Custom event tracking via Plausible
+export function trackEvent(name: string, props?: Record<string, string | number>) {
+  if (typeof window !== 'undefined' && (window as any).plausible) {
+    (window as any).plausible(name, { props });
+  }
+}

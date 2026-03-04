@@ -2,6 +2,7 @@ import { useState, memo } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '../i18n/LanguageContext';
 import StarRating from './StarRating';
+import { trackEvent } from '../lib/analytics';
 
 function getDomain(url: string): string | null {
   try {
@@ -239,6 +240,7 @@ function ServiceCard({ service, lastActivity, healthStatus = null, uptimePercent
               rel="noopener noreferrer"
               className="text-xs font-medium text-[#FF9900] hover:text-[#FFB340] no-underline min-h-[44px] sm:min-h-0 flex items-center
                          opacity-100 transition-opacity duration-200"
+              onClick={() => trackEvent('service_card_click', { service: service.name })}
             >
               {t.serviceCard.viewApi} &rarr;
             </a>

@@ -10,6 +10,7 @@ import ServiceCard from '../components/ServiceCard';
 import CategoryIcon from '../components/CategoryIcon';
 import GitHubIcon from '../components/icons/GitHubIcon';
 import { VALID_CATEGORIES } from '../data/categories';
+import { trackEvent } from '../lib/analytics';
 
 // ---- CountUp ----
 function CountUp({ end, duration = 2000, suffix = '', prefix = '' }: {
@@ -399,24 +400,37 @@ export default function Home() {
 
               {/* Subline */}
               <p className="text-gray-400 text-base sm:text-lg max-w-2xl mb-8 animate-fade-in-up delay-200">
-                {t.home.heroSubtitle.replace('{count}', String(services.length))}
+                {t.home.heroSubtitle}
               </p>
 
               {/* CTA buttons */}
-              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 mb-8 animate-fade-in-up delay-200">
+              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 mb-3 animate-fade-in-up delay-200">
                 <Link
                   to="/services"
                   className="gradient-btn text-white text-base font-semibold px-10 py-3.5 rounded-xl no-underline
-                             transition-all duration-200 hover:brightness-110 hover:scale-[1.02] animate-pulse-glow"
+                             transition-all duration-200 hover:brightness-110 hover:scale-[1.02] animate-pulse-glow
+                             shadow-[0_0_24px_rgba(255,153,0,0.25)]"
+                  onClick={() => trackEvent('cta_hero_click', { variant: 'explore' })}
                 >
                   {t.home.exploreCTA}
                 </Link>
                 <Link
                   to="/register"
-                  className="glass-card text-gray-300 text-base font-medium px-8 py-3.5 rounded-xl no-underline
-                             transition-all duration-200 hover:border-[#FF9900]/30 hover:text-white"
+                  className="border border-white/15 text-gray-300 text-base font-medium px-8 py-3.5 rounded-xl no-underline
+                             transition-all duration-200 hover:border-[#FF9900]/30 hover:text-white bg-transparent"
+                  onClick={() => trackEvent('cta_hero_click', { variant: 'list' })}
                 >
                   {t.home.listApiCTA} →
+                </Link>
+              </div>
+
+              {/* Compare nudge */}
+              <div className="flex justify-center lg:justify-start mb-8 animate-fade-in-up delay-200">
+                <Link
+                  to="/compare"
+                  className="text-xs text-[#FF9900]/70 hover:text-[#FF9900] no-underline transition-colors duration-200 underline-offset-2 hover:underline"
+                >
+                  {t.home.compareCommission} →
                 </Link>
               </div>
 
@@ -466,6 +480,21 @@ export default function Home() {
                 <CountUp end={stats?.integrations || 8} />
               </div>
               <div className="text-xs text-gray-400 uppercase tracking-wider">{t.home.statIntegrations}</div>
+            </div>
+          </div>
+
+          {/* Trust bar — real providers */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-8 animate-fade-in-up delay-300">
+            <span className="text-xs text-gray-500 uppercase tracking-widest shrink-0">Trusted by</span>
+            <div className="flex flex-wrap items-center justify-center gap-2">
+              {['Interzoid', 'AgentsHere', 'Fia Signals'].map((name) => (
+                <span
+                  key={name}
+                  className="text-xs font-medium px-3 py-1 rounded-full bg-white/5 border border-white/10 text-gray-300"
+                >
+                  {name}
+                </span>
+              ))}
             </div>
           </div>
         </div>

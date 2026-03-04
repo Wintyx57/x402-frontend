@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { parseUnits } from 'viem';
 import { API_URL, USDC_ABI, CHAIN_CONFIG } from '../config';
@@ -6,11 +6,50 @@ import { useTranslation } from '../i18n/LanguageContext';
 import useSEO from '../hooks/useSEO';
 import { Link } from 'react-router-dom';
 import ChainSelector from '../components/ChainSelector';
+import { trackEvent } from '../lib/analytics';
 
 const REGISTER_COST = 1;
 
 const CATEGORIES = ['ai', 'data', 'devtools', 'utility', 'social', 'finance', 'other'];
 const METHODS = ['GET', 'POST'];
+
+// ---- Step Indicator ----
+function StepIndicator({ num, label, active }: { num: number; label: string; active: boolean }) {
+  return (
+    <div className="flex flex-col items-center gap-1">
+      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 border ${
+        active
+          ? 'bg-[#FF9900]/10 text-[#FF9900] border-[#FF9900]/50'
+          : 'bg-white/5 text-gray-500 border-white/10'
+      }`}>
+        {num}
+      </div>
+      <span className={`text-xs transition-colors duration-300 ${active ? 'text-[#FF9900]' : 'text-gray-500'}`}>
+        {label}
+      </span>
+    </div>
+  );
+}
+
+// ---- CheckItem ----
+function CheckItem({ done, label }: { done: boolean; label: string }) {
+  return (
+    <div className="flex items-center gap-2">
+      <div className={`w-4 h-4 rounded-full flex items-center justify-center transition-all duration-300 ${
+        done ? 'bg-[#34D399]/20 text-[#34D399]' : 'bg-white/5 text-gray-500'
+      }`}>
+        {done ? (
+          <svg className="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={3}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+          </svg>
+        ) : (
+          <span className="w-1.5 h-1.5 rounded-full bg-current" />
+        )}
+      </div>
+      <span className={`text-xs transition-colors duration-300 ${done ? 'text-gray-300' : 'text-gray-500'}`}>{label}</span>
+    </div>
+  );
+}
 
 export default function Register() {
   const { address, isConnected, chain } = useAccount();
@@ -34,13 +73,19 @@ export default function Register() {
   const [form, setForm] = useState({
     name: '', description: '', url: '', price: '', tags: '', category: 'utility', method: 'GET'
   });
-  const [step, setStep] = useState('form');
+  const [wizardStep, setWizardStep] = useState(1);
+  const [paymentState, setPaymentState] = useState<'idle' | 'paying' | 'registering' | 'done' | 'error'>('idle');
   const [txHash, setTxHash] = useState<`0x${string}` | null>(null);
   const [result, setResult] = useState<Record<string, any> | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [paymentStep, setPaymentStep] = useState(0);
 
   const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash: txHash ?? undefined });
+
+  // Si wallet déjà connecté au mount, passer directement à l'étape 2
+  useEffect(() => {
+    if (isConnected) setWizardStep(2);
+  }, [isConnected]);
 
   const validateForm = () => {
     if (!form.name.trim() || form.name.length > 200) return t.register.errName || 'Service name is required (max 200 chars)';
@@ -68,7 +113,18 @@ export default function Register() {
     return userTags;
   };
 
-  const handleSubmit = async (e: any) => {
+  const handleGoToStep3 = () => {
+    const validationError = validateForm();
+    if (validationError) {
+      setError(validationError as string);
+      return;
+    }
+    setError(null);
+    trackEvent('register_step', { step: '3_pay' });
+    setWizardStep(3);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isProcessing) return;
     setError(null);
@@ -78,14 +134,8 @@ export default function Register() {
       return;
     }
 
-    const validationError = validateForm();
-    if (validationError) {
-      setError(validationError as string);
-      return;
-    }
-
     try {
-      setStep('paying');
+      setPaymentState('paying');
       setPaymentStep(1);
       const res402 = await fetch(`${API_URL}/register`, {
         method: 'POST',
@@ -122,7 +172,7 @@ export default function Register() {
       });
 
       setTxHash(hash);
-      setStep('registering');
+      setPaymentState('registering');
       setPaymentStep(3);
 
       let confirmed = false;
@@ -172,26 +222,20 @@ export default function Register() {
 
       const data = await resRegister.json();
       setResult(data);
-      setStep('done');
+      setPaymentState('done');
       setPaymentStep(0);
+      trackEvent('register_success');
     } catch (err: unknown) {
       const e = err as Record<string, any>;
       const safeMessages = ['Transaction not confirmed', 'User rejected', 'Unexpected response'];
       const isSafe = safeMessages.some(m => e.message?.includes(m));
       setError(isSafe ? e.message : 'Registration failed. Please try again.');
-      setStep('error');
+      setPaymentState('error');
       setPaymentStep(0);
     }
   };
 
-  const isProcessing = step === 'paying' || step === 'registering';
-
-  // Preview data for the live card
-  const previewName = form.name.trim() || 'My API';
-  const previewDesc = form.description.trim() || (t.register.previewDescFallback || 'Your API description will appear here');
-  const previewPrice = parseFloat(form.price) || 0;
-  const previewTags = buildTags().slice(0, 3);
-  const previewInitial = previewName.charAt(0).toUpperCase();
+  const isProcessing = paymentState === 'paying' || paymentState === 'registering';
 
   // Category label mapping
   const categoryLabels: Record<string, string> = {
@@ -204,17 +248,17 @@ export default function Register() {
     other: t.register.catOther || 'Other',
   };
 
-  return (
-    <div className="max-w-4xl mx-auto px-4 py-10">
-      <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2 animate-fade-in-up">{t.register.title}</h1>
-      <p className="text-gray-400 mb-2 animate-fade-in-up delay-100">
-        {t.register.subtitle.replace('{cost}', String(REGISTER_COST))}
-      </p>
-      <p className="text-sm text-[#FF9900]/80 font-medium mb-8 animate-fade-in-up delay-100">
-        One-time 1 USDC anti-spam deposit &middot; 95% revenue share on all calls
-      </p>
+  // Preview data
+  const previewName = form.name.trim() || 'My API';
+  const previewDesc = form.description.trim() || (t.register.previewDescFallback || 'Your API description will appear here');
+  const previewPrice = parseFloat(form.price) || 0;
+  const previewTags = buildTags().slice(0, 3);
+  const previewInitial = previewName.charAt(0).toUpperCase();
 
-      {step === 'done' ? (
+  // ---- SUCCESS VIEW ----
+  if (paymentState === 'done') {
+    return (
+      <div className="max-w-4xl mx-auto px-4 py-10">
         <div className="glass glow-orange rounded-xl p-8 text-center animate-fade-in-up">
           <div className="text-[#FF9900] text-2xl font-bold mb-3">{t.register.successTitle}</div>
           <p className="text-gray-400 text-sm mb-5">{result?.data?.name} {t.register.successDesc}</p>
@@ -234,10 +278,80 @@ export default function Register() {
             </Link>
           </div>
         </div>
-      ) : (
+      </div>
+    );
+  }
+
+  return (
+    <div className="max-w-4xl mx-auto px-4 py-10">
+      <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2 animate-fade-in-up">{t.register.title}</h1>
+      <p className="text-gray-400 mb-2 animate-fade-in-up delay-100">
+        {t.register.subtitle.replace('{cost}', String(REGISTER_COST))}
+      </p>
+      <p className="text-sm text-[#FF9900]/80 font-medium mb-8 animate-fade-in-up delay-100">
+        One-time 1 USDC anti-spam deposit &middot; 95% revenue share on all calls
+      </p>
+
+      {/* ---- Progress bar ---- */}
+      <div className="flex items-center gap-4 mb-10 animate-fade-in-up">
+        <StepIndicator num={1} label="Connect" active={wizardStep >= 1} />
+        <div className={`h-px flex-1 transition-colors duration-300 ${wizardStep >= 2 ? 'bg-[#FF9900]/40' : 'bg-white/10'}`} />
+        <StepIndicator num={2} label="Configure" active={wizardStep >= 2} />
+        <div className={`h-px flex-1 transition-colors duration-300 ${wizardStep >= 3 ? 'bg-[#FF9900]/40' : 'bg-white/10'}`} />
+        <StepIndicator num={3} label="Pay" active={wizardStep >= 3} />
+      </div>
+
+      {/* ---- STEP 1 — Connect Wallet ---- */}
+      {wizardStep === 1 && (
+        <div className="max-w-lg mx-auto animate-fade-in-up">
+          <div className="glass-card rounded-xl p-8 text-center space-y-6">
+            <div className="w-16 h-16 rounded-full bg-[#FF9900]/10 border border-[#FF9900]/20 flex items-center justify-center mx-auto">
+              <svg className="w-8 h-8 text-[#FF9900]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+              </svg>
+            </div>
+            <div>
+              <h2 className="text-xl font-bold text-white mb-2">Connect Your Wallet</h2>
+              <p className="text-gray-400 text-sm">
+                You'll need <span className="text-[#FF9900] font-semibold">1 USDC on Base</span> to register your API.
+              </p>
+            </div>
+
+            {/* Revenue calculator */}
+            <div className="glass rounded-xl p-4 text-left space-y-2">
+              <p className="text-xs text-gray-400 uppercase tracking-wider font-semibold mb-3">Revenue Potential</p>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-gray-400">100 calls/day &times; $0.01 &times; 95%</span>
+                <span className="text-[#34D399] font-bold">~$29/month</span>
+              </div>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-gray-400">1,000 calls/day &times; $0.01 &times; 95%</span>
+                <span className="text-[#34D399] font-bold">~$285/month</span>
+              </div>
+              <p className="text-xs text-gray-500 mt-2">Platform fee: only 5%. No subscription model.</p>
+            </div>
+
+            <ChainSelector />
+
+            <button
+              onClick={() => {
+                trackEvent('register_step', { step: '1_connect' });
+                setWizardStep(2);
+              }}
+              className="w-full gradient-btn text-white py-3 rounded-xl font-medium cursor-pointer
+                         transition-all duration-300 hover:scale-[1.02] hover:glow-orange"
+            >
+              Connect Wallet
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* ---- STEP 2 — Configure API ---- */}
+      {wizardStep === 2 && (
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 animate-fade-in-up delay-200">
           {/* Form — 3 cols */}
-          <form onSubmit={handleSubmit} className="space-y-5 lg:col-span-3">
+          <div className="space-y-5 lg:col-span-3">
             <ChainSelector />
             <div>
               <label className="block text-sm text-gray-400 mb-1.5">{t.register.serviceName}</label>
@@ -336,48 +450,15 @@ export default function Register() {
               </div>
             )}
 
-            {isProcessing && paymentStep > 0 && (
-              <div className="flex flex-col items-center gap-3 py-4">
-                <div className="w-10 h-10 border-2 border-[#FF9900] border-t-transparent rounded-full animate-spin" />
-                <p className="text-white text-sm font-medium">{PAYMENT_STEPS[paymentStep]}</p>
-                <p className="text-gray-400 text-xs">{t.register.stepOf || 'Step'} {paymentStep} / 4</p>
-              </div>
-            )}
-
             <button
-              type="submit"
-              disabled={isProcessing}
-              className="w-full gradient-btn disabled:opacity-40 text-white py-3 rounded-xl font-medium
-                         cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:glow-orange
-                         flex items-center justify-center gap-2"
+              type="button"
+              onClick={handleGoToStep3}
+              className="w-full gradient-btn text-white py-3 rounded-xl font-medium
+                         cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:glow-orange"
             >
-              {isProcessing && (
-                <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                </svg>
-              )}
-              {step === 'paying' ? t.register.paying :
-               step === 'registering' ? t.register.confirming :
-               `${t.register.submitButton} (${REGISTER_COST} USDC)`}
+              Next: Review &amp; Pay &rarr;
             </button>
-
-            {isConfirming && (
-              <div className="flex items-center gap-2 text-yellow-600">
-                <span className="animate-spin">⏳</span>
-                Confirming on-chain...
-              </div>
-            )}
-            {isConfirmed && (
-              <div className="text-green-600 font-medium">
-                ✅ Transaction confirmed!
-              </div>
-            )}
-
-            {!isConnected && (
-              <p className="text-orange-400 text-sm text-center">{t.register.connectFirst}</p>
-            )}
-          </form>
+          </div>
 
           {/* Live Preview Card — 2 cols */}
           <div className="lg:col-span-2">
@@ -439,6 +520,110 @@ export default function Register() {
         </div>
       )}
 
+      {/* ---- STEP 3 — Review & Pay ---- */}
+      {wizardStep === 3 && (
+        <div className="max-w-lg mx-auto animate-fade-in-up">
+          <div className="glass-card rounded-xl p-8 space-y-6">
+            <h2 className="text-xl font-bold text-white text-center">Review &amp; Pay</h2>
+
+            {/* Summary */}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between py-2 border-b border-white/5">
+                <span className="text-sm text-gray-400">Service name</span>
+                <span className="text-sm text-white font-medium">{form.name}</span>
+              </div>
+              <div className="flex items-center justify-between py-2 border-b border-white/5">
+                <span className="text-sm text-gray-400">API URL</span>
+                <span className="text-sm text-white font-mono truncate max-w-[200px]">{form.url}</span>
+              </div>
+              <div className="flex items-center justify-between py-2 border-b border-white/5">
+                <span className="text-sm text-gray-400">Price per call</span>
+                <span className="text-sm text-[#FF9900] font-bold">${form.price} USDC</span>
+              </div>
+              <div className="flex items-center justify-between py-2 border-b border-white/5">
+                <span className="text-sm text-gray-400">Category</span>
+                <span className="text-sm text-white capitalize">{categoryLabels[form.category]}</span>
+              </div>
+              {form.tags && (
+                <div className="flex items-center justify-between py-2 border-b border-white/5">
+                  <span className="text-sm text-gray-400">Tags</span>
+                  <span className="text-sm text-white">{form.tags}</span>
+                </div>
+              )}
+            </div>
+
+            {/* Registration cost */}
+            <div className="glass rounded-xl p-4 text-center">
+              <p className="text-xs text-gray-400 mb-1">One-time registration deposit</p>
+              <p className="text-2xl font-bold text-[#FF9900]">1 USDC</p>
+              <p className="text-xs text-gray-500 mt-1">Anti-spam fee &middot; 95% revenue on all future calls</p>
+            </div>
+
+            {error && (
+              <div className="bg-red-500/10 border border-red-500/50 rounded-xl p-4 text-red-300 text-sm font-medium">
+                {error}
+              </div>
+            )}
+
+            {isProcessing && paymentStep > 0 && (
+              <div className="flex flex-col items-center gap-3 py-4">
+                <div className="w-10 h-10 border-2 border-[#FF9900] border-t-transparent rounded-full animate-spin" />
+                <p className="text-white text-sm font-medium">{PAYMENT_STEPS[paymentStep]}</p>
+                <p className="text-gray-400 text-xs">{t.register.stepOf || 'Step'} {paymentStep} / 4</p>
+              </div>
+            )}
+
+            {isConfirming && (
+              <div className="flex items-center justify-center gap-2 text-yellow-600 text-sm">
+                <span className="animate-spin">⏳</span>
+                Confirming on-chain...
+              </div>
+            )}
+            {isConfirmed && (
+              <div className="text-green-600 font-medium text-center text-sm">
+                Transaction confirmed!
+              </div>
+            )}
+
+            <div className="flex flex-col gap-3">
+              <form onSubmit={handleSubmit}>
+                <button
+                  type="submit"
+                  disabled={isProcessing}
+                  className="w-full gradient-btn disabled:opacity-40 text-white py-3 rounded-xl font-medium
+                             cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:glow-orange
+                             flex items-center justify-center gap-2"
+                >
+                  {isProcessing && (
+                    <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                    </svg>
+                  )}
+                  {paymentState === 'paying' ? t.register.paying :
+                   paymentState === 'registering' ? t.register.confirming :
+                   `Register & Pay ${REGISTER_COST} USDC`}
+                </button>
+              </form>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setError(null);
+                  setPaymentState('idle');
+                  setWizardStep(2);
+                }}
+                disabled={isProcessing}
+                className="w-full text-sm text-gray-500 hover:text-gray-300 transition-colors duration-200
+                           cursor-pointer bg-transparent border-none py-2"
+              >
+                &larr; Back to Configure
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* What Happens Next */}
       <div className="mt-10 mb-2">
         <h2 className="text-lg font-bold text-white text-center mb-6">{t.register.whatHappensNext}</h2>
@@ -493,25 +678,6 @@ export default function Register() {
           </Link>
         </div>
       </div>
-    </div>
-  );
-}
-
-function CheckItem({ done, label }: { done: boolean; label: string }) {
-  return (
-    <div className="flex items-center gap-2">
-      <div className={`w-4 h-4 rounded-full flex items-center justify-center transition-all duration-300 ${
-        done ? 'bg-[#34D399]/20 text-[#34D399]' : 'bg-white/5 text-gray-500'
-      }`}>
-        {done ? (
-          <svg className="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={3}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-          </svg>
-        ) : (
-          <span className="w-1.5 h-1.5 rounded-full bg-current" />
-        )}
-      </div>
-      <span className={`text-xs transition-colors duration-300 ${done ? 'text-gray-300' : 'text-gray-500'}`}>{label}</span>
     </div>
   );
 }

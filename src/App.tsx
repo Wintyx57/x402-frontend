@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import ScrollToTop from './components/ScrollToTop';
 import Footer from './components/Footer';
@@ -27,9 +27,7 @@ const Analytics = lazy(() => import('./pages/Analytics'));
 const Compare = lazy(() => import('./pages/Compare'));
 const ForProviders = lazy(() => import('./pages/ForProviders'));
 const Budget = lazy(() => import('./pages/Budget'));
-const Creators = lazy(() => import('./pages/Creators'));
 const CreatorDashboard = lazy(() => import('./pages/CreatorDashboard'));
-const CreatorOnboarding = lazy(() => import('./pages/CreatorOnboarding'));
 const Quickstart = lazy(() => import('./pages/Quickstart'));
 const AdminCommunityAgent = lazy(() => import('./pages/AdminCommunityAgent'));
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
@@ -70,9 +68,9 @@ export default function App() {
             <Route path="/compare" element={<Compare />} />
             <Route path="/for-providers" element={<ForProviders />} />
             <Route path="/budget" element={<Budget />} />
-            <Route path="/creators" element={<Creators />} />
+            <Route path="/creators" element={<Navigate to="/for-providers" replace />} />
             <Route path="/creators/dashboard" element={<CreatorDashboard />} />
-            <Route path="/creators/onboarding" element={<CreatorOnboarding />} />
+            <Route path="/creators/onboarding" element={<Navigate to="/register" replace />} />
             <Route path="/quickstart" element={<Quickstart />} />
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/admin/community-agent" element={<AdminCommunityAgent />} />

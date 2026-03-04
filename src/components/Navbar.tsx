@@ -146,28 +146,27 @@ function Navbar() {
     }
   };
 
-  const marketplaceLinks: NavLink[] = [
+  const exploreLinks: NavLink[] = [
     { to: '/services', label: t.nav.services },
+    { to: '/playground', label: t.nav.playground || 'Playground' },
     { to: '/pricing', label: t.nav.pricing },
     { to: '/compare', label: t.nav.compare || 'Compare' },
   ];
 
   const providerLinks: NavLink[] = [
-    { to: '/register', label: t.nav.register },
     { to: '/for-providers', label: t.nav.forProviders || 'For Providers' },
-    { to: '/creators', label: t.nav.creators || 'Creators' },
+    { to: '/register', label: t.nav.register },
   ];
 
   const devLinks: NavLink[] = [
     { to: '/quickstart', label: 'Quickstart' },
-    { to: '/mcp', label: 'MCP' },
     { to: '/docs', label: t.nav.docs || 'Docs' },
-    { to: '/playground', label: t.nav.playground || 'Playground' },
+    { to: '/integrate', label: t.nav.integrate || 'Integrate' },
   ];
 
   const dropdownGroups = [
-    { id: 'marketplace' as DropdownId, label: t.nav.marketplace, links: marketplaceLinks },
-    { id: 'providers' as DropdownId, label: 'Providers', links: providerLinks },
+    { id: 'marketplace' as DropdownId, label: 'Explore', links: exploreLinks },
+    { id: 'providers' as DropdownId, label: 'For Providers', links: providerLinks },
     { id: 'dev' as DropdownId, label: t.nav.forDevelopers, links: devLinks },
   ];
 
