@@ -40,7 +40,7 @@ export const CHAIN_CONFIG: Record<number, ChainConfig> = {
     rpcUrl: 'https://skale-base.skalenodes.com/v1/base',
     usdcContract: '0x85889c8c714505E0c94b30fcfcF64fE3Ac8FCb20',
     explorer: 'https://skale-base-explorer.skalenodes.com',
-    gas: 'FREE',
+    gas: '~$0.0007',
   },
 };
 
