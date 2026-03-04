@@ -3,7 +3,7 @@ import { useTranslation } from '../i18n/LanguageContext';
 
 const CHAINS = [
   { id: 8453, label: 'Base', gas: '~$0.001', color: 'bg-blue-500', free: false },
-  { id: 2046399126, label: 'SKALE Europa', gas: 'FREE', color: 'bg-green-500', free: true },
+  { id: 1187947933, label: 'SKALE on Base', gas: 'FREE', color: 'bg-green-500', free: true },
 ];
 
 export default function ChainSelector() {

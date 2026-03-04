@@ -12,16 +12,16 @@ import {
 import { connectorsForWallets } from '@rainbow-me/rainbowkit';
 import type { Chain } from 'wagmi/chains';
 
-// SKALE Europa custom chain definition
+// SKALE on Base custom chain definition
 export const skaleEuropa: Chain = {
-  id: 2046399126,
-  name: 'SKALE Europa',
+  id: 1187947933,
+  name: 'SKALE on Base',
   nativeCurrency: { name: 'sFUEL', symbol: 'sFUEL', decimals: 18 },
   rpcUrls: {
-    default: { http: ['https://mainnet.skalenodes.com/v1/elated-tan-skat'] },
+    default: { http: ['https://skale-base.skalenodes.com/v1/base'] },
   },
   blockExplorers: {
-    default: { name: 'SKALE Explorer', url: 'https://elated-tan-skat.explorer.mainnet.skalenodes.com' },
+    default: { name: 'SKALE Explorer', url: 'https://skale-base-explorer.skalenodes.com' },
   },
 };
 
@@ -80,7 +80,7 @@ function buildConfig() {
     transports: {
       [base.id]: http(),
       [baseSepolia.id]: http(),
-      [skaleEuropa.id]: http('https://mainnet.skalenodes.com/v1/elated-tan-skat'),
+      [skaleEuropa.id]: http('https://skale-base.skalenodes.com/v1/base'),
     },
     ssr: false,
   });

@@ -135,8 +135,8 @@ export default function About() {
                 S
               </div>
               <div>
-                <h3 className="text-white font-semibold text-base">SKALE Europa</h3>
-                <p className="text-gray-500 text-xs">{t.about.skaleChainId}: {CHAIN_CONFIG[2046399126].key}</p>
+                <h3 className="text-white font-semibold text-base">SKALE on Base</h3>
+                <p className="text-gray-500 text-xs">{t.about.skaleChainId}: {CHAIN_CONFIG[1187947933].key}</p>
               </div>
             </div>
             <p className="text-gray-400 text-sm leading-relaxed mb-3">{t.about.skaleDesc}</p>

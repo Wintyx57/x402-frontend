@@ -33,13 +33,13 @@ export const CHAIN_CONFIG: Record<number, ChainConfig> = {
     explorer: 'https://sepolia.basescan.org',
     gas: '~$0.001',
   },
-  // SKALE Europa Hub
-  2046399126: {
+  // SKALE on Base
+  1187947933: {
     key: 'skale',
-    label: 'SKALE Europa',
-    rpcUrl: 'https://mainnet.skalenodes.com/v1/elated-tan-skat',
-    usdcContract: '0x5F795bb52dAc3085f578f4877D450e2929D2F13d',
-    explorer: 'https://elated-tan-skat.explorer.mainnet.skalenodes.com',
+    label: 'SKALE on Base',
+    rpcUrl: 'https://skale-base.skalenodes.com/v1/base',
+    usdcContract: '0x85889c8c714505E0c94b30fcfcF64fE3Ac8FCb20',
+    explorer: 'https://skale-base-explorer.skalenodes.com',
     gas: 'FREE',
   },
 };

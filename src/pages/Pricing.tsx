@@ -307,12 +307,12 @@ export default function Pricing() {
                   S
                 </div>
                 <div>
-                  <h3 className="text-white font-semibold text-base">SKALE Europa</h3>
+                  <h3 className="text-white font-semibold text-base">SKALE on Base</h3>
                   <p className="text-gray-500 text-xs">{t.pricing.skaleChainId}</p>
                 </div>
               </div>
               <div className="text-left sm:text-right">
-                <div className="text-green-400 font-bold text-lg">{CHAIN_CONFIG[2046399126].gas}</div>
+                <div className="text-green-400 font-bold text-lg">{CHAIN_CONFIG[1187947933].gas}</div>
                 <p className="text-green-400 text-xs">{t.pricing.zeroGas}</p>
               </div>
             </div>
