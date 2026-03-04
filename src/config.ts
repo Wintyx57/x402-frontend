@@ -1,6 +1,6 @@
 export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
-if (import.meta.env.DEV && import.meta.env.PROD && API_URL.includes('localhost')) {
+if (import.meta.env.PROD && API_URL.includes('localhost')) {
   console.warn('[x402] API_URL contains localhost in production. Set VITE_API_URL to the production API URL.');
 }
 

@@ -39,8 +39,8 @@ const NotFound = lazy(() => import('./pages/NotFound'));
 export default function App() {
   return (
     <div className="min-h-screen overflow-x-hidden transition-colors duration-300">
-      <Navbar />
       <ErrorBoundary>
+        <Navbar />
         <Suspense fallback={
           <div className="flex flex-col items-center justify-center min-h-screen gap-4">
             <div className="w-10 h-10 border-2 border-[#FF9900]/20 border-t-[#FF9900] rounded-full animate-spin-slow" />
@@ -80,8 +80,8 @@ export default function App() {
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
+        <Footer />
       </ErrorBoundary>
-      <Footer />
       <ScrollToTop />
     </div>
   );
