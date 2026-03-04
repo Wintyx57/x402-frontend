@@ -96,7 +96,7 @@ export default function Compare() {
           { icon: '\u{1F512}', title: c.win3Title || 'Transparent', desc: c.win3Desc || 'Every payment is on-chain, verifiable, auditable. No hidden fees, no surprise bills.' },
           { icon: '\u26A1', title: c.win4Title || 'Fast Onboarding', desc: c.win4Desc || '2 minutes to start. One CLI command: npx x402-bazaar init. No account creation needed.' },
           { icon: '\u{1F4B5}', title: c.win5Title || '95% Revenue', desc: c.win5Desc || 'API creators keep 95% of revenue vs 75% on RapidAPI. Better economics for everyone.' },
-          { icon: '\u{1F310}', title: c.win6Title || 'Multi-Chain', desc: c.win6Desc || 'Base mainnet + SKALE (zero gas). Choose the network that fits your needs.' },
+          { icon: '\u{1F310}', title: c.win6Title || 'Multi-Chain', desc: c.win6Desc || 'Base mainnet + SKALE (ultra-low gas). Choose the network that fits your needs.' },
         ].map((item, i) => (
           <div key={i} className="glass-card rounded-xl p-5">
             <div className="text-2xl mb-2">{item.icon}</div>

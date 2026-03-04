@@ -144,7 +144,7 @@ export default function CreatorOnboarding() {
       details: [
         co.step4d1 || 'Agent calls your API endpoint',
         co.step4d2 || 'x402 responds HTTP 402 with price in USDC',
-        co.step4d3 || 'Agent pays USDC on Base (or SKALE for zero gas)',
+        co.step4d3 || 'Agent pays USDC on Base (or SKALE for ultra-low gas ~$0.0007)',
         co.step4d4 || 'Agent resends request with tx hash in header',
         co.step4d5 || 'x402 verifies payment on-chain',
         co.step4d6 || '95% of the payment goes directly to your wallet',
