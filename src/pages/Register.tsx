@@ -207,8 +207,11 @@ export default function Register() {
   return (
     <div className="max-w-4xl mx-auto px-4 py-10">
       <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2 animate-fade-in-up">{t.register.title}</h1>
-      <p className="text-gray-500 mb-8 animate-fade-in-up delay-100">
+      <p className="text-gray-400 mb-2 animate-fade-in-up delay-100">
         {t.register.subtitle.replace('{cost}', String(REGISTER_COST))}
+      </p>
+      <p className="text-sm text-[#FF9900]/80 font-medium mb-8 animate-fade-in-up delay-100">
+        One-time 1 USDC anti-spam deposit &middot; 95% revenue share on all calls
       </p>
 
       {step === 'done' ? (
@@ -337,7 +340,7 @@ export default function Register() {
               <div className="flex flex-col items-center gap-3 py-4">
                 <div className="w-10 h-10 border-2 border-[#FF9900] border-t-transparent rounded-full animate-spin" />
                 <p className="text-white text-sm font-medium">{PAYMENT_STEPS[paymentStep]}</p>
-                <p className="text-gray-500 text-xs">{t.register.stepOf || 'Step'} {paymentStep} / 4</p>
+                <p className="text-gray-400 text-xs">{t.register.stepOf || 'Step'} {paymentStep} / 4</p>
               </div>
             )}
 
@@ -379,7 +382,7 @@ export default function Register() {
           {/* Live Preview Card — 2 cols */}
           <div className="lg:col-span-2">
             <div className="sticky top-20">
-              <p className="text-xs text-gray-500 uppercase tracking-wider mb-3 font-medium">{t.register.previewTitle || 'Live Preview'}</p>
+              <p className="text-xs text-gray-400 uppercase tracking-wider mb-3 font-medium">{t.register.previewTitle || 'Live Preview'}</p>
               <div className="glass-card rounded-xl p-4 transition-all duration-300">
                 {/* Top row: logo + name + price */}
                 <div className="flex items-start gap-3 mb-3">
@@ -393,7 +396,7 @@ export default function Register() {
                         {form.method}
                       </span>
                     </div>
-                    <span className="inline-block text-xs mt-0.5 text-gray-500 capitalize">{categoryLabels[form.category]}</span>
+                    <span className="inline-block text-xs mt-0.5 text-gray-400 capitalize">{categoryLabels[form.category]}</span>
                   </div>
                   <span className={`shrink-0 font-mono text-xs font-bold px-2.5 py-1 rounded-lg ${
                     previewPrice === 0
@@ -405,18 +408,18 @@ export default function Register() {
                 </div>
 
                 {/* Description */}
-                <p className="text-gray-500 text-xs mb-3 leading-relaxed line-clamp-2">{previewDesc}</p>
+                <p className="text-gray-400 text-xs mb-3 leading-relaxed line-clamp-2">{previewDesc}</p>
 
                 {/* Tags */}
                 <div className="flex flex-wrap gap-1 mb-3">
                   {previewTags.map(tag => (
-                    <span key={tag} className="text-xs text-gray-500 bg-white/5 px-2 py-0.5 rounded-lg">{tag}</span>
+                    <span key={tag} className="text-xs text-gray-400 bg-white/5 px-2 py-0.5 rounded-lg">{tag}</span>
                   ))}
                 </div>
 
                 {/* Owner */}
                 <div className="flex items-center justify-between pt-2 border-t border-white/5">
-                  <span className="text-xs text-gray-600 font-mono">
+                  <span className="text-xs text-gray-500 font-mono">
                     {address ? `${address.slice(0, 6)}...${address.slice(-4)}` : '0x...'}
                   </span>
                   <span className="text-xs text-[#FF9900]">{t.serviceCard?.viewApi || 'View API'} &rarr;</span>
@@ -498,7 +501,7 @@ function CheckItem({ done, label }: { done: boolean; label: string }) {
   return (
     <div className="flex items-center gap-2">
       <div className={`w-4 h-4 rounded-full flex items-center justify-center transition-all duration-300 ${
-        done ? 'bg-[#34D399]/20 text-[#34D399]' : 'bg-white/5 text-gray-600'
+        done ? 'bg-[#34D399]/20 text-[#34D399]' : 'bg-white/5 text-gray-500'
       }`}>
         {done ? (
           <svg className="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={3}>
@@ -508,7 +511,7 @@ function CheckItem({ done, label }: { done: boolean; label: string }) {
           <span className="w-1.5 h-1.5 rounded-full bg-current" />
         )}
       </div>
-      <span className={`text-xs transition-colors duration-300 ${done ? 'text-gray-300' : 'text-gray-600'}`}>{label}</span>
+      <span className={`text-xs transition-colors duration-300 ${done ? 'text-gray-300' : 'text-gray-500'}`}>{label}</span>
     </div>
   );
 }

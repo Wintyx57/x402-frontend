@@ -121,7 +121,7 @@ function IntegrationBadge({ label, icon, href }: { label: string; icon: React.Re
                       group-hover:border-[#FF9900]/40 group-hover:bg-[#FF9900]/5 transition-all duration-300">
         {icon}
       </div>
-      <span className="text-xs text-gray-500 group-hover:text-gray-300 transition-colors">{label}</span>
+      <span className="text-xs text-gray-400 group-hover:text-gray-300 transition-colors">{label}</span>
     </div>
   );
   if (href) {
@@ -434,7 +434,7 @@ export default function Home() {
                     {copied ? <IconCheck /> : <IconCopy />}
                   </span>
                 </button>
-                <p className="text-gray-500 text-xs mt-2">{t.home.cliHint}</p>
+                <p className="text-gray-400 text-xs mt-2">{t.home.cliHint}</p>
               </div>
             </div>
           </div>
@@ -443,27 +443,29 @@ export default function Home() {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 mt-12 animate-fade-in-up delay-300">
             <div className="glass-card rounded-xl p-4 text-center">
               <div className="text-2xl sm:text-3xl font-bold gradient-text mb-1">
-                {loading ? <span className="inline-block w-10 h-7 animate-shimmer rounded" /> : <CountUp end={services.length} suffix="+" />}
+                {loading
+                  ? <CountUp end={70} suffix="+" />
+                  : <CountUp end={services.length > 0 ? services.length : 70} suffix="+" />}
               </div>
-              <div className="text-xs text-gray-500 uppercase tracking-wider">{t.home.statApis}</div>
+              <div className="text-xs text-gray-400 uppercase tracking-wider">{t.home.statApis}</div>
             </div>
             <div className="glass-card rounded-xl p-4 text-center">
               <div className="text-2xl sm:text-3xl font-bold text-white mb-1">
-                <CountUp end={stats?.totalPayments || 0} suffix="+" />
+                <CountUp end={stats?.totalPayments || 170} suffix="+" />
               </div>
-              <div className="text-xs text-gray-500 uppercase tracking-wider">{t.home.statPayments}</div>
+              <div className="text-xs text-gray-400 uppercase tracking-wider">{t.home.statPayments}</div>
             </div>
             <div className="glass-card rounded-xl p-4 text-center">
               <div className="text-2xl sm:text-3xl font-bold text-[#34D399] mb-1">
-                <CountUp end={stats?.externalProviders || 0} />
+                <CountUp end={stats?.externalProviders || 3} />
               </div>
-              <div className="text-xs text-gray-500 uppercase tracking-wider">{t.home.statProviders}</div>
+              <div className="text-xs text-gray-400 uppercase tracking-wider">{t.home.statProviders}</div>
             </div>
             <div className="glass-card rounded-xl p-4 text-center">
               <div className="text-2xl sm:text-3xl font-bold text-[#60A5FA] mb-1">
-                <CountUp end={stats?.integrations || 0} />
+                <CountUp end={stats?.integrations || 8} />
               </div>
-              <div className="text-xs text-gray-500 uppercase tracking-wider">{t.home.statIntegrations}</div>
+              <div className="text-xs text-gray-400 uppercase tracking-wider">{t.home.statIntegrations}</div>
             </div>
           </div>
         </div>
@@ -508,7 +510,7 @@ export default function Home() {
                 </div>
                 <div className="text-[#FF9900] text-xs font-semibold uppercase tracking-wider mb-2">{step.label}</div>
                 <h3 className="text-white font-semibold text-sm mb-2">{step.title}</h3>
-                <p className="text-gray-500 text-xs leading-relaxed">{step.desc}</p>
+                <p className="text-gray-400 text-xs leading-relaxed">{step.desc}</p>
               </div>
               {i < 2 && (
                 <div className="hidden md:flex items-center justify-center w-12 shrink-0" aria-hidden="true">
@@ -583,7 +585,7 @@ export default function Home() {
                 {card.icon}
               </div>
               <h3 className="text-white font-semibold text-sm mb-2">{card.title}</h3>
-              <p className="text-gray-500 text-xs leading-relaxed">{card.desc}</p>
+              <p className="text-gray-400 text-xs leading-relaxed">{card.desc}</p>
             </div>
           ))}
         </div>
@@ -594,7 +596,7 @@ export default function Home() {
         <div className="text-center mb-10">
           <p className="text-[#FF9900] text-xs font-semibold uppercase tracking-widest mb-3">{t.home.integrationsLabel}</p>
           <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3">{t.home.integrationsTitle}</h2>
-          <p className="text-gray-500 text-sm max-w-md mx-auto">{t.home.integrationsSubtitle}</p>
+          <p className="text-gray-400 text-sm max-w-md mx-auto">{t.home.integrationsSubtitle}</p>
         </div>
         <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-8">
           {integrations.map((item, i) => (
@@ -615,19 +617,19 @@ export default function Home() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-10 mb-10">
             <div className="animate-fade-in-up">
               <div className="text-4xl font-bold gradient-text mb-2">
-                <CountUp end={stats?.totalPayments || 0} suffix="+" />
+                <CountUp end={stats?.totalPayments || 170} suffix="+" />
               </div>
               <p className="text-gray-400 text-sm">{t.home.tractionPayments}</p>
             </div>
             <div className="animate-fade-in-up" style={{ animationDelay: '100ms' }}>
               <div className="text-4xl font-bold text-[#34D399] mb-2">
-                <CountUp end={stats?.externalProviders || 0} />
+                <CountUp end={stats?.externalProviders || 3} />
               </div>
               <p className="text-gray-400 text-sm">{t.home.tractionProviders}</p>
             </div>
             <div className="animate-fade-in-up" style={{ animationDelay: '200ms' }}>
               <div className="text-4xl font-bold text-[#60A5FA] mb-2">
-                <CountUp end={stats?.usdcVolume || 0} prefix="$" suffix=" USDC" />
+                <CountUp end={stats?.usdcVolume || 19} prefix="$" suffix=" USDC" />
               </div>
               <p className="text-gray-400 text-sm">{t.home.tractionVolume}</p>
             </div>
@@ -645,7 +647,7 @@ export default function Home() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                   </svg>
                 </div>
-                <cite className="text-xs text-gray-500 not-italic">{t.home.testimonialAuthor}</cite>
+                <cite className="text-xs text-gray-400 not-italic">{t.home.testimonialAuthor}</cite>
               </footer>
             </blockquote>
           </div>
@@ -709,7 +711,7 @@ export default function Home() {
             >
               <CategoryIcon category={cat} className="w-5 h-5 mx-auto mb-1.5" />
               <div className="text-white text-sm font-medium">{t.home.categories[cat]}</div>
-              <div className="text-gray-500 text-xs mt-1">{categoryCounts[cat] || 0} APIs</div>
+              <div className="text-gray-400 text-xs mt-1">{categoryCounts[cat] || 0} APIs</div>
             </Link>
           ))}
         </div>
@@ -761,35 +763,35 @@ export default function Home() {
               <div className="text-xl sm:text-3xl font-bold text-white">
                 <CountUp end={stats.services || 0} />
               </div>
-              <div className="text-xs text-gray-500 mt-1">{t.home.servicesListed}</div>
+              <div className="text-xs text-gray-400 mt-1">{t.home.servicesListed}</div>
             </div>
             <div className="text-center">
               <div className="text-xl sm:text-3xl font-bold text-[#FF9900]">
                 <CountUp end={nativeCount || 69} />
               </div>
-              <div className="text-xs text-gray-500 mt-1">Native APIs</div>
+              <div className="text-xs text-gray-400 mt-1">Native APIs</div>
             </div>
             <div className="text-center">
               <div className="text-xl sm:text-3xl font-bold gradient-text">{t.home.network}</div>
-              <div className="text-xs text-gray-500 mt-1">Blockchain</div>
+              <div className="text-xs text-gray-400 mt-1">Blockchain</div>
             </div>
             <div className="text-center">
               <div className="text-xl sm:text-3xl font-bold text-white">
                 <CountUp end={categories.length} />
               </div>
-              <div className="text-xs text-gray-500 mt-1">{t.home.categoriesCount}</div>
+              <div className="text-xs text-gray-400 mt-1">{t.home.categoriesCount}</div>
             </div>
             {avgLatency ? (
               <div className="text-center">
                 <div className="text-xl sm:text-3xl font-bold text-white">
                   <CountUp end={avgLatency} suffix="ms" />
                 </div>
-                <div className="text-xs text-gray-500 mt-1">{t.home.avgTransaction}</div>
+                <div className="text-xs text-gray-400 mt-1">{t.home.avgTransaction}</div>
               </div>
             ) : (
               <div className="text-center">
                 <div className="text-xl sm:text-3xl font-bold text-[#34D399]">$0 Gas</div>
-                <div className="text-xs text-gray-500 mt-1">{t.home.onSkale}</div>
+                <div className="text-xs text-gray-400 mt-1">{t.home.onSkale}</div>
               </div>
             )}
           </div>

@@ -161,8 +161,8 @@ export const translations = {
       tractionPayments: "Payments processed on-chain",
       tractionProviders: "External providers earning revenue",
       tractionVolume: "On-chain USDC volume",
-      testimonialQuote: "Listed my API and received my first USDC payment in under 10 minutes. The x402 protocol handles everything automatically.",
-      testimonialAuthor: "External Provider — Railway",
+      testimonialQuote: "Integrated our API in under 10 minutes. Instant USDC payments, 95% revenue share — exactly what we needed.",
+      testimonialAuthor: "Interzoid, Data API Provider",
       // Code snippet
       codeSnippetLabel: "x402 payment flow example",
       // Error
@@ -1760,8 +1760,8 @@ def my_function(query: str) -> dict:
       tractionPayments: "Paiements traites on-chain",
       tractionProviders: "Providers externes generant des revenus",
       tractionVolume: "Volume USDC on-chain",
-      testimonialQuote: "J'ai liste mon API et recu mon premier paiement USDC en moins de 10 minutes. Le protocole x402 gere tout automatiquement.",
-      testimonialAuthor: "Provider Externe — Railway",
+      testimonialQuote: "Integration de notre API en moins de 10 minutes. Paiements USDC instantanes, 95% de part de revenus — exactement ce dont nous avions besoin.",
+      testimonialAuthor: "Interzoid, Fournisseur API Data",
       // Code snippet
       codeSnippetLabel: "Exemple de flux de paiement x402",
       // Erreur

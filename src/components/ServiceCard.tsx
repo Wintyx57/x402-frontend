@@ -144,7 +144,7 @@ function ServiceCard({ service, lastActivity, healthStatus = null, uptimePercent
               </span>
             )}
           </div>
-          <span className="inline-block text-xs mt-0.5 text-gray-500 capitalize">
+          <span className="inline-block text-xs mt-0.5 text-gray-400 capitalize">
             {service.tags?.find((tag: string) => !['x402-native', 'live'].includes(tag)) || service.tags?.[0]}
           </span>
         </div>
@@ -161,14 +161,14 @@ function ServiceCard({ service, lastActivity, healthStatus = null, uptimePercent
       {reviewStats && reviewStats.count > 0 && (
         <div className="flex items-center gap-1.5 mb-2">
           <StarRating rating={reviewStats.average} size="sm" />
-          <span className="text-[10px] text-gray-500">
+          <span className="text-[10px] text-gray-400">
             {reviewStats.average} ({reviewStats.count})
           </span>
         </div>
       )}
 
       {/* Description */}
-      <p className="text-gray-500 text-xs mb-3 leading-relaxed line-clamp-2" title={service.description}>
+      <p className="text-gray-400 text-xs mb-3 leading-relaxed line-clamp-2" title={service.description}>
         {service.description}
       </p>
 
@@ -176,25 +176,25 @@ function ServiceCard({ service, lastActivity, healthStatus = null, uptimePercent
       {lastActivity && (
         <div className="flex items-center gap-1.5 mb-2">
           <span className="w-1.5 h-1.5 rounded-full bg-[#34D399] animate-pulse" />
-          <span className="text-xs text-gray-500">{timeAgo(lastActivity, t)}</span>
+          <span className="text-xs text-gray-400">{timeAgo(lastActivity, t)}</span>
         </div>
       )}
 
       {/* Tags */}
       <div className="flex flex-wrap gap-1 mb-3">
         {service.tags?.slice(0, 3).map((tag: string) => (
-          <span key={tag} className="text-xs text-gray-500 bg-white/5 px-2 py-0.5 rounded-lg">
+          <span key={tag} className="text-xs text-gray-400 bg-white/5 px-2 py-0.5 rounded-lg">
             {tag}
           </span>
         ))}
         {service.tags?.length > 3 && (
-          <span className="text-xs text-gray-600 px-1">+{service.tags.length - 3}</span>
+          <span className="text-xs text-gray-500 px-1">+{service.tags.length - 3}</span>
         )}
       </div>
 
       {/* Bottom row: owner + verify + actions */}
       <div className="flex items-center justify-between pt-2 border-t border-white/5">
-        <div className="flex items-center gap-2 text-xs text-gray-600">
+        <div className="flex items-center gap-2 text-xs text-gray-500">
           <span className="font-mono">
             {service.owner_address?.slice(0, 6)}...{service.owner_address?.slice(-4)}
           </span>
@@ -226,8 +226,8 @@ function ServiceCard({ service, lastActivity, healthStatus = null, uptimePercent
           )}
           <Link
             to={`/services/${service.id}`}
-            className="text-xs font-medium text-gray-500 hover:text-white no-underline min-h-[44px] sm:min-h-0 flex items-center
-                       opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-200"
+            className="text-xs font-medium text-gray-400 hover:text-white no-underline min-h-[44px] sm:min-h-0 flex items-center
+                       opacity-100 transition-opacity duration-200"
             onClick={e => e.stopPropagation()}
           >
             Reviews
@@ -238,12 +238,12 @@ function ServiceCard({ service, lastActivity, healthStatus = null, uptimePercent
               target="_blank"
               rel="noopener noreferrer"
               className="text-xs font-medium text-[#FF9900] hover:text-[#FFB340] no-underline min-h-[44px] sm:min-h-0 flex items-center
-                         opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-200"
+                         opacity-100 transition-opacity duration-200"
             >
               {t.serviceCard.viewApi} &rarr;
             </a>
           ) : (
-            <span className="text-xs text-gray-600">{t.serviceCard.viewApi}</span>
+            <span className="text-xs text-gray-500">{t.serviceCard.viewApi}</span>
           )}
         </div>
       </div>
