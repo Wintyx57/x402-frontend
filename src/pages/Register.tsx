@@ -14,20 +14,58 @@ const CATEGORIES = ['ai', 'data', 'devtools', 'utility', 'social', 'finance', 'o
 const METHODS = ['GET', 'POST'];
 
 // ---- Step Indicator ----
-function StepIndicator({ num, label, active }: { num: number; label: string; active: boolean }) {
+function StepIndicator({ num, label, active, done }: { num: number; label: string; active: boolean; done?: boolean }) {
   return (
     <div className="flex flex-col items-center gap-1">
       <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 border ${
-        active
-          ? 'bg-[#FF9900]/10 text-[#FF9900] border-[#FF9900]/50'
-          : 'bg-white/5 text-gray-500 border-white/10'
+        done
+          ? 'bg-[#34D399]/15 text-[#34D399] border-[#34D399]/40'
+          : active
+            ? 'bg-[#FF9900]/10 text-[#FF9900] border-[#FF9900]/50 shadow-[0_0_12px_rgba(255,153,0,0.2)]'
+            : 'bg-white/5 text-gray-500 border-white/10'
       }`}>
-        {num}
+        {done ? (
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+          </svg>
+        ) : num}
       </div>
-      <span className={`text-xs transition-colors duration-300 ${active ? 'text-[#FF9900]' : 'text-gray-500'}`}>
+      <span className={`text-xs transition-colors duration-300 ${done ? 'text-[#34D399]' : active ? 'text-[#FF9900]' : 'text-gray-500'}`}>
         {label}
       </span>
     </div>
+  );
+}
+
+// ---- Tooltip ----
+function FieldTooltip({ children, tip }: { children: React.ReactNode; tip: string }) {
+  const [show, setShow] = useState(false);
+  return (
+    <span className="relative inline-flex items-center ml-1.5">
+      <button
+        type="button"
+        onMouseEnter={() => setShow(true)}
+        onFocus={() => setShow(true)}
+        onMouseLeave={() => setShow(false)}
+        onBlur={() => setShow(false)}
+        className="w-4 h-4 rounded-full bg-white/10 border border-white/20 text-gray-400 hover:text-gray-200
+                   text-[10px] font-bold flex items-center justify-center cursor-help transition-colors"
+        aria-label={`Help: ${tip}`}
+      >
+        {children}
+      </button>
+      {show && (
+        <div
+          role="tooltip"
+          className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-52 px-3 py-2 rounded-lg
+                     bg-[#1a1f2e] border border-white/15 text-xs text-gray-300 leading-relaxed
+                     shadow-xl z-50 pointer-events-none animate-fade-in"
+        >
+          {tip}
+          <div className="absolute top-full left-1/2 -translate-x-1/2 w-2 h-2 bg-[#1a1f2e] border-r border-b border-white/15 rotate-45 -mt-1" aria-hidden="true" />
+        </div>
+      )}
+    </span>
   );
 }
 
@@ -258,24 +296,64 @@ export default function Register() {
   // ---- SUCCESS VIEW ----
   if (paymentState === 'done') {
     return (
-      <div className="max-w-4xl mx-auto px-4 py-10">
-        <div className="glass glow-orange rounded-xl p-8 text-center animate-fade-in-up">
-          <div className="text-[#FF9900] text-2xl font-bold mb-3">{t.register.successTitle}</div>
-          <p className="text-gray-400 text-sm mb-5">{result?.data?.name} {t.register.successDesc}</p>
-          <div className="flex flex-wrap justify-center gap-3">
-            {txHash && (
-              <a
-                href={`${(CHAIN_CONFIG[(chain?.id as number) ?? 8453] || CHAIN_CONFIG[8453]).explorer}/tx/${txHash}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="gradient-text font-medium text-sm no-underline"
+      <div className="max-w-2xl mx-auto px-4 py-16">
+        <div className="glass glow-orange-lg rounded-2xl p-10 text-center animate-fade-in-up relative overflow-hidden">
+          {/* Background radial glow */}
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 pointer-events-none"
+            style={{ backgroundImage: 'radial-gradient(ellipse 60% 40% at 50% 0%, rgba(255,153,0,0.15) 0%, transparent 70%)' }}
+          />
+          <div className="relative z-10">
+            {/* Success checkmark */}
+            <div className="w-20 h-20 rounded-full bg-[#34D399]/10 border-2 border-[#34D399]/30 flex items-center justify-center mx-auto mb-6 animate-fade-in-up">
+              <svg className="w-10 h-10 text-[#34D399]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+
+            <div className="text-[#FF9900] text-2xl font-bold mb-2 animate-fade-in-up delay-100">{t.register.successTitle}</div>
+            <p className="text-white font-semibold text-lg mb-1 animate-fade-in-up delay-100">
+              {result?.data?.name || 'Your API'}
+            </p>
+            <p className="text-gray-400 text-sm mb-8 animate-fade-in-up delay-200">{t.register.successDesc}</p>
+
+            {/* Next steps */}
+            <div className="grid sm:grid-cols-3 gap-3 mb-8 animate-fade-in-up delay-200">
+              {[
+                { icon: '01', text: 'Your API is now live on the marketplace' },
+                { icon: '02', text: 'AI agents can discover and call it instantly' },
+                { icon: '03', text: 'Earn 95% USDC per call, directly on-chain' },
+              ].map((item) => (
+                <div key={item.icon} className="glass rounded-xl p-3 text-left">
+                  <span className="text-[10px] text-[#FF9900]/60 font-mono font-bold">{item.icon}</span>
+                  <p className="text-gray-300 text-xs mt-1 leading-relaxed">{item.text}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="flex flex-wrap justify-center gap-3 animate-fade-in-up delay-300">
+              {txHash && (
+                <a
+                  href={`${(CHAIN_CONFIG[(chain?.id as number) ?? 8453] || CHAIN_CONFIG[8453]).explorer}/tx/${txHash}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 gradient-btn text-white font-medium text-sm px-5 py-2.5 rounded-xl no-underline hover:brightness-110 transition-all"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                  {t.register.viewTx}
+                </a>
+              )}
+              <Link
+                to="/services"
+                className="inline-flex items-center gap-2 glass border border-white/15 text-gray-300 hover:text-white
+                           text-sm font-medium px-5 py-2.5 rounded-xl no-underline transition-colors"
               >
-                {t.register.viewTx}
-              </a>
-            )}
-            <Link to="/services" className="text-sm text-gray-400 hover:text-white no-underline transition-colors">
-              {t.register.viewServices || 'View all services'} &rarr;
-            </Link>
+                {t.register.viewServices || 'View all services'} &rarr;
+              </Link>
+            </div>
           </div>
         </div>
       </div>
@@ -293,12 +371,18 @@ export default function Register() {
       </p>
 
       {/* ---- Progress bar ---- */}
-      <div className="flex items-center gap-4 mb-10 animate-fade-in-up">
-        <StepIndicator num={1} label="Connect" active={wizardStep >= 1} />
-        <div className={`h-px flex-1 transition-colors duration-300 ${wizardStep >= 2 ? 'bg-[#FF9900]/40' : 'bg-white/10'}`} />
-        <StepIndicator num={2} label="Configure" active={wizardStep >= 2} />
-        <div className={`h-px flex-1 transition-colors duration-300 ${wizardStep >= 3 ? 'bg-[#FF9900]/40' : 'bg-white/10'}`} />
-        <StepIndicator num={3} label="Pay" active={wizardStep >= 3} />
+      <div className="flex items-center gap-4 mb-10 animate-fade-in-up" role="list" aria-label="Registration steps">
+        <div role="listitem">
+          <StepIndicator num={1} label="Connect" active={wizardStep >= 1} done={wizardStep > 1} />
+        </div>
+        <div className={`h-0.5 flex-1 rounded-full transition-all duration-500 ${wizardStep >= 2 ? 'bg-[#FF9900]/50' : 'bg-white/10'}`} aria-hidden="true" />
+        <div role="listitem">
+          <StepIndicator num={2} label="Configure" active={wizardStep >= 2} done={wizardStep > 2} />
+        </div>
+        <div className={`h-0.5 flex-1 rounded-full transition-all duration-500 ${wizardStep >= 3 ? 'bg-[#FF9900]/50' : 'bg-white/10'}`} aria-hidden="true" />
+        <div role="listitem">
+          <StepIndicator num={3} label="Pay" active={wizardStep >= 3} />
+        </div>
       </div>
 
       {/* ---- STEP 1 — Connect Wallet ---- */}
@@ -423,24 +507,41 @@ export default function Register() {
             {/* Price + Tags row */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm text-gray-400 mb-1.5">{t.register.priceLabel}</label>
-                <input
-                  type="number" step="0.001" min="0.001" required value={form.price}
-                  onChange={e => setForm({ ...form, price: e.target.value })}
-                  placeholder={t.register.pricePlaceholder}
-                  className="w-full bg-[#1a1f2e] border border-white/10 rounded-lg px-4 py-2.5 text-white placeholder-gray-600
-                             focus:outline-none focus:border-[#FF9900]/40 transition-all duration-300"
-                />
+                <label className="flex items-center text-sm text-gray-400 mb-1.5">
+                  {t.register.priceLabel}
+                  <FieldTooltip tip="Price per API call in USDC. Min 0.001 USDC. AI agents will pay this amount automatically per request. Suggested: 0.001–0.05 USDC for standard APIs.">
+                    ?
+                  </FieldTooltip>
+                </label>
+                <div className="relative">
+                  <input
+                    type="number" step="0.001" min="0.001" required value={form.price}
+                    onChange={e => setForm({ ...form, price: e.target.value })}
+                    placeholder={t.register.pricePlaceholder}
+                    className="w-full bg-[#1a1f2e] border border-white/10 rounded-lg pl-4 pr-14 py-2.5 text-white placeholder-gray-600
+                               focus:outline-none focus:border-[#FF9900]/40 transition-all duration-300"
+                    aria-describedby="price-hint"
+                  />
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-500 pointer-events-none font-mono">USDC</span>
+                </div>
+                <p id="price-hint" className="text-[11px] text-gray-600 mt-1">0.001 – 1000 USDC per call</p>
               </div>
               <div>
-                <label className="block text-sm text-gray-400 mb-1.5">{t.register.tagsLabel}</label>
+                <label className="flex items-center text-sm text-gray-400 mb-1.5">
+                  {t.register.tagsLabel}
+                  <FieldTooltip tip="Comma-separated keywords to help agents discover your API. Max 10 tags, 50 chars each. Example: weather, forecast, realtime">
+                    ?
+                  </FieldTooltip>
+                </label>
                 <input
                   type="text" value={form.tags}
                   onChange={e => setForm({ ...form, tags: e.target.value })}
                   placeholder={t.register.tagsPlaceholder}
                   className="w-full bg-[#1a1f2e] border border-white/10 rounded-lg px-4 py-2.5 text-white placeholder-gray-600
                              focus:outline-none focus:border-[#FF9900]/40 transition-all duration-300"
+                  aria-describedby="tags-hint"
                 />
+                <p id="tags-hint" className="text-[11px] text-gray-600 mt-1">Comma-separated · max 10 tags</p>
               </div>
             </div>
 

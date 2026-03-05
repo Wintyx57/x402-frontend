@@ -150,7 +150,12 @@ export default function ServiceDetail() {
 
   useSEO({
     title: service ? `${service.name} — x402 Bazaar` : 'Service — x402 Bazaar',
-    description: service?.description || 'Service detail on x402 Bazaar marketplace.',
+    description: service
+      ? `${service.description} Pay per call with USDC from $${service.price_usdc ?? '0.001'} via x402 protocol on Base or SKALE. No API key required.`
+      : 'Discover and call this API service with USDC micropayments via the x402 protocol on x402 Bazaar.',
+    keywords: service
+      ? `${service.name}, ${(service.tags || []).join(', ')}, pay-per-call API, USDC micropayment, x402 protocol, AI agent API`
+      : undefined,
   });
 
   useEffect(() => {
@@ -241,11 +246,38 @@ export default function ServiceDetail() {
   ];
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-10">
-      {/* Back link */}
-      <Link to="/services" className="text-xs text-gray-500 hover:text-[#FF9900] no-underline mb-6 block">
-        &larr; Back to Services
-      </Link>
+    <div className="max-w-4xl mx-auto px-4 py-8">
+
+      {/* ── BREADCRUMB ── */}
+      <nav aria-label="Breadcrumb" className="mb-5">
+        <ol className="flex items-center flex-wrap gap-1 text-xs text-gray-500" role="list">
+          <li>
+            <Link to="/" className="hover:text-[#FF9900] no-underline transition-colors duration-150">Home</Link>
+          </li>
+          <li aria-hidden="true" className="mx-0.5">
+            <svg className="w-3 h-3 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+          </li>
+          <li>
+            <Link to="/services" className="hover:text-[#FF9900] no-underline transition-colors duration-150">Services</Link>
+          </li>
+          {service.tags?.[0] && (
+            <>
+              <li aria-hidden="true" className="mx-0.5">
+                <svg className="w-3 h-3 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+              </li>
+              <li>
+                <Link to={`/services?cat=${service.tags[0]}`} className="hover:text-[#FF9900] no-underline transition-colors duration-150 capitalize">
+                  {service.tags[0]}
+                </Link>
+              </li>
+            </>
+          )}
+          <li aria-hidden="true" className="mx-0.5">
+            <svg className="w-3 h-3 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+          </li>
+          <li aria-current="page" className="text-gray-300 truncate max-w-[180px] font-medium">{service.name}</li>
+        </ol>
+      </nav>
 
       {/* ── 1. HEADER ── */}
       <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6 mb-4">
@@ -260,7 +292,10 @@ export default function ServiceDetail() {
                 </span>
               )}
               {service.verified_status === 'mainnet_verified' && (
-                <span className="text-xs bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded border border-emerald-500/20">
+                <span className="inline-flex items-center gap-1 text-xs bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded border border-emerald-500/20">
+                  <svg className="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
                   Verified
                 </span>
               )}
@@ -284,21 +319,43 @@ export default function ServiceDetail() {
             <p className="text-gray-400 text-sm leading-relaxed">{service.description}</p>
           </div>
 
-          {/* Price badge */}
-          <span className={`shrink-0 font-mono text-sm font-bold px-3 py-1.5 rounded-lg ${
-            isFree
-              ? 'bg-[#34D399]/10 text-[#34D399] border border-[#34D399]/20'
-              : 'bg-[#FF9900]/10 text-[#FF9900] border border-[#FF9900]/20'
-          }`}>
-            {isFree ? 'Free' : `$${service.price_usdc} USDC`}
-          </span>
+          {/* Price + prominent Try it CTA */}
+          <div className="flex flex-col items-end gap-3 shrink-0">
+            <span className={`font-mono text-sm font-bold px-3 py-1.5 rounded-lg ${
+              isFree
+                ? 'bg-[#34D399]/10 text-[#34D399] border border-[#34D399]/20'
+                : 'bg-[#FF9900]/10 text-[#FF9900] border border-[#FF9900]/20'
+            }`}>
+              {isFree ? 'Free' : `$${service.price_usdc} USDC`}
+            </span>
+
+            <Link
+              to={`/playground?api=${encodeURIComponent(service.name)}`}
+              className="inline-flex items-center gap-2 gradient-btn text-white font-bold px-5 py-2.5 rounded-xl
+                         text-sm no-underline transition-all duration-200 hover:brightness-110 hover:scale-[1.02]
+                         shadow-[0_0_20px_rgba(255,153,0,0.30)]"
+              aria-label={`Try ${service.name} in the playground`}
+            >
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M8 5v14l11-7z" />
+              </svg>
+              Try it now
+            </Link>
+          </div>
         </div>
 
-        {/* Tags */}
+        {/* Tags — clickable links to category filter */}
         {service.tags?.length > 0 && (
           <div className="flex flex-wrap gap-1.5 mt-4">
             {service.tags.map(tag => (
-              <span key={tag} className="text-xs text-gray-500 bg-white/5 px-2 py-0.5 rounded-lg">{tag}</span>
+              <Link
+                key={tag}
+                to={`/services?cat=${tag}`}
+                className="text-xs text-gray-500 bg-white/5 hover:bg-white/8 hover:text-gray-300
+                           px-2 py-0.5 rounded-lg no-underline transition-colors duration-150 capitalize"
+              >
+                {tag}
+              </Link>
             ))}
           </div>
         )}
@@ -308,9 +365,11 @@ export default function ServiceDetail() {
       <div className="flex flex-wrap gap-3 mb-6">
         <Link
           to={`/playground?api=${encodeURIComponent(service.name)}`}
-          className="inline-flex items-center gap-2 bg-[#FF9900] hover:bg-[#FFa500] text-black font-bold px-5 py-2.5 rounded-lg text-sm transition-colors no-underline"
+          className="inline-flex items-center gap-2 bg-[#FF9900] hover:bg-[#FFa500] text-black font-bold
+                     px-5 py-2.5 rounded-lg text-sm transition-all duration-200 no-underline
+                     hover:shadow-[0_0_16px_rgba(255,153,0,0.4)]"
         >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2} aria-hidden="true">
             <path strokeLinecap="round" strokeLinejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
             <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
@@ -320,12 +379,21 @@ export default function ServiceDetail() {
         {service.url && (
           <button
             onClick={handleCopyUrl}
-            className="inline-flex items-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 text-gray-300 hover:text-white font-medium px-5 py-2.5 rounded-lg text-sm transition-colors cursor-pointer"
+            className="inline-flex items-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10
+                       text-gray-300 hover:text-white font-medium px-5 py-2.5 rounded-lg text-sm
+                       transition-colors duration-200 cursor-pointer"
+            aria-label={urlCopied ? 'URL copied to clipboard' : 'Copy API URL to clipboard'}
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-            </svg>
-            {urlCopied ? 'Copied!' : 'Copy URL'}
+            {urlCopied ? (
+              <svg className="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2} aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+            ) : (
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2} aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+            )}
+            <span className={urlCopied ? 'text-emerald-400' : ''}>{urlCopied ? 'Copied!' : 'Copy URL'}</span>
           </button>
         )}
 
@@ -334,9 +402,11 @@ export default function ServiceDetail() {
             href={service.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 text-gray-300 hover:text-white font-medium px-5 py-2.5 rounded-lg text-sm transition-colors no-underline"
+            className="inline-flex items-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10
+                       text-gray-300 hover:text-white font-medium px-5 py-2.5 rounded-lg text-sm
+                       transition-colors duration-200 no-underline"
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2} aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
             </svg>
             View API

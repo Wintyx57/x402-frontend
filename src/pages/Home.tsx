@@ -152,21 +152,6 @@ function IntegrationBadge({ label, icon, href }: { label: string; icon: React.Re
 }
 
 // ---- SVG icons ----
-const IconSearch = () => (
-  <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-  </svg>
-);
-const IconPayment = () => (
-  <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-  </svg>
-);
-const IconCode = () => (
-  <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-  </svg>
-);
 const IconZero = () => (
   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
@@ -492,17 +477,61 @@ export default function Home() {
             </div>
           </div>
 
+          {/* Revenue split banner */}
+          <div className="mt-8 animate-fade-in-up delay-300">
+            <div className="inline-flex items-center gap-3 bg-[#FF9900]/8 border border-[#FF9900]/25 rounded-xl px-5 py-3 mx-auto">
+              <div className="w-8 h-8 rounded-full bg-[#FF9900]/15 border border-[#FF9900]/30 flex items-center justify-center shrink-0">
+                <svg className="w-4 h-4 text-[#FF9900]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div className="text-left">
+                <p className="text-[#FF9900] text-sm font-bold leading-tight">Revenue split 95/5 — Providers keep 95%</p>
+                <p className="text-gray-400 text-xs mt-0.5">Native on-chain split · No subscription · Instant USDC payments</p>
+              </div>
+            </div>
+          </div>
+
           {/* Trust bar — real providers */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-8 animate-fade-in-up delay-300">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-6 animate-fade-in-up delay-300">
             <span className="text-xs text-gray-500 uppercase tracking-widest shrink-0">Trusted by</span>
             <div className="flex flex-wrap items-center justify-center gap-2">
-              {['Interzoid', 'AgentsHere', 'Fia Signals'].map((name) => (
-                <span
-                  key={name}
-                  className="text-xs font-medium px-3 py-1 rounded-full bg-white/5 border border-white/10 text-gray-300"
-                >
-                  {name}
-                </span>
+              {[
+                { name: 'Interzoid', url: 'https://api.interzoid.com', verified: true },
+                { name: 'AgentsHere', url: null, verified: true },
+                { name: 'Fia Signals', url: 'https://x402.fiasignals.com', verified: false },
+              ].map(({ name, url, verified }) => (
+                url ? (
+                  <a
+                    key={name}
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full
+                               bg-white/5 border border-white/10 text-gray-300 hover:border-[#FF9900]/30
+                               hover:text-white transition-colors no-underline"
+                  >
+                    {verified && (
+                      <svg className="w-3 h-3 text-emerald-400 shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-label="Verified">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                    )}
+                    {name}
+                  </a>
+                ) : (
+                  <span
+                    key={name}
+                    className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full
+                               bg-white/5 border border-white/10 text-gray-300"
+                  >
+                    {verified && (
+                      <svg className="w-3 h-3 text-emerald-400 shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-label="Verified">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                    )}
+                    {name}
+                  </span>
+                )
               ))}
             </div>
           </div>
@@ -523,36 +552,74 @@ export default function Home() {
         <div className="text-center mb-12">
           <p className="text-[#FF9900] text-xs font-semibold uppercase tracking-widest mb-3">{t.home.howLabel}</p>
           <h2 className="text-2xl sm:text-3xl font-bold text-white">{t.home.howItWorks}</h2>
+          <p className="text-gray-400 text-sm mt-3 max-w-md mx-auto">Three steps to autonomous API monetization — no API keys, no billing setup.</p>
         </div>
 
         <div className="flex flex-col md:flex-row items-stretch justify-between gap-4 md:gap-0">
           {[
-            { icon: <IconSearch />, label: t.home.howStep1Icon, title: t.home.step1Title, desc: t.home.step1Desc },
-            { icon: <IconPayment />, label: t.home.howStep2Icon, title: t.home.step2Title, desc: t.home.step2Desc },
-            { icon: <IconCode />, label: t.home.howStep3Icon, title: t.home.step3Title, desc: t.home.step3Desc },
+            {
+              icon: (
+                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              ),
+              label: t.home.howStep1Icon,
+              title: t.home.step1Title,
+              desc: t.home.step1Desc,
+              color: 'text-[#FF9900]',
+              bg: 'bg-[#FF9900]/8 border-[#FF9900]/25',
+              glow: 'hover:shadow-[0_0_28px_rgba(255,153,0,0.12)]',
+            },
+            {
+              icon: (
+                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              ),
+              label: t.home.howStep2Icon,
+              title: t.home.step2Title,
+              desc: t.home.step2Desc,
+              color: 'text-[#60A5FA]',
+              bg: 'bg-blue-500/8 border-blue-500/25',
+              glow: 'hover:shadow-[0_0_28px_rgba(96,165,250,0.12)]',
+            },
+            {
+              icon: (
+                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              ),
+              label: t.home.howStep3Icon,
+              title: t.home.step3Title,
+              desc: t.home.step3Desc,
+              color: 'text-[#34D399]',
+              bg: 'bg-emerald-500/8 border-emerald-500/25',
+              glow: 'hover:shadow-[0_0_28px_rgba(52,211,153,0.12)]',
+            },
           ].map((step, i) => (
             <div key={i} className="flex flex-col md:flex-row items-center gap-4 md:gap-0 flex-1">
               <div
-                className="glass-card rounded-xl p-6 w-full max-w-xs mx-auto text-center animate-fade-in-up
-                           hover:border-[#FF9900]/30 hover:shadow-[0_0_20px_rgba(255,153,0,0.06)] transition-all duration-300"
+                className={`glass-card rounded-xl p-7 w-full max-w-xs mx-auto text-center animate-fade-in-up
+                           hover:border-[#FF9900]/20 transition-all duration-300 ${step.glow} relative`}
                 style={{ animationDelay: `${i * 100}ms` }}
               >
-                {/* Step number */}
-                <div className="w-7 h-7 rounded-full flex items-center justify-center mx-auto mb-3
+                {/* Step number — top right */}
+                <div className="absolute top-4 right-4 w-6 h-6 rounded-full flex items-center justify-center
                                 text-xs font-bold text-[#FF9900] bg-[#FF9900]/10 border border-[#FF9900]/20">
                   {i + 1}
                 </div>
-                <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4
-                                text-[#FF9900] bg-[#FF9900]/5 border-2 border-[#FF9900]/20">
+                {/* Icon */}
+                <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5
+                                border-2 ${step.color} ${step.bg}`}>
                   {step.icon}
                 </div>
-                <div className="text-[#FF9900] text-xs font-semibold uppercase tracking-wider mb-2">{step.label}</div>
-                <h3 className="text-white font-semibold text-sm mb-2">{step.title}</h3>
+                <div className={`text-xs font-semibold uppercase tracking-wider mb-2 ${step.color}`}>{step.label}</div>
+                <h3 className="text-white font-semibold text-base mb-2">{step.title}</h3>
                 <p className="text-gray-400 text-xs leading-relaxed">{step.desc}</p>
               </div>
               {i < 2 && (
                 <div className="hidden md:flex items-center justify-center w-12 shrink-0" aria-hidden="true">
-                  <svg className="w-5 h-5 text-[#FF9900]/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-6 h-6 text-[#FF9900]/25" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                   </svg>
                 </div>
@@ -647,25 +714,27 @@ export default function Home() {
 
       {/* ===== SOCIAL PROOF / TRACTION ===== */}
       <section ref={socialRef} className="reveal max-w-5xl mx-auto px-4 mb-24">
-        <div className="glass-card rounded-2xl p-8 sm:p-10 text-center border border-white/10">
-          <p className="text-[#FF9900] text-xs font-semibold uppercase tracking-widest mb-3">{t.home.tractionLabel}</p>
-          <h2 className="text-2xl sm:text-3xl font-bold text-white mb-10">{t.home.tractionTitle}</h2>
+        <div className="glass-card rounded-2xl p-8 sm:p-10 border border-white/10">
+          <div className="text-center mb-10">
+            <p className="text-[#FF9900] text-xs font-semibold uppercase tracking-widest mb-3">{t.home.tractionLabel}</p>
+            <h2 className="text-2xl sm:text-3xl font-bold text-white">{t.home.tractionTitle}</h2>
+          </div>
 
           {/* Stats row */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-10 mb-10">
-            <div className="animate-fade-in-up">
+            <div className="text-center animate-fade-in-up">
               <div className="text-4xl font-bold gradient-text mb-2">
                 <CountUp end={stats?.totalPayments || 170} suffix="+" />
               </div>
               <p className="text-gray-400 text-sm">{t.home.tractionPayments}</p>
             </div>
-            <div className="animate-fade-in-up" style={{ animationDelay: '100ms' }}>
+            <div className="text-center animate-fade-in-up" style={{ animationDelay: '100ms' }}>
               <div className="text-4xl font-bold text-[#34D399] mb-2">
                 <CountUp end={stats?.externalProviders || 3} />
               </div>
               <p className="text-gray-400 text-sm">{t.home.tractionProviders}</p>
             </div>
-            <div className="animate-fade-in-up" style={{ animationDelay: '200ms' }}>
+            <div className="text-center animate-fade-in-up" style={{ animationDelay: '200ms' }}>
               <div className="text-4xl font-bold text-[#60A5FA] mb-2">
                 <CountUp end={stats?.usdcVolume || 19} prefix="$" suffix=" USDC" />
               </div>
@@ -673,37 +742,92 @@ export default function Home() {
             </div>
           </div>
 
+          {/* Featured providers — social proof cards */}
+          <div className="mb-10">
+            <p className="text-xs text-gray-500 uppercase tracking-widest text-center mb-5">Featured Providers</p>
+            <div className="grid sm:grid-cols-3 gap-4">
+              {[
+                {
+                  name: 'Interzoid',
+                  category: 'Data / Intelligence',
+                  desc: 'Company name matching and entity resolution at scale.',
+                  url: 'https://api.interzoid.com',
+                  status: 'mainnet_verified',
+                  statusLabel: 'Verified',
+                  statusColor: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20',
+                },
+                {
+                  name: 'AgentsHere',
+                  category: 'AI Verification',
+                  desc: 'Agent identity verification and attestation service.',
+                  url: null,
+                  status: 'mainnet_verified',
+                  statusLabel: 'Verified',
+                  statusColor: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20',
+                },
+                {
+                  name: 'Fia Signals',
+                  category: 'Finance / Trading',
+                  desc: 'Real-time trading signals and market intelligence data.',
+                  url: 'https://x402.fiasignals.com',
+                  status: 'reachable',
+                  statusLabel: 'Auto-tested',
+                  statusColor: 'text-blue-400 bg-blue-500/10 border-blue-500/20',
+                },
+              ].map((provider, i) => (
+                <div
+                  key={provider.name}
+                  className="glass rounded-xl p-4 border border-white/8 hover:border-[#FF9900]/20 transition-all duration-300 animate-fade-in-up"
+                  style={{ animationDelay: `${i * 80}ms` }}
+                >
+                  <div className="flex items-start justify-between gap-2 mb-2">
+                    <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-[#FF9900]/15 to-[#FF9900]/5
+                                    border border-[#FF9900]/20 flex items-center justify-center shrink-0">
+                      <span className="text-sm font-bold text-[#FF9900]">{provider.name.charAt(0)}</span>
+                    </div>
+                    <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${provider.statusColor}`}>
+                      {provider.statusLabel}
+                    </span>
+                  </div>
+                  <p className="text-white text-sm font-semibold mb-0.5">{provider.name}</p>
+                  <p className="text-[10px] text-[#FF9900]/70 font-medium mb-2">{provider.category}</p>
+                  <p className="text-gray-400 text-xs leading-relaxed mb-3">{provider.desc}</p>
+                  {provider.url && (
+                    <a
+                      href={provider.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-[10px] text-[#FF9900] hover:text-[#FEBD69] no-underline transition-colors font-medium"
+                    >
+                      View API <IconExternal />
+                    </a>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+
           {/* Testimonial quote */}
           <div className="max-w-lg mx-auto animate-fade-in-up" style={{ animationDelay: '300ms' }}>
-            <blockquote className="glass rounded-xl p-5 border border-white/8">
-              <p className="text-gray-300 text-sm italic leading-relaxed mb-3">
+            <blockquote className="glass rounded-xl p-5 border border-white/8 relative">
+              <div className="absolute -top-3 left-5 text-[#FF9900]/40 text-4xl font-serif leading-none select-none" aria-hidden="true">"</div>
+              <p className="text-gray-300 text-sm italic leading-relaxed mb-3 pt-1">
                 "{t.home.testimonialQuote}"
               </p>
-              <footer className="flex items-center justify-center gap-2">
+              <footer className="flex items-center justify-start gap-2">
                 <div className="w-7 h-7 rounded-full bg-gradient-to-br from-[#FF9900]/20 to-violet-500/20 border border-white/10 flex items-center justify-center">
                   <svg className="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                   </svg>
                 </div>
                 <cite className="text-xs text-gray-400 not-italic">{t.home.testimonialAuthor}</cite>
+                <span className="ml-auto text-xs text-[#FF9900]/60 font-medium">Interzoid · Data Provider</span>
               </footer>
             </blockquote>
           </div>
 
-          {/* External providers badges */}
-          <div className="flex flex-wrap items-center justify-center gap-3 mt-8 animate-fade-in-up" style={{ animationDelay: '400ms' }}>
-            {(stats?.externalProviderNames || []).map((name: string) => (
-              <span
-                key={name}
-                className="text-xs font-medium px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-gray-400"
-              >
-                {name}
-              </span>
-            ))}
-          </div>
-
           {/* ERC-8004 badge */}
-          <div className="flex justify-center mt-6 animate-fade-in-up" style={{ animationDelay: '450ms' }}>
+          <div className="flex justify-center mt-8 animate-fade-in-up" style={{ animationDelay: '450ms' }}>
             <a
               href="https://basescan.org/token/0x8004A169FB4a3325136EB29fA0ceB6D2e539a432"
               target="_blank"
