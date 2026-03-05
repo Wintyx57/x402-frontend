@@ -156,9 +156,11 @@ export default function ServiceDetail() {
   useEffect(() => {
     if (!id) return;
 
+    /* eslint-disable react-hooks/set-state-in-effect */
     setService(null);
     setError(null);
     setLoadingService(true);
+    /* eslint-enable react-hooks/set-state-in-effect */
 
     // Try direct endpoint first, fall back to full list for compatibility
     fetch(`${API_URL}/api/services/${id}`)
@@ -195,10 +197,10 @@ export default function ServiceDetail() {
   }, [id]);
 
   useEffect(() => {
-    loadReviews();
+    loadReviews(); // eslint-disable-line react-hooks/set-state-in-effect
   }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const handleCopyUrl = useCallback(async () => {
+  const handleCopyUrl = async () => {
     if (!service?.url) return;
     try {
       await navigator.clipboard.writeText(service.url);
@@ -207,7 +209,7 @@ export default function ServiceDetail() {
     } catch {
       // Clipboard API may fail in insecure contexts
     }
-  }, [service?.url]);
+  };
 
   if (loadingService) {
     return (

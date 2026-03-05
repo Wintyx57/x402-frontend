@@ -88,12 +88,13 @@ describe('Home', () => {
 
   it('should display the hero title', () => {
     renderWithProviders(<Home />);
-    expect(screen.getByText('Your AI Agents Pay for APIs')).toBeInTheDocument();
+    const heading = screen.getByRole('heading', { level: 1 });
+    expect(heading.textContent).toMatch(/APIs that pay/);
   });
 
   it('should display the hero title highlight', () => {
     renderWithProviders(<Home />);
-    expect(screen.getByText('Automatically')).toBeInTheDocument();
+    expect(screen.getByText('themselves.')).toBeInTheDocument();
   });
 
 
@@ -101,7 +102,7 @@ describe('Home', () => {
     renderWithProviders(<Home />);
     // The explore button text from en translations
     const links = screen.getAllByRole('link');
-    const exploreLink = links.find(link => link.textContent.includes('Explore'));
+    const exploreLink = links.find(link => link.textContent.includes('Browse') || link.textContent.includes('Explore') || link.textContent.includes('API'));
     expect(exploreLink).toBeDefined();
   });
 

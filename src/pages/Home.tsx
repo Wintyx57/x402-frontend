@@ -94,7 +94,8 @@ function HeroVideo() {
     const vid = videoRef.current;
     if (!vid) return;
     vid.src = HERO_VIDEOS[idx];
-    vid.play().catch(() => {});
+    const p = vid.play();
+    if (p) p.catch(() => {});
   }, [idx]);
 
   return (
