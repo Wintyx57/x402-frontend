@@ -57,15 +57,22 @@ interface ReviewStats {
   average: number;
 }
 
+function isNewService(createdAt: string | null | undefined): boolean {
+  if (!createdAt) return false;
+  const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+  return new Date(createdAt).getTime() > sevenDaysAgo;
+}
+
 interface ServiceCardProps {
   service: Record<string, any>;
   lastActivity: string | null;
   healthStatus?: 'online' | 'offline' | null;
   uptimePercent?: number | null;
   reviewStats?: ReviewStats | null;
+  callCount?: number | null;
 }
 
-function ServiceCard({ service, lastActivity, healthStatus = null, uptimePercent = null, reviewStats = null }: ServiceCardProps) {
+function ServiceCard({ service, lastActivity, healthStatus = null, uptimePercent = null, reviewStats = null, callCount = null }: ServiceCardProps) {
   const { t } = useTranslation();
   const isFree = Number(service.price_usdc) === 0;
   const initial = service.name?.charAt(0)?.toUpperCase() || '?';
@@ -74,6 +81,7 @@ function ServiceCard({ service, lastActivity, healthStatus = null, uptimePercent
   const [copied, setCopied] = useState(false);
   const isNative = service.url?.startsWith('https://x402-api.onrender.com');
   const quality = getQualityTier(uptimePercent);
+  const isNew = isNewService(service.created_at);
 
   const handleCopyPrompt = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
@@ -90,7 +98,18 @@ function ServiceCard({ service, lastActivity, healthStatus = null, uptimePercent
   return (
     <div className="glass-card rounded-xl p-3 sm:p-5 transition-all duration-300 ease-out hover:bg-white/[0.07]
                     hover:border-[#FF9900]/30 hover:-translate-y-1 hover:scale-[1.02]
-                    hover:shadow-[0_0_20px_rgba(255,153,0,0.08),0_8px_24px_rgba(0,0,0,0.3)] group">
+                    hover:shadow-[0_0_20px_rgba(255,153,0,0.08),0_8px_24px_rgba(0,0,0,0.3)] group relative">
+      {/* NEW badge */}
+      {isNew && (
+        <span
+          className="absolute -top-2 -right-2 text-[10px] font-bold px-1.5 py-0.5 rounded-full
+                     bg-[#FF9900] text-black animate-badge-glow select-none z-10"
+          aria-label="New service added in the last 7 days"
+        >
+          NEW
+        </span>
+      )}
+
       {/* Top row: logo + name + price */}
       <div className="flex items-start gap-3 mb-3">
         <div className="w-9 h-9 rounded-lg bg-[#232f3e] flex items-center justify-center shrink-0 overflow-hidden">
@@ -139,13 +158,13 @@ function ServiceCard({ service, lastActivity, healthStatus = null, uptimePercent
                   color: quality.color,
                   border: `1px solid ${quality.bg}30`,
                 }}
-                title={`${uptimePercent}% uptime (7d)`}
+                aria-label={`${quality?.label} tier - ${uptimePercent}% uptime over 7 days`}
               >
                 {quality.label}
               </span>
             )}
           </div>
-          <span className="inline-block text-xs mt-0.5 text-gray-400 capitalize">
+          <span className="inline-block text-xs mt-0.5 text-gray-300 capitalize">
             {service.tags?.find((tag: string) => !['x402-native', 'live'].includes(tag)) || service.tags?.[0]}
           </span>
         </div>
@@ -162,14 +181,14 @@ function ServiceCard({ service, lastActivity, healthStatus = null, uptimePercent
       {reviewStats && reviewStats.count > 0 && (
         <div className="flex items-center gap-1.5 mb-2">
           <StarRating rating={reviewStats.average} size="sm" />
-          <span className="text-[10px] text-gray-400">
+          <span className="text-[10px] text-gray-300">
             {reviewStats.average} ({reviewStats.count})
           </span>
         </div>
       )}
 
       {/* Description */}
-      <p className="text-gray-400 text-xs mb-3 leading-relaxed line-clamp-2" title={service.description}>
+      <p className="text-gray-300 text-xs mb-3 leading-relaxed line-clamp-2" title={service.description}>
         {service.description}
       </p>
 
@@ -177,14 +196,14 @@ function ServiceCard({ service, lastActivity, healthStatus = null, uptimePercent
       {lastActivity && (
         <div className="flex items-center gap-1.5 mb-2">
           <span className="w-1.5 h-1.5 rounded-full bg-[#34D399] animate-pulse" />
-          <span className="text-xs text-gray-400">{timeAgo(lastActivity, t)}</span>
+          <span className="text-xs text-gray-300">{timeAgo(lastActivity, t)}</span>
         </div>
       )}
 
       {/* Tags */}
       <div className="flex flex-wrap gap-1 mb-3">
         {service.tags?.slice(0, 3).map((tag: string) => (
-          <span key={tag} className="text-xs text-gray-400 bg-white/5 px-2 py-0.5 rounded-lg">
+          <span key={tag} className="text-xs text-gray-300 bg-white/5 px-2 py-0.5 rounded-lg">
             {tag}
           </span>
         ))}
@@ -193,9 +212,23 @@ function ServiceCard({ service, lastActivity, healthStatus = null, uptimePercent
         )}
       </div>
 
+      {/* Call count */}
+      {callCount != null && callCount > 0 && (
+        <div className="flex items-center gap-1 mb-2">
+          <svg className="w-3 h-3 text-gray-500 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+          </svg>
+          <span className="text-[11px] text-gray-500">
+            {callCount >= 1000
+              ? `${(callCount / 1000).toFixed(1)}k calls`
+              : `${callCount} calls`}
+          </span>
+        </div>
+      )}
+
       {/* Bottom row: owner + verify + actions */}
       <div className="flex items-center justify-between pt-2 border-t border-white/5">
-        <div className="flex items-center gap-2 text-xs text-gray-500">
+        <div className="flex items-center gap-2 text-xs text-gray-400">
           <span className="font-mono">
             {service.owner_address?.slice(0, 6)}...{service.owner_address?.slice(-4)}
           </span>
@@ -216,7 +249,8 @@ function ServiceCard({ service, lastActivity, healthStatus = null, uptimePercent
               onClick={handleCopyPrompt}
               className="flex items-center gap-1 text-xs font-medium px-2 py-1 min-h-[44px] sm:min-h-0 rounded-md
                          bg-white/5 text-gray-400 hover:text-white hover:bg-white/10
-                         transition-all duration-200 cursor-pointer border-none"
+                         transition-all duration-200 cursor-pointer border-none active:scale-95"
+              aria-label={copied ? t.serviceCard.copied : t.serviceCard.useWithAI}
               title={t.serviceCard.useWithAI}
             >
               <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -230,6 +264,7 @@ function ServiceCard({ service, lastActivity, healthStatus = null, uptimePercent
             className="text-xs font-medium text-gray-400 hover:text-white no-underline min-h-[44px] sm:min-h-0 flex items-center
                        opacity-100 transition-opacity duration-200"
             onClick={e => e.stopPropagation()}
+            aria-label={`Reviews for ${service.name}`}
           >
             Reviews
           </Link>
@@ -240,7 +275,9 @@ function ServiceCard({ service, lastActivity, healthStatus = null, uptimePercent
               rel="noopener noreferrer"
               className="text-xs font-medium text-[#FF9900] hover:text-[#FFB340] no-underline min-h-[44px] sm:min-h-0 flex items-center
                          opacity-100 transition-opacity duration-200"
-              onClick={() => trackEvent('service_card_click', { service: service.name })}
+              aria-label={}
+              aria-label={}
+              onClick={() => trackEvent("service_card_click", { service: service.name })}
             >
               {t.serviceCard.viewApi} &rarr;
             </a>

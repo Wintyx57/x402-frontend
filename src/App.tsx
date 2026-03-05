@@ -5,6 +5,60 @@ import ScrollToTop from './components/ScrollToTop';
 import Footer from './components/Footer';
 import ErrorBoundary from './components/ErrorBoundary';
 
+function PageSkeleton() {
+  return (
+    <div className="min-h-screen animate-page-enter" aria-busy="true" aria-label="Loading page">
+      {/* Hero skeleton */}
+      <div className="max-w-7xl mx-auto px-4 pt-20 pb-12">
+        <div className="flex flex-col items-center gap-6">
+          <div className="h-3 w-24 animate-shimmer rounded-full" />
+          <div className="h-10 w-3/4 max-w-xl animate-shimmer rounded-xl" />
+          <div className="h-10 w-2/3 max-w-md animate-shimmer rounded-xl" />
+          <div className="h-5 w-1/2 max-w-sm animate-shimmer rounded-lg" />
+          <div className="flex gap-3 mt-2">
+            <div className="h-10 w-32 animate-shimmer rounded-lg" />
+            <div className="h-10 w-32 animate-shimmer rounded-lg" />
+          </div>
+        </div>
+      </div>
+      {/* Cards skeleton grid */}
+      <div className="max-w-7xl mx-auto px-4 pb-16">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+          {Array.from({ length: 8 }, (_, i) => (
+            <div
+              key={i}
+              className="glass-card rounded-xl p-4 space-y-3"
+              style={{ animationDelay: `${i * 40}ms` }}
+              aria-hidden="true"
+            >
+              <div className="flex items-start gap-3">
+                <div className="w-9 h-9 rounded-lg animate-shimmer shrink-0" />
+                <div className="flex-1 space-y-2">
+                  <div className="h-4 w-3/4 animate-shimmer rounded" />
+                  <div className="h-3 w-1/3 animate-shimmer rounded" />
+                </div>
+                <div className="h-6 w-14 animate-shimmer rounded-lg shrink-0" />
+              </div>
+              <div className="space-y-1.5">
+                <div className="h-3 w-full animate-shimmer rounded" />
+                <div className="h-3 w-2/3 animate-shimmer rounded" />
+              </div>
+              <div className="flex gap-1.5">
+                <div className="h-5 w-14 animate-shimmer rounded-lg" />
+                <div className="h-5 w-14 animate-shimmer rounded-lg" />
+              </div>
+              <div className="border-t border-white/5 pt-2 flex justify-between">
+                <div className="h-3 w-24 animate-shimmer rounded" />
+                <div className="h-3 w-16 animate-shimmer rounded" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 const Home = lazy(() => import('./pages/Home'));
 const Services = lazy(() => import('./pages/Services'));
 const Register = lazy(() => import('./pages/Register'));
@@ -39,12 +93,7 @@ export default function App() {
     <div className="min-h-screen overflow-x-hidden transition-colors duration-300">
       <ErrorBoundary>
         <Navbar />
-        <Suspense fallback={
-          <div className="flex flex-col items-center justify-center min-h-screen gap-4">
-            <div className="w-10 h-10 border-2 border-[#FF9900]/20 border-t-[#FF9900] rounded-full animate-spin-slow" />
-            <span className="text-gray-500 text-sm">Loading...</span>
-          </div>
-        }>
+        <Suspense fallback={<PageSkeleton />}>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/services" element={<Services />} />

@@ -36,9 +36,9 @@ export default function Services() {
   };
 
   useSEO({
-    title: 'API Catalog — 60+ Services for AI Agents',
-    description: 'Browse 60+ APIs for AI agents: weather, crypto prices, image generation, web search. Pay per call with USDC via x402 protocol on Base.',
-    keywords: 'AI agent API catalog, pay-per-call API, USDC micropayments, x402 services, HTTP 402 marketplace, LangChain APIs',
+    title: 'API Catalog — 69 Services for AI Agents',
+    description: 'Browse 69 APIs for AI agents across 11 categories: AI tools, crypto prices, weather, image generation, web search and more. Pay per call with USDC on Base or SKALE via x402 protocol. No API keys required.',
+    keywords: 'AI agent API catalog, pay-per-call API, USDC micropayments, x402 services, HTTP 402 marketplace, LangChain APIs, AI tools API, crypto price API, weather API agents',
   });
 
   useEffect(() => {
@@ -257,16 +257,24 @@ export default function Services() {
 
       <div className="border-b border-white/6 mb-6" />
 
-      {/* Results info */}
-      {(search || priceFilter !== 'all' || category !== 'all') && (
-        <div className="flex items-center justify-between mb-4">
-          <p className="text-xs text-gray-500">
-            {sorted.length} {t.services.results}
+      {/* Results info — always visible when at least one filter is active */}
+      {(search || priceFilter !== 'all' || category !== 'all' || sourceFilter !== 'all') && (
+        <div className="flex items-center justify-between mb-4 animate-fade-in">
+          <p className="text-xs text-gray-400">
+            <span className="text-white font-semibold tabular-nums">{sorted.length}</span>
+            {' '}{t.services.results}
+            {search && (
+              <span className="text-gray-500"> for &ldquo;{search}&rdquo;</span>
+            )}
           </p>
           <button
             onClick={() => setSearchParams({})}
-            className="text-xs text-[#FF9900] hover:text-[#FEBD69] cursor-pointer bg-transparent border-none"
+            className="text-xs text-[#FF9900] hover:text-[#FEBD69] cursor-pointer bg-transparent border-none
+                       flex items-center gap-1 transition-colors duration-200"
           >
+            <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
             {t.services.clearFilters}
           </button>
         </div>
@@ -289,8 +297,52 @@ export default function Services() {
           ))}
         </div>
       ) : sorted.length === 0 ? (
-        <div className="text-gray-500 text-center py-20 glass-card rounded-lg">
-          <p className="text-sm">{search ? `${t.services.noMatch} "${search}"` : t.services.noServices}</p>
+        <div className="flex flex-col items-center justify-center py-24 gap-5 animate-fade-in">
+          {/* Illustration */}
+          <div className="relative">
+            <div className="w-20 h-20 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center">
+              <svg className="w-9 h-9 text-gray-600" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </div>
+            <span className="absolute -bottom-1 -right-1 w-6 h-6 bg-[#0a0a0f] rounded-full flex items-center justify-center border border-white/10">
+              <svg className="w-3.5 h-3.5 text-gray-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </span>
+          </div>
+
+          {/* Text */}
+          <div className="text-center max-w-xs">
+            <p className="text-white font-semibold text-base mb-1">
+              {search ? `No results for "${search}"` : t.services.noServices}
+            </p>
+            <p className="text-gray-500 text-sm leading-relaxed">
+              {search
+                ? 'Try different keywords, or browse all services by clearing your filters.'
+                : 'No APIs match your current filters. Try adjusting your search.'}
+            </p>
+          </div>
+
+          {/* Actions */}
+          <div className="flex items-center gap-3 flex-wrap justify-center">
+            <button
+              onClick={() => setSearchParams({})}
+              className="px-4 py-2 rounded-lg text-sm font-medium bg-[#FF9900]/10 text-[#FF9900]
+                         border border-[#FF9900]/25 hover:bg-[#FF9900]/20 transition-all duration-200 cursor-pointer"
+            >
+              {t.services.clearFilters}
+            </button>
+            {search && (
+              <button
+                onClick={() => setParam('q', '')}
+                className="px-4 py-2 rounded-lg text-sm font-medium bg-white/5 text-gray-400
+                           border border-white/10 hover:text-white hover:bg-white/10 transition-all duration-200 cursor-pointer"
+              >
+                Clear search
+              </button>
+            )}
+          </div>
         </div>
       ) : category === 'all' && !search ? (
         /* Grouped by category view */

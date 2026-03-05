@@ -435,3 +435,22 @@ html.light nav button span.bg-gray-300 {
 @utility animate-page-enter {
   animation: page-enter 0.4s ease-out both;
 }
+
+/* ========== NEW BADGE PULSE ========== */
+@keyframes badge-glow {
+  0%, 100% { box-shadow: 0 0 6px rgba(255, 153, 0, 0.4); }
+  50% { box-shadow: 0 0 12px rgba(255, 153, 0, 0.8), 0 0 20px rgba(255, 153, 0, 0.3); }
+}
+
+@utility animate-badge-glow {
+  animation: badge-glow 2s ease-in-out infinite;
+}
+
+/* ========== CARD HOVER LIFT (enhanced) ========== */
+.card-hover-lift {
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease-out;
+}
+
+.card-hover-lift:hover {
+  transform: translateY(-4px) scale(1.02);
+}
