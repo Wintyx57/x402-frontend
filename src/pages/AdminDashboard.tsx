@@ -16,7 +16,7 @@ import { Bar, Line } from 'react-chartjs-2';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, PointElement, LineElement, Tooltip, Legend, Filler);
 
-const STORAGE_KEY = 'x402-admin-token';
+import { ADMIN_STORAGE_KEY as STORAGE_KEY } from '../constants/admin';
 
 /* ─── Types ─── */
 interface StatsData {

@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { API_URL } from '../../config';
-
-const STORAGE_KEY = 'x402-admin-token';
+import { ADMIN_STORAGE_KEY as STORAGE_KEY } from '../../constants/admin';
 
 interface Props {
   adminFetch: <T = unknown>(path: string, options?: RequestInit) => Promise<T>;

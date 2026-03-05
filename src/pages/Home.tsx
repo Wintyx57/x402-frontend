@@ -24,36 +24,44 @@ function CountUp({ end, duration = 2000, suffix = '', prefix = '' }: {
   useEffect(() => {
     const element = ref.current;
     if (!element) return;
-    const observer = new IntersectionObserver(([entry]) => {
-      isVisible.current = entry.isIntersecting;
-      if (entry.isIntersecting && end > 0 && end !== lastEnd.current) {
-        lastEnd.current = end;
-        const increment = end / (duration / 16);
-        let current = 0;
-        const timer = setInterval(() => {
-          current += increment;
-          if (current >= end) { setCount(end); clearInterval(timer); }
-          else { setCount(Math.floor(current)); }
-        }, 16);
-      }
-    }, { threshold: 0.3 });
-    observer.observe(element);
-    return () => observer.disconnect();
-  }, [end, duration]);
 
-  // Re-animate when end changes while already visible
-  useEffect(() => {
-    if (isVisible.current && end > 0 && end !== lastEnd.current) {
+    let activeTimer: ReturnType<typeof setInterval> | null = null;
+
+    const startAnimation = () => {
+      if (activeTimer) clearInterval(activeTimer);
       lastEnd.current = end;
       const increment = end / (duration / 16);
       let current = 0;
-      const timer = setInterval(() => {
+      activeTimer = setInterval(() => {
         current += increment;
-        if (current >= end) { setCount(end); clearInterval(timer); }
-        else { setCount(Math.floor(current)); }
+        if (current >= end) {
+          setCount(end);
+          if (activeTimer) clearInterval(activeTimer);
+          activeTimer = null;
+        } else {
+          setCount(Math.floor(current));
+        }
       }, 16);
-      return () => clearInterval(timer);
+    };
+
+    const observer = new IntersectionObserver(([entry]) => {
+      isVisible.current = entry.isIntersecting;
+      if (entry.isIntersecting && end > 0 && end !== lastEnd.current) {
+        startAnimation();
+      }
+    }, { threshold: 0.3 });
+
+    // If already visible when end changes (stats loaded after mount)
+    if (isVisible.current && end > 0 && end !== lastEnd.current) {
+      startAnimation();
     }
+
+    observer.observe(element);
+
+    return () => {
+      observer.disconnect();
+      if (activeTimer) clearInterval(activeTimer);
+    };
   }, [end, duration]);
 
   return <span ref={ref}>{prefix}{count}{suffix}</span>;
