@@ -59,7 +59,7 @@ curl "${url}"
 
 # Step 3: Retry with the transaction hash
 curl -X GET "${url}" \\
-  -H "X-Payment-TX: 0xYOUR_TX_HASH" \\
+  -H "X-Payment-TxHash: 0xYOUR_TX_HASH" \\
   -H "X-Payment-Chain: base"`;
   }
 
@@ -87,7 +87,7 @@ if (res.status === 402) {
   // Step 3: Retry with the transaction hash
   const data = await fetch("${url}", {
     headers: {
-      "X-Payment-TX": txHash,
+      "X-Payment-TxHash": txHash,
       "X-Payment-Chain": "base",
     },
   }).then(r => r.json());
@@ -124,7 +124,7 @@ if res.status_code == 402:
     data = requests.get(
         "${url}",
         headers={
-            "X-Payment-TX": tx_hash,
+            "X-Payment-TxHash": tx_hash,
             "X-Payment-Chain": "base",
         },
     ).json()

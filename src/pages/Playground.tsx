@@ -54,7 +54,7 @@ curl "${url}"
 # (use your wallet to send the exact amount)
 
 # Step 3: Retry with transaction hash
-curl -H "X-Payment-TX: 0xYOUR_TX_HASH" \\
+curl -H "X-Payment-TxHash: 0xYOUR_TX_HASH" \\
      "${url}"`;
   }
 
@@ -72,7 +72,7 @@ if (res.status === 402) {
 
   // Step 3: Retry with tx hash
   const data = await fetch("${url}", {
-    headers: { "X-Payment-TX": txHash }
+    headers: { "X-Payment-TxHash": txHash }
   }).then(r => r.json());
 
   console.log("Result:", data);
@@ -95,7 +95,7 @@ if res.status_code == 402:
 
     # Step 3: Retry with tx hash
     data = requests.get("${url}",
-        headers={"X-Payment-TX": tx_hash}
+        headers={"X-Payment-TxHash": tx_hash}
     ).json()
 
     print("Result:", data)`;
