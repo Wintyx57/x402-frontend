@@ -4,7 +4,9 @@ import { API_URL } from '../config';
 async function fetchServices() {
   const res = await fetch(`${API_URL}/api/services`);
   if (!res.ok) throw new Error(`Failed to fetch services (${res.status})`);
-  return res.json();
+  const json = await res.json();
+  // Backend may return { data: [...], pagination } or a raw array
+  return Array.isArray(json) ? json : (json.data ?? []);
 }
 
 export function useServices(options: Omit<UseQueryOptions, 'queryKey' | 'queryFn'> = {}) {
