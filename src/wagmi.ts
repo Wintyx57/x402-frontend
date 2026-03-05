@@ -13,7 +13,7 @@ import { connectorsForWallets } from '@rainbow-me/rainbowkit';
 import type { Chain } from 'wagmi/chains';
 
 // SKALE on Base custom chain definition
-export const skaleEuropa: Chain = {
+export const skaleOnBase: Chain = {
   id: 1187947933,
   name: 'SKALE on Base',
   nativeCurrency: { name: 'sFUEL', symbol: 'sFUEL', decimals: 18 },
@@ -26,7 +26,7 @@ export const skaleEuropa: Chain = {
 };
 
 const projectId = import.meta.env.VITE_WALLETCONNECT_PROJECT_ID || '';
-const chains = [base, baseSepolia, skaleEuropa] as const;
+const chains = [base, baseSepolia, skaleOnBase] as const;
 
 function buildConfig() {
   // If projectId is available, use RainbowKit's getDefaultConfig (includes WalletConnect)
@@ -80,7 +80,7 @@ function buildConfig() {
     transports: {
       [base.id]: http(),
       [baseSepolia.id]: http(),
-      [skaleEuropa.id]: http('https://skale-base.skalenodes.com/v1/base'),
+      [skaleOnBase.id]: http('https://skale-base.skalenodes.com/v1/base'),
     },
     ssr: false,
   });
