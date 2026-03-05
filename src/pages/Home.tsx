@@ -820,7 +820,7 @@ export default function Home() {
               </div>
             ) : (
               <div className="text-center">
-                <div className="text-xl sm:text-3xl font-bold text-[#34D399]">$0 Gas</div>
+                <div className="text-xl sm:text-3xl font-bold text-[#34D399]">~$0.0007 Gas</div>
                 <div className="text-xs text-gray-400 mt-1">{t.home.onSkale}</div>
               </div>
             )}

@@ -72,7 +72,7 @@ export default function Status() {
 
   useSEO({
     title: t.status?.pageTitle || 'System Status - x402 Bazaar',
-    description: t.status?.pageDesc || 'Real-time status of all 41 API endpoints on x402 Bazaar.',
+    description: t.status?.pageDesc || 'Real-time status of all 69+ API endpoints on x402 Bazaar.',
   });
 
   const fetchUptime = useCallback(async () => {

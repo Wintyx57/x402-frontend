@@ -37,7 +37,7 @@ const articles = [
     title: 'Building the Future of Autonomous APIs: Lessons Learned',
     date: '2026-02-28',
     category: 'Insights',
-    excerpt: 'After launching x402 Bazaar and processing 164+ on-chain payments, here are the key lessons learned about decentralized payments for APIs.'
+    excerpt: 'After launching x402 Bazaar and processing 170+ on-chain payments, here are the key lessons learned about decentralized payments for APIs.'
   },
 ];
 

@@ -115,7 +115,7 @@ export default function CreatorOnboarding() {
     {
       label: co.step3Label || 'Step 3',
       title: co.step3Title || 'Get Discovered by AI Agents',
-      desc: co.step3Desc || 'Once listed, your API is automatically distributed to 6 platforms:',
+      desc: co.step3Desc || 'Once listed, your API is automatically distributed to 9 platforms:',
       color: '#60A5FA',
       icon: (
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

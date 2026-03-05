@@ -16,7 +16,7 @@ import type { Chain } from 'wagmi/chains';
 export const skaleOnBase: Chain = {
   id: 1187947933,
   name: 'SKALE on Base',
-  nativeCurrency: { name: 'sFUEL', symbol: 'sFUEL', decimals: 18 },
+  nativeCurrency: { name: 'CREDITS', symbol: 'CREDITS', decimals: 18 },
   rpcUrls: {
     default: { http: ['https://skale-base.skalenodes.com/v1/base'] },
   },
