@@ -47,7 +47,7 @@ export default function Docs() {
 
   useSEO({
     title: 'Documentation — x402 Protocol, API Reference & SDK',
-    description: 'Complete technical documentation for x402 Bazaar: HTTP 402 protocol specification, REST API reference, 69 native wrappers, MCP server setup, CLI usage, LangChain integration and security guidelines.',
+    description: 'Complete technical documentation for x402 Bazaar: HTTP 402 protocol specification, REST API reference, 70+ native wrappers, MCP server setup, CLI usage, LangChain integration and security guidelines.',
     keywords: 'x402 documentation, HTTP 402 protocol spec, x402 API reference, MCP server docs, x402 SDK, LangChain integration docs, USDC micropayment tutorial',
   });
 

@@ -35,9 +35,10 @@ export default function Services() {
     setSearchParams(params);
   };
 
+  const serviceCount = services.length || '70+';
   useSEO({
-    title: 'API Catalog — 69 Services for AI Agents',
-    description: 'Browse 69 APIs for AI agents across 11 categories: AI tools, crypto prices, weather, image generation, web search and more. Pay per call with USDC on Base or SKALE via x402 protocol. No API keys required.',
+    title: `API Catalog — ${serviceCount} Services for AI Agents`,
+    description: `Browse ${serviceCount} APIs for AI agents across 11 categories: AI tools, crypto prices, weather, image generation, web search and more. Pay per call with USDC on Base or SKALE via x402 protocol. No API keys required.`,
     keywords: 'AI agent API catalog, pay-per-call API, USDC micropayments, x402 services, HTTP 402 marketplace, LangChain APIs, AI tools API, crypto price API, weather API agents',
   });
 
