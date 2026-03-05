@@ -99,9 +99,9 @@ export default function MCP() {
   const reveal = useReveal();
 
   useSEO({
-    title: 'MCP Server — Connect Claude & Cursor to x402 APIs',
-    description: 'Use x402 Bazaar as an MCP server. Connect Claude, Cursor or VS Code to 60+ paid APIs. AI agents pay autonomously with USDC on Base.',
-    keywords: 'MCP server x402, Claude MCP marketplace, Cursor MCP integration, AI agent MCP tools, Model Context Protocol payments',
+    title: 'MCP Server — Connect Claude & Cursor to 69 Paid APIs',
+    description: 'Use x402 Bazaar as an MCP server. Connect Claude, Cursor or VS Code to 69 paid APIs. AI agents pay autonomously with USDC on Base or SKALE. Auto-wallet generation, 9 MCP tools, plug-and-play setup.',
+    keywords: 'MCP server x402, Claude MCP marketplace, Cursor MCP integration, AI agent MCP tools, Model Context Protocol payments, MCP USDC, Claude tools marketplace',
   });
 
   return (

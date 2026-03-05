@@ -27,11 +27,13 @@ function CountUp({ end, duration = 2000, suffix = '', prefix = '' }: {
 
     let activeTimer: ReturnType<typeof setInterval> | null = null;
 
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const startAnimation = () => {
       if (activeTimer) clearInterval(activeTimer);
       lastEnd.current = end;
       const increment = end / (duration / 16);
       let current = 0;
+      if (prefersReducedMotion) { setCount(end); return; }
       activeTimer = setInterval(() => {
         current += increment;
         if (current >= end) {
@@ -117,6 +119,8 @@ function HeroVideo() {
           muted
           playsInline
           onEnded={playNext}
+          aria-label="x402 Bazaar demo"
+          aria-hidden="true"
         />
         <div className="absolute inset-0 rounded-2xl border border-[#FF9900]/10 pointer-events-none" />
       </div>

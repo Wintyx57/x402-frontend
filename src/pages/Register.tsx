@@ -14,10 +14,10 @@ const CATEGORIES = ['ai', 'data', 'devtools', 'utility', 'social', 'finance', 'o
 const METHODS = ['GET', 'POST'];
 
 // ---- Step Indicator ----
-function StepIndicator({ num, label, active, done }: { num: number; label: string; active: boolean; done?: boolean }) {
+function StepIndicator({ num, label, active, done, current }: { num: number; label: string; active: boolean; done?: boolean; current?: boolean }) {
   return (
     <div className="flex flex-col items-center gap-1">
-      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 border ${
+      <div aria-current={current ? "step" : undefined} className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 border ${
         done
           ? 'bg-[#34D399]/15 text-[#34D399] border-[#34D399]/40'
           : active
@@ -373,15 +373,15 @@ export default function Register() {
       {/* ---- Progress bar ---- */}
       <div className="flex items-center gap-4 mb-10 animate-fade-in-up" role="list" aria-label="Registration steps">
         <div role="listitem">
-          <StepIndicator num={1} label="Connect" active={wizardStep >= 1} done={wizardStep > 1} />
+          <StepIndicator num={1} label="Connect" active={wizardStep >= 1} done={wizardStep > 1} current={wizardStep === 1} />
         </div>
         <div className={`h-0.5 flex-1 rounded-full transition-all duration-500 ${wizardStep >= 2 ? 'bg-[#FF9900]/50' : 'bg-white/10'}`} aria-hidden="true" />
         <div role="listitem">
-          <StepIndicator num={2} label="Configure" active={wizardStep >= 2} done={wizardStep > 2} />
+          <StepIndicator num={2} label="Configure" active={wizardStep >= 2} done={wizardStep > 2} current={wizardStep === 2} />
         </div>
         <div className={`h-0.5 flex-1 rounded-full transition-all duration-500 ${wizardStep >= 3 ? 'bg-[#FF9900]/50' : 'bg-white/10'}`} aria-hidden="true" />
         <div role="listitem">
-          <StepIndicator num={3} label="Pay" active={wizardStep >= 3} />
+          <StepIndicator num={3} label="Pay" active={wizardStep >= 3} current={wizardStep === 3} />
         </div>
       </div>
 
@@ -438,9 +438,9 @@ export default function Register() {
           <div className="space-y-5 lg:col-span-3">
             <ChainSelector />
             <div>
-              <label className="block text-sm text-gray-400 mb-1.5">{t.register.serviceName}</label>
+              <label htmlFor="reg-name" className="block text-sm text-gray-300 mb-1.5">{t.register.serviceName}</label>
               <input
-                type="text" required value={form.name}
+                id="reg-name" type="text" required aria-required="true" value={form.name}
                 onChange={e => setForm({ ...form, name: e.target.value })}
                 placeholder={t.register.namePlaceholder}
                 className="w-full bg-[#1a1f2e] border border-white/10 rounded-lg px-4 py-2.5 text-white placeholder-gray-600
@@ -448,9 +448,9 @@ export default function Register() {
               />
             </div>
             <div>
-              <label className="block text-sm text-gray-400 mb-1.5">{t.register.description}</label>
+              <label htmlFor="reg-desc" className="block text-sm text-gray-300 mb-1.5">{t.register.description}</label>
               <textarea
-                rows={3} value={form.description}
+                id="reg-desc" rows={3} value={form.description}
                 onChange={e => setForm({ ...form, description: e.target.value })}
                 placeholder={t.register.descPlaceholder}
                 className="w-full bg-[#1a1f2e] border border-white/10 rounded-lg px-4 py-2.5 text-white placeholder-gray-600
@@ -458,9 +458,9 @@ export default function Register() {
               />
             </div>
             <div>
-              <label className="block text-sm text-gray-400 mb-1.5">{t.register.apiUrl}</label>
+              <label htmlFor="reg-url" className="block text-sm text-gray-300 mb-1.5">{t.register.apiUrl}</label>
               <input
-                type="url" required value={form.url}
+                id="reg-url" type="url" required aria-required="true" value={form.url}
                 onChange={e => setForm({ ...form, url: e.target.value })}
                 placeholder={t.register.urlPlaceholder}
                 className="w-full bg-[#1a1f2e] border border-white/10 rounded-lg px-4 py-2.5 text-white placeholder-gray-600
@@ -471,7 +471,7 @@ export default function Register() {
             {/* Category + Method row */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm text-gray-400 mb-1.5">{t.register.categoryLabel || 'Category'}</label>
+                <label htmlFor="reg-category" className="block text-sm text-gray-300 mb-1.5">{t.register.categoryLabel || 'Category'}</label>
                 <select
                   value={form.category}
                   onChange={e => setForm({ ...form, category: e.target.value })}
@@ -490,6 +490,7 @@ export default function Register() {
                     <button
                       key={m}
                       type="button"
+                      aria-pressed={form.method === m}
                       onClick={() => setForm({ ...form, method: m })}
                       className={`flex-1 py-2.5 rounded-lg text-sm font-mono font-medium transition-all duration-200 cursor-pointer border ${
                         form.method === m
@@ -515,7 +516,7 @@ export default function Register() {
                 </label>
                 <div className="relative">
                   <input
-                    type="number" step="0.001" min="0.001" required value={form.price}
+                    id="reg-price" type="number" step="0.001" min="0.001" required aria-required="true" value={form.price}
                     onChange={e => setForm({ ...form, price: e.target.value })}
                     placeholder={t.register.pricePlaceholder}
                     className="w-full bg-[#1a1f2e] border border-white/10 rounded-lg pl-4 pr-14 py-2.5 text-white placeholder-gray-600
@@ -534,7 +535,7 @@ export default function Register() {
                   </FieldTooltip>
                 </label>
                 <input
-                  type="text" value={form.tags}
+                  id="reg-tags" type="text" value={form.tags}
                   onChange={e => setForm({ ...form, tags: e.target.value })}
                   placeholder={t.register.tagsPlaceholder}
                   className="w-full bg-[#1a1f2e] border border-white/10 rounded-lg px-4 py-2.5 text-white placeholder-gray-600
@@ -546,7 +547,7 @@ export default function Register() {
             </div>
 
             {error && (
-              <div className="bg-red-500/10 border border-red-500/50 rounded-xl p-4 text-red-300 text-sm font-medium">
+              <div role="alert" aria-live="assertive" className="bg-red-500/10 border border-red-500/50 rounded-xl p-4 text-red-300 text-sm font-medium">
                 {error}
               </div>
             )}
@@ -667,8 +668,8 @@ export default function Register() {
             )}
 
             {isProcessing && paymentStep > 0 && (
-              <div className="flex flex-col items-center gap-3 py-4">
-                <div className="w-10 h-10 border-2 border-[#FF9900] border-t-transparent rounded-full animate-spin" />
+              <div role="status" aria-live="polite" className="flex flex-col items-center gap-3 py-4">
+                <div className="w-10 h-10 border-2 border-[#FF9900] border-t-transparent rounded-full animate-spin" aria-hidden="true" />
                 <p className="text-white text-sm font-medium">{PAYMENT_STEPS[paymentStep]}</p>
                 <p className="text-gray-400 text-xs">{t.register.stepOf || 'Step'} {paymentStep} / 4</p>
               </div>

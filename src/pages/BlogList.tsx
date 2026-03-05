@@ -45,8 +45,9 @@ export default function BlogList() {
   const { t } = useTranslation();
 
   useSEO({
-    title: 'Blog - x402 Bazaar',
-    description: 'Latest articles on autonomous AI agents, HTTP 402 payment protocol, API monetization, and decentralized payments with USDC.'
+    title: 'Blog — x402 Bazaar Insights on AI Agents & HTTP 402',
+    description: 'Technical articles and guides on autonomous AI agents, HTTP 402 payment protocol, API monetization strategies, USDC micropayments on Base and SKALE, and the future of the agent economy.',
+    keywords: 'x402 Bazaar blog, HTTP 402 articles, AI agent economy blog, USDC micropayments guide, API monetization tips, autonomous agent payments',
   });
 
   return (

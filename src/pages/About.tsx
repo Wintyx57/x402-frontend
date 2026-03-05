@@ -13,8 +13,9 @@ export default function About() {
   const [catCount, setCatCount] = useState<string | number>('...');
 
   useSEO({
-    title: 'About',
-    description: 'Learn about x402 Bazaar — the first API marketplace powered by the x402 payment protocol. Our mission, security and team.'
+    title: 'About x402 Bazaar — The First AI-to-AI API Marketplace',
+    description: 'Learn how x402 Bazaar works: the first autonomous API marketplace where AI agents pay per call with USDC using the HTTP 402 protocol. Our mission, architecture, security model and 69-service ecosystem on Base and SKALE.',
+    keywords: 'about x402 Bazaar, HTTP 402 protocol marketplace, AI agent economy, USDC API payments, x402 mission, who built x402',
   });
 
   useEffect(() => {

@@ -90,9 +90,9 @@ export default function Footer() {
 
           {/* Product links */}
           <div>
-            <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
+            <h3 className="text-xs font-semibold text-gray-300 uppercase tracking-wider mb-3">
               {t.home.footerProduct}
-            </h4>
+            </h3>
             <nav aria-label="Product links">
               <ul className="flex flex-col gap-0.5">
                 {[
@@ -107,7 +107,7 @@ export default function Footer() {
                   <li key={to}>
                     <Link
                       to={to}
-                      className="text-xs text-gray-400 hover:text-white no-underline transition-colors py-1 block"
+                      className="text-xs text-gray-300 hover:text-white no-underline transition-colors py-1 block"
                     >
                       {label}
                     </Link>
@@ -119,9 +119,9 @@ export default function Footer() {
 
           {/* Resources links */}
           <div>
-            <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
+            <h3 className="text-xs font-semibold text-gray-300 uppercase tracking-wider mb-3">
               {t.home.footerResources}
-            </h4>
+            </h3>
             <nav aria-label="Resource links">
               <ul className="flex flex-col gap-0.5">
                 {[
@@ -137,7 +137,7 @@ export default function Footer() {
                   <li key={to}>
                     <Link
                       to={to}
-                      className="text-xs text-gray-400 hover:text-white no-underline transition-colors py-1 block"
+                      className="text-xs text-gray-300 hover:text-white no-underline transition-colors py-1 block"
                     >
                       {label}
                     </Link>
@@ -149,16 +149,16 @@ export default function Footer() {
 
           {/* Community / Open Source column */}
           <div>
-            <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
+            <h3 className="text-xs font-semibold text-gray-300 uppercase tracking-wider mb-3">
               Community
-            </h4>
+            </h3>
             <ul className="flex flex-col gap-0.5">
               <li>
                 <a
                   href="https://github.com/Wintyx57"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xs text-gray-400 hover:text-white no-underline transition-colors py-1
+                  className="text-xs text-gray-300 hover:text-white no-underline transition-colors py-1
                              flex items-center gap-1.5 group"
                 >
                   <svg className="w-3.5 h-3.5 group-hover:text-white transition-colors" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -172,7 +172,7 @@ export default function Footer() {
                   href="https://x.com/x402_bazaar"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xs text-gray-400 hover:text-white no-underline transition-colors py-1
+                  className="text-xs text-gray-300 hover:text-white no-underline transition-colors py-1
                              flex items-center gap-1.5 group"
                 >
                   <svg className="w-3.5 h-3.5 group-hover:text-white transition-colors" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -186,7 +186,7 @@ export default function Footer() {
                   href="https://github.com/Wintyx57/x402-bazaar"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xs text-gray-400 hover:text-white no-underline transition-colors py-1"
+                  className="text-xs text-gray-300 hover:text-white no-underline transition-colors py-1"
                 >
                   Source code
                 </a>
@@ -196,7 +196,7 @@ export default function Footer() {
                   href="https://github.com/Wintyx57/x402-bazaar/issues"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xs text-gray-400 hover:text-white no-underline transition-colors py-1"
+                  className="text-xs text-gray-300 hover:text-white no-underline transition-colors py-1"
                 >
                   Report an issue
                 </a>
@@ -207,14 +207,14 @@ export default function Footer() {
 
         {/* Bottom bar */}
         <div className="border-t border-white/5 pt-6 flex flex-wrap items-center justify-between gap-4">
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-gray-400">
             Built on{' '}
             <span className="text-[#FF9900] font-medium">x402 Protocol</span>
             {' '}&middot;{' '}
             Powered by Base &amp; <span className="text-[#34D399]">SKALE</span>
           </p>
           <div className="flex items-center gap-4">
-            <p className="text-xs text-gray-500">&copy; 2026 x402 Bazaar</p>
+            <p className="text-xs text-gray-400">&copy; 2026 x402 Bazaar</p>
             <BackToTop />
           </div>
         </div>

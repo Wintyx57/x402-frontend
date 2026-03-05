@@ -130,13 +130,13 @@ function ServiceCard({ service, lastActivity, healthStatus = null, uptimePercent
             <h3 className="text-white font-semibold text-sm leading-tight truncate" title={service.name}>{service.name}</h3>
             {healthStatus === 'online' && (
               <span className="flex items-center gap-1 text-[10px] text-[#34D399] shrink-0">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#34D399] animate-pulse" />
+                <span className="w-1.5 h-1.5 rounded-full bg-[#34D399] animate-pulse" aria-hidden="true" />
                 {t.serviceCard.online || 'Online'}
               </span>
             )}
             {healthStatus === 'offline' && (
               <span className="flex items-center gap-1 text-[10px] text-red-400 shrink-0">
-                <span className="w-1.5 h-1.5 rounded-full bg-red-400" />
+                <span className="w-1.5 h-1.5 rounded-full bg-red-400" aria-hidden="true" />
                 {t.serviceCard.offline || 'Offline'}
               </span>
             )}
@@ -195,7 +195,7 @@ function ServiceCard({ service, lastActivity, healthStatus = null, uptimePercent
       {/* Activity badge */}
       {lastActivity && (
         <div className="flex items-center gap-1.5 mb-2">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#34D399] animate-pulse" />
+          <span className="w-1.5 h-1.5 rounded-full bg-[#34D399] animate-pulse" aria-hidden="true" />
           <span className="text-xs text-gray-300">{timeAgo(lastActivity, t)}</span>
         </div>
       )}
@@ -238,6 +238,7 @@ function ServiceCard({ service, lastActivity, healthStatus = null, uptimePercent
               target="_blank"
               rel="noopener noreferrer"
               className="text-[#FF9900] no-underline hover:text-[#FEBD69]"
+              aria-label={`${t.serviceCard.verified} - Basescan (opens in new tab)`}
             >
               {t.serviceCard.verified}
             </a>
@@ -248,7 +249,7 @@ function ServiceCard({ service, lastActivity, healthStatus = null, uptimePercent
             <button
               onClick={handleCopyPrompt}
               className="flex items-center gap-1 text-xs font-medium px-2 py-1 min-h-[44px] sm:min-h-0 rounded-md
-                         bg-white/5 text-gray-400 hover:text-white hover:bg-white/10
+                         bg-white/5 text-gray-300 hover:text-white hover:bg-white/10
                          transition-all duration-200 cursor-pointer border-none active:scale-95"
               aria-label={copied ? t.serviceCard.copied : t.serviceCard.useWithAI}
               title={t.serviceCard.useWithAI}
@@ -261,7 +262,7 @@ function ServiceCard({ service, lastActivity, healthStatus = null, uptimePercent
           )}
           <Link
             to={`/services/${service.id}`}
-            className="text-xs font-medium text-gray-400 hover:text-white no-underline min-h-[44px] sm:min-h-0 flex items-center
+            className="text-xs font-medium text-gray-300 hover:text-white no-underline min-h-[44px] sm:min-h-0 flex items-center
                        opacity-100 transition-opacity duration-200"
             onClick={e => e.stopPropagation()}
             aria-label={`Reviews for ${service.name}`}
@@ -275,8 +276,7 @@ function ServiceCard({ service, lastActivity, healthStatus = null, uptimePercent
               rel="noopener noreferrer"
               className="text-xs font-medium text-[#FF9900] hover:text-[#FFB340] no-underline min-h-[44px] sm:min-h-0 flex items-center
                          opacity-100 transition-opacity duration-200"
-              aria-label={}
-              aria-label={}
+              aria-label={`View API - ${service.name} (opens in new tab)`}
               onClick={() => trackEvent("service_card_click", { service: service.name })}
             >
               {t.serviceCard.viewApi} &rarr;

@@ -129,14 +129,15 @@ export default function BlogArticle() {
   useNavigate();
   useTranslation();
   const [content, setContent] = useState<string>('');
-  const [metadata, setMetadata] = useState<{ title?: string; date?: string; author?: string }>({});
+  const [metadata, setMetadata] = useState<{ title?: string; date?: string; author?: string; description?: string }>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   // SEO Hook au niveau du composant
   useSEO({
     title: metadata.title || 'Article',
-    description: metadata.title || 'Read the latest article from x402 Bazaar'
+    description: metadata.description || metadata.title || 'Read the latest article from x402 Bazaar — AI agents, HTTP 402 protocol and USDC micropayments.',
+    ogType: 'article',
   });
 
   // Article list for navigation

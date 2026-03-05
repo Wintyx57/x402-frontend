@@ -108,8 +108,9 @@ export default function Playground() {
   const { t } = useTranslation();
   const pg = t.playground || {};
   useSEO({
-    title: pg.title || 'API Playground',
-    description: 'Test x402 Bazaar APIs live in the browser. See the HTTP 402 payment protocol in action and generate ready-to-use code.'
+    title: pg.title || 'API Playground — Test x402 APIs Live',
+    description: 'Test all 69 x402 Bazaar APIs directly in your browser without writing a single line of code. See HTTP 402 micropayments in action and generate ready-to-use cURL, JavaScript or Python snippets.',
+    keywords: 'x402 API playground, test HTTP 402 live, USDC micropayment demo, AI API sandbox, x402 Bazaar playground',
   });
 
   const heroRef = useReveal();

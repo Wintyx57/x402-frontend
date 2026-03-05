@@ -8,8 +8,9 @@ import GitHubIcon from '../components/icons/GitHubIcon';
 export default function Integrate() {
   const { t } = useTranslation();
   useSEO({
-    title: 'Integration Guide',
-    description: 'Integrate x402 Bazaar into your AI agent. JavaScript, Python and LangChain examples with full payment handling.'
+    title: 'Integration Guide — JavaScript, Python & LangChain',
+    description: 'Step-by-step guide to integrate x402 Bazaar into your AI agent or application. Ready-to-run code examples in JavaScript, Python and LangChain. Handle HTTP 402 payment flow in minutes.',
+    keywords: 'x402 integration guide, HTTP 402 JavaScript, Python x402 agent, LangChain x402 payment, AI agent API integration, USDC payment flow code',
   });
   const whyRef = useReveal();
   const flowRef = useReveal();

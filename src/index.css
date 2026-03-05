@@ -52,6 +52,19 @@ textarea:focus-visible {
   box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.25);
 }
 
+
+/* ========== SCREEN READER UTILITIES ========== */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
 /* ========== GLOBAL TRANSITIONS ========== */
 a, button, [role="button"] {
   transition: all 0.2s ease-in-out;

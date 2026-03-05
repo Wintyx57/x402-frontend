@@ -44,8 +44,9 @@ export default function Compare() {
   const { t } = useTranslation();
   const c = t.compare || {};
   useSEO({
-    title: c.title || 'x402 Bazaar vs RapidAPI',
-    description: 'Compare x402 Bazaar and RapidAPI — pricing, agent support, revenue share, onboarding time. See why x402 is built for AI agents.',
+    title: c.title || 'x402 Bazaar vs RapidAPI vs Kong — API Marketplace Comparison',
+    description: 'Compare x402 Bazaar with RapidAPI, Kong and traditional API marketplaces. Side-by-side analysis of pricing, AI agent support, revenue share (95% vs 70%), onboarding time and decentralisation.',
+    keywords: 'x402 vs RapidAPI, API marketplace comparison, best API marketplace AI agents, RapidAPI alternative, pay-per-call vs subscription API, AI agent compatible marketplace',
   });
 
   const ref1 = useReveal();

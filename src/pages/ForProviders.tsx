@@ -22,8 +22,9 @@ export default function ForProviders() {
   const { t } = useTranslation();
   const p = t.forProviders || {};
   useSEO({
-    title: p.title || 'For API Providers',
-    description: 'List your API on x402 Bazaar. Keep 95% revenue, reach AI agents worldwide. No infrastructure needed.',
+    title: p.title || 'Monetize Your API — List on x402 Bazaar',
+    description: 'Publish your API on x402 Bazaar and earn USDC from AI agents worldwide. Keep 95% of every payment. No subscription model, no infrastructure overhead. Instant on-chain payouts on Base or SKALE.',
+    keywords: 'monetize API, earn USDC from API, list API marketplace, API provider x402, HTTP 402 monetization, AI agent revenue, 95% revenue share API',
   });
 
   const ref1 = useReveal();

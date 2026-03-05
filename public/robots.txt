@@ -8,14 +8,39 @@ Disallow: /creators/onboarding
 Disallow: /admin
 Crawl-delay: 1
 
+# Allow OpenAI training crawler — good for AI ecosystem visibility
 User-agent: GPTBot
 Allow: /
 Disallow: /config
 Disallow: /analytics
 Disallow: /budget
 
+# Allow Anthropic crawler
 User-agent: ClaudeBot
 Allow: /
+
+# Allow Google Bard / Gemini crawler
+User-agent: Google-Extended
+Allow: /
+
+# Allow Perplexity crawler
+User-agent: PerplexityBot
+Allow: /
+
+# Allow Meta AI crawler
+User-agent: FacebookBot
+Allow: /
+Disallow: /config
+Disallow: /analytics
+Disallow: /budget
+Disallow: /admin
+
+# Allow Googlebot-Image for og-image indexing
+User-agent: Googlebot-Image
+Allow: /og-image.png
+Allow: /favicon.svg
+Allow: /favicon-32x32.png
+Allow: /apple-touch-icon.png
 
 Sitemap: https://x402bazaar.org/sitemap.xml
 Host: https://x402bazaar.org

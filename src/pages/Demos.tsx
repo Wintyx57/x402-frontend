@@ -7,8 +7,9 @@ import { Search, Radar, Sparkles, TrendingUp, Coins } from 'lucide-react';
 export default function Demos() {
   const { t } = useTranslation();
   useSEO({
-    title: 'Agent Demos',
-    description: 'Watch AI agents use x402 Bazaar in action. Live demos with code examples for autonomous API consumption.'
+    title: 'Agent Demos — AI Agents Paying APIs Autonomously',
+    description: 'Watch AI agents call x402 Bazaar APIs and pay autonomously with USDC micropayments. Live code demos using LangChain, AutoGPT, Claude MCP and n8n integrations.',
+    keywords: 'AI agent demo, autonomous payment USDC, LangChain x402 demo, AutoGPT API payment, Claude MCP demo, n8n x402 workflow',
   });
   const revealRef = useReveal();
   const scenariosRef = useReveal();
