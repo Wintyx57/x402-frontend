@@ -4,6 +4,7 @@ import { API_URL } from '../config';
 import { useTranslation } from '../i18n/LanguageContext';
 import useSEO from '../hooks/useSEO';
 import { useServices } from '../hooks/useServices';
+import { useAllReviewStats } from '../hooks/useReviews';
 import ServiceCard from '../components/ServiceCard';
 import { ServiceCardSkeleton } from '../components/Skeleton';
 import CategoryIcon from '../components/CategoryIcon';
@@ -12,6 +13,10 @@ import { CATEGORIES, CATEGORY_LABELS } from '../data/categories';
 export default function Services() {
   const { data: servicesData, isLoading: loading, error: servicesError } = useServices();
   const services = Array.isArray(servicesData) ? servicesData : [];
+
+  // Fetch review stats for all services in parallel (each result cached individually)
+  const serviceIds = useMemo(() => services.map((s: any) => s.id as string), [services]);
+  const reviewStatsMap = useAllReviewStats(serviceIds);
   const [activityMap, setActivityMap] = useState<Record<string, any>>({});
   const [healthMap, setHealthMap] = useState<Record<string, any>>({});
   const [uptimeMap, setUptimeMap] = useState<Record<string, any>>({});
@@ -41,6 +46,52 @@ export default function Services() {
     description: `Browse ${serviceCount} APIs for AI agents across 11 categories: AI tools, crypto prices, weather, image generation, web search and more. Pay per call with USDC on Base or SKALE via x402 protocol. No API keys required.`,
     keywords: 'AI agent API catalog, pay-per-call API, USDC micropayments, x402 services, HTTP 402 marketplace, LangChain APIs, AI tools API, crypto price API, weather API agents',
   });
+
+  // ItemList JSON-LD for the catalog — injected when services load
+  useEffect(() => {
+    if (!services.length) return;
+
+    const itemListSchema = {
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      name: 'x402 Bazaar API Catalog',
+      description: `${services.length} APIs for AI agents. Pay per call with USDC on Base or SKALE via HTTP 402 protocol.`,
+      url: 'https://x402bazaar.org/services',
+      numberOfItems: services.length,
+      itemListElement: services.slice(0, 20).map((svc: any, idx: number) => ({
+        '@type': 'ListItem',
+        position: idx + 1,
+        name: svc.name,
+        url: `https://x402bazaar.org/services/${svc.id || encodeURIComponent(svc.name)}`,
+        description: svc.description,
+        item: {
+          '@type': 'Product',
+          name: svc.name,
+          description: svc.description,
+          offers: {
+            '@type': 'Offer',
+            price: svc.price,
+            priceCurrency: 'USD',
+            availability: 'https://schema.org/InStock',
+          },
+        },
+      })),
+    };
+
+    let script = document.getElementById('services-itemlist-jsonld') as HTMLScriptElement | null;
+    if (!script) {
+      script = document.createElement('script');
+      script.id = 'services-itemlist-jsonld';
+      script.type = 'application/ld+json';
+      document.head.appendChild(script);
+    }
+    script.textContent = JSON.stringify(itemListSchema);
+
+    return () => {
+      const s = document.getElementById('services-itemlist-jsonld');
+      if (s) s.remove();
+    };
+  }, [services]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -371,7 +422,13 @@ export default function Services() {
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
                   {catServices.map((s, i) => (
                     <div key={s.id} className="animate-fade-in-up" style={{ animationDelay: `${Math.min(i, 7) * 50}ms` }}>
-                      <ServiceCard service={s} lastActivity={activityMap[s.url]} healthStatus={healthMap[s.url]} uptimePercent={uptimeMap[s.url]} />
+                      <ServiceCard
+                        service={s}
+                        lastActivity={activityMap[s.url]}
+                        healthStatus={healthMap[s.url]}
+                        uptimePercent={uptimeMap[s.url]}
+                        reviewStats={reviewStatsMap.get(s.id) ?? null}
+                      />
                     </div>
                   ))}
                 </div>
@@ -396,7 +453,13 @@ export default function Services() {
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
                   {uncategorized.map((s, i) => (
                     <div key={s.id} className="animate-fade-in-up" style={{ animationDelay: `${Math.min(i, 7) * 50}ms` }}>
-                      <ServiceCard service={s} lastActivity={activityMap[s.url]} healthStatus={healthMap[s.url]} uptimePercent={uptimeMap[s.url]} />
+                      <ServiceCard
+                        service={s}
+                        lastActivity={activityMap[s.url]}
+                        healthStatus={healthMap[s.url]}
+                        uptimePercent={uptimeMap[s.url]}
+                        reviewStats={reviewStatsMap.get(s.id) ?? null}
+                      />
                     </div>
                   ))}
                 </div>
@@ -409,7 +472,13 @@ export default function Services() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
           {sorted.map((s, i) => (
             <div key={s.id} className="animate-fade-in-up" style={{ animationDelay: `${Math.min(i, 11) * 50}ms` }}>
-              <ServiceCard service={s} lastActivity={activityMap[s.url]} healthStatus={healthMap[s.url]} uptimePercent={uptimeMap[s.url]} />
+              <ServiceCard
+                service={s}
+                lastActivity={activityMap[s.url]}
+                healthStatus={healthMap[s.url]}
+                uptimePercent={uptimeMap[s.url]}
+                reviewStats={reviewStatsMap.get(s.id) ?? null}
+              />
             </div>
           ))}
         </div>

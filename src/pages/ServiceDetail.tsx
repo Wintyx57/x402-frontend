@@ -1,8 +1,9 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { API_URL } from '../config';
 import { useTranslation } from '../i18n/LanguageContext';
 import useSEO from '../hooks/useSEO';
+import { useReviews, useReviewStats } from '../hooks/useReviews';
 import StarRating from '../components/StarRating';
 import ReviewCard from '../components/ReviewCard';
 import ReviewForm from '../components/ReviewForm';
@@ -19,20 +20,6 @@ interface Service {
   tx_hash?: string;
   created_at: string;
   verified_status?: string;
-}
-
-interface Review {
-  id: string;
-  wallet_address: string;
-  rating: number;
-  comment: string | null;
-  created_at: string;
-}
-
-interface ReviewStats {
-  average: number;
-  count: number;
-  distribution: Record<string, number>;
 }
 
 type CodeTab = 'curl' | 'javascript' | 'python';
@@ -135,18 +122,120 @@ if res.status_code == 402:
   return '';
 }
 
+// ── Rating distribution bar ────────────────────────────────────────────────────
+
+interface DistributionBarProps {
+  star: number;
+  count: number;
+  total: number;
+}
+
+function DistributionBar({ star, count, total }: DistributionBarProps) {
+  const pct = total > 0 ? Math.round((count / total) * 100) : 0;
+  return (
+    <div className="flex items-center gap-2 text-xs">
+      <span className="text-gray-500 w-3 text-right" aria-label={`${star} star`}>{star}</span>
+      <div
+        className="flex-1 bg-white/5 rounded-full h-1.5 overflow-hidden"
+        role="progressbar"
+        aria-valuenow={pct}
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-label={`${star} stars: ${count} reviews (${pct}%)`}
+      >
+        <div
+          className="h-full bg-[#FBBF24] rounded-full transition-all duration-500"
+          style={{ width: `${pct}%` }}
+        />
+      </div>
+      <span className="text-gray-600 w-5 text-right">{count}</span>
+    </div>
+  );
+}
+
+// ── Pagination controls ────────────────────────────────────────────────────────
+
+interface PaginationProps {
+  page: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+}
+
+function Pagination({ page, totalPages, onPageChange }: PaginationProps) {
+  if (totalPages <= 1) return null;
+
+  return (
+    <nav
+      className="flex items-center justify-center gap-2 mt-5"
+      aria-label="Reviews pagination"
+    >
+      <button
+        onClick={() => onPageChange(page - 1)}
+        disabled={page <= 1}
+        className="px-3 py-1.5 rounded-lg text-sm text-gray-400 bg-white/5 border border-white/10
+                   hover:bg-white/10 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed
+                   transition-all duration-150 cursor-pointer"
+        aria-label="Previous page"
+      >
+        &larr;
+      </button>
+
+      {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
+        <button
+          key={p}
+          onClick={() => onPageChange(p)}
+          aria-current={p === page ? 'page' : undefined}
+          className={`px-3 py-1.5 rounded-lg text-sm transition-all duration-150 cursor-pointer ${
+            p === page
+              ? 'bg-[#FF9900]/15 text-[#FF9900] border border-[#FF9900]/25 font-medium'
+              : 'text-gray-500 bg-white/5 border border-white/10 hover:bg-white/10 hover:text-white'
+          }`}
+        >
+          {p}
+        </button>
+      ))}
+
+      <button
+        onClick={() => onPageChange(page + 1)}
+        disabled={page >= totalPages}
+        className="px-3 py-1.5 rounded-lg text-sm text-gray-400 bg-white/5 border border-white/10
+                   hover:bg-white/10 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed
+                   transition-all duration-150 cursor-pointer"
+        aria-label="Next page"
+      >
+        &rarr;
+      </button>
+    </nav>
+  );
+}
+
+// ── Main component ─────────────────────────────────────────────────────────────
+
+const PAGE_SIZE = 5;
+
 export default function ServiceDetail() {
   const { id } = useParams<{ id: string }>();
   const { t } = useTranslation();
 
   const [service, setService] = useState<Service | null>(null);
-  const [reviews, setReviews] = useState<Review[]>([]);
-  const [stats, setStats] = useState<ReviewStats | null>(null);
   const [loadingService, setLoadingService] = useState(true);
-  const [loadingReviews, setLoadingReviews] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<CodeTab>('curl');
   const [urlCopied, setUrlCopied] = useState(false);
+  const [reviewPage, setReviewPage] = useState(1);
+
+  // ── TanStack Query: reviews + stats ──
+  const {
+    data: reviewsData,
+    isLoading: loadingReviews,
+    isFetching: fetchingReviews,
+  } = useReviews(id, reviewPage);
+
+  const { data: stats, refetch: refetchStats } = useReviewStats(id);
+
+  const reviews = reviewsData?.data ?? [];
+  const totalReviews = reviewsData?.count ?? 0;
+  const totalPages = Math.ceil(totalReviews / PAGE_SIZE);
 
   useSEO({
     title: service ? `${service.name} — x402 Bazaar` : 'Service — x402 Bazaar',
@@ -161,17 +250,14 @@ export default function ServiceDetail() {
   useEffect(() => {
     if (!id) return;
 
-    /* eslint-disable react-hooks/set-state-in-effect */
     setService(null);
     setError(null);
     setLoadingService(true);
-    /* eslint-enable react-hooks/set-state-in-effect */
+    setReviewPage(1);
 
-    // Try direct endpoint first, fall back to full list for compatibility
     fetch(`${API_URL}/api/services/${id}`)
       .then(async r => {
         if (r.status === 404 || r.status === 405) {
-          // Fallback: scan the full catalogue
           const listRes = await fetch(`${API_URL}/api/services`);
           const data: Service[] = await listRes.json();
           const found = data.find(s => s.id === id);
@@ -186,25 +272,6 @@ export default function ServiceDetail() {
       .finally(() => setLoadingService(false));
   }, [id]);
 
-  const loadReviews = useCallback(() => {
-    if (!id) return;
-    setLoadingReviews(true);
-    Promise.all([
-      fetch(`${API_URL}/api/reviews/${id}`).then(r => r.json()),
-      fetch(`${API_URL}/api/reviews/${id}/stats`).then(r => r.json()),
-    ])
-      .then(([reviewsData, statsData]) => {
-        setReviews(reviewsData.data || []);
-        setStats(statsData);
-      })
-      .catch(() => {})
-      .finally(() => setLoadingReviews(false));
-  }, [id]);
-
-  useEffect(() => {
-    loadReviews(); // eslint-disable-line react-hooks/set-state-in-effect
-  }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
-
   const handleCopyUrl = async () => {
     if (!service?.url) return;
     try {
@@ -216,10 +283,20 @@ export default function ServiceDetail() {
     }
   };
 
+  // Reset to page 1 when service changes
+  const handleReviewSuccess = () => {
+    setReviewPage(1);
+    refetchStats();
+  };
+
   if (loadingService) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-16 text-center">
-        <div className="w-8 h-8 border-2 border-[#FF9900]/20 border-t-[#FF9900] rounded-full animate-spin mx-auto" />
+        <div
+          className="w-8 h-8 border-2 border-[#FF9900]/20 border-t-[#FF9900] rounded-full animate-spin mx-auto"
+          role="status"
+          aria-label="Loading service"
+        />
       </div>
     );
   }
@@ -306,7 +383,7 @@ export default function ServiceDetail() {
               )}
             </div>
 
-            {/* Star rating (if reviews exist) */}
+            {/* Star rating summary (inline in header) */}
             {stats && stats.count > 0 && (
               <div className="flex items-center gap-2 mb-2">
                 <StarRating rating={stats.average} size="sm" />
@@ -423,10 +500,12 @@ export default function ServiceDetail() {
           <h2 className="text-sm font-semibold text-white">Quick Start</h2>
 
           {/* Tab buttons */}
-          <div className="flex gap-1 ml-auto">
+          <div className="flex gap-1 ml-auto" role="tablist" aria-label="Code language selector">
             {CODE_TABS.map(tab => (
               <button
                 key={tab.key}
+                role="tab"
+                aria-selected={activeTab === tab.key}
                 onClick={() => setActiveTab(tab.key)}
                 className={`px-3 py-1 text-xs rounded-md transition-colors cursor-pointer border-none ${
                   activeTab === tab.key
@@ -440,7 +519,7 @@ export default function ServiceDetail() {
           </div>
         </div>
 
-        <div className="relative">
+        <div className="relative" role="tabpanel">
           <CopyButton text={codeSnippet} label="Copy" copiedLabel="Copied!" />
           <pre className="p-5 text-xs leading-relaxed overflow-x-auto font-mono text-green-400 bg-black/30 max-h-[340px] overflow-y-auto">
             {codeSnippet}
@@ -502,54 +581,49 @@ export default function ServiceDetail() {
       </div>
 
       {/* ── 5. REVIEWS ── */}
+      <section aria-labelledby="reviews-heading">
 
-      {/* Rating distribution */}
-      {stats && stats.count > 0 && (
-        <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-5 mb-4">
-          <div className="flex items-center gap-6 flex-wrap">
-            <div className="text-center">
-              <div className="text-4xl font-bold text-white">{stats.average}</div>
-              <StarRating rating={stats.average} size="md" />
-              <div className="text-xs text-gray-500 mt-1">{stats.count} reviews</div>
-            </div>
-            <div className="flex-1 min-w-[150px] flex flex-col gap-1.5">
-              {[5, 4, 3, 2, 1].map(star => {
-                const count = stats.distribution[String(star)] || 0;
-                const pct = stats.count > 0 ? Math.round((count / stats.count) * 100) : 0;
-                return (
-                  <div key={star} className="flex items-center gap-2 text-xs">
-                    <span className="text-gray-500 w-3 text-right">{star}</span>
-                    <div className="flex-1 bg-white/5 rounded-full h-1.5 overflow-hidden">
-                      <div
-                        className="h-full bg-[#FBBF24] rounded-full transition-all duration-500"
-                        style={{ width: `${pct}%` }}
-                      />
-                    </div>
-                    <span className="text-gray-600 w-5 text-right">{count}</span>
-                  </div>
-                );
-              })}
+        {/* Rating distribution */}
+        {stats && stats.count > 0 && (
+          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-5 mb-4">
+            <div className="flex items-center gap-6 flex-wrap">
+              {/* Average score */}
+              <div className="text-center shrink-0" aria-label={`Average rating: ${stats.average} out of 5`}>
+                <div className="text-4xl font-bold text-white">{stats.average}</div>
+                <StarRating rating={stats.average} size="md" />
+                <div className="text-xs text-gray-500 mt-1">{stats.count} {t.reviews.title.toLowerCase()}</div>
+              </div>
+              {/* Distribution bars */}
+              <div className="flex-1 min-w-[150px] flex flex-col gap-1.5" aria-label="Rating distribution">
+                {[5, 4, 3, 2, 1].map(star => (
+                  <DistributionBar
+                    key={star}
+                    star={star}
+                    count={stats.distribution[String(star)] || 0}
+                    total={stats.count}
+                  />
+                ))}
+              </div>
             </div>
           </div>
+        )}
+
+        {/* Review form */}
+        <div className="mb-6">
+          <ReviewForm serviceId={service.id} onSuccess={handleReviewSuccess} />
         </div>
-      )}
 
-      {/* Review form */}
-      <div className="mb-6">
-        <ReviewForm serviceId={service.id} onSuccess={loadReviews} />
-      </div>
-
-      {/* Reviews list */}
-      <div>
-        <h2 className="text-lg font-semibold text-white mb-4">
+        {/* Reviews list heading */}
+        <h2 id="reviews-heading" className="text-lg font-semibold text-white mb-4">
           {t.reviews.title}
           {stats && stats.count > 0 && (
             <span className="text-sm text-gray-500 font-normal ml-2">({stats.count})</span>
           )}
         </h2>
 
+        {/* Reviews list */}
         {loadingReviews ? (
-          <div className="text-center py-8">
+          <div className="text-center py-8" role="status" aria-label="Loading reviews">
             <div className="w-6 h-6 border-2 border-[#FF9900]/20 border-t-[#FF9900] rounded-full animate-spin mx-auto" />
           </div>
         ) : reviews.length === 0 ? (
@@ -557,13 +631,29 @@ export default function ServiceDetail() {
             {t.reviews.noReviews}
           </div>
         ) : (
-          <div className="flex flex-col gap-3">
-            {reviews.map(review => (
-              <ReviewCard key={review.id} review={review} />
-            ))}
-          </div>
+          <>
+            <div
+              className={`flex flex-col gap-3 transition-opacity duration-200 ${fetchingReviews ? 'opacity-60' : 'opacity-100'}`}
+              aria-live="polite"
+              aria-busy={fetchingReviews}
+            >
+              {reviews.map(review => (
+                <ReviewCard key={review.id} review={review} />
+              ))}
+            </div>
+
+            <Pagination
+              page={reviewPage}
+              totalPages={totalPages}
+              onPageChange={(p) => {
+                setReviewPage(p);
+                // Scroll to top of reviews section smoothly
+                document.getElementById('reviews-heading')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }}
+            />
+          </>
         )}
-      </div>
+      </section>
     </div>
   );
 }
