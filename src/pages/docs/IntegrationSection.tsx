@@ -9,7 +9,32 @@ export default function IntegrationSection({ d }: Props) {
       <h2 className="text-2xl font-bold text-white mb-3">{d.integrationTitle || 'Integration'}</h2>
       <p className="text-gray-400 text-sm mb-6">{d.integrationDesc || ''}</p>
 
-      <h3 className="text-white font-semibold mb-3">{d.integrationJs || 'JavaScript (Node.js)'}</h3>
+      <h3 className="text-white font-semibold mb-3">TypeScript SDK (Recommended)</h3>
+      <DocsCodeBlock code={`npm install @wintyx/x402-sdk`} />
+      <DocsCodeBlock code={`import { createClient } from '@wintyx/x402-sdk';
+
+// Auto-wallet: no privateKey needed (generates & encrypts one automatically)
+const client = createClient({ chain: 'base' });
+
+// List all APIs
+const services = await client.listServices();
+
+// Call a paid API (payment handled automatically)
+const result = await client.call(serviceId);
+
+// Search APIs
+const weather = await client.searchServices('weather');`} />
+      <p className="text-gray-400 text-xs mt-2 mb-6">
+        <a href="https://github.com/Wintyx57/x402-sdk" target="_blank" rel="noopener noreferrer" className="text-[#FF9900] hover:text-[#FFB84D] no-underline">
+          View on GitHub
+        </a>
+        {' · '}
+        <a href="https://www.npmjs.com/package/@wintyx/x402-sdk" target="_blank" rel="noopener noreferrer" className="text-[#FF9900] hover:text-[#FFB84D] no-underline">
+          npm
+        </a>
+      </p>
+
+      <h3 className="text-white font-semibold mb-3">{d.integrationJs || 'JavaScript (Manual)'}</h3>
       <DocsCodeBlock code={`async function payAndRequest(url, wallet, options = {}) {
   const res = await fetch(url, options);
   const body = await res.json();
@@ -29,7 +54,7 @@ export default function IntegrationSection({ d }: Props) {
   return retryRes.json();
 }`} />
 
-      <h3 className="text-white font-semibold mt-6 mb-3">{d.integrationPy || 'Python (requests + web3)'}</h3>
+      <h3 className="text-white font-semibold mt-6 mb-3">{d.integrationPy || 'Python (Manual)'}</h3>
       <DocsCodeBlock code={`import requests
 
 BAZAAR = "https://x402-api.onrender.com"

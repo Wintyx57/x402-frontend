@@ -132,6 +132,33 @@ export default function Developers() {
         </div>
       </section>
 
+      {/* TypeScript SDK */}
+      <section className="mb-10">
+        <h2 className="text-2xl font-bold text-white mb-4">TypeScript SDK</h2>
+        <p className="text-gray-400 text-sm mb-4">The easiest way to integrate x402 Bazaar. Install and start calling APIs in 3 lines.</p>
+        <CodeBlock lang="Shell" code={`npm install @wintyx/x402-sdk`} />
+        <div className="mt-3" />
+        <CodeBlock lang="TypeScript" code={`import { createClient } from '@wintyx/x402-sdk';
+
+const client = createClient({ chain: 'base' });
+
+// Call any paid API — payment is automatic
+const joke = await client.call('service-uuid-here');
+console.log(joke);
+
+// List available services
+const services = await client.listServices();
+console.log(\`\${services.length} APIs available\`);`} />
+        <div className="mt-3 flex gap-3">
+          <a href="https://github.com/Wintyx57/x402-sdk" target="_blank" rel="noopener noreferrer" className="text-[#FF9900] hover:text-[#FFB84D] text-sm font-medium no-underline inline-flex items-center gap-1">
+            GitHub →
+          </a>
+          <a href="https://www.npmjs.com/package/@wintyx/x402-sdk" target="_blank" rel="noopener noreferrer" className="text-[#FF9900] hover:text-[#FFB84D] text-sm font-medium no-underline inline-flex items-center gap-1">
+            npm →
+          </a>
+        </div>
+      </section>
+
       {/* Example */}
       <section ref={exampleRef} className="reveal mb-10">
         <h2 className="text-2xl font-bold text-white mb-4">{t.developers.exampleTitle}</h2>

@@ -337,6 +337,17 @@ export default function Home() {
         </svg>
       ),
     },
+    {
+      label: 'TS SDK',
+      href: 'https://www.npmjs.com/package/@wintyx/x402-sdk',
+      icon: (
+        <svg className="w-6 h-6 text-gray-400 group-hover:text-[#FF9900] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="2" y="3" width="20" height="14" rx="2" strokeWidth={2} />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 21h8M12 17v4" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h2.5a1.5 1.5 0 010 3H8m0-6v6m8-6v6m-2-6h4" />
+        </svg>
+      ),
+    },
   ];
 
   return (
