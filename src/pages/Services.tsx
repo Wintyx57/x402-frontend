@@ -190,6 +190,7 @@ export default function Services() {
           <select
             value={sort}
             onChange={e => setParam('sort', e.target.value)}
+            aria-label="Sort services by"
             className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-gray-300
                        focus:outline-none focus:border-[#FF9900]/50 cursor-pointer"
           >
@@ -234,6 +235,7 @@ export default function Services() {
           <button
             key={f}
             onClick={() => setParam('price', f)}
+            aria-pressed={priceFilter === f}
             className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 cursor-pointer ${
               priceFilter === f
                 ? 'bg-[#FF9900]/15 text-[#FF9900] border border-[#FF9900]/25'
@@ -249,14 +251,16 @@ export default function Services() {
       <div className="flex flex-col sm:flex-row flex-wrap items-start sm:items-center gap-3 sm:gap-4 mb-3">
         {/* Max price slider */}
         <div className="flex items-center gap-2">
-          <label className="text-xs text-gray-500 whitespace-nowrap">{t.services.maxPrice || 'Max price'}:</label>
+          <label htmlFor="price-range-slider" className="text-xs text-gray-500 whitespace-nowrap">{t.services.maxPrice || 'Max price'}:</label>
           <input
+            id="price-range-slider"
             type="range"
             min="0"
             max="1"
             step="0.005"
             value={maxPrice}
             onChange={e => setParam('maxPrice', e.target.value === '1' ? 'all' : e.target.value)}
+            aria-valuetext={maxPrice >= 1 ? (t.services.all || 'All') : `$${maxPrice}`}
             className="w-32 sm:w-24 h-2 accent-[#FF9900] cursor-pointer"
           />
           <span className="text-xs text-[#FF9900] font-mono min-w-[3rem]">
@@ -270,6 +274,7 @@ export default function Services() {
             <button
               key={f}
               onClick={() => setParam('source', f)}
+              aria-pressed={sourceFilter === f}
               className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 cursor-pointer ${
                 sourceFilter === f
                   ? 'bg-[#FF9900]/15 text-[#FF9900] border border-[#FF9900]/25'
@@ -291,6 +296,7 @@ export default function Services() {
             <button
               key={cat.key}
               onClick={() => setParam('cat', cat.key)}
+              aria-pressed={isActive}
               className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer whitespace-nowrap shrink-0 sm:shrink ${
                 isActive
                   ? 'bg-white/10 text-white border border-white/15'

@@ -473,6 +473,7 @@ export default function Register() {
               <div>
                 <label htmlFor="reg-category" className="block text-sm text-gray-300 mb-1.5">{t.register.categoryLabel || 'Category'}</label>
                 <select
+                  id="reg-category"
                   value={form.category}
                   onChange={e => setForm({ ...form, category: e.target.value })}
                   className="w-full bg-[#1a1f2e] border border-white/10 rounded-lg px-4 py-2.5 text-white
