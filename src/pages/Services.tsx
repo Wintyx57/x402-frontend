@@ -70,7 +70,7 @@ export default function Services() {
           description: svc.description,
           offers: {
             '@type': 'Offer',
-            price: svc.price,
+            price: svc.price_usdc,
             priceCurrency: 'USD',
             availability: 'https://schema.org/InStock',
           },
