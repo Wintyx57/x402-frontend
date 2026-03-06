@@ -17,6 +17,7 @@ import { Bar, Line } from 'react-chartjs-2';
 ChartJS.register(CategoryScale, LinearScale, BarElement, PointElement, LineElement, Tooltip, Legend, Filler);
 
 import { ADMIN_STORAGE_KEY as STORAGE_KEY } from '../constants/admin';
+import useSEO from '../hooks/useSEO';
 
 /* ─── Types ─── */
 interface StatsData {
@@ -309,6 +310,7 @@ function RecentTransactions({ activities }: { activities: AnalyticsData['recentA
 
 /* ─── Main Component ─── */
 export default function AdminDashboard() {
+  useSEO({ title: 'Admin Dashboard', noindex: true });
   const [showLogin, setShowLogin] = useState(!sessionStorage.getItem(STORAGE_KEY));
   const [stats, setStats] = useState<StatsData | null>(null);
   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);

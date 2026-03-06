@@ -46,13 +46,28 @@
       "@type": "Organization",
       "name": "x402 Bazaar",
       "url": "https://x402bazaar.org",
-      "logo": "https://x402bazaar.org/favicon.svg",
-      "description": "The first API marketplace powered by x402 protocol — AI agents pay per call with USDC stablecoins.",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://x402bazaar.org/favicon.svg",
+        "width": "512",
+        "height": "512"
+      },
+      "image": "https://x402bazaar.org/og-image.png",
+      "description": "The first API marketplace powered by x402 protocol — AI agents pay per call with USDC stablecoins on Base and SKALE.",
+      "email": "contact.x402bazaar@gmail.com",
+      "foundingDate": "2026",
       "sameAs": [
         "https://github.com/Wintyx57/x402-backend",
         "https://github.com/Wintyx57/x402-frontend",
-        "https://www.npmjs.com/package/x402-bazaar"
-      ]
+        "https://www.npmjs.com/package/x402-bazaar",
+        "https://x.com/x402_bazaar"
+      ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "customer support",
+        "email": "contact.x402bazaar@gmail.com",
+        "availableLanguage": ["English", "French"]
+      }
     }
     </script>
 
@@ -160,10 +175,15 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preconnect" href="https://x402-api.onrender.com" crossorigin />
-    <link rel="dns-prefetch" href="https://www.google.com" />
+    <link rel="dns-prefetch" href="https://plausible.io" />
 
-    <!-- Fonts: Inter + JetBrains Mono -->
+    <!-- Fonts: Inter + JetBrains Mono (display=swap garantit font-display:swap) -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+    <!-- Preload critical font subsets to avoid FOUT on LCP text -->
+    <link rel="preload" as="font" type="font/woff2"
+      href="https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfAZ9hiJ-Ek-_EeA.woff2"
+      crossorigin="anonymous" />
 
     <!-- Theme -->
     <meta name="theme-color" content="#0f1111" />

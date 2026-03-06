@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Bot, Code, CircleDollarSign, Package, BookOpen, Plug } from 'lucide-react';
 import useSEO from '../hooks/useSEO';
@@ -81,6 +82,59 @@ export default function Quickstart() {
     keywords:
       'x402 quickstart, npx x402-bazaar init, HTTP 402 setup, AI agent payment tutorial, USDC wallet Base, MCP quickstart',
   });
+
+  // HowTo JSON-LD structured data
+  useEffect(() => {
+    const howToSchema = {
+      '@context': 'https://schema.org',
+      '@type': 'HowTo',
+      name: 'Get Started with x402 Bazaar in 5 Minutes',
+      description: 'Connect your AI agent or application to 70+ paid APIs using USDC micropayments on Base or SKALE via the HTTP 402 protocol.',
+      totalTime: 'PT5M',
+      tool: [
+        { '@type': 'HowToTool', name: 'Node.js' },
+        { '@type': 'HowToTool', name: 'npm or npx' },
+        { '@type': 'HowToTool', name: 'USDC wallet on Base' },
+      ],
+      step: [
+        {
+          '@type': 'HowToStep',
+          position: 1,
+          name: 'Run the initializer',
+          text: 'Run npx x402-bazaar init in your terminal. This automatically configures your wallet and MCP server.',
+          url: 'https://x402bazaar.org/quickstart',
+        },
+        {
+          '@type': 'HowToStep',
+          position: 2,
+          name: 'Fund your wallet with USDC on Base',
+          text: 'Send USDC to your agent wallet address on Base mainnet. A few dollars is enough to start.',
+          url: 'https://x402bazaar.org/quickstart',
+        },
+        {
+          '@type': 'HowToStep',
+          position: 3,
+          name: 'Start calling APIs — payments are automatic',
+          text: 'Your agent calls any x402 Bazaar API. When a 402 is returned, the wallet pays automatically and the request is retried.',
+          url: 'https://x402bazaar.org/quickstart',
+        },
+      ],
+    };
+
+    let script = document.getElementById('howto-jsonld') as HTMLScriptElement | null;
+    if (!script) {
+      script = document.createElement('script');
+      script.id = 'howto-jsonld';
+      script.type = 'application/ld+json';
+      document.head.appendChild(script);
+    }
+    script.textContent = JSON.stringify(howToSchema);
+
+    return () => {
+      const s = document.getElementById('howto-jsonld');
+      if (s) s.remove();
+    };
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#0f1117] text-white">

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAdminAuth } from '../hooks/useAdminAuth';
+import useSEO from '../hooks/useSEO';
 import OverviewTab from '../components/community-agent/OverviewTab';
 import AutomationTab from '../components/community-agent/AutomationTab';
 import StudioTab from '../components/community-agent/StudioTab';
@@ -46,6 +47,7 @@ function LoginModal({ onLogin }: { onLogin: (token: string) => void }) {
 }
 
 export default function AdminCommunityAgent() {
+  useSEO({ title: 'Admin — Community Agent', noindex: true });
   const { showLogin, login, logout, adminFetch } = useAdminAuth();
   const [activeTab, setActiveTab] = useState<Tab>('Overview');
 

@@ -140,6 +140,55 @@ export default function BlogArticle() {
     ogType: 'article',
   });
 
+  // Article JSON-LD structured data
+  useEffect(() => {
+    if (!metadata.title) return;
+
+    const articleSchema = {
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      headline: metadata.title,
+      description: metadata.description || metadata.title,
+      datePublished: metadata.date || '2026-02-28',
+      dateModified: metadata.date || '2026-03-05',
+      url: `https://x402bazaar.org/blog/${slug}`,
+      image: 'https://x402bazaar.org/og-image.png',
+      author: {
+        '@type': 'Person',
+        name: metadata.author || 'Robin',
+        url: 'https://github.com/Wintyx57',
+        sameAs: ['https://github.com/Wintyx57', 'https://x.com/x402_bazaar'],
+      },
+      publisher: {
+        '@type': 'Organization',
+        name: 'x402 Bazaar',
+        url: 'https://x402bazaar.org',
+        logo: {
+          '@type': 'ImageObject',
+          url: 'https://x402bazaar.org/favicon.svg',
+        },
+      },
+      mainEntityOfPage: {
+        '@type': 'WebPage',
+        '@id': `https://x402bazaar.org/blog/${slug}`,
+      },
+    };
+
+    let script = document.getElementById('article-jsonld') as HTMLScriptElement | null;
+    if (!script) {
+      script = document.createElement('script');
+      script.id = 'article-jsonld';
+      script.type = 'application/ld+json';
+      document.head.appendChild(script);
+    }
+    script.textContent = JSON.stringify(articleSchema);
+
+    return () => {
+      const s = document.getElementById('article-jsonld');
+      if (s) s.remove();
+    };
+  }, [metadata, slug]);
+
   // Article list for navigation
   const articles = [
     { slug: '01-introduction', title: 'x402 Bazaar: 69 APIs Your AI Agents Can Pay For with USDC' },

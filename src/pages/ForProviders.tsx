@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useTranslation } from '../i18n/LanguageContext';
 import { useReveal } from '../hooks/useReveal';
 import useSEO from '../hooks/useSEO';
@@ -31,6 +32,48 @@ export default function ForProviders() {
   const ref2 = useReveal();
   const ref3 = useReveal();
   const ref4 = useReveal();
+
+  // Service JSON-LD for API monetization page
+  useEffect(() => {
+    const serviceSchema = {
+      '@context': 'https://schema.org',
+      '@type': 'Service',
+      name: 'x402 Bazaar API Listing Service',
+      description: 'List your API on x402 Bazaar and earn USDC from AI agents worldwide. Keep 95% of every payment. Instant on-chain payouts on Base or SKALE.',
+      url: 'https://x402bazaar.org/for-providers',
+      provider: {
+        '@type': 'Organization',
+        name: 'x402 Bazaar',
+        url: 'https://x402bazaar.org',
+      },
+      serviceType: 'API Marketplace',
+      offers: {
+        '@type': 'Offer',
+        price: '1.00',
+        priceCurrency: 'USD',
+        description: 'One-time listing fee of 1 USDC. Keep 95% of all revenue.',
+      },
+      areaServed: 'Worldwide',
+      audience: {
+        '@type': 'Audience',
+        audienceType: 'API developers, SaaS providers, data providers',
+      },
+    };
+
+    let script = document.getElementById('service-provider-jsonld') as HTMLScriptElement | null;
+    if (!script) {
+      script = document.createElement('script');
+      script.id = 'service-provider-jsonld';
+      script.type = 'application/ld+json';
+      document.head.appendChild(script);
+    }
+    script.textContent = JSON.stringify(serviceSchema);
+
+    return () => {
+      const s = document.getElementById('service-provider-jsonld');
+      if (s) s.remove();
+    };
+  }, []);
 
   const steps = [
     { num: '1', title: p.step1Title || 'Submit Your API Spec', desc: p.step1Desc || 'Provide your API endpoint URL, parameters, and desired price in USDC. Use our JSON template below.' },

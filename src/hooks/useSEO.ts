@@ -69,11 +69,18 @@ export default function useSEO({
       el.setAttribute('content', value);
     };
 
-    // Description — propagate to og + twitter
-    if (description) {
-      setMeta('name', 'description', description);
-      setMeta('property', 'og:description', description);
-      setMeta('name', 'twitter:description', description);
+    // Description — propagate to og + twitter.
+    // If no description is provided, read the default from the static meta tag
+    // so og:description is always consistent with the page description.
+    const resolvedDescription =
+      description ||
+      (document.querySelector('meta[name="description"]') as HTMLMetaElement | null)?.content ||
+      '';
+
+    if (resolvedDescription) {
+      setMeta('name', 'description', resolvedDescription);
+      setMeta('property', 'og:description', resolvedDescription);
+      setMeta('name', 'twitter:description', resolvedDescription);
     }
 
     // Keywords
