@@ -41,6 +41,14 @@ export default function Privacy() {
         { label: t.privacy.blockchainPublic, desc: t.privacy.blockchainPublicDesc },
         { label: t.privacy.blockchainImmutable, desc: t.privacy.blockchainImmutableDesc },
       ]
+    },
+    {
+      title: t.privacy.sentryTitle,
+      items: [
+        { label: t.privacy.sentryTracker, desc: t.privacy.sentryTrackerDesc },
+        { label: t.privacy.sentrySubprocessors, desc: t.privacy.sentrySubprocessorsDesc },
+        { label: t.privacy.sentryLegalBasis, desc: t.privacy.sentryLegalBasisDesc },
+      ]
     }
   ];
 
