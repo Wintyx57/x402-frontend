@@ -250,26 +250,39 @@ export default function ServiceDetail() {
   useEffect(() => {
     if (!id) return;
 
-    setService(null);
-    setError(null);
-    setLoadingService(true);
-    setReviewPage(1);
+    let cancelled = false;
+    const controller = new AbortController();
 
-    fetch(`${API_URL}/api/services/${id}`)
-      .then(async r => {
+    (async () => {
+      setService(null);
+      setError(null);
+      setLoadingService(true);
+      setReviewPage(1);
+
+      try {
+        let r = await fetch(`${API_URL}/api/services/${id}`, { signal: controller.signal });
+        let result: Service;
         if (r.status === 404 || r.status === 405) {
-          const listRes = await fetch(`${API_URL}/api/services`);
+          const listRes = await fetch(`${API_URL}/api/services`, { signal: controller.signal });
           const data: Service[] = await listRes.json();
           const found = data.find(s => s.id === id);
           if (!found) throw new Error('Service not found');
-          return found;
+          result = found;
+        } else {
+          if (!r.ok) throw new Error('Failed to load service');
+          result = await r.json() as Service;
         }
-        if (!r.ok) throw new Error('Failed to load service');
-        return r.json() as Promise<Service>;
-      })
-      .then(setService)
-      .catch(err => setError(err instanceof Error ? err.message : 'Failed to load service'))
-      .finally(() => setLoadingService(false));
+        if (!cancelled) setService(result);
+      } catch (err) {
+        if (!cancelled && !(err instanceof DOMException && err.name === 'AbortError')) {
+          setError(err instanceof Error ? err.message : 'Failed to load service');
+        }
+      } finally {
+        if (!cancelled) setLoadingService(false);
+      }
+    })();
+
+    return () => { cancelled = true; controller.abort(); };
   }, [id]);
 
   const handleCopyUrl = async () => {
