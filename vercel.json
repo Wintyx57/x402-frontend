@@ -2,8 +2,23 @@
   "framework": "vite",
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "www.x402bazaar.org" }],
+      "destination": "https://x402bazaar.org/:path*",
+      "permanent": true
+    }
+  ],
   "rewrites": [
-    { "source": "/((?!assets/).*)", "destination": "/index.html" }
+    { "source": "/blog/:slug", "destination": "/index.html" },
+    { "source": "/services/:id", "destination": "/index.html" },
+    { "source": "/creators/dashboard", "destination": "/index.html" },
+    { "source": "/admin/community-agent", "destination": "/index.html" },
+    { "source": "/admin", "destination": "/index.html" },
+    { "source": "/((?!assets|og-image|favicon|site.webmanifest|robots.txt|sitemap.xml|icon-).*)", "destination": "/index.html" }
   ],
   "headers": [
     {
