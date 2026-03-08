@@ -133,6 +133,7 @@ export default function Footer() {
                   { to: '/blog', label: t.blog.title },
                   { to: '/privacy', label: t.nav.privacy },
                   { to: '/terms', label: t.nav.terms },
+                  { to: '/legal', label: 'Mentions légales' },
                 ].map(({ to, label }) => (
                   <li key={to}>
                     <Link

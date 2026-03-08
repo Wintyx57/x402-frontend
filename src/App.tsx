@@ -76,6 +76,7 @@ const Docs = lazy(() => import('./pages/Docs'));
 const Status = lazy(() => import('./pages/Status'));
 const Privacy = lazy(() => import('./pages/Privacy'));
 const Terms = lazy(() => import('./pages/Terms'));
+const Legal = lazy(() => import('./pages/Legal'));
 const Playground = lazy(() => import('./pages/Playground'));
 const Analytics = lazy(() => import('./pages/Analytics'));
 const Compare = lazy(() => import('./pages/Compare'));
@@ -112,6 +113,7 @@ export default function App() {
             <Route path="/status" element={<Status />} />
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/terms" element={<Terms />} />
+            <Route path="/legal" element={<Legal />} />
             <Route path="/playground" element={<Playground />} />
             <Route path="/analytics" element={<Analytics />} />
             <Route path="/compare" element={<Compare />} />
