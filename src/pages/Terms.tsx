@@ -50,10 +50,26 @@ export default function Terms() {
         { label: t.terms.liabilityBlockchain, desc: t.terms.liabilityBlockchainDesc },
         { label: t.terms.liabilityChanges, desc: t.terms.liabilityChangesDesc },
       ]
+    },
+    {
+      title: t.terms.legalTitle,
+      items: [
+        { label: t.terms.legalLaw, desc: t.terms.legalLawDesc },
+        { label: t.terms.legalJurisdiction, desc: t.terms.legalJurisdictionDesc },
+        { label: t.terms.legalMediation, desc: t.terms.legalMediationDesc },
+      ]
+    },
+    {
+      title: t.terms.cryptoTitle,
+      items: [
+        { label: t.terms.cryptoDepeg, desc: t.terms.cryptoDepegDesc },
+        { label: t.terms.cryptoSmartContract, desc: t.terms.cryptoSmartContractDesc },
+        { label: t.terms.cryptoAdvice, desc: t.terms.cryptoAdviceDesc },
+      ]
     }
   ];
 
-  const sectionColors = ['bg-[#FF9900]', 'bg-blue-500', 'bg-green-500', 'bg-purple-500', 'bg-red-500'];
+  const sectionColors = ['bg-[#FF9900]', 'bg-blue-500', 'bg-green-500', 'bg-purple-500', 'bg-red-500', 'bg-teal-500', 'bg-orange-500'];
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-10">
