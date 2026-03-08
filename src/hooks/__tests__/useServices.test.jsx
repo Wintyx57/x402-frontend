@@ -82,7 +82,7 @@ describe('useServices', () => {
     });
 
     await waitFor(() => {
-      expect(globalThis.fetch).toHaveBeenCalledWith('http://localhost:3000/api/services');
+      expect(globalThis.fetch).toHaveBeenCalledWith('http://localhost:3000/api/services?limit=100');
     });
   });
 
