@@ -110,7 +110,7 @@ describe('Home', () => {
     usePublicStats.mockReturnValue({
       data: {
         services: 50,
-        nativeEndpoints: 61,
+        nativeEndpoints: 69,
       },
     });
 

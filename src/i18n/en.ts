@@ -966,7 +966,7 @@ def my_function(query: str) -> dict:
     tierBase: "Base",
     tierUtility: "Utility",
     tierMicro: "Micro",
-    allEndpointsNote: "All 41 native endpoints are production-ready with real USDC payments.",
+    allEndpointsNote: "All 69 native endpoints are production-ready with real USDC payments.",
     marketplaceFeesTitle: "Marketplace Fees",
     marketplaceFeesList: "List Services",
     marketplaceFeesSearch: "Search Services",

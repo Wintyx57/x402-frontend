@@ -286,7 +286,7 @@ export default function Analytics() {
             <StatCard
               label={t.analytics.totalServices}
               value={stats.services || 0}
-              sub={`${stats.nativeEndpoints || 61} ${t.analytics.nativeLabel || 'native endpoints'}`}
+              sub={`${stats.nativeEndpoints || 69} ${t.analytics.nativeLabel || 'native endpoints'}`}
               icon="&#9632;"
             />
             <StatCard

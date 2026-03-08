@@ -35,7 +35,7 @@ const paths: PathItem[] = [
     title: "I'm a Developer",
     description: 'Integrate x402 protocol in your app. Call paid APIs or build your own payment layer.',
     steps: [
-      { code: false, text: 'Read the API docs — 61 endpoints documented' },
+      { code: false, text: 'Read the API docs — 69 endpoints documented' },
       { code: true, text: 'npm install x402-bazaar', suffix: '' },
       { code: false, text: 'Make your first paid API call' },
     ],

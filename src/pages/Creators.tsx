@@ -29,7 +29,7 @@ export default function Creators() {
         clearTimeout(timeoutId);
         if (res.ok) {
           const data = await res.json();
-          setServiceCount(data.total_services || data.services || 61);
+          setServiceCount(data.total_services || data.services || 69);
         }
       } catch { /* ignore */ }
     };
@@ -103,7 +103,7 @@ export default function Creators() {
   ];
 
   const stats = [
-    { value: serviceCount !== null ? serviceCount : '61+', label: c.statApis || 'Live APIs', color: '#FF9900' },
+    { value: serviceCount !== null ? serviceCount : '69+', label: c.statApis || 'Live APIs', color: '#FF9900' },
     { value: '95%', label: c.statRevenue || 'Creator Revenue', color: '#34D399' },
     { value: '6', label: c.statIntegrations || 'Integrations', color: '#60A5FA' },
     { value: '$0.001', label: c.statGas || 'Gas Cost', color: '#A78BFA' },

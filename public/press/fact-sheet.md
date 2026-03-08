@@ -29,7 +29,7 @@ x402 Bazaar enables AI agents to make autonomous economic decisions. Instead of 
 
 **Backend:**
 - Node.js + Express
-- 61 native REST endpoints
+- 69 native REST endpoints
 - Supabase (database)
 - Coinbase SDK (crypto operations)
 - MCP Server (Model Context Protocol)

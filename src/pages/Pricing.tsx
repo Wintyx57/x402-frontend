@@ -24,7 +24,7 @@ export default function Pricing() {
   const providerRef = useReveal();
   const faqRef = useReveal();
 
-  // All 61 native API endpoints grouped by price tier
+  // All 69 native API endpoints grouped by price tier
   const pricingTiers = [
     {
       name: 'tierPremium',
