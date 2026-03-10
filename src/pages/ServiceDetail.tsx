@@ -38,6 +38,7 @@ function getCodeSnippet(service: Service, tab: CodeTab): string {
 curl -X GET "${url}"`;
     }
     return `${paymentNote}
+# Optional: Add -H "X-Payment-Chain: skale" for ultra-low gas
 
 # Step 1: Call the API (returns 402 with payment instructions)
 curl "${url}"
@@ -75,7 +76,8 @@ if (res.status === 402) {
   const data = await fetch("${url}", {
     headers: {
       "X-Payment-TxHash": txHash,
-      "X-Payment-Chain": "base",
+      // Optional: "skale" for ultra-low gas (~$0.0007/tx)
+      "X-Payment-Chain": "base", // or "skale"
     },
   }).then(r => r.json());
 
@@ -112,7 +114,8 @@ if res.status_code == 402:
         "${url}",
         headers={
             "X-Payment-TxHash": tx_hash,
-            "X-Payment-Chain": "base",
+            # Optional: "skale" for ultra-low gas (~$0.0007/tx)
+            "X-Payment-Chain": "base",  # or "skale"
         },
     ).json()
 
@@ -560,7 +563,10 @@ export default function ServiceDetail() {
 
           <div>
             <span className="text-xs text-gray-500 block mb-1">Chain</span>
-            <span className="text-white font-medium">Base (USDC)</span>
+            <div className="flex flex-col gap-1">
+              <span className="text-white font-medium text-sm">Base (USDC) <span className="text-gray-500 font-normal text-xs">— default</span></span>
+              <span className="text-gray-300 font-medium text-sm">SKALE on Base (USDC) <span className="text-gray-500 font-normal text-xs">— ultra-low gas</span></span>
+            </div>
           </div>
 
           <div>

@@ -86,7 +86,9 @@ function ServiceCard({ service, lastActivity, healthStatus = null, uptimePercent
 
   const handleCopyPrompt = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-    const prompt = `Use x402 Bazaar to call "${service.name}" at ${service.url}${isFree ? ' (free)' : ` (costs ${service.price_usdc} USDC)`}`;
+    const prompt = isFree
+      ? `Use x402 Bazaar to call "${service.name}" (free).`
+      : `Use x402 Bazaar to call "${service.name}" (costs ${service.price_usdc} USDC).\nWhen calling, specify chain: "base" (default, ~$0.001 gas) or "skale" (ultra-low gas ~$0.0007).\nService ID: ${service.id} — use call_service("${service.id}") for native 95/5 revenue split.`;
     try {
       await navigator.clipboard.writeText(prompt);
       setCopied(true);
