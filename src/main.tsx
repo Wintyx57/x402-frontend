@@ -8,7 +8,6 @@ import { BrowserRouter } from 'react-router-dom';
 import { config } from './wagmi';
 import { LanguageProvider } from './i18n/LanguageContext';
 import { ThemeProvider } from './context/ThemeContext';
-import { initGA4 } from './analytics';
 import App from './App';
 import '@rainbow-me/rainbowkit/styles.css';
 import './index.css';
@@ -18,7 +17,6 @@ if (import.meta.env.PROD) {
     dsn: import.meta.env.VITE_SENTRY_DSN,
     tracesSampleRate: 0,
   });
-  initGA4();
 }
 
 const queryClient = new QueryClient();

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
+import DOMPurify from 'dompurify';
 import useSEO from '../hooks/useSEO';
 import { useTranslation } from '../i18n/LanguageContext';
 
@@ -225,7 +226,10 @@ export default function BlogArticle() {
           if (authorMatch) metaData.author = authorMatch[1];
 
           setMetadata(metaData);
-          const html = parseMarkdown(markdown);
+          const html = DOMPurify.sanitize(parseMarkdown(markdown), {
+            ALLOWED_TAGS: ['h1','h2','h3','h4','h5','h6','p','a','strong','em','ul','ol','li','pre','code','hr','br'],
+            ALLOWED_ATTR: ['href','target','rel','class','data-language'],
+          });
           setContent(html);
         }
       } catch (err) {
