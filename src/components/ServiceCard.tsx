@@ -86,9 +86,13 @@ function ServiceCard({ service, lastActivity, healthStatus = null, uptimePercent
 
   const handleCopyPrompt = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
+    const requiredParams = service.required_parameters?.required;
+    const paramsLine = requiredParams?.length
+      ? `\nRequired parameters: ${requiredParams.join(', ')}. You MUST provide these parameters or the call will fail.`
+      : '';
     const prompt = isFree
-      ? `Use x402 Bazaar to call "${service.name}" (free).`
-      : `Use x402 Bazaar to call "${service.name}" (costs ${service.price_usdc} USDC).\nWhen calling, specify chain: "base" (default, ~$0.001 gas) or "skale" (ultra-low gas ~$0.0007).\nService ID: ${service.id} — use call_service("${service.id}") for native 95/5 revenue split.`;
+      ? `Use x402 Bazaar to call "${service.name}" (free).${paramsLine}`
+      : `Use x402 Bazaar to call "${service.name}" (costs ${service.price_usdc} USDC).\nWhen calling, specify chain: "base" (default, ~$0.001 gas) or "skale" (ultra-low gas ~$0.0007).\nService ID: ${service.id} — use call_service("${service.id}") for native 95/5 revenue split.${paramsLine}`;
     try {
       await navigator.clipboard.writeText(prompt);
       setCopied(true);

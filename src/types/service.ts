@@ -9,4 +9,5 @@ export interface Service {
   tx_hash?: string;
   created_at?: string;
   verified_status?: string;
+  required_parameters?: { required?: string[]; properties?: Record<string, unknown> } | null;
 }

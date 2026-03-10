@@ -20,6 +20,7 @@ interface Service {
   tx_hash?: string;
   created_at: string;
   verified_status?: string;
+  required_parameters?: { required?: string[]; properties?: Record<string, unknown> } | null;
 }
 
 type CodeTab = 'curl' | 'javascript' | 'python';
@@ -31,38 +32,48 @@ function getCodeSnippet(service: Service, tab: CodeTab): string {
   const paymentNote = isFree
     ? '# Free API — no payment required'
     : `# Price: $${price} USDC on Base`;
+  const reqParams = service.required_parameters?.required;
+  const paramsNote = reqParams?.length
+    ? `# Required parameters: ${reqParams.join(', ')}`
+    : '';
+  // Build example query string from required params
+  const exampleQs = reqParams?.length
+    ? '?' + reqParams.map((p: string) => `${p}=YOUR_${p.toUpperCase()}`).join('&')
+    : '';
 
   if (tab === 'curl') {
     if (isFree) {
-      return `${paymentNote}
-curl -X GET "${url}"`;
+      return [paymentNote, paramsNote, `curl -X GET "${url}${exampleQs}"`].filter(Boolean).join('\n');
     }
-    return `${paymentNote}
-# Optional: Add -H "X-Payment-Chain: skale" for ultra-low gas
-
-# Step 1: Call the API (returns 402 with payment instructions)
-curl "${url}"
-
-# Step 2: Send USDC on Base to the recipient address shown in the 402 response
-
-# Step 3: Retry with the transaction hash
-curl -X GET "${url}" \\
-  -H "X-Payment-TxHash: 0xYOUR_TX_HASH" \\
-  -H "X-Payment-Chain: base"`;
+    return [paymentNote, paramsNote,
+      '# Optional: Add -H "X-Payment-Chain: skale" for ultra-low gas',
+      '',
+      '# Step 1: Call the API (returns 402 with payment instructions)',
+      `curl "${url}${exampleQs}"`,
+      '',
+      '# Step 2: Send USDC on Base to the recipient address shown in the 402 response',
+      '',
+      '# Step 3: Retry with the transaction hash',
+      `curl -X GET "${url}${exampleQs}" \\`,
+      '  -H "X-Payment-TxHash: 0xYOUR_TX_HASH" \\',
+      '  -H "X-Payment-Chain: base"',
+    ].filter(l => l !== undefined).join('\n');
   }
 
   if (tab === 'javascript') {
     if (isFree) {
-      return `${paymentNote}
-
-const response = await fetch("${url}");
-const data = await response.json();
-console.log(data);`;
+      return [paymentNote, paramsNote ? `// ${paramsNote.slice(2)}` : '',
+        '',
+        `const response = await fetch("${url}${exampleQs}");`,
+        'const data = await response.json();',
+        'console.log(data);',
+      ].filter(Boolean).join('\n');
     }
     return `${paymentNote}
+${paramsNote ? `// ${paramsNote.slice(2)}` : ''}
 
 // Step 1: Call the API
-const res = await fetch("${url}");
+const res = await fetch("${url}${exampleQs}");
 
 if (res.status === 402) {
   const payment = await res.json();
@@ -73,7 +84,7 @@ if (res.status === 402) {
   const txHash = await sendUSDC(payment.address, payment.price);
 
   // Step 3: Retry with the transaction hash
-  const data = await fetch("${url}", {
+  const data = await fetch("${url}${exampleQs}", {
     headers: {
       "X-Payment-TxHash": txHash,
       // Optional: "skale" for ultra-low gas (~$0.0007/tx)
@@ -87,19 +98,21 @@ if (res.status === 402) {
 
   if (tab === 'python') {
     if (isFree) {
-      return `${paymentNote}
-
-import requests
-
-response = requests.get("${url}")
-print(response.json())`;
+      return [paymentNote, paramsNote,
+        '',
+        'import requests',
+        '',
+        `response = requests.get("${url}${exampleQs}")`,
+        'print(response.json())',
+      ].filter(Boolean).join('\n');
     }
     return `${paymentNote}
+${paramsNote}
 
 import requests
 
 # Step 1: Call the API
-res = requests.get("${url}")
+res = requests.get("${url}${exampleQs}")
 
 if res.status_code == 402:
     payment = res.json()
@@ -111,7 +124,7 @@ if res.status_code == 402:
 
     # Step 3: Retry with the transaction hash
     data = requests.get(
-        "${url}",
+        "${url}${exampleQs}",
         headers={
             "X-Payment-TxHash": tx_hash,
             # Optional: "skale" for ultra-low gas (~$0.0007/tx)
@@ -543,6 +556,31 @@ export default function ServiceDetail() {
           </pre>
         </div>
       </div>
+
+      {/* ── 3b. REQUIRED PARAMETERS ── */}
+      {service.required_parameters?.required && service.required_parameters.required.length > 0 && (
+        <div className="bg-amber-500/5 border border-amber-500/20 rounded-xl p-5 mb-6">
+          <h2 className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
+            <svg className="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+            </svg>
+            Required Parameters
+          </h2>
+          <p className="text-xs text-gray-400 mb-3">
+            You must provide these parameters when calling this API, otherwise the request will fail.
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {service.required_parameters.required.map((param: string) => (
+              <span
+                key={param}
+                className="font-mono text-xs bg-amber-500/10 text-amber-300 px-2.5 py-1 rounded-md border border-amber-500/20"
+              >
+                {param}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* ── 4. PAYMENT INFO ── */}
       <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-5 mb-6">
