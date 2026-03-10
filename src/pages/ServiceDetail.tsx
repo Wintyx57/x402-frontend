@@ -264,7 +264,8 @@ export default function ServiceDetail() {
         let result: Service;
         if (r.status === 404 || r.status === 405) {
           const listRes = await fetch(`${API_URL}/api/services`, { signal: controller.signal });
-          const data: Service[] = await listRes.json();
+          const json = await listRes.json();
+          const data: Service[] = Array.isArray(json) ? json : (json.data ?? []);
           const found = data.find(s => s.id === id);
           if (!found) throw new Error('Service not found');
           result = found;

@@ -125,15 +125,18 @@ export default function Services() {
   }, []);
 
   // Helper: find the primary category of a service (first tag matching a known category)
-  const categoryTags = CATEGORIES.filter(c => c.tag).map(c => c.tag);
-  const getCategory = (s: any) => s.tags?.find((t: string) => categoryTags.includes(t)) || null;
-
-  // Count per category
-  const categoryCounts: Record<string, number> = { all: services.length };
-  services.forEach((s: any) => {
-    const cat = getCategory(s);
-    if (cat) categoryCounts[cat] = (categoryCounts[cat] || 0) + 1;
-  });
+  const { categoryTags, getCategory, categoryCounts, freeCount, paidCount } = useMemo(() => {
+    const categoryTags = CATEGORIES.filter(c => c.tag).map(c => c.tag);
+    const getCategory = (s: any) => s.tags?.find((t: string) => categoryTags.includes(t)) || null;
+    const categoryCounts: Record<string, number> = { all: services.length };
+    services.forEach((s: any) => {
+      const cat = getCategory(s);
+      if (cat) categoryCounts[cat] = (categoryCounts[cat] || 0) + 1;
+    });
+    const freeCount = services.filter((s: any) => Number(s.price_usdc) === 0).length;
+    const paidCount = services.filter((s: any) => Number(s.price_usdc) > 0).length;
+    return { categoryTags, getCategory, categoryCounts, freeCount, paidCount };
+  }, [services]);
 
   // Filter
   const filtered = useMemo(() => services.filter((s: any) => {
@@ -166,9 +169,6 @@ export default function Services() {
       default: return a.name.localeCompare(b.name);
     }
   }), [filtered, sort]);
-
-  const freeCount = services.filter(s => Number(s.price_usdc) === 0).length;
-  const paidCount = services.filter(s => Number(s.price_usdc) > 0).length;
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">

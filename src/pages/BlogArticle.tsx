@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import DOMPurify from 'dompurify';
 import useSEO from '../hooks/useSEO';
-import { useTranslation } from '../i18n/LanguageContext';
 
 // Simple markdown to HTML parser
 function parseMarkdown(markdown: string): string {
@@ -127,8 +126,6 @@ function parseMarkdown(markdown: string): string {
 
 export default function BlogArticle() {
   const { slug } = useParams<{ slug: string }>();
-  useNavigate();
-  useTranslation();
   const [content, setContent] = useState<string>('');
   const [metadata, setMetadata] = useState<{ title?: string; date?: string; author?: string; description?: string }>({});
   const [loading, setLoading] = useState(true);
@@ -151,7 +148,7 @@ export default function BlogArticle() {
       headline: metadata.title,
       description: metadata.description || metadata.title,
       datePublished: metadata.date || '2026-02-28',
-      dateModified: metadata.date || '2026-03-05',
+      ...(metadata.date && { dateModified: metadata.date }),
       url: `https://x402bazaar.org/blog/${slug}`,
       image: 'https://x402bazaar.org/og-image.png',
       author: {

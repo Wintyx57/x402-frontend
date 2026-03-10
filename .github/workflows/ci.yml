@@ -7,35 +7,41 @@ on:
     branches: [main]
 
 jobs:
-  test:
+  lint:
+    name: Lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: '20.19.0'
+          cache: npm
+      - run: npm ci
+      # Progressively tighten max-warnings toward 0
+      - run: npx eslint src/ --max-warnings 50
+
+  test:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.19.0'
           cache: npm
       - run: npm ci
       - run: npm test
 
   build:
+    name: Build
     runs-on: ubuntu-latest
+    # Only build if lint and tests pass — prevents deploying broken code
+    needs: [lint, test]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: '20.19.0'
           cache: npm
       - run: npm ci
       - run: npm run build
-
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: npm
-      - run: npm ci
-      - run: npx eslint src/ --max-warnings 100

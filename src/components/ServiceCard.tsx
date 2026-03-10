@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from '../i18n/LanguageContext';
 import StarRating from './StarRating';
 import { trackEvent } from '../lib/analytics';
+import type { Service } from '../types/service';
 
 function getDomain(url: string): string | null {
   try {
@@ -64,7 +65,7 @@ function isNewService(createdAt: string | null | undefined): boolean {
 }
 
 interface ServiceCardProps {
-  service: Record<string, any>;
+  service: Service;
   lastActivity: string | null;
   healthStatus?: 'online' | 'offline' | null;
   uptimePercent?: number | null;
