@@ -109,7 +109,7 @@ export default function Register() {
   ];
 
   const [form, setForm] = useState({
-    name: '', description: '', url: '', price: '', tags: '', category: 'utility', method: 'GET'
+    name: '', description: '', url: '', price: '', tags: '', category: 'utility', method: 'GET', requiredParams: ''
   });
   const [wizardStep, setWizardStep] = useState(1);
   const [paymentState, setPaymentState] = useState<'idle' | 'paying' | 'registering' | 'done' | 'error'>('idle');
@@ -151,6 +151,24 @@ export default function Register() {
     return userTags;
   };
 
+  // Build registration payload (reused in both 402 probe and final POST)
+  const buildPayload = () => {
+    const payload: Record<string, unknown> = {
+      name: form.name,
+      description: form.description,
+      url: form.url,
+      price: parseFloat(form.price),
+      tags: buildTags(),
+      ownerAddress: address,
+    };
+    // Parse required params from comma-separated input
+    const params = form.requiredParams.split(',').map(p => p.trim()).filter(Boolean);
+    if (params.length > 0) {
+      payload.required_parameters = { required: params };
+    }
+    return payload;
+  };
+
   const handleGoToStep3 = () => {
     const validationError = validateForm();
     if (validationError) {
@@ -178,14 +196,7 @@ export default function Register() {
       const res402 = await fetch(`${API_URL}/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: form.name,
-          description: form.description,
-          url: form.url,
-          price: parseFloat(form.price),
-          tags: buildTags(),
-          ownerAddress: address,
-        }),
+        body: JSON.stringify(buildPayload()),
       });
 
       if (res402.status !== 402) {
@@ -243,14 +254,7 @@ export default function Register() {
           'X-Payment-TxHash': hash,
           'X-Payment-Chain': currentChainConfig.key,
         },
-        body: JSON.stringify({
-          name: form.name,
-          description: form.description,
-          url: form.url,
-          price: parseFloat(form.price),
-          tags: buildTags(),
-          ownerAddress: address,
-        }),
+        body: JSON.stringify(buildPayload()),
       });
 
       if (!resRegister.ok) {
@@ -547,6 +551,25 @@ export default function Register() {
               </div>
             </div>
 
+            {/* Required Parameters */}
+            <div>
+              <label className="flex items-center text-sm text-gray-400 mb-1.5">
+                Required Parameters
+                <FieldTooltip tip="Comma-separated list of parameters your API requires. This prevents AI agents from calling your API without the right params (and wasting USDC). Example: city, country">
+                  ?
+                </FieldTooltip>
+              </label>
+              <input
+                id="reg-params" type="text" value={form.requiredParams}
+                onChange={e => setForm({ ...form, requiredParams: e.target.value })}
+                placeholder="e.g. city, latitude, longitude"
+                className="w-full bg-[#1a1f2e] border border-white/10 rounded-lg px-4 py-2.5 text-white placeholder-gray-600
+                           focus:outline-none focus:border-[#FF9900]/40 transition-all duration-300"
+                aria-describedby="params-hint"
+              />
+              <p id="params-hint" className="text-[11px] text-gray-600 mt-1">Comma-separated · Prevents failed calls &amp; wasted USDC</p>
+            </div>
+
             {error && (
               <div role="alert" aria-live="assertive" className="bg-red-500/10 border border-red-500/50 rounded-xl p-4 text-red-300 text-sm font-medium">
                 {error}
@@ -616,6 +639,7 @@ export default function Register() {
                 <CheckItem done={form.url.trim().length > 0 && form.url.startsWith('http')} label={t.register.checkUrl || 'Valid URL'} />
                 <CheckItem done={parseFloat(form.price) > 0} label={t.register.checkPrice || 'Price set'} />
                 <CheckItem done={form.description.trim().length > 0} label={t.register.checkDesc || 'Description'} />
+                <CheckItem done={form.requiredParams.trim().length > 0} label="Required params" />
                 <CheckItem done={isConnected} label={t.register.checkWallet || 'Wallet connected'} />
               </div>
             </div>
@@ -651,6 +675,12 @@ export default function Register() {
                 <div className="flex items-center justify-between py-2 border-b border-white/5">
                   <span className="text-sm text-gray-400">Tags</span>
                   <span className="text-sm text-white">{form.tags}</span>
+                </div>
+              )}
+              {form.requiredParams.trim() && (
+                <div className="flex items-center justify-between py-2 border-b border-white/5">
+                  <span className="text-sm text-gray-400">Required params</span>
+                  <span className="text-sm text-amber-300 font-mono">{form.requiredParams}</span>
                 </div>
               )}
             </div>
