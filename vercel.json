@@ -4,14 +4,6 @@
   "outputDirectory": "dist",
   "cleanUrls": true,
   "trailingSlash": false,
-  "redirects": [
-    {
-      "source": "/:path*",
-      "has": [{ "type": "host", "value": "www.x402bazaar.org" }],
-      "destination": "https://x402bazaar.org/:path*",
-      "permanent": true
-    }
-  ],
   "rewrites": [
     { "source": "/blog/:slug", "destination": "/index.html" },
     { "source": "/services/:id", "destination": "/index.html" },
