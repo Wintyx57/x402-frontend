@@ -116,6 +116,11 @@ const STATIC_ROUTES = [
     title: 'Configuration | x402 Bazaar',
     description: 'Configure your x402 Bazaar integration. Set chain preferences, wallet, and payment settings.',
   },
+  {
+    path: '/fund',
+    title: 'Fund Your Wallet — Get USDC on Base | x402 Bazaar',
+    description: 'Get USDC from any chain to Base in 1 click. Bridge from Ethereum, Polygon, Arbitrum, or Optimism. Pay for APIs instantly.',
+  },
 ];
 
 function esc(str) {
