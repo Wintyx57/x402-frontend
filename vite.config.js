@@ -1,5 +1,6 @@
 /// <reference types="vitest" />
 import { defineConfig } from 'vite'
+import path from 'path'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { generateRoutePages } from './vite-plugin-generate-routes.js'
@@ -8,6 +9,12 @@ export default defineConfig({
   plugins: [react(), tailwindcss(), generateRoutePages()],
   define: {
     global: 'globalThis',
+  },
+  resolve: {
+    alias: {
+      // Force single copy of react-query (0xtrails bundles its own v5.90.9)
+      '@tanstack/react-query': path.resolve('./node_modules/@tanstack/react-query'),
+    },
   },
   build: {
     rollupOptions: {
