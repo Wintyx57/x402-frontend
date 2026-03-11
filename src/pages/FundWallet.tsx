@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { TrailsWidget } from '0xtrails/widget';
+import { TRAILS_ROUTER_PLACEHOLDER_AMOUNT } from '0xtrails';
 import { useAccount } from 'wagmi';
+import { encodeFunctionData } from 'viem';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '../i18n/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
@@ -9,6 +11,31 @@ import { useReveal } from '../hooks/useReveal';
 
 const TRAILS_API_KEY = import.meta.env.VITE_TRAILS_API_KEY || '';
 
+// Base Mainnet USDC
+const USDC_BASE_ADDRESS = '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913' as const;
+
+// SKALE IMA Bridge DepositBoxERC20 on Base
+const DEPOSIT_BOX_ERC20_ADDRESS = '0x7f54e52D08C911eAbB4fDF00Ad36ccf07F867F61' as const;
+
+// SKALE Chain name for SKALE on Base
+const SKALE_CHAIN_NAME = 'winged-bubbly-grumium';
+
+// DepositBoxERC20 ABI - depositERC20Direct function
+const depositBoxErc20Abi = [
+  {
+    type: 'function' as const,
+    name: 'depositERC20Direct' as const,
+    stateMutability: 'nonpayable' as const,
+    inputs: [
+      { name: 'schainName', type: 'string' as const },
+      { name: 'erc20OnMainnet', type: 'address' as const },
+      { name: 'amount', type: 'uint256' as const },
+      { name: 'receiver', type: 'address' as const },
+    ],
+    outputs: [],
+  },
+] as const;
+
 export default function FundWallet() {
   const { t } = useTranslation();
   const { theme } = useTheme();
@@ -16,13 +43,14 @@ export default function FundWallet() {
   const [recipient, setRecipient] = useState('');
   const [bridgeComplete, setBridgeComplete] = useState(false);
   const [bridgeSessionId, setBridgeSessionId] = useState<string | null>(null);
+  const [bridgedAmount, setBridgedAmount] = useState<string | null>(null);
 
   const f = t.fund || {} as Record<string, string>;
 
   useSEO({
-    title: f.pageTitle || 'Fund Your Wallet — Get USDC on Base',
-    description: f.pageDescription || 'Get USDC from any chain to Base in 1 click. Pay for APIs instantly.',
-    keywords: 'bridge USDC, cross-chain, fund wallet, x402',
+    title: f.pageTitle || 'Fund Your Wallet — Bridge USDC to SKALE',
+    description: f.pageDescription || 'Bridge USDC from any chain to SKALE on Base in 1 click. Pay for APIs with ultra-low gas.',
+    keywords: 'bridge USDC, cross-chain, fund wallet, x402, SKALE',
   });
 
   const heroRef = useReveal();
@@ -32,6 +60,29 @@ export default function FundWallet() {
   const actualRecipient = (recipient || address || '') as `0x${string}`;
   const isValidRecipient = actualRecipient && actualRecipient.startsWith('0x') && actualRecipient.length === 42;
 
+  // Encode the depositERC20Direct calldata with placeholder amount
+  const bridgeCalldata = useMemo(() => {
+    if (!actualRecipient) return undefined;
+
+    return encodeFunctionData({
+      abi: depositBoxErc20Abi,
+      functionName: 'depositERC20Direct',
+      args: [
+        SKALE_CHAIN_NAME,
+        USDC_BASE_ADDRESS,
+        TRAILS_ROUTER_PLACEHOLDER_AMOUNT,
+        actualRecipient,
+      ],
+    });
+  }, [actualRecipient]);
+
+  function handleCheckoutQuote({ quote }: { sessionId: string; quote: { destinationTokenAmount?: string } }) {
+    if (quote?.destinationTokenAmount) {
+      const amountInUsdc = Number(quote.destinationTokenAmount) / 1e6;
+      setBridgedAmount(amountInUsdc.toFixed(2));
+    }
+  }
+
   function handleBridgeComplete({ sessionId }: { sessionId: string }) {
     setBridgeComplete(true);
     setBridgeSessionId(sessionId);
@@ -40,6 +91,7 @@ export default function FundWallet() {
   function handleReset() {
     setBridgeComplete(false);
     setBridgeSessionId(null);
+    setBridgedAmount(null);
   }
 
   const isDark = theme === 'dark';
@@ -68,15 +120,15 @@ export default function FundWallet() {
 
   const steps = [
     { icon: '1', title: f.step1Title || 'Select Any Token', desc: f.step1Desc || 'Choose USDC, ETH, or any token from Ethereum, Polygon, Optimism, Arbitrum, or Base.' },
-    { icon: '2', title: f.step2Title || 'Trails Routes Automatically', desc: f.step2Desc || 'Trails SDK finds the best route, swaps and bridges your tokens to USDC on Base.' },
-    { icon: '3', title: f.step3Title || 'USDC on Base', desc: f.step3Desc || 'USDC arrives on Base. Ready to pay for APIs on x402 Bazaar.' },
+    { icon: '2', title: f.step2Title || 'Trails Routes to SKALE', desc: f.step2Desc || 'Trails SDK swaps and bridges your tokens to Base, then deposits into the IMA bridge to SKALE.' },
+    { icon: '3', title: f.step3Title || 'USDC on SKALE', desc: f.step3Desc || 'After 5-15 minutes, USDC arrives on SKALE on Base. Ready for ultra-low gas API payments.' },
   ];
 
   const faqs = [
-    { q: f.faqQ1 || 'How long does it take?', a: f.faqA1 || 'Most transfers complete in under 2 minutes. Cross-chain bridges may take up to 15 minutes.' },
+    { q: f.faqQ1 || 'How long does the bridge take?', a: f.faqA1 || 'The IMA bridge from Base to SKALE typically takes 5-15 minutes.' },
     { q: f.faqQ2 || 'What tokens can I use?', a: f.faqA2 || 'Any token on Ethereum, Polygon, Optimism, Arbitrum, or Base. Trails finds the best route automatically.' },
     { q: f.faqQ3 || 'Is there a minimum amount?', a: f.faqA3 || 'No minimum. Very small amounts may not be cost-effective due to gas fees.' },
-    { q: f.faqQ4 || 'What if the transaction fails?', a: f.faqA4 || 'Trails provides automatic refunds if the transaction fails on the source chain.' },
+    { q: f.faqQ4 || 'What if the bridge fails?', a: f.faqA4 || 'Trails provides automatic refunds if the transaction fails on the source chain.' },
   ];
 
   return (
@@ -91,7 +143,7 @@ export default function FundWallet() {
             {f.heroTitle || 'Fund Your Wallet'}
           </h1>
           <p className="text-base sm:text-lg text-gray-400 max-w-xl mx-auto">
-            {f.heroSubtitle || 'Get USDC from any chain in 1 click. Pay for APIs instantly on x402 Bazaar.'}
+            {f.heroSubtitle || 'Bridge USDC from any chain to SKALE on Base in 1 click. Pay for APIs instantly with ultra-low gas.'}
           </p>
         </div>
       </section>
@@ -101,7 +153,7 @@ export default function FundWallet() {
         <div className="max-w-lg mx-auto glass-card rounded-2xl p-6 space-y-4">
           {/* Recipient */}
           <div className="space-y-2">
-            <label className="text-sm font-medium">{f.recipientLabel || 'Recipient Address'}</label>
+            <label className="text-sm font-medium">{f.recipientLabel || 'SKALE Recipient Address'}</label>
             <input
               type="text"
               value={recipient}
@@ -116,10 +168,11 @@ export default function FundWallet() {
           {/* Success */}
           {bridgeComplete && (
             <div className="p-4 bg-green-500/10 border border-green-500/20 rounded-lg space-y-2">
-              <p className="text-sm font-medium text-green-400">{f.successTitle || 'Funds sent!'}</p>
+              <p className="text-sm font-medium text-green-400">{f.successTitle || 'Bridge initiated!'}</p>
+              {bridgedAmount && <p className="text-xs text-green-300"><strong>{f.successAmount || 'Amount'}:</strong> {bridgedAmount} USDC</p>}
               <p className="text-xs text-green-300"><strong>{f.successRecipient || 'Recipient'}:</strong> {actualRecipient.slice(0, 6)}...{actualRecipient.slice(-4)}</p>
               {bridgeSessionId && <p className="text-xs text-green-300"><strong>{f.successSession || 'Session'}:</strong> {bridgeSessionId.slice(0, 16)}...</p>}
-              <p className="text-xs text-green-300 mt-2">{f.successTiming || 'USDC should arrive shortly. Cross-chain transfers may take up to 15 minutes.'}</p>
+              <p className="text-xs text-green-300 mt-2">{f.successTiming || 'The IMA bridge typically takes 5-15 minutes to deliver tokens to SKALE.'}</p>
               <Link to="/services" className="inline-block mt-2 text-sm text-[#FF9900] hover:underline font-medium">
                 {f.startUsing || 'Start using APIs'} &rarr;
               </Link>
@@ -129,28 +182,27 @@ export default function FundWallet() {
           {/* Widget / States */}
           {!isConnected && (
             <div className="p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-lg text-center">
-              <p className="text-sm text-yellow-400">{f.connectPrompt || 'Connect your wallet to fund with USDC'}</p>
+              <p className="text-sm text-yellow-400">{f.connectPrompt || 'Connect your wallet to bridge USDC'}</p>
             </div>
           )}
 
-          {isConnected && isValidRecipient && !bridgeComplete && TRAILS_API_KEY && (
+          {isConnected && isValidRecipient && !bridgeComplete && TRAILS_API_KEY && bridgeCalldata && (
             <TrailsWidget
               apiKey={TRAILS_API_KEY}
               mode="fund"
               toChainId={8453}
-              toToken="USDC"
-              toAddress={actualRecipient}
+              toToken={USDC_BASE_ADDRESS}
+              toAddress={DEPOSIT_BOX_ERC20_ADDRESS}
+              toCalldata={bridgeCalldata}
+              buttonText={f.bridgeButton || 'Bridge to SKALE'}
               theme={isDark ? 'dark' : 'light'}
               customCss={widgetCss}
+              onCheckoutQuote={handleCheckoutQuote}
               onCheckoutComplete={handleBridgeComplete}
               onCheckoutError={({ error }: { sessionId: string; error: unknown }) => {
-                console.error('Fund error:', error);
+                console.error('Bridge error:', error);
               }}
-            >
-              <button className="w-full h-12 rounded-xl bg-[#FF9900] hover:bg-[#e68a00] text-white font-semibold transition-colors">
-                {f.bridgeButton || 'Fund with USDC'}
-              </button>
-            </TrailsWidget>
+            />
           )}
 
           {isConnected && !isValidRecipient && !bridgeComplete && (
@@ -170,7 +222,7 @@ export default function FundWallet() {
               onClick={handleReset}
               className="w-full h-12 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 font-medium transition-colors"
             >
-              {f.bridgeMore || 'Fund More'}
+              {f.bridgeMore || 'Bridge More'}
             </button>
           )}
         </div>
