@@ -86,6 +86,7 @@ const CreatorDashboard = lazy(() => import('./pages/CreatorDashboard'));
 const Quickstart = lazy(() => import('./pages/Quickstart'));
 const AdminCommunityAgent = lazy(() => import('./pages/AdminCommunityAgent'));
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
+const FundWallet = lazy(() => import('./pages/FundWallet'));
 const ServiceDetail = lazy(() => import('./pages/ServiceDetail'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
@@ -119,6 +120,7 @@ export default function App() {
             <Route path="/compare" element={<Compare />} />
             <Route path="/for-providers" element={<ForProviders />} />
             <Route path="/budget" element={<Budget />} />
+            <Route path="/fund" element={<FundWallet />} />
             <Route path="/creators" element={<Navigate to="/for-providers" replace />} />
             <Route path="/creators/dashboard" element={<CreatorDashboard />} />
             <Route path="/creators/onboarding" element={<Navigate to="/register" replace />} />

@@ -1,5 +1,5 @@
 import { getDefaultConfig } from '@rainbow-me/rainbowkit';
-import { base, baseSepolia } from 'wagmi/chains';
+import { base, baseSepolia, mainnet, polygon, optimism, arbitrum } from 'wagmi/chains';
 import { http, createConfig } from 'wagmi';
 import {
   metaMaskWallet,
@@ -26,7 +26,7 @@ export const skaleOnBase: Chain = {
 };
 
 const projectId = import.meta.env.VITE_WALLETCONNECT_PROJECT_ID || '';
-const chains = [base, baseSepolia, skaleOnBase] as const;
+const chains = [base, baseSepolia, skaleOnBase, mainnet, polygon, optimism, arbitrum] as const;
 
 function buildConfig() {
   // If projectId is available, use RainbowKit's getDefaultConfig (includes WalletConnect)
@@ -81,6 +81,10 @@ function buildConfig() {
       [base.id]: http(),
       [baseSepolia.id]: http(),
       [skaleOnBase.id]: http('https://skale-base.skalenodes.com/v1/base'),
+      [mainnet.id]: http(),
+      [polygon.id]: http(),
+      [optimism.id]: http(),
+      [arbitrum.id]: http(),
     },
     ssr: false,
   });

@@ -181,6 +181,7 @@ function Navbar() {
 
   const exploreLinks: NavLink[] = [
     { to: '/services', label: t.nav.services },
+    { to: '/fund', label: t.nav.fund || 'Fund Wallet' },
     { to: '/playground', label: t.nav.playground || 'Playground' },
     { to: '/pricing', label: t.nav.pricing },
     { to: '/compare', label: t.nav.compare || 'Compare' },
