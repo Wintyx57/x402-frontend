@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { TrailsWidget } from '0xtrails/widget';
-import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
-import { parseUnits, erc20Abi } from 'viem';
+import { TRAILS_ROUTER_PLACEHOLDER_AMOUNT } from '0xtrails';
+import { useAccount } from 'wagmi';
+import { encodeFunctionData } from 'viem';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '../i18n/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
@@ -39,9 +40,9 @@ export default function FundWallet() {
   const { theme } = useTheme();
   const { address, isConnected } = useAccount();
   const [recipient, setRecipient] = useState('');
-  const [fundComplete, setFundComplete] = useState(false);
-  const [bridgeAmount, setBridgeAmount] = useState('');
-  const [step, setStep] = useState<'fund' | 'bridge' | 'done'>('fund');
+  const [bridgeComplete, setBridgeComplete] = useState(false);
+  const [bridgeSessionId, setBridgeSessionId] = useState<string | null>(null);
+  const [bridgedAmount, setBridgedAmount] = useState<string | null>(null);
 
   const f = t.fund || {} as Record<string, string>;
 
@@ -58,15 +59,24 @@ export default function FundWallet() {
   const actualRecipient = (recipient || address || '') as `0x${string}`;
   const isValidRecipient = actualRecipient && actualRecipient.startsWith('0x') && actualRecipient.length === 42;
 
-  // Step 2: Approve USDC for DepositBox
-  const { writeContract: approveUsdc, data: approveTxHash, isPending: isApproving, reset: resetApprove } = useWriteContract();
-  const { isLoading: isApproveConfirming, isSuccess: isApproveConfirmed } = useWaitForTransactionReceipt({ hash: approveTxHash });
-
-  // Step 3: Bridge via IMA DepositBox
-  const { writeContract: bridgeToSkale, data: bridgeTxHash, isPending: isBridging, reset: resetBridge } = useWriteContract();
-  const { isLoading: isBridgeConfirming, isSuccess: isBridgeConfirmed } = useWaitForTransactionReceipt({ hash: bridgeTxHash });
-
   const isDark = theme === 'dark';
+
+  // Encode depositERC20Direct calldata with placeholder amount
+  // Trails replaces the placeholder with the actual amount at runtime
+  const bridgeCalldata = useMemo(() => {
+    if (!isValidRecipient) return undefined;
+
+    return encodeFunctionData({
+      abi: depositBoxErc20Abi,
+      functionName: 'depositERC20Direct',
+      args: [
+        SKALE_CHAIN_NAME,
+        USDC_BASE_ADDRESS,
+        TRAILS_ROUTER_PLACEHOLDER_AMOUNT, // Auto-filled at runtime
+        actualRecipient,
+      ],
+    });
+  }, [actualRecipient, isValidRecipient]);
 
   const widgetCss = isDark
     ? `--trails-border-radius-button: 12px;
@@ -90,56 +100,28 @@ export default function FundWallet() {
        --trails-text-primary: #111827;
        --trails-text-secondary: #6b7280;`;
 
-  function handleFundComplete({ sessionId }: { sessionId: string }) {
-    console.log('Fund complete:', sessionId);
-    setFundComplete(true);
-    setStep('bridge');
+  function handleCheckoutQuote({ quote }: { sessionId: string; quote: { destinationTokenAmount?: string } }) {
+    if (quote?.destinationTokenAmount) {
+      const amountInUsdc = Number(quote.destinationTokenAmount) / 1e6;
+      setBridgedAmount(amountInUsdc.toFixed(2));
+    }
   }
 
-  function handleApproveAndBridge() {
-    if (!bridgeAmount || !isValidRecipient) return;
-    const amount = parseUnits(bridgeAmount, 6);
-
-    approveUsdc({
-      address: USDC_BASE_ADDRESS,
-      abi: erc20Abi,
-      functionName: 'approve',
-      args: [DEPOSIT_BOX_ERC20_ADDRESS, amount],
-    });
-  }
-
-  function handleBridge() {
-    if (!bridgeAmount || !isValidRecipient) return;
-    const amount = parseUnits(bridgeAmount, 6);
-
-    bridgeToSkale({
-      address: DEPOSIT_BOX_ERC20_ADDRESS,
-      abi: depositBoxErc20Abi,
-      functionName: 'depositERC20Direct',
-      args: [SKALE_CHAIN_NAME, USDC_BASE_ADDRESS, amount, actualRecipient],
-    });
-  }
-
-  // Auto-trigger bridge after approve confirms
-  if (isApproveConfirmed && !bridgeTxHash && !isBridging) {
-    handleBridge();
-  }
-
-  if (isBridgeConfirmed && step !== 'done') {
-    setStep('done');
+  function handleBridgeComplete({ sessionId }: { sessionId: string }) {
+    console.log('Bridge complete! Session:', sessionId);
+    setBridgeComplete(true);
+    setBridgeSessionId(sessionId);
   }
 
   function handleReset() {
-    setFundComplete(false);
-    setBridgeAmount('');
-    setStep('fund');
-    resetApprove();
-    resetBridge();
+    setBridgeComplete(false);
+    setBridgeSessionId(null);
+    setBridgedAmount(null);
   }
 
   const steps = [
-    { icon: '1', title: f.step1Title || 'Get USDC on Base', desc: f.step1Desc || 'Use any token from any chain. Trails routes it to USDC on Base automatically.' },
-    { icon: '2', title: f.step2Title || 'Bridge to SKALE', desc: f.step2Desc || 'One click to bridge your USDC from Base to SKALE via the IMA bridge.' },
+    { icon: '1', title: f.step1Title || 'Choose any token', desc: f.step1Desc || 'Use any token from any chain. Trails finds the best route to USDC on Base automatically.' },
+    { icon: '2', title: f.step2Title || 'One-click bridge', desc: f.step2Desc || 'Trails routes, approves, and bridges to SKALE — all in one transaction.' },
     { icon: '3', title: f.step3Title || 'USDC on SKALE', desc: f.step3Desc || 'After 5-15 minutes, USDC arrives on SKALE on Base. Ready for ultra-low gas API payments.' },
   ];
 
@@ -162,7 +144,7 @@ export default function FundWallet() {
             {f.heroTitle || 'Fund Your Wallet'}
           </h1>
           <p className="text-base sm:text-lg text-gray-400 max-w-xl mx-auto">
-            {f.heroSubtitle || 'Bridge USDC from any chain to SKALE on Base in 2 steps. Pay for APIs instantly with ultra-low gas.'}
+            {f.heroSubtitle || 'Bridge USDC from any chain to SKALE on Base in 1 click. Pay for APIs instantly with ultra-low gas.'}
           </p>
         </div>
       </section>
@@ -178,127 +160,74 @@ export default function FundWallet() {
               value={recipient}
               onChange={(e) => setRecipient(e.target.value)}
               placeholder={address || '0x...'}
-              disabled={step !== 'fund'}
+              disabled={bridgeComplete}
               className="w-full px-3 py-2 rounded-lg border border-white/10 bg-white/5 font-mono text-sm focus:outline-none focus:ring-2 focus:ring-[#FF9900]/50"
             />
             <p className="text-xs text-gray-500">{f.recipientHint || 'Leave empty to use your connected wallet address'}</p>
           </div>
 
-          {/* Step indicator */}
-          <div className="flex items-center gap-2 text-xs font-medium">
-            <span className={`flex items-center gap-1 px-2 py-1 rounded-full ${step === 'fund' ? 'bg-[#FF9900]/20 text-[#FF9900]' : 'bg-green-500/20 text-green-400'}`}>
-              {step === 'fund' ? '1' : '\u2713'} Get USDC on Base
-            </span>
-            <span className="text-gray-600">&rarr;</span>
-            <span className={`flex items-center gap-1 px-2 py-1 rounded-full ${step === 'bridge' ? 'bg-[#FF9900]/20 text-[#FF9900]' : step === 'done' ? 'bg-green-500/20 text-green-400' : 'bg-white/5 text-gray-500'}`}>
-              {step === 'done' ? '\u2713' : '2'} Bridge to SKALE
-            </span>
-          </div>
-
-          {/* Step 1: Fund with Trails */}
-          {step === 'fund' && (
-            <>
-              {!isConnected && (
-                <div className="p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-lg text-center">
-                  <p className="text-sm text-yellow-400">{f.connectPrompt || 'Connect your wallet to bridge USDC'}</p>
-                </div>
-              )}
-
-              {isConnected && isValidRecipient && TRAILS_API_KEY && (
-                <>
-                  <p className="text-xs text-gray-400 text-center">
-                    Already have USDC on Base?{' '}
-                    <button onClick={() => setStep('bridge')} className="text-[#FF9900] hover:underline font-medium">
-                      Skip to bridge &rarr;
-                    </button>
-                  </p>
-                  <TrailsWidget
-                    apiKey={TRAILS_API_KEY}
-                    mode="fund"
-                    toChainId={8453}
-                    toToken="USDC"
-                    toAddress={actualRecipient}
-                    theme={isDark ? 'dark' : 'light'}
-                    customCss={widgetCss}
-                    onCheckoutComplete={handleFundComplete}
-                    onCheckoutError={({ error }: { sessionId: string; error: unknown }) => {
-                      console.error('Fund error:', error);
-                    }}
-                    buttonText={f.bridgeButton || 'Get USDC on Base'}
-                  />
-                </>
-              )}
-
-              {isConnected && !isValidRecipient && (
-                <div className="p-4 bg-white/5 rounded-lg text-center">
-                  <p className="text-sm text-gray-400">{f.invalidAddress || 'Enter a valid recipient address to continue'}</p>
-                </div>
-              )}
-
-              {isConnected && isValidRecipient && !TRAILS_API_KEY && (
-                <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-lg text-center">
-                  <p className="text-sm text-red-400">Trails API key not configured. Set VITE_TRAILS_API_KEY.</p>
-                </div>
-              )}
-            </>
-          )}
-
-          {/* Step 2: Bridge to SKALE */}
-          {step === 'bridge' && (
-            <div className="space-y-4">
-              {fundComplete && (
-                <div className="p-3 bg-green-500/10 border border-green-500/20 rounded-lg">
-                  <p className="text-sm text-green-400 font-medium">Step 1 complete — USDC on Base</p>
-                </div>
-              )}
-
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Amount to bridge (USDC)</label>
-                <input
-                  type="number"
-                  value={bridgeAmount}
-                  onChange={(e) => setBridgeAmount(e.target.value)}
-                  placeholder="e.g. 5"
-                  min="0.01"
-                  step="0.01"
-                  className="w-full px-3 py-2 rounded-lg border border-white/10 bg-white/5 font-mono text-sm focus:outline-none focus:ring-2 focus:ring-[#FF9900]/50"
-                />
-              </div>
-
-              <button
-                onClick={handleApproveAndBridge}
-                disabled={!bridgeAmount || Number(bridgeAmount) <= 0 || isApproving || isApproveConfirming || isBridging || isBridgeConfirming}
-                className="w-full h-12 rounded-xl bg-[#FF9900] hover:bg-[#e68a00] disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold transition-colors"
-              >
-                {isApproving ? 'Approve USDC...' :
-                 isApproveConfirming ? 'Confirming approval...' :
-                 isBridging ? 'Bridging to SKALE...' :
-                 isBridgeConfirming ? 'Confirming bridge...' :
-                 `Bridge ${bridgeAmount || '...'} USDC to SKALE`}
-              </button>
-
-              <p className="text-xs text-gray-500 text-center">
-                2 transactions: approve USDC + deposit into IMA bridge. Gas ~$0.01 on Base.
+          {/* Info box */}
+          {!bridgeComplete && (
+            <div className="p-3 bg-[#FF9900]/10 border border-[#FF9900]/20 rounded-lg">
+              <p className="text-sm text-[#FF9900]/80">
+                <strong>{f.howItWorksInline || 'How it works:'}</strong>{' '}
+                {f.howItWorksDesc || 'Choose any amount from any chain. Trails routes to Base, approves the SKALE bridge, and calls depositERC20Direct \u2014 all in one transaction.'}
               </p>
             </div>
           )}
 
-          {/* Done */}
-          {step === 'done' && (
+          {/* Not connected */}
+          {!isConnected && (
+            <div className="p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-lg text-center">
+              <p className="text-sm text-yellow-400">{f.connectPrompt || 'Connect your wallet to bridge USDC'}</p>
+            </div>
+          )}
+
+          {/* Trails Widget — 1-step: route + approve + bridge */}
+          {isConnected && isValidRecipient && TRAILS_API_KEY && bridgeCalldata && !bridgeComplete && (
+            <TrailsWidget
+              apiKey={TRAILS_API_KEY}
+              mode="fund"
+              toChainId={8453}
+              toToken={USDC_BASE_ADDRESS}
+              toAddress={DEPOSIT_BOX_ERC20_ADDRESS}
+              toCalldata={bridgeCalldata}
+              theme={isDark ? 'dark' : 'light'}
+              customCss={widgetCss}
+              onCheckoutQuote={handleCheckoutQuote}
+              onCheckoutComplete={handleBridgeComplete}
+              onCheckoutError={({ error }: { sessionId: string; error: unknown }) => {
+                console.error('Bridge error:', error);
+              }}
+              buttonText={f.bridgeButton || 'Bridge USDC to SKALE'}
+            />
+          )}
+
+          {/* Invalid recipient */}
+          {isConnected && !isValidRecipient && !bridgeComplete && (
+            <div className="p-4 bg-white/5 rounded-lg text-center">
+              <p className="text-sm text-gray-400">{f.invalidAddress || 'Enter a valid recipient address to continue'}</p>
+            </div>
+          )}
+
+          {/* No API key */}
+          {isConnected && isValidRecipient && !TRAILS_API_KEY && !bridgeComplete && (
+            <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-lg text-center">
+              <p className="text-sm text-red-400">Trails API key not configured. Set VITE_TRAILS_API_KEY.</p>
+            </div>
+          )}
+
+          {/* Success */}
+          {bridgeComplete && (
             <div className="space-y-4">
               <div className="p-4 bg-green-500/10 border border-green-500/20 rounded-lg space-y-2">
                 <p className="text-sm font-medium text-green-400">{f.successTitle || 'Bridge initiated!'}</p>
-                <p className="text-xs text-green-300"><strong>{f.successAmount || 'Amount'}:</strong> {bridgeAmount} USDC</p>
+                {bridgedAmount && (
+                  <p className="text-xs text-green-300"><strong>{f.successAmount || 'Amount'}:</strong> {bridgedAmount} USDC</p>
+                )}
                 <p className="text-xs text-green-300"><strong>{f.successRecipient || 'Recipient'}:</strong> {actualRecipient.slice(0, 6)}...{actualRecipient.slice(-4)}</p>
-                {bridgeTxHash && (
-                  <a
-                    href={`https://basescan.org/tx/${bridgeTxHash}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-xs text-[#FF9900] hover:underline"
-                  >
-                    View on BaseScan &rarr;
-                  </a>
+                {bridgeSessionId && (
+                  <p className="text-xs text-green-300"><strong>Session:</strong> {bridgeSessionId.slice(0, 16)}...</p>
                 )}
                 <p className="text-xs text-green-300 mt-2">{f.successTiming || 'The IMA bridge typically takes 5-15 minutes to deliver tokens to SKALE.'}</p>
                 <Link to="/services" className="inline-block mt-2 text-sm text-[#FF9900] hover:underline font-medium">
