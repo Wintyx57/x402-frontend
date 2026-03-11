@@ -175,6 +175,9 @@ export const translations = {
       finalCtaDesc: "Join the autonomous marketplace. Your AI agent deserves APIs that pay themselves.",
       integrateTitle: "Integrate your AI Agent",
       integrateDesc: "Connect Claude, ChatGPT, or any LangChain agent in minutes via MCP, CLI, or REST.",
+      fundCta: "Fund Your Wallet",
+      fundCtaDesc: "Bridge USDC from any chain to SKALE in 1 click — ultra-low gas fees (~$0.0007/tx)",
+      fundCtaBtn: "Fund Wallet",
     },
     services: {
       title: "Services",
@@ -1832,6 +1835,9 @@ def my_function(query: str) -> dict:
       finalCtaDesc: "Rejoignez la marketplace autonome. Votre agent IA merite des APIs qui se paient seules.",
       integrateTitle: "Integrez votre Agent IA",
       integrateDesc: "Connectez Claude, ChatGPT ou tout agent LangChain en quelques minutes via MCP, CLI ou REST.",
+      fundCta: "Alimentez votre Wallet",
+      fundCtaDesc: "Bridgez vos USDC depuis n'importe quelle chain vers SKALE en 1 clic — frais ultra-bas (~0,0007$/tx)",
+      fundCtaBtn: "Alimenter le Wallet",
     },
     services: {
       title: "Services",

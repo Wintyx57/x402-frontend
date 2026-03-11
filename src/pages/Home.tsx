@@ -213,6 +213,7 @@ export default function Home() {
   const paidRef = useReveal();
   const statsRef = useReveal();
   const ctaRef = useReveal();
+  const fundRef = useReveal();
 
   useSEO({
     title: 'x402 Bazaar — The API Marketplace for AI Agents',
@@ -550,6 +551,27 @@ export default function Home() {
               ))}
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Fund Wallet CTA */}
+      <section ref={fundRef} className="reveal max-w-4xl mx-auto px-4 mb-10">
+        <div className="glass-card rounded-2xl p-6 md:p-8 flex flex-col md:flex-row items-center gap-5 md:gap-8 border border-[#FF9900]/20 bg-[#FF9900]/5">
+          <div className="flex items-center justify-center w-14 h-14 rounded-xl bg-[#FF9900]/15 border border-[#FF9900]/30 shrink-0" aria-hidden="true">
+            <svg className="w-7 h-7 text-[#FF9900]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+            </svg>
+          </div>
+          <div className="flex-1 text-center md:text-left">
+            <h2 className="text-lg font-bold text-white mb-1">{t.home.fundCta}</h2>
+            <p className="text-gray-400 text-sm">{t.home.fundCtaDesc}</p>
+          </div>
+          <Link
+            to="/fund"
+            className="shrink-0 px-6 py-2.5 bg-[#FF9900] hover:bg-[#e68a00] text-white font-semibold rounded-xl transition-colors text-sm whitespace-nowrap"
+          >
+            {t.home.fundCtaBtn} →
+          </Link>
         </div>
       </section>
 
