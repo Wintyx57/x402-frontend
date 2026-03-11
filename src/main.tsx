@@ -6,7 +6,6 @@ import { RainbowKitProvider, darkTheme } from '@rainbow-me/rainbowkit';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter } from 'react-router-dom';
 import { config } from './wagmi';
-import { TrailsProvider } from '0xtrails';
 import { LanguageProvider } from './i18n/LanguageContext';
 import { ThemeProvider } from './context/ThemeContext';
 import App from './App';
@@ -47,7 +46,6 @@ try {
     <StrictMode>
       <WagmiProvider config={config}>
         <QueryClientProvider client={queryClient}>
-          <TrailsProvider config={{ trailsApiKey: import.meta.env.VITE_TRAILS_API_KEY ?? '' }}>
           <RainbowKitProvider locale="en" theme={darkTheme({ accentColor: '#FF9900', accentColorForeground: 'white', borderRadius: 'medium' })} modalSize="compact">
             <BrowserRouter>
               <ThemeProvider>
@@ -57,7 +55,6 @@ try {
               </ThemeProvider>
             </BrowserRouter>
           </RainbowKitProvider>
-          </TrailsProvider>
         </QueryClientProvider>
       </WagmiProvider>
     </StrictMode>,
