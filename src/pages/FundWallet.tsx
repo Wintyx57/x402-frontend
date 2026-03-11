@@ -189,7 +189,7 @@ export default function FundWallet() {
           {isConnected && isValidRecipient && !bridgeComplete && TRAILS_API_KEY && bridgeCalldata && (
             <TrailsWidget
               apiKey={TRAILS_API_KEY}
-              mode="fund"
+              mode="pay"
               toChainId={8453}
               toToken={USDC_BASE_ADDRESS}
               toAddress={DEPOSIT_BOX_ERC20_ADDRESS}
