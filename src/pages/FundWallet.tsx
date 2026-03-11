@@ -59,11 +59,11 @@ export default function FundWallet() {
   const isValidRecipient = actualRecipient && actualRecipient.startsWith('0x') && actualRecipient.length === 42;
 
   // Step 2: Approve USDC for DepositBox
-  const { writeContract: approveUsdc, data: approveTxHash, isPending: isApproving } = useWriteContract();
+  const { writeContract: approveUsdc, data: approveTxHash, isPending: isApproving, reset: resetApprove } = useWriteContract();
   const { isLoading: isApproveConfirming, isSuccess: isApproveConfirmed } = useWaitForTransactionReceipt({ hash: approveTxHash });
 
   // Step 3: Bridge via IMA DepositBox
-  const { writeContract: bridgeToSkale, data: bridgeTxHash, isPending: isBridging } = useWriteContract();
+  const { writeContract: bridgeToSkale, data: bridgeTxHash, isPending: isBridging, reset: resetBridge } = useWriteContract();
   const { isLoading: isBridgeConfirming, isSuccess: isBridgeConfirmed } = useWaitForTransactionReceipt({ hash: bridgeTxHash });
 
   const isDark = theme === 'dark';
@@ -133,6 +133,8 @@ export default function FundWallet() {
     setFundComplete(false);
     setBridgeAmount('');
     setStep('fund');
+    resetApprove();
+    resetBridge();
   }
 
   const steps = [
