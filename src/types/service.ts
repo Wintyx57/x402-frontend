@@ -10,4 +10,6 @@ export interface Service {
   created_at?: string;
   verified_status?: string;
   required_parameters?: { required?: string[]; properties?: Record<string, unknown> } | null;
+  status?: 'online' | 'offline' | 'degraded' | 'unknown';
+  last_checked_at?: string;
 }

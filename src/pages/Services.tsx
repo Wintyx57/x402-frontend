@@ -18,7 +18,6 @@ export default function Services() {
   const serviceIds = useMemo(() => services.map((s: any) => s.id as string), [services]);
   const reviewStatsMap = useAllReviewStats(serviceIds);
   const [activityMap, setActivityMap] = useState<Record<string, any>>({});
-  const [healthMap, setHealthMap] = useState<Record<string, any>>({});
   const [uptimeMap, setUptimeMap] = useState<Record<string, any>>({});
   const [searchParams, setSearchParams] = useSearchParams();
   const { t } = useTranslation();
@@ -102,10 +101,7 @@ export default function Services() {
       .then(data => setActivityMap(data || {}))
       .catch(() => {});
 
-    fetch(`${API_URL}/api/health-check`, { signal })
-      .then(r => r.json())
-      .then(data => setHealthMap(data || {}))
-      .catch(() => {});
+    // Note: healthMap removed — service.status comes from DB directly (updated by monitor + daily-tester)
 
     fetch(`${API_URL}/api/status/uptime?period=7d`, { signal })
       .then(r => r.json())
@@ -431,7 +427,7 @@ export default function Services() {
                       <ServiceCard
                         service={s}
                         lastActivity={activityMap[s.url]}
-                        healthStatus={healthMap[s.url]}
+                        healthStatus={s.status === 'online' ? 'online' : s.status === 'offline' || s.status === 'degraded' ? 'offline' : undefined}
                         uptimePercent={uptimeMap[s.url]}
                         reviewStats={reviewStatsMap.get(s.id) ?? null}
                       />
@@ -462,7 +458,7 @@ export default function Services() {
                       <ServiceCard
                         service={s}
                         lastActivity={activityMap[s.url]}
-                        healthStatus={healthMap[s.url]}
+                        healthStatus={s.status === 'online' ? 'online' : s.status === 'offline' || s.status === 'degraded' ? 'offline' : undefined}
                         uptimePercent={uptimeMap[s.url]}
                         reviewStats={reviewStatsMap.get(s.id) ?? null}
                       />
@@ -481,7 +477,7 @@ export default function Services() {
               <ServiceCard
                 service={s}
                 lastActivity={activityMap[s.url]}
-                healthStatus={healthMap[s.url]}
+                healthStatus={s.status === 'online' ? 'online' : s.status === 'offline' || s.status === 'degraded' ? 'offline' : undefined}
                 uptimePercent={uptimeMap[s.url]}
                 reviewStats={reviewStatsMap.get(s.id) ?? null}
               />

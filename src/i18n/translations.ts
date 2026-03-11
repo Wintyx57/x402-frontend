@@ -55,6 +55,8 @@ export const translations = {
       activeNow: "Active now",
       online: "Online",
       offline: "Offline",
+      degraded: "Degraded",
+      lastChecked: "Last checked",
     },
     home: {
       heroTitle: "APIs that pay",
@@ -1715,6 +1717,8 @@ def my_function(query: str) -> dict:
       activeNow: "Actif maintenant",
       online: "En ligne",
       offline: "Hors ligne",
+      degraded: "Dégradé",
+      lastChecked: "Vérifié",
     },
     home: {
       heroTitle: "Des APIs qui se paient",
