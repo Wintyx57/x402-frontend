@@ -181,21 +181,21 @@ function Navbar() {
 
   const exploreLinks: NavLink[] = [
     { to: '/services', label: t.nav.services },
-    { to: '/fund', label: t.nav.fund || 'Fund Wallet' },
-    { to: '/playground', label: t.nav.playground || 'Playground' },
+    { to: '/fund', label: t.nav.fund },
+    { to: '/playground', label: t.nav.playground },
     { to: '/pricing', label: t.nav.pricing },
-    { to: '/compare', label: t.nav.compare || 'Compare' },
+    { to: '/compare', label: t.nav.compare },
   ];
 
   const providerLinks: NavLink[] = [
-    { to: '/for-providers', label: t.nav.forProviders || 'For Providers' },
+    { to: '/for-providers', label: t.nav.forProviders },
     { to: '/register', label: t.nav.register },
   ];
 
   const devLinks: NavLink[] = [
     { to: '/quickstart', label: 'Quickstart' },
-    { to: '/docs', label: t.nav.docs || 'Docs' },
-    { to: '/integrate', label: t.nav.integrate || 'Integrate' },
+    { to: '/docs', label: t.nav.docs },
+    { to: '/integrate', label: t.nav.integrate },
   ];
 
   const dropdownGroups = [

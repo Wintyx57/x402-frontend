@@ -24,6 +24,10 @@ export const translations = {
       creators: "Creators",
       budget: "Budget",
       fund: "Fund Wallet",
+      legal: "Legal Notice",
+      community: "Community",
+      sourceCode: "Source code",
+      reportIssue: "Report an issue",
     },
     connect: {
       connectWallet: "Connect Wallet",
@@ -57,6 +61,8 @@ export const translations = {
       offline: "Offline",
       degraded: "Degraded",
       lastChecked: "Last checked",
+      reviews: "Reviews",
+      reviewsFor: "Reviews for",
     },
     home: {
       heroTitle: "APIs that pay",
@@ -215,6 +221,7 @@ export const translations = {
       sourceAll: "All sources",
       sourceNative: "x402 Native",
       sourceCommunity: "Community",
+      clearSearch: "Clear search",
     },
     faq: {
       title: "Frequently Asked Questions",
@@ -1688,6 +1695,10 @@ def my_function(query: str) -> dict:
       creators: "Createurs",
       budget: "Budget",
       fund: "Alimenter Wallet",
+      legal: "Mentions légales",
+      community: "Communauté",
+      sourceCode: "Code source",
+      reportIssue: "Signaler un problème",
     },
     connect: {
       connectWallet: "Connecter Wallet",
@@ -1721,6 +1732,8 @@ def my_function(query: str) -> dict:
       offline: "Hors ligne",
       degraded: "Dégradé",
       lastChecked: "Vérifié",
+      reviews: "Avis",
+      reviewsFor: "Avis pour",
     },
     home: {
       heroTitle: "Des APIs qui se paient",
@@ -1879,6 +1892,7 @@ def my_function(query: str) -> dict:
       sourceAll: "Toutes les sources",
       sourceNative: "x402 Natif",
       sourceCommunity: "Communaute",
+      clearSearch: "Effacer la recherche",
     },
     faq: {
       title: "Questions frequentes",

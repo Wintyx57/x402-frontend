@@ -6,7 +6,6 @@ import { RainbowKitProvider, darkTheme } from '@rainbow-me/rainbowkit';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter } from 'react-router-dom';
 import { config } from './wagmi';
-import { TrailsProvider } from '0xtrails';
 import { LanguageProvider } from './i18n/LanguageContext';
 import { ThemeProvider } from './context/ThemeContext';
 import App from './App';
@@ -34,7 +33,7 @@ function renderError(err: unknown) {
           </div>
           <h2 style="font-size:1.25rem;font-weight:700;margin-bottom:0.5rem">x402 Bazaar — Loading Error</h2>
           <p style="color:#9ca3af;font-size:0.875rem;margin-bottom:1rem">The application failed to initialize. This may be caused by browser extensions or security settings.</p>
-          <pre style="background:#1a1f2e;border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:1rem;text-align:left;font-size:0.75rem;color:#F87171;overflow-x:auto;margin-bottom:1rem;font-family:'JetBrains Mono',monospace">${String(err)}</pre>
+          <pre style="background:#1a1f2e;border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:1rem;text-align:left;font-size:0.75rem;color:#F87171;overflow-x:auto;margin-bottom:1rem;font-family:'JetBrains Mono',monospace">${import.meta.env.PROD ? 'Application initialization failed. Please refresh the page.' : String(err)}</pre>
           <button onclick="location.reload()" style="background:linear-gradient(135deg,#FF9900,#e68a00);color:white;border:none;padding:0.625rem 1.5rem;border-radius:8px;font-size:0.875rem;font-weight:500;cursor:pointer">Refresh Page</button>
         </div>
       </div>
@@ -47,17 +46,15 @@ try {
     <StrictMode>
       <WagmiProvider config={config}>
         <QueryClientProvider client={queryClient}>
-          <TrailsProvider config={{ trailsApiKey: import.meta.env.VITE_TRAILS_API_KEY ?? '' }}>
-            <RainbowKitProvider locale="en" theme={darkTheme({ accentColor: '#FF9900', accentColorForeground: 'white', borderRadius: 'medium' })} modalSize="compact">
-              <BrowserRouter>
-                <ThemeProvider>
-                  <LanguageProvider>
-                    <App />
-                  </LanguageProvider>
-                </ThemeProvider>
-              </BrowserRouter>
-            </RainbowKitProvider>
-          </TrailsProvider>
+          <RainbowKitProvider locale="en" theme={darkTheme({ accentColor: '#FF9900', accentColorForeground: 'white', borderRadius: 'medium' })} modalSize="compact">
+            <BrowserRouter>
+              <ThemeProvider>
+                <LanguageProvider>
+                  <App />
+                </LanguageProvider>
+              </ThemeProvider>
+            </BrowserRouter>
+          </RainbowKitProvider>
         </QueryClientProvider>
       </WagmiProvider>
     </StrictMode>,

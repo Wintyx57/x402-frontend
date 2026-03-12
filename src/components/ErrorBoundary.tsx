@@ -36,13 +36,19 @@ export default class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBo
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
               </svg>
             </div>
-            <h2 className="text-white font-bold text-lg mb-2">Something went wrong</h2>
-            <p className="text-gray-300 text-sm mb-6">An unexpected error occurred. Please try refreshing the page.</p>
+            <h2 className="text-white font-bold text-lg mb-2">
+              {navigator.language.startsWith('fr') ? 'Une erreur est survenue' : 'Something went wrong'}
+            </h2>
+            <p className="text-gray-300 text-sm mb-6">
+              {navigator.language.startsWith('fr')
+                ? 'Une erreur inattendue est survenue. Essayez de rafraîchir la page.'
+                : 'An unexpected error occurred. Please try refreshing the page.'}
+            </p>
             <button
               onClick={() => window.location.reload()}
               className="gradient-btn text-white px-6 py-2.5 rounded-lg text-sm font-medium cursor-pointer transition-all duration-200 hover:brightness-110"
             >
-              Refresh Page
+              {navigator.language.startsWith('fr') ? 'Rafraîchir la page' : 'Refresh Page'}
             </button>
           </div>
         </main>

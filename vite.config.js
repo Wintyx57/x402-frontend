@@ -25,7 +25,6 @@ export default defineConfig({
           'vendor-web3': ['wagmi', 'viem', '@rainbow-me/rainbowkit'],
           'vendor-query': ['@tanstack/react-query'],
           'vendor-charts': ['chart.js', 'react-chartjs-2'],
-          'vendor-trails': ['0xtrails'],
         }
       }
     }

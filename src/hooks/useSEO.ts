@@ -165,8 +165,29 @@ export default function useSEO({
       bcScript = document.createElement('script');
       bcScript.id = 'breadcrumb-jsonld';
       bcScript.type = 'application/ld+json';
+      bcScript.setAttribute('data-seo-hook', 'true');
       document.head.appendChild(bcScript);
     }
     bcScript.textContent = JSON.stringify(breadcrumb);
+
+    // Track whether we created the canonical link so we can clean it up
+    let createdCanonical = false;
+    const existingCanonical = document.querySelector('link[rel="canonical"]');
+    if (!existingCanonical) {
+      createdCanonical = true;
+    } else {
+      existingCanonical.setAttribute('data-seo-hook', 'true');
+    }
+
+    return () => {
+      // Remove breadcrumb JSON-LD added by this hook instance
+      const bc = document.getElementById('breadcrumb-jsonld');
+      if (bc) bc.remove();
+      // Remove canonical link only if this hook created it
+      if (createdCanonical) {
+        const canonical = document.querySelector('link[data-seo-hook][rel="canonical"]');
+        if (canonical) canonical.remove();
+      }
+    };
   }, [fullTitle, description, keywords, ogImage, noindex, ogType, url, pathname, title, image]);
 }

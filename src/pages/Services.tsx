@@ -9,16 +9,17 @@ import ServiceCard from '../components/ServiceCard';
 import { ServiceCardSkeleton } from '../components/Skeleton';
 import CategoryIcon from '../components/CategoryIcon';
 import { CATEGORIES, CATEGORY_LABELS } from '../data/categories';
+import type { Service } from '../types/service';
 
 export default function Services() {
   const { data: servicesData, isLoading: loading, error: servicesError } = useServices();
   const services = Array.isArray(servicesData) ? servicesData : [];
 
   // Fetch review stats for all services in parallel (each result cached individually)
-  const serviceIds = useMemo(() => services.map((s: any) => s.id as string), [services]);
+  const serviceIds = useMemo(() => services.map((s: Service) => s.id), [services]);
   const reviewStatsMap = useAllReviewStats(serviceIds);
-  const [activityMap, setActivityMap] = useState<Record<string, any>>({});
-  const [uptimeMap, setUptimeMap] = useState<Record<string, any>>({});
+  const [activityMap, setActivityMap] = useState<Record<string, string>>({});
+  const [uptimeMap, setUptimeMap] = useState<Record<string, number>>({});
   const [searchParams, setSearchParams] = useSearchParams();
   const { t } = useTranslation();
 
@@ -57,7 +58,7 @@ export default function Services() {
       description: `${services.length} APIs for AI agents. Pay per call with USDC on Base or SKALE via HTTP 402 protocol.`,
       url: 'https://x402bazaar.org/services',
       numberOfItems: services.length,
-      itemListElement: services.slice(0, 20).map((svc: any, idx: number) => ({
+      itemListElement: services.slice(0, 20).map((svc: Service, idx: number) => ({
         '@type': 'ListItem',
         position: idx + 1,
         name: svc.name,
@@ -107,7 +108,7 @@ export default function Services() {
       .then(r => r.json())
       .then(data => {
         if (data?.endpoints) {
-          const map: Record<string, any> = {};
+          const map: Record<string, number> = {};
           for (const ep of data.endpoints) {
             if (ep.uptime !== null) {
               map[`${API_URL}${ep.endpoint}`] = ep.uptime;
@@ -123,19 +124,19 @@ export default function Services() {
   // Helper: find the primary category of a service (first tag matching a known category)
   const { categoryTags, getCategory, categoryCounts, freeCount, paidCount } = useMemo(() => {
     const categoryTags = CATEGORIES.filter(c => c.tag).map(c => c.tag);
-    const getCategory = (s: any) => s.tags?.find((t: string) => categoryTags.includes(t)) || null;
+    const getCategory = (s: Service) => s.tags?.find((t: string) => categoryTags.includes(t)) || null;
     const categoryCounts: Record<string, number> = { all: services.length };
-    services.forEach((s: any) => {
+    services.forEach((s: Service) => {
       const cat = getCategory(s);
       if (cat) categoryCounts[cat] = (categoryCounts[cat] || 0) + 1;
     });
-    const freeCount = services.filter((s: any) => Number(s.price_usdc) === 0).length;
-    const paidCount = services.filter((s: any) => Number(s.price_usdc) > 0).length;
+    const freeCount = services.filter((s: Service) => Number(s.price_usdc) === 0).length;
+    const paidCount = services.filter((s: Service) => Number(s.price_usdc) > 0).length;
     return { categoryTags, getCategory, categoryCounts, freeCount, paidCount };
   }, [services]);
 
   // Filter
-  const filtered = useMemo(() => services.filter((s: any) => {
+  const filtered = useMemo(() => services.filter((s: Service) => {
     if (search) {
       const q = search.toLowerCase();
       const match = s.name.toLowerCase().includes(q) ||
@@ -200,11 +201,14 @@ export default function Services() {
 
       {/* Search bar */}
       <div className="relative mb-4">
+        <label htmlFor="services-search" className="sr-only">{t.services.searchPlaceholder}</label>
         <input
+          id="services-search"
           type="text"
           value={search}
           onChange={e => setParam('q', e.target.value)}
           placeholder={t.services.searchPlaceholder}
+          aria-label={t.services.searchPlaceholder}
           className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-2.5 text-sm text-white
                      placeholder-gray-500 focus:outline-none focus:border-[#FF9900]/50 focus:bg-white/8
                      transition-all duration-200"
@@ -215,10 +219,11 @@ export default function Services() {
         {search && (
           <button
             onClick={() => setParam('q', '')}
+            aria-label={t.services.clearSearch || 'Clear search'}
             className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white transition-colors
                        bg-transparent border-none cursor-pointer p-1"
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
@@ -310,6 +315,11 @@ export default function Services() {
       </div>
 
       <div className="border-b border-white/6 mb-6" />
+
+      {/* Screen reader announcement for search results */}
+      <div aria-live="polite" className="sr-only">
+        {sorted.length} {sorted.length === 1 ? 'service' : 'services'}
+      </div>
 
       {/* Results info — always visible when at least one filter is active */}
       {(search || priceFilter !== 'all' || category !== 'all' || sourceFilter !== 'all') && (

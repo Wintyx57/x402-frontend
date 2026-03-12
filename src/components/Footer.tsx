@@ -98,11 +98,11 @@ export default function Footer() {
                 {[
                   { to: '/services', label: t.nav.services },
                   { to: '/pricing', label: t.nav.pricing },
-                  { to: '/docs', label: t.nav.docs || 'Docs' },
-                  { to: '/playground', label: t.nav.playground || 'Playground' },
+                  { to: '/docs', label: t.nav.docs },
+                  { to: '/playground', label: t.nav.playground },
                   { to: '/register', label: t.nav.register },
-                  { to: '/for-providers', label: t.nav.forProviders || 'For Providers' },
-                  { to: '/compare', label: t.nav.compare || 'Compare' },
+                  { to: '/for-providers', label: t.nav.forProviders },
+                  { to: '/compare', label: t.nav.compare },
                 ].map(({ to, label }) => (
                   <li key={to}>
                     <Link
@@ -128,12 +128,12 @@ export default function Footer() {
                   { to: '/about', label: t.nav.about },
                   { to: '/faq', label: 'FAQ' },
                   { to: '/status', label: t.nav.status },
-                  { to: '/analytics', label: t.nav.analytics || 'Analytics' },
+                  { to: '/analytics', label: t.nav.analytics },
                   { to: '/integrate', label: t.nav.integrate },
                   { to: '/blog', label: t.blog.title },
                   { to: '/privacy', label: t.nav.privacy },
                   { to: '/terms', label: t.nav.terms },
-                  { to: '/legal', label: 'Mentions légales' },
+                  { to: '/legal', label: t.nav.legal },
                 ].map(({ to, label }) => (
                   <li key={to}>
                     <Link
@@ -151,7 +151,7 @@ export default function Footer() {
           {/* Community / Open Source column */}
           <div>
             <h3 className="text-xs font-semibold text-gray-300 uppercase tracking-wider mb-3">
-              Community
+              {t.nav.community}
             </h3>
             <ul className="flex flex-col gap-0.5">
               <li>
@@ -189,7 +189,7 @@ export default function Footer() {
                   rel="noopener noreferrer"
                   className="text-xs text-gray-300 hover:text-white no-underline transition-colors py-1"
                 >
-                  Source code
+                  {t.nav.sourceCode}
                 </a>
               </li>
               <li>
@@ -199,7 +199,7 @@ export default function Footer() {
                   rel="noopener noreferrer"
                   className="text-xs text-gray-300 hover:text-white no-underline transition-colors py-1"
                 >
-                  Report an issue
+                  {t.nav.reportIssue}
                 </a>
               </li>
             </ul>

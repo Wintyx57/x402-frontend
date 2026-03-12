@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { TrailsWidget } from '0xtrails/widget';
+import { TrailsProvider, TrailsWidget } from '0xtrails';
 import { TRAILS_ROUTER_PLACEHOLDER_AMOUNT } from '0xtrails';
 import { useAccount } from 'wagmi';
 import { encodeFunctionData } from 'viem';
@@ -108,7 +108,7 @@ export default function FundWallet() {
   }
 
   function handleBridgeComplete({ sessionId }: { sessionId: string }) {
-    console.log('Bridge complete! Session:', sessionId);
+    if (import.meta.env.DEV) console.log('Bridge complete! Session:', sessionId);
     setBridgeComplete(true);
     setBridgeSessionId(sessionId);
   }
@@ -133,6 +133,7 @@ export default function FundWallet() {
   ];
 
   return (
+    <TrailsProvider config={{ trailsApiKey: TRAILS_API_KEY }}>
     <main className="min-h-screen animate-page-enter">
       {/* Hero */}
       <section ref={heroRef} className="reveal-section text-center py-16 px-4">
@@ -284,5 +285,6 @@ export default function FundWallet() {
         </div>
       </section>
     </main>
+    </TrailsProvider>
   );
 }

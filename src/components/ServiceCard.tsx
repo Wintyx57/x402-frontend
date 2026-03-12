@@ -296,9 +296,9 @@ function ServiceCard({ service, lastActivity, healthStatus = null, uptimePercent
             className="text-xs font-medium text-gray-300 hover:text-white no-underline min-h-[44px] sm:min-h-0 flex items-center
                        opacity-100 transition-opacity duration-200"
             onClick={e => e.stopPropagation()}
-            aria-label={`Reviews for ${service.name}`}
+            aria-label={`${t.serviceCard.reviewsFor} ${service.name}`}
           >
-            Reviews
+            {t.serviceCard.reviews}
           </Link>
           {isValidServiceUrl(service.url) ? (
             <a

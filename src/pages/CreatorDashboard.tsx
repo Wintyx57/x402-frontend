@@ -6,10 +6,14 @@ import { useTranslation } from '../i18n/LanguageContext';
 import { useReveal } from '../hooks/useReveal';
 import useSEO from '../hooks/useSEO';
 import { API_URL } from '../config';
+import type { Service } from '../types/service';
+import { translations } from '../i18n/translations';
 
-function ServiceRow({ service, t }: { service: any; t: any }) {
+type TranslationShape = typeof translations['en'] | typeof translations['fr'];
+
+function ServiceRow({ service, t }: { service: Service; t: TranslationShape }) {
   const cd = t.creatorDashboard || {};
-  const price = parseFloat(service.price_usdc || service.price) || 0;
+  const price = parseFloat(String(service.price_usdc ?? 0)) || 0;
   const tags = service.tags || [];
   const date = service.created_at
     ? new Date(service.created_at).toLocaleDateString()
@@ -70,7 +74,7 @@ export default function CreatorDashboard() {
   const { address, isConnected } = useAccount();
   const { openConnectModal } = useConnectModal();
 
-  const [services, setServices] = useState<any[]>([]);
+  const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [fetched, setFetched] = useState(false);
@@ -102,8 +106,7 @@ export default function CreatorDashboard() {
       const data = await res.json();
       const allServices = Array.isArray(data) ? data : (data.data || data.services || []);
       const mine = allServices.filter(
-        (s: any) => s.owner_address?.toLowerCase() === walletAddr.toLowerCase() ||
-             s.ownerAddress?.toLowerCase() === walletAddr.toLowerCase()
+        (s: Service) => s.owner_address?.toLowerCase() === walletAddr.toLowerCase()
       );
       setServices(mine);
     } catch (err: unknown) {
@@ -116,7 +119,7 @@ export default function CreatorDashboard() {
     }
   };
 
-  const totalRevenuePotential = services.reduce((acc, s) => acc + (parseFloat(s.price_usdc || s.price) || 0) * 0.95, 0);
+  const totalRevenuePotential = services.reduce((acc, s) => acc + (parseFloat(String(s.price_usdc ?? 0)) || 0) * 0.95, 0);
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-12">
