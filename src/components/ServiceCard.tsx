@@ -53,6 +53,14 @@ function getQualityTier(uptimePercent: number | null): QualityTier | null {
   return null;
 }
 
+function getTrustBadge(score: number | null | undefined): { label: string; color: string; bg: string } | null {
+  if (score == null) return null;
+  if (score >= 80) return { label: `${score}`, color: '#34D399', bg: '#34D399' };
+  if (score >= 60) return { label: `${score}`, color: '#FBBF24', bg: '#FBBF24' };
+  if (score >= 40) return { label: `${score}`, color: '#FB923C', bg: '#FB923C' };
+  return { label: `${score}`, color: '#F87171', bg: '#F87171' };
+}
+
 interface ReviewStats {
   count: number;
   average: number;
@@ -82,6 +90,7 @@ function ServiceCard({ service, lastActivity, healthStatus = null, uptimePercent
   const [copied, setCopied] = useState(false);
   const isNative = service.url?.startsWith('https://x402-api.onrender.com');
   const quality = getQualityTier(uptimePercent);
+  const trustBadge = getTrustBadge(service.trust_score);
   const isNew = isNewService(service.created_at);
 
   const handleCopyPrompt = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -168,6 +177,21 @@ function ServiceCard({ service, lastActivity, healthStatus = null, uptimePercent
                 aria-label={`${quality?.label} tier - ${uptimePercent}% uptime over 7 days`}
               >
                 {quality.label}
+              </span>
+            )}
+            {trustBadge && (
+              <span
+                className="text-[11px] px-1.5 py-0.5 rounded shrink-0 font-medium flex items-center gap-0.5"
+                style={{
+                  backgroundColor: `${trustBadge.bg}15`,
+                  color: trustBadge.color,
+                  border: `1px solid ${trustBadge.bg}30`,
+                }}
+                aria-label={`Trust score: ${trustBadge.label} out of 100`}
+                title="Proof of Quality score"
+              >
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 1l3.09 6.26L22 8.27l-5 4.87 1.18 6.88L12 16.77l-6.18 3.25L7 13.14 2 8.27l6.91-1.01z"/></svg>
+                {trustBadge.label}
               </span>
             )}
           </div>

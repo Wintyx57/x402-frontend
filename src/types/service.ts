@@ -12,4 +12,6 @@ export interface Service {
   required_parameters?: { required?: string[]; properties?: Record<string, unknown> } | null;
   status?: 'online' | 'offline' | 'degraded' | 'unknown';
   last_checked_at?: string;
+  trust_score?: number | null;
+  trust_score_updated_at?: string | null;
 }
