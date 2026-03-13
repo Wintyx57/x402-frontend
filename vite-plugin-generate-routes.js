@@ -121,6 +121,16 @@ const STATIC_ROUTES = [
     title: 'Fund Your Wallet — Get USDC on Base | x402 Bazaar',
     description: 'Get USDC from any chain to Base in 1 click. Bridge from Ethereum, Polygon, Arbitrum, or Optimism. Pay for APIs instantly.',
   },
+  {
+    path: '/admin',
+    title: 'Admin Dashboard | x402 Bazaar',
+    description: 'x402 Bazaar admin dashboard. Protected area.',
+  },
+  {
+    path: '/admin/community-agent',
+    title: 'Community Agent Admin | x402 Bazaar',
+    description: 'x402 Bazaar community agent management.',
+  },
 ];
 
 function esc(str) {
