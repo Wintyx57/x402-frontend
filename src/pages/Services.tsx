@@ -122,7 +122,7 @@ export default function Services() {
   }, []);
 
   // Helper: find the primary category of a service (first tag matching a known category)
-  const { categoryTags, getCategory, categoryCounts, freeCount, paidCount } = useMemo(() => {
+  const { getCategory, categoryCounts, freeCount, paidCount } = useMemo(() => {
     const categoryTags = CATEGORIES.filter(c => c.tag).map(c => c.tag);
     const getCategory = (s: Service) => s.tags?.find((t: string) => categoryTags.includes(t)) || null;
     const categoryCounts: Record<string, number> = { all: services.length };
@@ -132,7 +132,7 @@ export default function Services() {
     });
     const freeCount = services.filter((s: Service) => Number(s.price_usdc) === 0).length;
     const paidCount = services.filter((s: Service) => Number(s.price_usdc) > 0).length;
-    return { categoryTags, getCategory, categoryCounts, freeCount, paidCount };
+    return { getCategory, categoryCounts, freeCount, paidCount };
   }, [services]);
 
   // Filter

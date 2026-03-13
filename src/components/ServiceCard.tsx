@@ -238,8 +238,8 @@ function ServiceCard({ service, lastActivity, healthStatus = null, uptimePercent
             {tag}
           </span>
         ))}
-        {service.tags?.length > 3 && (
-          <span className="text-xs text-gray-500 px-1">+{service.tags.length - 3}</span>
+        {(service.tags?.length ?? 0) > 3 && (
+          <span className="text-xs text-gray-500 px-1">+{(service.tags?.length ?? 0) - 3}</span>
         )}
       </div>
 
