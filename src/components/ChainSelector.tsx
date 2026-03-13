@@ -4,6 +4,7 @@ import { useTranslation } from '../i18n/LanguageContext';
 const CHAINS = [
   { id: 8453, label: 'Base', gas: '~$0.001', color: 'bg-blue-500', free: false },
   { id: 1187947933, label: 'SKALE on Base', gas: '~$0.0007', color: 'bg-green-500', free: false },
+  { id: 137, label: 'Polygon', gas: '~$0.001', color: 'bg-purple-500', free: false },
 ];
 
 export default function ChainSelector() {
@@ -30,7 +31,7 @@ export default function ChainSelector() {
           <span className="text-xs text-[#FF9900] animate-pulse ml-auto" role="status" aria-live="polite">{cs.switchingTo || 'Switching...'}</span>
         )}
       </div>
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-3 gap-2">
         {CHAINS.map(c => {
           const isActive = currentId === c.id;
           return (
