@@ -46,7 +46,7 @@ export const CHAIN_CONFIG: Record<number, ChainConfig> = {
   137: {
     key: 'polygon',
     label: 'Polygon',
-    rpcUrl: 'https://polygon-rpc.com',
+    rpcUrl: 'https://polygon-bor-rpc.publicnode.com',
     usdcContract: '0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359',
     explorer: 'https://polygonscan.com',
     gas: '~$0.001',
