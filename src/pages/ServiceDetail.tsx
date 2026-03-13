@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { useAccount } from 'wagmi';
 import { API_URL } from '../config';
 import { useTranslation } from '../i18n/LanguageContext';
 import useSEO from '../hooks/useSEO';
@@ -8,6 +9,13 @@ import StarRating from '../components/StarRating';
 import ReviewCard from '../components/ReviewCard';
 import ReviewForm from '../components/ReviewForm';
 import CopyButton from '../components/CopyButton';
+import ChainSelector from '../components/ChainSelector';
+
+const CHAIN_KEY_MAP: Record<number, string> = {
+  8453: 'base',
+  1187947933: 'skale',
+  137: 'polygon',
+};
 
 interface Service {
   id: string;
@@ -27,18 +35,24 @@ interface Service {
 
 type CodeTab = 'curl' | 'javascript' | 'python';
 
-function getCodeSnippet(service: Service, tab: CodeTab): string {
+const CHAIN_LABELS: Record<string, string> = {
+  base: 'Base',
+  skale: 'SKALE on Base (ultra-low gas ~$0.0007/tx)',
+  polygon: 'Polygon (low gas ~$0.001/tx)',
+};
+
+function getCodeSnippet(service: Service, tab: CodeTab, chainKey: string): string {
   const url = service.url || `${API_URL}/api/${service.name.toLowerCase().replace(/\s+/g, '-')}`;
   const price = Number(service.price_usdc);
   const isFree = price === 0;
+  const chainLabel = CHAIN_LABELS[chainKey] || 'Base';
   const paymentNote = isFree
     ? '# Free API — no payment required'
-    : `# Price: $${price} USDC on Base`;
+    : `# Price: $${price} USDC on ${chainLabel}`;
   const reqParams = service.required_parameters?.required;
   const paramsNote = reqParams?.length
     ? `# Required parameters: ${reqParams.join(', ')}`
     : '';
-  // Build example query string from required params
   const exampleQs = reqParams?.length
     ? '?' + reqParams.map((p: string) => `${p}=YOUR_${p.toUpperCase()}`).join('&')
     : '';
@@ -48,17 +62,16 @@ function getCodeSnippet(service: Service, tab: CodeTab): string {
       return [paymentNote, paramsNote, `curl -X GET "${url}${exampleQs}"`].filter(Boolean).join('\n');
     }
     return [paymentNote, paramsNote,
-      '# Optional: Add -H "X-Payment-Chain: skale" for ultra-low gas',
       '',
       '# Step 1: Call the API (returns 402 with payment instructions)',
       `curl "${url}${exampleQs}"`,
       '',
-      '# Step 2: Send USDC on Base to the recipient address shown in the 402 response',
+      `# Step 2: Send USDC on ${chainLabel} to the recipient address shown in the 402 response`,
       '',
       '# Step 3: Retry with the transaction hash',
       `curl -X GET "${url}${exampleQs}" \\`,
       '  -H "X-Payment-TxHash: 0xYOUR_TX_HASH" \\',
-      '  -H "X-Payment-Chain: base"',
+      `  -H "X-Payment-Chain: ${chainKey}"`,
     ].filter(l => l !== undefined).join('\n');
   }
 
@@ -82,15 +95,14 @@ if (res.status === 402) {
   // payment.address = recipient wallet
   // payment.price   = amount in USDC (${price})
 
-  // Step 2: Send USDC on Base (use viem, ethers, or your wallet)
+  // Step 2: Send USDC on ${chainLabel}
   const txHash = await sendUSDC(payment.address, payment.price);
 
   // Step 3: Retry with the transaction hash
   const data = await fetch("${url}${exampleQs}", {
     headers: {
       "X-Payment-TxHash": txHash,
-      // Optional: "skale" for ultra-low gas (~$0.0007/tx)
-      "X-Payment-Chain": "base", // or "skale"
+      "X-Payment-Chain": "${chainKey}",
     },
   }).then(r => r.json());
 
@@ -121,7 +133,7 @@ if res.status_code == 402:
     # payment["address"] = recipient wallet
     # payment["price"]   = amount in USDC (${price})
 
-    # Step 2: Send USDC on Base
+    # Step 2: Send USDC on ${chainLabel}
     tx_hash = send_usdc(payment["address"], payment["price"])
 
     # Step 3: Retry with the transaction hash
@@ -129,8 +141,7 @@ if res.status_code == 402:
         "${url}${exampleQs}",
         headers={
             "X-Payment-TxHash": tx_hash,
-            # Optional: "skale" for ultra-low gas (~$0.0007/tx)
-            "X-Payment-Chain": "base",  # or "skale"
+            "X-Payment-Chain": "${chainKey}",
         },
     ).json()
 
@@ -234,6 +245,7 @@ const PAGE_SIZE = 5;
 export default function ServiceDetail() {
   const { id } = useParams<{ id: string }>();
   const { t } = useTranslation();
+  const { chain } = useAccount();
 
   const [service, setService] = useState<Service | null>(null);
   const [loadingService, setLoadingService] = useState(true);
@@ -241,6 +253,8 @@ export default function ServiceDetail() {
   const [activeTab, setActiveTab] = useState<CodeTab>('curl');
   const [urlCopied, setUrlCopied] = useState(false);
   const [reviewPage, setReviewPage] = useState(1);
+
+  const chainKey = (chain?.id && CHAIN_KEY_MAP[chain.id]) || 'base';
 
   // ── TanStack Query: reviews + stats ──
   const {
@@ -258,7 +272,7 @@ export default function ServiceDetail() {
   useSEO({
     title: service ? `${service.name} — x402 Bazaar` : 'Service — x402 Bazaar',
     description: service
-      ? `${service.description} Pay per call with USDC from $${service.price_usdc ?? '0.001'} via x402 protocol on Base or SKALE. No API key required.`
+      ? `${service.description} Pay per call with USDC from $${service.price_usdc ?? '0.001'} via x402 protocol on Base, SKALE or Polygon. No API key required.`
       : 'Discover and call this API service with USDC micropayments via the x402 protocol on x402 Bazaar.',
     keywords: service
       ? `${service.name}, ${(service.tags || []).join(', ')}, pay-per-call API, USDC micropayment, x402 protocol, AI agent API`
@@ -346,7 +360,7 @@ export default function ServiceDetail() {
 
   const isFree = Number(service.price_usdc) === 0;
   const isNative = service.url?.startsWith('https://x402-api.onrender.com');
-  const codeSnippet = getCodeSnippet(service, activeTab);
+  const codeSnippet = getCodeSnippet(service, activeTab, chainKey);
 
   const CODE_TABS: { key: CodeTab; label: string }[] = [
     { key: 'curl', label: 'cURL' },
@@ -537,6 +551,9 @@ export default function ServiceDetail() {
         )}
       </div>
 
+      {/* ── Chain Selector ── */}
+      {!isFree && <ChainSelector />}
+
       {/* ── 3. QUICK START ── */}
       <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden mb-6">
         <div className="flex items-center gap-2 px-5 py-3 border-b border-white/8">
@@ -618,8 +635,9 @@ export default function ServiceDetail() {
           <div>
             <span className="text-xs text-gray-500 block mb-1">Chain</span>
             <div className="flex flex-col gap-1">
-              <span className="text-white font-medium text-sm">Base (USDC) <span className="text-gray-500 font-normal text-xs">— default</span></span>
-              <span className="text-gray-300 font-medium text-sm">SKALE on Base (USDC) <span className="text-gray-500 font-normal text-xs">— ultra-low gas</span></span>
+              <span className={`font-medium text-sm ${chainKey === 'base' ? 'text-white' : 'text-gray-300'}`}>Base (USDC) <span className="text-gray-500 font-normal text-xs">— default</span></span>
+              <span className={`font-medium text-sm ${chainKey === 'skale' ? 'text-white' : 'text-gray-300'}`}>SKALE on Base (USDC) <span className="text-gray-500 font-normal text-xs">— ultra-low gas</span></span>
+              <span className={`font-medium text-sm ${chainKey === 'polygon' ? 'text-white' : 'text-gray-300'}`}>Polygon (USDC) <span className="text-gray-500 font-normal text-xs">— low gas</span></span>
             </div>
           </div>
 
