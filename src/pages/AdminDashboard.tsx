@@ -308,6 +308,96 @@ function RecentTransactions({ activities }: { activities: AnalyticsData['recentA
   );
 }
 
+/* ─── FeeSplitter Types ─── */
+interface FeeSplitterData {
+  configured: boolean;
+  message?: string;
+  contract?: string;
+  pending_usdc?: string;
+  preview_1usdc?: { provider: string; platform: string };
+}
+
+/* ─── FeeSplitter Card ─── */
+function FeeSplitterCard({ data, onWithdraw, onRefresh, withdrawing }: {
+  data: FeeSplitterData | null;
+  onWithdraw: () => void;
+  onRefresh: () => void;
+  withdrawing: boolean;
+}) {
+  if (!data) return null;
+  if (!data.configured) {
+    return (
+      <div className="glass-card rounded-xl p-5 border border-white/5">
+        <div className="flex items-center gap-2 mb-2">
+          <span className="text-lg">&#9878;</span>
+          <h3 className="text-sm font-semibold text-white">FeeSplitter (Polygon)</h3>
+        </div>
+        <p className="text-xs text-gray-500">{data.message || 'Non configure'}</p>
+      </div>
+    );
+  }
+
+  const pending = parseFloat(data.pending_usdc || '0');
+  const hasPending = pending > 0;
+
+  return (
+    <div className="glass-card rounded-xl p-5 border border-white/5">
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2">
+          <span className="text-lg">&#9878;</span>
+          <h3 className="text-sm font-semibold text-white">FeeSplitter (Polygon)</h3>
+          <span className="text-[10px] px-1.5 py-0.5 rounded bg-purple-500/10 text-purple-400 border border-purple-500/20">
+            95/5 split
+          </span>
+        </div>
+        <button onClick={onRefresh} className="text-xs text-gray-500 hover:text-[#FF9900] transition-colors">
+          &#8635;
+        </button>
+      </div>
+
+      <div className="grid grid-cols-3 gap-4 mb-4">
+        <div>
+          <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-1">Solde en attente</p>
+          <p className={`text-xl font-bold ${hasPending ? 'text-yellow-400' : 'text-green-400'}`}>
+            ${pending.toFixed(6)}
+          </p>
+          <p className="text-[10px] text-gray-600">USDC dans le contrat</p>
+        </div>
+        <div>
+          <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-1">Split preview (1 USDC)</p>
+          <p className="text-sm text-white">
+            Provider: <span className="text-green-400">${data.preview_1usdc?.provider || '—'}</span>
+          </p>
+          <p className="text-sm text-white">
+            Platform: <span className="text-blue-400">${data.preview_1usdc?.platform || '—'}</span>
+          </p>
+        </div>
+        <div>
+          <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-1">Contrat</p>
+          <a
+            href={`https://polygonscan.com/address/${data.contract}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs font-mono text-gray-400 hover:text-[#FF9900] transition-colors break-all"
+          >
+            {data.contract?.slice(0, 10)}...{data.contract?.slice(-8)} &#8599;
+          </a>
+        </div>
+      </div>
+
+      {hasPending && (
+        <button
+          onClick={onWithdraw}
+          disabled={withdrawing}
+          className="w-full py-2.5 rounded-lg bg-[#FF9900]/10 text-[#FF9900] text-sm font-semibold hover:bg-[#FF9900]/20 border border-[#FF9900]/20 transition-colors disabled:opacity-50"
+        >
+          {withdrawing ? 'Withdraw en cours...' : `Withdraw ${pending.toFixed(6)} USDC vers plateforme`}
+        </button>
+      )}
+    </div>
+  );
+}
+
 /* ─── Main Component ─── */
 export default function AdminDashboard() {
   useSEO({ title: 'Admin Dashboard', noindex: true });
@@ -317,6 +407,9 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [lastRefresh, setLastRefresh] = useState<Date | null>(null);
+  const [feeSplitter, setFeeSplitter] = useState<FeeSplitterData | null>(null);
+  const [withdrawing, setWithdrawing] = useState(false);
+  const [withdrawResult, setWithdrawResult] = useState<string | null>(null);
 
   const adminFetch = useCallback(async <T,>(path: string): Promise<T> => {
     const token = sessionStorage.getItem(STORAGE_KEY) || '';
@@ -335,6 +428,38 @@ export default function AdminDashboard() {
     return res.json() as Promise<T>;
   }, []);
 
+  const fetchFeeSplitter = useCallback(async () => {
+    try {
+      const data = await adminFetch<FeeSplitterData>('/api/admin/fee-splitter');
+      setFeeSplitter(data);
+    } catch {
+      // Non-critical — don't block dashboard
+    }
+  }, [adminFetch]);
+
+  const handleWithdraw = useCallback(async () => {
+    setWithdrawing(true);
+    setWithdrawResult(null);
+    try {
+      const token = sessionStorage.getItem(STORAGE_KEY) || '';
+      const res = await fetch(`${API_URL}/api/admin/fee-splitter/withdraw`, {
+        method: 'POST',
+        headers: { 'X-Admin-Token': token, 'Content-Type': 'application/json' },
+      });
+      const body = await res.json();
+      if (body.success) {
+        setWithdrawResult(`Withdraw OK — tx: ${body.txHash?.slice(0, 18)}...`);
+        fetchFeeSplitter();
+      } else {
+        setWithdrawResult(`Erreur: ${body.error || 'Unknown'}`);
+      }
+    } catch (e) {
+      setWithdrawResult(`Erreur: ${(e as Error).message}`);
+    } finally {
+      setWithdrawing(false);
+    }
+  }, [fetchFeeSplitter]);
+
   const fetchData = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -346,6 +471,7 @@ export default function AdminDashboard() {
       setStats(statsData);
       setAnalytics(analyticsData);
       setLastRefresh(new Date());
+      fetchFeeSplitter();
     } catch (e) {
       if ((e as Error).message !== 'Unauthorized') {
         setError((e as Error).message);
@@ -353,7 +479,7 @@ export default function AdminDashboard() {
     } finally {
       setLoading(false);
     }
-  }, [adminFetch]);
+  }, [adminFetch, fetchFeeSplitter]);
 
   useEffect(() => {
     if (!showLogin) fetchData();
@@ -510,6 +636,21 @@ export default function AdminDashboard() {
               <RecentTransactions activities={analytics.recentActivity} />
             </div>
           )}
+
+          {/* FeeSplitter */}
+          <div className="mb-6">
+            <FeeSplitterCard
+              data={feeSplitter}
+              onWithdraw={handleWithdraw}
+              onRefresh={fetchFeeSplitter}
+              withdrawing={withdrawing}
+            />
+            {withdrawResult && (
+              <p className={`text-xs mt-2 px-2 ${withdrawResult.startsWith('Erreur') ? 'text-red-400' : 'text-green-400'}`}>
+                {withdrawResult}
+              </p>
+            )}
+          </div>
 
           {/* Quick Links */}
           <div className="grid grid-cols-3 gap-4">
