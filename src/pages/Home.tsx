@@ -507,6 +507,19 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── Provider CTA ── */}
+      <div className="text-center py-4 animate-fade-in-up">
+        <Link
+          to="/register"
+          className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-[#FF9900] transition-colors no-underline group"
+        >
+          <span>{t.home?.providerCtaInline || 'API Provider? Monetize any URL in 10 seconds'}</span>
+          <svg className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </Link>
+      </div>
+
       {/* Fund Wallet CTA */}
       <section ref={fundRef} className="reveal max-w-4xl mx-auto px-4 mb-10">
         <div className="glass-card rounded-2xl p-6 md:p-8 flex flex-col md:flex-row items-center gap-5 md:gap-8 border border-[#FF9900]/20 bg-[#FF9900]/5">

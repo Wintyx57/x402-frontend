@@ -76,11 +76,9 @@ export default function ForProviders() {
   }, []);
 
   const steps = [
-    { num: '1', title: p.step1Title || 'Submit Your API Spec', desc: p.step1Desc || 'Provide your API endpoint URL, parameters, and desired price in USDC. Use our JSON template below.' },
-    { num: '2', title: p.step2Title || 'Verification', desc: p.step2Desc || 'We test your API for latency, error rates, and reliability. You approve the listing before it goes live.' },
-    { num: '3', title: p.step3Title || 'Payment Setup', desc: p.step3Desc || 'Provide your wallet address to receive USDC payments. We configure the 95/5 revenue split automatically.' },
-    { num: '4', title: p.step4Title || 'Go Live', desc: p.step4Desc || 'Your API appears on x402bazaar.org. AI agents can discover and pay for it immediately.' },
-    { num: '5', title: p.step5Title || 'Earn Revenue', desc: p.step5Desc || 'Agents call your API, pay in USDC, and 95% goes directly to your wallet. Track earnings in real-time.' },
+    { num: '1', title: 'Paste Your URL', desc: 'Enter your API endpoint URL. Any publicly reachable HTTP endpoint works — no code changes needed.' },
+    { num: '2', title: 'Set Your Price', desc: 'Choose how much to charge per call in USDC. Start from $0.001. Change anytime.' },
+    { num: '3', title: 'Earn USDC', desc: 'AI agents discover your API, pay automatically via HTTP 402, and 95% goes to your wallet.' },
   ];
 
   const benefits = [
@@ -136,6 +134,31 @@ export default function ForProviders() {
             </div>
           ))}
         </div>
+      </div>
+
+      {/* Proxy diagram */}
+      <div className="glass-card rounded-xl p-6 mb-12">
+        <h3 className="text-sm font-semibold text-white mb-4 text-center">Zero Integration Required</h3>
+        <div className="flex flex-wrap items-center justify-center gap-3 text-xs">
+          <span className="px-4 py-2 rounded-lg font-medium bg-[#60A5FA]/15 text-[#60A5FA] border border-[#60A5FA]/30">
+            AI Agent
+          </span>
+          <svg className="w-5 h-5 text-gray-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+          <span className="px-4 py-2 rounded-lg font-medium bg-[#FF9900]/15 text-[#FF9900] border border-[#FF9900]/30">
+            x402 Proxy
+          </span>
+          <svg className="w-5 h-5 text-gray-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+          <span className="px-4 py-2 rounded-lg font-medium bg-[#34D399]/15 text-[#34D399] border border-[#34D399]/30">
+            Your API
+          </span>
+        </div>
+        <p className="text-xs text-gray-500 text-center mt-3">
+          Your API stays untouched. No SDK. No code changes. Just paste your URL.
+        </p>
       </div>
 
       {/* API Spec template */}
@@ -194,8 +217,8 @@ export default function ForProviders() {
           {p.ctaDesc || 'Register your API in 2 minutes. Start earning from AI agent traffic today.'}
         </p>
         <div className="flex flex-wrap justify-center gap-3">
-          <Link to="/register" className="gradient-btn px-6 py-2.5 rounded-lg text-white text-sm font-medium hover:opacity-90 transition-opacity no-underline">
-            {p.ctaRegister || 'Register Your API'}
+          <Link to="/register?mode=quick" className="gradient-btn px-6 py-2.5 rounded-lg text-white text-sm font-medium hover:opacity-90 transition-opacity no-underline">
+            {p.ctaRegister || 'Monetize Your API'}
           </Link>
           <a href="https://github.com/Wintyx57/x402-backend" target="_blank" rel="noopener noreferrer" className="px-6 py-2.5 rounded-lg text-sm font-medium border border-white/10 text-gray-300 hover:text-white hover:border-white/20 transition-all no-underline">
             {p.ctaGithub || 'View on GitHub'}

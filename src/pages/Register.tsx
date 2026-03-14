@@ -4,11 +4,13 @@ import { parseUnits } from 'viem';
 import { API_URL, USDC_ABI, CHAIN_CONFIG } from '../config';
 import { useTranslation } from '../i18n/LanguageContext';
 import useSEO from '../hooks/useSEO';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import ChainSelector from '../components/ChainSelector';
 import { trackEvent } from '../lib/analytics';
+import EmbedSnippet from '../components/EmbedSnippet';
 
 const REGISTER_COST = 1;
+const PRICE_PRESETS = [0.001, 0.005, 0.01];
 
 const CATEGORIES = ['ai', 'data', 'devtools', 'utility', 'social', 'finance', 'other'];
 const METHODS = ['GET', 'POST'];
@@ -93,6 +95,15 @@ export default function Register() {
   const { address, isConnected, chain } = useAccount();
   const { writeContractAsync } = useWriteContract();
   const { t } = useTranslation();
+  const [searchParams] = useSearchParams();
+
+  const [mode, setMode] = useState<'quick' | 'full'>(
+    searchParams.get('mode') === 'full' ? 'full' : 'quick'
+  );
+  const [quickForm, setQuickForm] = useState({ url: '', price: '', wallet: '' });
+  const [quickLoading, setQuickLoading] = useState(false);
+  const [quickResult, setQuickResult] = useState<any>(null);
+  const [quickError, setQuickError] = useState<string | null>(null);
 
   useSEO({
     title: 'List Your API — Earn USDC from AI Agents',
@@ -284,6 +295,40 @@ export default function Register() {
 
   const isProcessing = paymentState === 'paying' || paymentState === 'registering';
 
+  const handleQuickRegister = async () => {
+    setQuickError(null);
+
+    // Validate
+    try { new URL(quickForm.url); } catch { return setQuickError('Invalid URL format'); }
+    const price = parseFloat(quickForm.price);
+    if (isNaN(price) || price < 0.001 || price > 1000) return setQuickError('Price must be between 0.001 and 1000 USDC');
+    if (!/^0x[a-fA-F0-9]{40}$/.test(quickForm.wallet)) return setQuickError('Invalid wallet address');
+
+    setQuickLoading(true);
+    try {
+      const res = await fetch(`${API_URL}/quick-register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          url: quickForm.url,
+          price,
+          ownerAddress: quickForm.wallet,
+        }),
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || err.message || 'Registration failed');
+      }
+      const data = await res.json();
+      setQuickResult(data);
+      trackEvent('quick_register_success');
+    } catch (err: unknown) {
+      setQuickError((err as Error).message || 'Registration failed');
+    } finally {
+      setQuickLoading(false);
+    }
+  };
+
   // Category label mapping
   const categoryLabels: Record<string, string> = {
     ai: t.register.catAi || 'AI & ML',
@@ -371,13 +416,213 @@ export default function Register() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-10">
-      <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2 animate-fade-in-up">{t.register.title}</h1>
+      <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2 animate-fade-in-up">
+        {mode === 'quick' ? 'Monetize Any API in 10 Seconds' : t.register.title}
+      </h1>
       <p className="text-gray-400 mb-2 animate-fade-in-up delay-100">
-        {t.register.subtitle.replace('{cost}', String(REGISTER_COST))}
+        {mode === 'quick'
+          ? 'Paste your URL, set a price, start earning. No payment required.'
+          : t.register.subtitle.replace('{cost}', String(REGISTER_COST))}
       </p>
-      <p className="text-sm text-[#FF9900]/80 font-medium mb-8 animate-fade-in-up delay-100">
-        One-time 1 USDC anti-spam deposit &middot; 95% revenue share on all calls
-      </p>
+      {mode === 'full' && (
+        <p className="text-sm text-[#FF9900]/80 font-medium mb-8 animate-fade-in-up delay-100">
+          One-time 1 USDC anti-spam deposit &middot; 95% revenue share on all calls
+        </p>
+      )}
+
+      {/* ---- Tab selector ---- */}
+      <div className="flex gap-2 mb-8 animate-fade-in-up">
+        <button
+          onClick={() => setMode('quick')}
+          className={`px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer border ${
+            mode === 'quick'
+              ? 'bg-[#FF9900]/10 text-[#FF9900] border-[#FF9900]/30 shadow-[0_0_12px_rgba(255,153,0,0.15)]'
+              : 'bg-white/5 text-gray-400 border-white/10 hover:text-white hover:border-white/20'
+          }`}
+        >
+          Quick Start
+        </button>
+        <button
+          onClick={() => setMode('full')}
+          className={`px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer border ${
+            mode === 'full'
+              ? 'bg-[#FF9900]/10 text-[#FF9900] border-[#FF9900]/30 shadow-[0_0_12px_rgba(255,153,0,0.15)]'
+              : 'bg-white/5 text-gray-400 border-white/10 hover:text-white hover:border-white/20'
+          }`}
+        >
+          Full Registration
+        </button>
+      </div>
+
+      {/* ---- Quick Start Form ---- */}
+      {mode === 'quick' && !quickResult && (
+        <div className="max-w-lg mx-auto animate-fade-in-up">
+          <div className="glass-card rounded-xl p-8 space-y-6">
+            {/* URL field */}
+            <div>
+              <label htmlFor="quick-url" className="block text-sm text-gray-300 mb-1.5">API URL</label>
+              <input
+                id="quick-url"
+                type="url"
+                required
+                value={quickForm.url}
+                onChange={e => setQuickForm({ ...quickForm, url: e.target.value })}
+                placeholder="https://api.example.com/endpoint"
+                className="w-full bg-[#1a1f2e] border border-white/10 rounded-lg px-4 py-3 text-white text-lg placeholder-gray-600
+                           focus:outline-none focus:border-[#FF9900]/40 transition-all duration-300"
+              />
+            </div>
+
+            {/* Price with presets */}
+            <div>
+              <label htmlFor="quick-price" className="block text-sm text-gray-300 mb-1.5">Price per call (USDC)</label>
+              <div className="flex gap-2 mb-2">
+                {PRICE_PRESETS.map(p => (
+                  <button
+                    key={p}
+                    type="button"
+                    onClick={() => setQuickForm({ ...quickForm, price: String(p) })}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-mono transition-all cursor-pointer border ${
+                      quickForm.price === String(p)
+                        ? 'bg-[#FF9900]/10 text-[#FF9900] border-[#FF9900]/30'
+                        : 'bg-white/5 text-gray-400 border-white/10 hover:text-white'
+                    }`}
+                  >
+                    ${p}
+                  </button>
+                ))}
+              </div>
+              <div className="relative">
+                <input
+                  id="quick-price"
+                  type="number"
+                  step="0.001"
+                  min="0.001"
+                  required
+                  value={quickForm.price}
+                  onChange={e => setQuickForm({ ...quickForm, price: e.target.value })}
+                  placeholder="0.01"
+                  className="w-full bg-[#1a1f2e] border border-white/10 rounded-lg pl-4 pr-14 py-2.5 text-white placeholder-gray-600
+                             focus:outline-none focus:border-[#FF9900]/40 transition-all duration-300"
+                />
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-500 pointer-events-none font-mono">USDC</span>
+              </div>
+            </div>
+
+            {/* Wallet */}
+            <div>
+              <label htmlFor="quick-wallet" className="block text-sm text-gray-300 mb-1.5">Your Wallet Address</label>
+              <div className="flex gap-2">
+                <input
+                  id="quick-wallet"
+                  type="text"
+                  required
+                  value={quickForm.wallet}
+                  onChange={e => setQuickForm({ ...quickForm, wallet: e.target.value })}
+                  placeholder="0x..."
+                  className="flex-1 bg-[#1a1f2e] border border-white/10 rounded-lg px-4 py-2.5 text-white font-mono text-sm placeholder-gray-600
+                             focus:outline-none focus:border-[#FF9900]/40 transition-all duration-300"
+                />
+                {isConnected && address && (
+                  <button
+                    type="button"
+                    onClick={() => setQuickForm({ ...quickForm, wallet: address })}
+                    className="px-3 py-2.5 rounded-lg text-xs bg-[#FF9900]/10 text-[#FF9900] border border-[#FF9900]/20
+                               hover:bg-[#FF9900]/20 transition-colors cursor-pointer whitespace-nowrap"
+                  >
+                    Use Connected
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {quickError && (
+              <div role="alert" className="bg-red-500/10 border border-red-500/50 rounded-xl p-4 text-red-300 text-sm">
+                {quickError}
+              </div>
+            )}
+
+            <button
+              onClick={handleQuickRegister}
+              disabled={quickLoading}
+              className="w-full gradient-btn text-white py-3 rounded-xl font-medium cursor-pointer
+                         transition-all duration-300 hover:scale-[1.02] hover:glow-orange
+                         disabled:opacity-40 flex items-center justify-center gap-2"
+            >
+              {quickLoading ? (
+                <>
+                  <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  </svg>
+                  Registering...
+                </>
+              ) : 'Monetize this API'}
+            </button>
+
+            <p className="text-xs text-gray-500 text-center">
+              No payment required · Rate limited to prevent spam
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* ---- Quick Start Success ---- */}
+      {mode === 'quick' && quickResult && (
+        <div className="max-w-2xl mx-auto animate-fade-in-up">
+          <div className="glass glow-orange-lg rounded-2xl p-10 text-center relative overflow-hidden">
+            <div aria-hidden="true" className="absolute inset-0 pointer-events-none"
+              style={{ backgroundImage: 'radial-gradient(ellipse 60% 40% at 50% 0%, rgba(255,153,0,0.15) 0%, transparent 70%)' }} />
+            <div className="relative z-10">
+              <div className="w-20 h-20 rounded-full bg-[#34D399]/10 border-2 border-[#34D399]/30 flex items-center justify-center mx-auto mb-6">
+                <svg className="w-10 h-10 text-[#34D399]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <h2 className="text-[#FF9900] text-2xl font-bold mb-2">API Listed!</h2>
+              <p className="text-gray-400 text-sm mb-6">Your API is live on x402 Bazaar. AI agents can now discover and pay for it.</p>
+
+              {/* Proxy URL */}
+              <div className="glass rounded-xl p-4 mb-6 text-left">
+                <p className="text-xs text-gray-400 mb-2">x402 Proxy Endpoint</p>
+                <div className="flex items-center gap-2">
+                  <code className="text-sm text-[#FF9900] font-mono flex-1 truncate">{quickResult.proxy_url}</code>
+                  <button
+                    onClick={() => navigator.clipboard.writeText(quickResult.proxy_url)}
+                    className="px-3 py-1.5 rounded-lg text-xs bg-[#FF9900]/10 text-[#FF9900] border border-[#FF9900]/20 hover:bg-[#FF9900]/20 transition-colors cursor-pointer"
+                  >
+                    Copy
+                  </button>
+                </div>
+              </div>
+
+              {/* Embed snippets */}
+              <div className="mb-6">
+                <EmbedSnippet serviceId={quickResult.data?.id} serviceName={quickResult.data?.name} />
+              </div>
+
+              <div className="flex flex-wrap justify-center gap-3">
+                <Link
+                  to={`/services/${quickResult.data?.id}`}
+                  className="inline-flex items-center gap-2 gradient-btn text-white font-medium text-sm px-5 py-2.5 rounded-xl no-underline hover:brightness-110 transition-all"
+                >
+                  View Service Page &rarr;
+                </Link>
+                <button
+                  onClick={() => { setQuickResult(null); setQuickForm({ url: '', price: '', wallet: '' }); }}
+                  className="inline-flex items-center gap-2 glass border border-white/15 text-gray-300 hover:text-white text-sm font-medium px-5 py-2.5 rounded-xl transition-colors cursor-pointer"
+                >
+                  Register Another
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ---- Full Registration (existing wizard) ---- */}
+      {mode === 'full' && (
+        <>
 
       {/* ---- Progress bar ---- */}
       <div className="flex items-center gap-4 mb-10 animate-fade-in-up" role="list" aria-label="Registration steps">
@@ -855,6 +1100,9 @@ export default function Register() {
           </Link>
         </div>
       </div>
+
+        </>
+      )}
     </div>
   );
 }

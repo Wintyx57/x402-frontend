@@ -248,6 +248,7 @@ function Navbar() {
   ];
 
   const providerLinks: NavLink[] = [
+    { to: '/register?mode=quick', label: t.nav?.quickMonetize || 'Quick Monetize' },
     { to: '/for-providers', label: t.nav.forProviders },
     { to: '/register', label: t.nav.register },
   ];

@@ -10,6 +10,7 @@ import ReviewCard from '../components/ReviewCard';
 import ReviewForm from '../components/ReviewForm';
 import CopyButton from '../components/CopyButton';
 import ChainSelector from '../components/ChainSelector';
+import EmbedSnippet from '../components/EmbedSnippet';
 import type { Service } from '../types/service';
 
 const CHAIN_KEY_MAP: Record<number, string> = {
@@ -387,6 +388,28 @@ export default function ServiceDetail() {
         </ol>
       </nav>
 
+      {/* ── x402 PROXY ENDPOINT ── */}
+      <div className="bg-[#FF9900]/5 border border-[#FF9900]/20 rounded-xl p-4 mb-4">
+        <div className="flex items-center gap-2 mb-2">
+          <svg className="w-4 h-4 text-[#FF9900]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+          <span className="text-sm font-semibold text-white">x402 Endpoint</span>
+          <span className="text-xs bg-[#FF9900]/10 text-[#FF9900] px-2 py-0.5 rounded border border-[#FF9900]/20 ml-auto">
+            No SDK Required — Just HTTP
+          </span>
+        </div>
+        <div className="flex items-center gap-2">
+          <code className="text-sm text-[#FF9900] font-mono flex-1 truncate bg-black/20 px-3 py-2 rounded-lg">
+            POST {API_URL}/api/call/{id}
+          </code>
+          <CopyButton text={`${API_URL}/api/call/${id}`} label="Copy" copiedLabel="Copied!" />
+        </div>
+        <p className="text-xs text-gray-500 mt-2">
+          Your API stays untouched. We handle payments through our proxy.
+        </p>
+      </div>
+
       {/* ── 1. HEADER ── */}
       <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6 mb-4">
         <div className="flex items-start justify-between gap-4 flex-wrap">
@@ -439,6 +462,11 @@ export default function ServiceDetail() {
                   {service.free_calls_per_month} Free/mo
                 </span>
               )}
+              {(service as any).quick_registered && (
+                <span className="text-xs bg-purple-500/10 text-purple-400 px-2 py-0.5 rounded border border-purple-500/20">
+                  Quick Listed
+                </span>
+              )}
             </div>
 
             {/* Star rating summary (inline in header) */}
@@ -480,9 +508,9 @@ export default function ServiceDetail() {
         </div>
 
         {/* Tags — clickable links to category filter */}
-        {service.tags?.length > 0 && (
+        {(service.tags?.length ?? 0) > 0 && (
           <div className="flex flex-wrap gap-1.5 mt-4">
-            {service.tags.map(tag => (
+            {(service.tags ?? []).map(tag => (
               <Link
                 key={tag}
                 to={`/services?cat=${tag}`}
@@ -668,6 +696,11 @@ export default function ServiceDetail() {
             </a>
           </div>
         )}
+      </div>
+
+      {/* ── EMBED THIS API ── */}
+      <div className="mb-6">
+        <EmbedSnippet serviceId={service.id} serviceName={service.name} />
       </div>
 
       {/* ── 5. REVIEWS ── */}
