@@ -242,10 +242,8 @@ function Navbar() {
 
   const exploreLinks: NavLink[] = [
     { to: '/services', label: t.nav.services },
-    { to: '/leaderboard', label: (t.nav as any).leaderboard ?? 'Leaderboard' },
     { to: '/fund', label: t.nav.fund },
     { to: '/playground', label: t.nav.playground },
-    { to: '/pricing', label: t.nav.pricing },
     { to: '/compare', label: t.nav.compare },
   ];
 
@@ -258,7 +256,6 @@ function Navbar() {
     { to: '/quickstart', label: 'Quickstart' },
     { to: '/docs', label: t.nav.docs },
     { to: '/integrate', label: t.nav.integrate },
-    { to: '/api-keys', label: 'API Keys' },
   ];
 
   const dropdownGroups = [

@@ -507,32 +507,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== NO WALLET? NO PROBLEM. ===== */}
-      <section className="max-w-4xl mx-auto px-4 mb-16">
-        <div className="glass-card rounded-2xl p-8 sm:p-10 border border-blue-500/20 bg-gradient-to-br from-blue-500/5 to-violet-500/5 flex flex-col sm:flex-row items-center gap-6 sm:gap-10">
-          {/* Icone clé */}
-          <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-blue-500/10 border border-blue-500/25 shrink-0" aria-hidden="true">
-            <svg className="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z" />
-            </svg>
-          </div>
-          <div className="flex-1 text-center sm:text-left">
-            <h2 className="text-xl sm:text-2xl font-bold text-white mb-2">No Wallet? No Problem.</h2>
-            <p className="text-gray-400 text-sm sm:text-base leading-relaxed">
-              Use a simple API key to call any service. No crypto wallet needed. We handle the payments.
-            </p>
-          </div>
-          <Link
-            to="/api-keys"
-            className="shrink-0 px-6 py-3 bg-blue-500/15 hover:bg-blue-500/25 border border-blue-500/30 hover:border-blue-500/50
-                       text-blue-300 font-semibold rounded-xl transition-all duration-200 text-sm whitespace-nowrap no-underline"
-            onClick={() => trackEvent('cta_apikeys_click', { source: 'hero_section' })}
-          >
-            Get Your API Key →
-          </Link>
-        </div>
-      </section>
-
       {/* Fund Wallet CTA */}
       <section ref={fundRef} className="reveal max-w-4xl mx-auto px-4 mb-10">
         <div className="glass-card rounded-2xl p-6 md:p-8 flex flex-col md:flex-row items-center gap-5 md:gap-8 border border-[#FF9900]/20 bg-[#FF9900]/5">

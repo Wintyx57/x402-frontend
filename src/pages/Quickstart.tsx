@@ -55,8 +55,8 @@ const paths: PathItem[] = [
     ],
     primaryLabel: 'List My API',
     primaryHref: '/register',
-    secondaryLabel: 'See pricing tiers',
-    secondaryHref: '/pricing',
+    secondaryLabel: 'View all services',
+    secondaryHref: '/services',
   },
 ];
 

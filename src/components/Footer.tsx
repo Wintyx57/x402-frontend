@@ -97,7 +97,6 @@ export default function Footer() {
               <ul className="flex flex-col gap-0.5">
                 {[
                   { to: '/services', label: t.nav.services },
-                  { to: '/pricing', label: t.nav.pricing },
                   { to: '/docs', label: t.nav.docs },
                   { to: '/playground', label: t.nav.playground },
                   { to: '/register', label: t.nav.register },

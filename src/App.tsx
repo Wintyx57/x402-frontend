@@ -68,7 +68,6 @@ const MCP = lazy(() => import('./pages/MCP'));
 const BlogList = lazy(() => import('./pages/BlogList'));
 const BlogArticle = lazy(() => import('./pages/BlogArticle'));
 const About = lazy(() => import('./pages/About'));
-const Pricing = lazy(() => import('./pages/Pricing'));
 const FAQ = lazy(() => import('./pages/FAQ'));
 const Demos = lazy(() => import('./pages/Demos'));
 const Config = lazy(() => import('./pages/Config'));
@@ -87,9 +86,7 @@ const Quickstart = lazy(() => import('./pages/Quickstart'));
 const AdminCommunityAgent = lazy(() => import('./pages/AdminCommunityAgent'));
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 const FundWallet = lazy(() => import('./pages/FundWallet'));
-const ApiKeys = lazy(() => import('./pages/ApiKeys'));
 const ServiceDetail = lazy(() => import('./pages/ServiceDetail'));
-const Leaderboard = lazy(() => import('./pages/Leaderboard'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
 export default function App() {
@@ -108,7 +105,6 @@ export default function App() {
             <Route path="/blog" element={<BlogList />} />
             <Route path="/blog/:slug" element={<BlogArticle />} />
             <Route path="/about" element={<About />} />
-            <Route path="/pricing" element={<Pricing />} />
             <Route path="/faq" element={<FAQ />} />
             <Route path="/demos" element={<Demos />} />
             <Route path="/config" element={<Config />} />
@@ -123,7 +119,6 @@ export default function App() {
             <Route path="/for-providers" element={<ForProviders />} />
             <Route path="/budget" element={<Budget />} />
             <Route path="/fund" element={<FundWallet />} />
-            <Route path="/api-keys" element={<ApiKeys />} />
             <Route path="/creators" element={<Navigate to="/for-providers" replace />} />
             <Route path="/creators/dashboard" element={<CreatorDashboard />} />
             <Route path="/creators/onboarding" element={<Navigate to="/register" replace />} />
@@ -131,7 +126,6 @@ export default function App() {
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/admin/community-agent" element={<AdminCommunityAgent />} />
             <Route path="/services/:id" element={<ServiceDetail />} />
-            <Route path="/leaderboard" element={<Leaderboard />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
