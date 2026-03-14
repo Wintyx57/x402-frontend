@@ -8,7 +8,7 @@
     <a href="https://www.npmjs.com/package/x402-bazaar"><img src="https://img.shields.io/npm/v/x402-bazaar?style=flat-square&color=green" alt="CLI"></a>
     <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-yellow?style=flat-square" alt="License"></a>
     <a href="https://github.com/Wintyx57/x402-frontend"><img src="https://img.shields.io/github/stars/Wintyx57/x402-frontend?style=flat-square" alt="Stars"></a>
-    <a href="https://basescan.org"><img src="https://img.shields.io/badge/chain-Base%20%2B%20SKALE-8b5cf6?style=flat-square" alt="Chain"></a>
+    <a href="https://basescan.org"><img src="https://img.shields.io/badge/chain-Base%20%2B%20SKALE%20%2B%20Polygon-8b5cf6?style=flat-square" alt="Chain"></a>
   </p>
 </p>
 
@@ -24,7 +24,8 @@ x402 Bazaar is an autonomous API marketplace built on the [HTTP 402 Payment Requ
 
 - **Service Catalog** -- Browse, search, and filter 70+ API services with real-time data from the backend.
 - **Register Your API** -- Submit your own API service to the marketplace with an on-chain USDC payment.
-- **Wallet Connect** -- MetaMask and Coinbase Wallet via wagmi/viem with automatic Base network detection.
+- **Wallet Connect** -- MetaMask and Coinbase Wallet via wagmi/viem with automatic network detection (Base, SKALE on Base, Polygon).
+- **ChainSelector** -- 3-way toggle (Base / SKALE on Base / Polygon) for multi-chain payment routing.
 - **MCP Installation Guide** -- Step-by-step setup for Claude Desktop, Cursor, VS Code, and Claude Code.
 - **Agent Integration Docs** -- Code examples in JavaScript and Python for building x402 agents.
 - **One-Line CLI** -- `npx x402-bazaar init` prominently featured for instant setup.
@@ -116,7 +117,7 @@ src/
 | Framework | React 19 |
 | Build | Vite 7 |
 | Styling | Tailwind CSS v4 |
-| Wallet | wagmi + viem (Base chain) |
+| Wallet | wagmi + viem (Base + SKALE on Base + Polygon) |
 | Routing | React Router v7 |
 | State | TanStack React Query |
 | i18n | Custom React Context (EN/FR) |
@@ -156,7 +157,7 @@ Contributions are welcome. See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelin
 
 | Repository | Description |
 |---|---|
-| **[x402-backend](https://github.com/Wintyx57/x402-backend)** | API server, 69 native endpoints, payment middleware, MCP server |
+| **[x402-backend](https://github.com/Wintyx57/x402-backend)** | API server, 74 native endpoints, payment middleware, MCP server |
 | **[x402-frontend](https://github.com/Wintyx57/x402-frontend)** | React + TypeScript UI (this repo) |
 | **[x402-bazaar-cli](https://github.com/Wintyx57/x402-bazaar-cli)** | `npx x402-bazaar` -- CLI with 7 commands |
 | **[x402-sdk](https://github.com/Wintyx57/x402-sdk)** | TypeScript SDK for AI agents |
