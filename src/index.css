@@ -31,6 +31,29 @@ body {
   color: #E8E4E0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Premium background — 3 layers: dot grid + gradient mesh orbs + noise texture */
+  background-image:
+    /* Layer 1 — Dot grid subtil (orange 3% opacity) */
+    radial-gradient(circle, rgba(255,153,0,0.03) 1px, transparent 1px),
+    /* Layer 2 — Gradient mesh orbs */
+    radial-gradient(ellipse at 20% 0%, rgba(255,153,0,0.07) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 100%, rgba(96,165,250,0.05) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(139,92,246,0.04) 0%, transparent 50%),
+    /* Layer 3 — Noise texture SVG */
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+  background-size: 40px 40px, cover, cover, cover, 200px 200px;
+  background-attachment: scroll, fixed, fixed, fixed, scroll;
+  background-repeat: repeat, no-repeat, no-repeat, no-repeat, repeat;
+}
+
+/* Vignette radiale — bords assombris pour profondeur */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(ellipse at 50% 50%, transparent 50%, rgba(0,0,0,0.4) 100%);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -266,6 +289,17 @@ pre.code-block .number { color: #FBBF24; }
 html.light body {
   background-color: #f8f9fa;
   color: #1a1a2e;
+  background-image:
+    radial-gradient(circle, rgba(0,0,0,0.04) 1px, transparent 1px),
+    radial-gradient(ellipse at 20% 0%, rgba(255,153,0,0.04) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 100%, rgba(96,165,250,0.03) 0%, transparent 50%);
+  background-size: 40px 40px, cover, cover;
+  background-attachment: scroll, fixed, fixed;
+  background-repeat: repeat, no-repeat, no-repeat;
+}
+
+html.light body::after {
+  background: radial-gradient(ellipse at 50% 50%, transparent 60%, rgba(0,0,0,0.03) 100%);
 }
 
 html.light ::-webkit-scrollbar-track { background: #f0f0f0; }

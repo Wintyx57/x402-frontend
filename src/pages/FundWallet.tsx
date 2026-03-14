@@ -37,38 +37,11 @@ export default function FundWallet() {
     <TrailsProvider config={{ trailsApiKey: TRAILS_API_KEY }}>
     <main className="min-h-screen animate-page-enter relative overflow-hidden">
 
-      {/* ===== Background Effects ===== */}
-      {/* Main glow */}
+      {/* ===== Hero glow (page-specific, more intense than global) ===== */}
       <div
         aria-hidden="true"
         className="absolute top-32 left-1/2 -translate-x-1/2
                    w-[800px] h-[600px] bg-[#FF9900]/15 rounded-full blur-[160px] animate-glow-pulse pointer-events-none"
-      />
-      {/* Secondary blue glow (left) */}
-      <div
-        aria-hidden="true"
-        className="absolute top-[500px] -left-40
-                   w-[500px] h-[500px] bg-blue-500/8 rounded-full blur-[120px] pointer-events-none"
-      />
-      {/* Tertiary purple glow (right) */}
-      <div
-        aria-hidden="true"
-        className="absolute top-[700px] -right-40
-                   w-[400px] h-[400px] bg-purple-500/8 rounded-full blur-[120px] pointer-events-none"
-      />
-      {/* Floating grid */}
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          backgroundImage: `
-            linear-gradient(rgba(255,153,0,0.03) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255,153,0,0.03) 1px, transparent 1px)
-          `,
-          backgroundSize: '50px 50px',
-          maskImage: 'radial-gradient(ellipse 70% 50% at 50% 30%, black 30%, transparent 100%)',
-          WebkitMaskImage: 'radial-gradient(ellipse 70% 50% at 50% 30%, black 30%, transparent 100%)',
-        }}
       />
 
       {/* ===== Hero ===== */}
