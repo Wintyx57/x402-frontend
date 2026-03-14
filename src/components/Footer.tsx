@@ -101,6 +101,7 @@ export default function Footer() {
                   { to: '/playground', label: t.nav.playground },
                   { to: '/register', label: t.nav.register },
                   { to: '/for-providers', label: t.nav.forProviders },
+                  { to: '/my-apis', label: t.myApis?.title || 'My APIs' },
                   { to: '/compare', label: t.nav.compare },
                 ].map(({ to, label }) => (
                   <li key={to}>

@@ -81,12 +81,14 @@ const Analytics = lazy(() => import('./pages/Analytics'));
 const Compare = lazy(() => import('./pages/Compare'));
 const ForProviders = lazy(() => import('./pages/ForProviders'));
 const Budget = lazy(() => import('./pages/Budget'));
-const CreatorDashboard = lazy(() => import('./pages/CreatorDashboard'));
+// CreatorDashboard redirected to /my-apis — kept for potential reuse
+// const CreatorDashboard = lazy(() => import('./pages/CreatorDashboard'));
 const Quickstart = lazy(() => import('./pages/Quickstart'));
 const AdminCommunityAgent = lazy(() => import('./pages/AdminCommunityAgent'));
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 const FundWallet = lazy(() => import('./pages/FundWallet'));
 const ServiceDetail = lazy(() => import('./pages/ServiceDetail'));
+const MyApis = lazy(() => import('./pages/MyApis'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
 export default function App() {
@@ -120,7 +122,8 @@ export default function App() {
             <Route path="/budget" element={<Budget />} />
             <Route path="/fund" element={<FundWallet />} />
             <Route path="/creators" element={<Navigate to="/for-providers" replace />} />
-            <Route path="/creators/dashboard" element={<CreatorDashboard />} />
+            <Route path="/my-apis" element={<MyApis />} />
+            <Route path="/creators/dashboard" element={<Navigate to="/my-apis" replace />} />
             <Route path="/creators/onboarding" element={<Navigate to="/register" replace />} />
             <Route path="/quickstart" element={<Quickstart />} />
             <Route path="/admin" element={<AdminDashboard />} />

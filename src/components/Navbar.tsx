@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback, memo } from 'react';
 import { Link, useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { useTranslation } from '../i18n/LanguageContext';
-import ConnectButton from './ConnectButton';
+import WalletInfo from './WalletInfo';
 import LanguageToggle from './LanguageToggle';
 import DarkModeToggle from './DarkModeToggle';
 
@@ -248,6 +248,7 @@ function Navbar() {
   ];
 
   const providerLinks: NavLink[] = [
+    { to: '/my-apis', label: t.myApis?.title || 'My APIs' },
     { to: '/register?mode=quick', label: t.nav?.quickMonetize || 'Quick Monetize' },
     { to: '/for-providers', label: t.nav.forProviders },
     { to: '/register', label: t.nav.register },
@@ -317,7 +318,7 @@ function Navbar() {
           <div className="flex items-center gap-2 shrink-0">
             <DarkModeToggle />
             <LanguageToggle />
-            <ConnectButton />
+            <WalletInfo />
 
             {/* Mobile hamburger */}
             <button
