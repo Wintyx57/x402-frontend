@@ -31,6 +31,12 @@
       ]
     },
     {
+      "source": "/(.*\\.mp4)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=2592000, stale-while-revalidate=86400" }
+      ]
+    },
+    {
       "source": "/(og-image.svg|og-image.png|site.webmanifest|robots.txt|sitemap.xml|favicon.ico|favicon.svg|favicon-16x16.png|favicon-32x32.png|apple-touch-icon.png|icon-192.png|icon-512.png)",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=86400" }

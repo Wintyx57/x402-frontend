@@ -95,6 +95,8 @@ function Navbar() {
   const { pathname } = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const navStripRef = useRef<HTMLDivElement>(null);
+  const mobilePanelRef = useRef<HTMLDivElement>(null);
+  const hamburgerRef = useRef<HTMLButtonElement>(null);
 
   const onServicesPage = pathname === '/services' || pathname.startsWith('/services/');
   const searchValue = onServicesPage ? (searchParams.get('q') || '') : localSearch;
@@ -143,6 +145,65 @@ function Navbar() {
       document.body.style.overflow = '';
     }
     return () => { document.body.style.overflow = ''; };
+  }, [mobileOpen]);
+
+  // Focus trap for mobile menu
+  useEffect(() => {
+    if (!mobileOpen) return;
+
+    const panel = mobilePanelRef.current;
+    if (!panel) return;
+
+    const focusableSelectors = [
+      'a[href]',
+      'button:not([disabled])',
+      'input:not([disabled])',
+      'select:not([disabled])',
+      'textarea:not([disabled])',
+      '[tabindex]:not([tabindex="-1"])',
+    ].join(', ');
+
+    const getFocusableElements = () =>
+      Array.from(panel.querySelectorAll<HTMLElement>(focusableSelectors)).filter(
+        (el) => !el.closest('[aria-hidden="true"]'),
+      );
+
+    // Focus the first focusable element when the menu opens
+    const firstFocusable = getFocusableElements()[0];
+    firstFocusable?.focus();
+
+    const handleFocusTrap = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setMobileOpen(false);
+        hamburgerRef.current?.focus();
+        return;
+      }
+
+      if (e.key !== 'Tab') return;
+
+      const focusable = getFocusableElements();
+      if (focusable.length === 0) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (e.shiftKey) {
+        if (document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else {
+        if (document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleFocusTrap);
+    return () => {
+      document.removeEventListener('keydown', handleFocusTrap);
+    };
   }, [mobileOpen]);
 
   const clearSearch = () => {
@@ -260,6 +321,7 @@ function Navbar() {
 
             {/* Mobile hamburger */}
             <button
+              ref={hamburgerRef}
               onClick={() => setMobileOpen((prev) => !prev)}
               className="md:hidden relative w-9 h-9 flex flex-col items-center justify-center gap-[5px]
                          bg-transparent border-none cursor-pointer z-50 rounded-lg
@@ -267,6 +329,7 @@ function Navbar() {
               aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={mobileOpen}
               aria-controls="mobile-menu"
+              type="button"
             >
               <span className={`block w-5 h-[2px] rounded-full transition-all duration-300 origin-center ${
                 mobileOpen ? 'translate-y-[7px] rotate-45 bg-[#FF9900]' : 'bg-gray-300'
@@ -333,6 +396,7 @@ function Navbar() {
 
           {/* Panel — slides in from left */}
           <div
+            ref={mobilePanelRef}
             className={`relative w-[280px] max-w-[85vw] h-full bg-[#131921] border-r border-white/8
                         flex flex-col transition-transform duration-300 ease-out shadow-2xl ${
               mobileOpen ? 'translate-x-0' : '-translate-x-full'

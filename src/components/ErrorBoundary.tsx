@@ -45,6 +45,7 @@ export default class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBo
                 : 'An unexpected error occurred. Please try refreshing the page.'}
             </p>
             <button
+              type="button"
               onClick={() => window.location.reload()}
               className="gradient-btn text-white px-6 py-2.5 rounded-lg text-sm font-medium cursor-pointer transition-all duration-200 hover:brightness-110"
             >

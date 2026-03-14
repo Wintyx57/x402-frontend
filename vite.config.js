@@ -19,12 +19,47 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
-          'vendor-react': ['react', 'react-dom'],
-          'vendor-router': ['react-router-dom'],
-          'vendor-web3': ['wagmi', 'viem', '@rainbow-me/rainbowkit'],
-          'vendor-query': ['@tanstack/react-query'],
-          'vendor-charts': ['chart.js', 'react-chartjs-2'],
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (
+              id.includes('0xtrails') ||
+              id.includes('@0xsequence') ||
+              id.includes('trails')
+            ) {
+              return 'vendor-trails';
+            }
+            if (
+              id.includes('@metamask') ||
+              id.includes('metamask-sdk')
+            ) {
+              return 'vendor-metamask';
+            }
+            if (
+              id.includes('wagmi') ||
+              id.includes('viem') ||
+              id.includes('@rainbow-me')
+            ) {
+              return 'vendor-web3';
+            }
+            if (
+              id.includes('react-dom') ||
+              id.includes('react/')
+            ) {
+              return 'vendor-react';
+            }
+            if (id.includes('react-router-dom')) {
+              return 'vendor-router';
+            }
+            if (id.includes('@tanstack/react-query')) {
+              return 'vendor-query';
+            }
+            if (
+              id.includes('chart.js') ||
+              id.includes('react-chartjs-2')
+            ) {
+              return 'vendor-charts';
+            }
+          }
         }
       }
     }

@@ -10,28 +10,13 @@ import ReviewCard from '../components/ReviewCard';
 import ReviewForm from '../components/ReviewForm';
 import CopyButton from '../components/CopyButton';
 import ChainSelector from '../components/ChainSelector';
+import type { Service } from '../types/service';
 
 const CHAIN_KEY_MAP: Record<number, string> = {
   8453: 'base',
   1187947933: 'skale',
   137: 'polygon',
 };
-
-interface Service {
-  id: string;
-  name: string;
-  description: string;
-  url: string;
-  price_usdc: number;
-  tags: string[];
-  owner_address: string;
-  tx_hash?: string;
-  created_at: string;
-  verified_status?: string;
-  required_parameters?: { required?: string[]; properties?: Record<string, unknown> } | null;
-  trust_score?: number | null;
-  trust_score_updated_at?: string | null;
-}
 
 type CodeTab = 'curl' | 'javascript' | 'python';
 
