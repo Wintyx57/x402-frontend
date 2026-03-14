@@ -19,7 +19,6 @@ function ChainCard({
   const img = chainImageUrl(chainId);
   const [imgError, setImgError] = useState(false);
   const handleImgError = useCallback(() => setImgError(true), []);
-
   const showImg = img && !imgError;
 
   return (
@@ -53,6 +52,144 @@ function ChainCard({
   );
 }
 
+// Deep CSS customization — widget blends into glass-card design
+function useWidgetCss(isDark: boolean): string {
+  if (isDark) {
+    return `
+      --trails-primary: #FF9900;
+      --trails-primary-hover: #e68a00;
+      --trails-primary-disabled: rgba(255,153,0,0.3);
+      --trails-primary-disabled-text: rgba(255,255,255,0.4);
+      --trails-text-primary: #E8E4E0;
+      --trails-text-secondary: #9ca3af;
+      --trails-text-tertiary: #6b7280;
+      --trails-text-muted: #4b5563;
+      --trails-text-inverse: #ffffff;
+      --trails-bg-primary: transparent;
+      --trails-bg-secondary: rgba(255,255,255,0.04);
+      --trails-bg-secondary-hover: rgba(255,255,255,0.08);
+      --trails-bg-tertiary: rgba(255,255,255,0.06);
+      --trails-bg-card: rgba(255,255,255,0.04);
+      --trails-bg-overlay: rgba(15,18,25,0.95);
+      --trails-border-primary: rgba(255,255,255,0.12);
+      --trails-border-secondary: rgba(255,255,255,0.15);
+      --trails-border-tertiary: rgba(255,255,255,0.06);
+      --trails-input-bg: rgba(255,255,255,0.04);
+      --trails-input-border: rgba(255,255,255,0.12);
+      --trails-input-text: #E8E4E0;
+      --trails-input-placeholder: #6b7280;
+      --trails-input-focus-border: #FF9900;
+      --trails-dropdown-bg: #1a1f2e;
+      --trails-dropdown-border: rgba(255,255,255,0.12);
+      --trails-dropdown-text: #E8E4E0;
+      --trails-dropdown-hover-bg: rgba(255,255,255,0.08);
+      --trails-dropdown-selected-bg: rgba(255,153,0,0.12);
+      --trails-dropdown-selected-text: #FF9900;
+      --trails-dropdown-focus-border: #FF9900;
+      --trails-list-bg: #1a1f2e;
+      --trails-list-border: rgba(255,255,255,0.12);
+      --trails-list-hover-bg: rgba(255,255,255,0.06);
+      --trails-list-item-bg: transparent;
+      --trails-list-item-selected-bg: rgba(255,153,0,0.1);
+      --trails-hover-bg: rgba(255,255,255,0.06);
+      --trails-hover-text: #ffffff;
+      --trails-modal-button-bg: #FF9900;
+      --trails-modal-button-hover-bg: #e68a00;
+      --trails-modal-button-text: #ffffff;
+      --trails-modal-button-shadow: 0 4px 14px rgba(255,153,0,0.25);
+      --trails-success-bg: rgba(34,197,94,0.12);
+      --trails-success-text: #4ade80;
+      --trails-success-border: rgba(34,197,94,0.25);
+      --trails-warning-bg: rgba(234,179,8,0.12);
+      --trails-warning-text: #facc15;
+      --trails-warning-border: rgba(234,179,8,0.25);
+      --trails-error-bg: rgba(239,68,68,0.12);
+      --trails-error-text: #f87171;
+      --trails-error-border: rgba(239,68,68,0.25);
+      --trails-shadow: none;
+      --trails-widget-border: none;
+      --trails-border-radius-widget: 0px;
+      --trails-border-radius-button: 12px;
+      --trails-border-radius-input: 12px;
+      --trails-border-radius-dropdown: 12px;
+      --trails-border-radius-container: 12px;
+      --trails-border-radius-list: 12px;
+      --trails-border-radius-list-button: 10px;
+      --trails-border-radius-large-button: 14px;
+      --trails-percentage-button-bg: rgba(255,255,255,0.08);
+      --trails-percentage-button-text: #9ca3af;
+      --trails-percentage-button-hover-bg: rgba(255,153,0,0.15);
+      --trails-focus-ring: rgba(255,153,0,0.4);
+    `;
+  }
+  return `
+    --trails-primary: #FF9900;
+    --trails-primary-hover: #e68a00;
+    --trails-primary-disabled: #e5e7eb;
+    --trails-primary-disabled-text: #9ca3af;
+    --trails-text-primary: #111827;
+    --trails-text-secondary: #4b5563;
+    --trails-text-tertiary: #6b7280;
+    --trails-text-muted: #9ca3af;
+    --trails-text-inverse: #ffffff;
+    --trails-bg-primary: transparent;
+    --trails-bg-secondary: #f9fafb;
+    --trails-bg-secondary-hover: #f3f4f6;
+    --trails-bg-tertiary: #f3f4f6;
+    --trails-bg-card: #ffffff;
+    --trails-bg-overlay: rgba(255,255,255,0.98);
+    --trails-border-primary: #e5e7eb;
+    --trails-border-secondary: #d1d5db;
+    --trails-border-tertiary: #f3f4f6;
+    --trails-input-bg: #ffffff;
+    --trails-input-border: #d1d5db;
+    --trails-input-text: #111827;
+    --trails-input-placeholder: #9ca3af;
+    --trails-input-focus-border: #FF9900;
+    --trails-dropdown-bg: #ffffff;
+    --trails-dropdown-border: #e5e7eb;
+    --trails-dropdown-text: #111827;
+    --trails-dropdown-hover-bg: #f9fafb;
+    --trails-dropdown-selected-bg: rgba(255,153,0,0.08);
+    --trails-dropdown-selected-text: #FF9900;
+    --trails-dropdown-focus-border: #FF9900;
+    --trails-list-bg: #ffffff;
+    --trails-list-border: #e5e7eb;
+    --trails-list-hover-bg: #f9fafb;
+    --trails-list-item-bg: transparent;
+    --trails-list-item-selected-bg: rgba(255,153,0,0.06);
+    --trails-hover-bg: #f3f4f6;
+    --trails-hover-text: #111827;
+    --trails-modal-button-bg: #FF9900;
+    --trails-modal-button-hover-bg: #e68a00;
+    --trails-modal-button-text: #ffffff;
+    --trails-modal-button-shadow: 0 4px 14px rgba(255,153,0,0.2);
+    --trails-success-bg: #f0fdf4;
+    --trails-success-text: #16a34a;
+    --trails-success-border: #bbf7d0;
+    --trails-warning-bg: #fffbeb;
+    --trails-warning-text: #d97706;
+    --trails-warning-border: #fde68a;
+    --trails-error-bg: #fef2f2;
+    --trails-error-text: #dc2626;
+    --trails-error-border: #fecaca;
+    --trails-shadow: none;
+    --trails-widget-border: none;
+    --trails-border-radius-widget: 0px;
+    --trails-border-radius-button: 12px;
+    --trails-border-radius-input: 12px;
+    --trails-border-radius-dropdown: 12px;
+    --trails-border-radius-container: 12px;
+    --trails-border-radius-list: 12px;
+    --trails-border-radius-list-button: 10px;
+    --trails-border-radius-large-button: 14px;
+    --trails-percentage-button-bg: #e5e7eb;
+    --trails-percentage-button-text: #6b7280;
+    --trails-percentage-button-hover-bg: rgba(255,153,0,0.12);
+    --trails-focus-ring: rgba(255,153,0,0.4);
+  `;
+}
+
 export default function BridgeCard() {
   const { t } = useTranslation();
   const { theme } = useTheme();
@@ -75,27 +212,7 @@ export default function BridgeCard() {
   const sourceChain = SOURCE_CHAINS.find((c) => c.id === chain?.id);
   const sourceChainName = sourceChain?.name || chain?.name || 'Unknown';
 
-  const widgetCss = isDark
-    ? `--trails-border-radius-button: 12px;
-       --trails-border-radius-card: 16px;
-       --trails-primary: #FF9900;
-       --trails-primary-hover: #e68a00;
-       --trails-text-inverse: #ffffff;
-       --trails-focus-ring: rgba(255, 153, 0, 0.4);
-       --trails-background: transparent;
-       --trails-border-color: rgba(255, 255, 255, 0.12);
-       --trails-text-primary: #E8E4E0;
-       --trails-text-secondary: #9ca3af;`
-    : `--trails-border-radius-button: 12px;
-       --trails-border-radius-card: 16px;
-       --trails-primary: #FF9900;
-       --trails-primary-hover: #e68a00;
-       --trails-text-inverse: #ffffff;
-       --trails-focus-ring: rgba(255, 153, 0, 0.4);
-       --trails-background: transparent;
-       --trails-border-color: #e5e7eb;
-       --trails-text-primary: #111827;
-       --trails-text-secondary: #6b7280;`;
+  const widgetCss = useWidgetCss(isDark);
 
   const buttonTextMap: Record<DestKey, string> = {
     base: f.bridgeButtonBase || 'Bridge USDC to Base',
@@ -127,7 +244,7 @@ export default function BridgeCard() {
     setBridgedAmount(null);
   }
 
-  // Not connected state
+  // Not connected
   if (!isConnected) {
     return (
       <div className="max-w-2xl mx-auto glass-card rounded-2xl p-8 text-center space-y-5">
@@ -237,7 +354,7 @@ export default function BridgeCard() {
         </div>
       )}
 
-      {/* Recipient + Widget + Success */}
+      {/* Recipient + Inline Widget + Success */}
       <div className="glass-card rounded-2xl p-5 space-y-4">
         {!bridgeComplete && (
           <>
@@ -254,25 +371,29 @@ export default function BridgeCard() {
               <p className="text-xs text-gray-500">{f.recipientHint || 'Leave empty to use your connected wallet address'}</p>
             </div>
 
-            {/* Trails Widget */}
+            {/* Inline Trails Widget — token selector, amount, quote, execute */}
             {isValidRecipient && TRAILS_API_KEY && destConfig && (
-              <TrailsWidget
-                key={`trails-${selectedDest}-${actualRecipient}`}
-                apiKey={TRAILS_API_KEY}
-                mode="fund"
-                toChainId={destConfig.toChainId}
-                toToken={destConfig.toToken}
-                toAddress={destConfig.toAddress}
-                toCalldata={destConfig.toCalldata}
-                theme={isDark ? 'dark' : 'light'}
-                customCss={widgetCss}
-                onCheckoutQuote={handleCheckoutQuote}
-                onCheckoutComplete={handleBridgeComplete}
-                onCheckoutError={({ error }: { sessionId: string; error: unknown }) => {
-                  console.error('Bridge error:', error);
-                }}
-                buttonText={buttonTextMap[selectedDest]}
-              />
+              <div className="trails-inline-widget">
+                <TrailsWidget
+                  key={`trails-${selectedDest}-${actualRecipient}`}
+                  apiKey={TRAILS_API_KEY}
+                  mode="fund"
+                  renderInline
+                  toChainId={destConfig.toChainId}
+                  toToken={destConfig.toToken}
+                  toAddress={destConfig.toAddress}
+                  toCalldata={destConfig.toCalldata}
+                  hideDisconnect
+                  theme={isDark ? 'dark' : 'light'}
+                  customCss={widgetCss}
+                  onCheckoutQuote={handleCheckoutQuote}
+                  onCheckoutComplete={handleBridgeComplete}
+                  onCheckoutError={({ error }: { sessionId: string; error: unknown }) => {
+                    console.error('Bridge error:', error);
+                  }}
+                  buttonText={buttonTextMap[selectedDest]}
+                />
+              </div>
             )}
 
             {/* Invalid recipient */}
