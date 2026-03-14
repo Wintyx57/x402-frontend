@@ -1,4 +1,4 @@
-import { useQuery, useQueries, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { API_URL } from '../config';
 
 // ── Types ──────────────────────────────────────────────────────────────────────
@@ -101,33 +101,47 @@ export function useReviewStats(serviceId: string | undefined) {
   });
 }
 
+// Réponse du endpoint batch : pas de `distribution` (champ optionnel)
+type BatchStatsResponse = Record<string, { average: number; count: number }>;
+
+async function fetchBatchReviewStats(ids: string[]): Promise<BatchStatsResponse> {
+  const res = await fetch(
+    `${API_URL}/api/reviews/stats/batch?ids=${ids.join(',')}`,
+  );
+  if (!res.ok) throw new Error(`Failed to fetch batch review stats (${res.status})`);
+  return res.json();
+}
+
 /**
- * Fetch review stats for multiple services at once.
- * Uses useQueries to run fetches in parallel. Results are keyed by serviceId.
- * Only fetches if serviceIds array is non-empty.
+ * Fetch review stats for multiple services via a single batch request.
+ * Une seule requête vers `/api/reviews/stats/batch?ids=id1,id2,...`
+ * L'API retourne `{ [service_id]: { average, count } }`.
  *
  * @param serviceIds — array of service UUIDs
  * @returns Map<serviceId, ReviewStats>
  */
 export function useAllReviewStats(serviceIds: string[]): Map<string, ReviewStats> {
-  const results = useQueries({
-    queries: serviceIds.map((id) => ({
-      queryKey: ['reviewStats', id],
-      queryFn: () => fetchReviewStats(id),
-      staleTime: 5 * 60 * 1000, // 5 minutes — catalogue page can tolerate slightly stale data
-      // Only fetch services with actual reviews to avoid N×empty requests on first load.
-      // We fetch all for correctness; TanStack Query deduplicates and caches automatically.
-      enabled: true,
-    })),
+  const key = serviceIds.join(',');
+
+  const { data } = useQuery<BatchStatsResponse>({
+    queryKey: ['reviewStatsBatch', key],
+    queryFn: () => fetchBatchReviewStats(serviceIds),
+    enabled: serviceIds.length > 0,
+    staleTime: 5 * 60 * 1000, // 5 minutes — le catalogue tolère des données légèrement périmées
   });
 
   const map = new Map<string, ReviewStats>();
-  serviceIds.forEach((id, i) => {
-    const result = results[i];
-    if (result.data && result.data.count > 0) {
-      map.set(id, result.data);
+  if (data) {
+    for (const [id, stats] of Object.entries(data)) {
+      if (stats.count > 0) {
+        map.set(id, {
+          average: stats.average,
+          count: stats.count,
+          distribution: {},
+        });
+      }
     }
-  });
+  }
   return map;
 }
 
