@@ -30,13 +30,12 @@ function NavDropdown({ id, label, links, openDropdown, setOpenDropdown, pathname
       <button
         onClick={() => setOpenDropdown(isOpen ? null : id)}
         onMouseEnter={() => setOpenDropdown(id)}
-        className={`flex items-center gap-1 text-xs font-medium px-3 py-1.5 rounded transition-colors duration-200 whitespace-nowrap cursor-pointer
+        className={`flex items-center gap-1 text-xs font-medium px-3 py-1.5 rounded-lg transition-colors duration-200 whitespace-nowrap cursor-pointer
           ${hasActive ? 'text-[#FF9900]' : 'text-gray-300 hover:text-white hover:bg-white/5'}
           ${isOpen ? 'bg-white/5' : ''}`}
         aria-expanded={isOpen}
         aria-haspopup="menu"
       >
-        {/* Active indicator dot */}
         {hasActive && (
           <span className="w-1 h-1 rounded-full bg-[#FF9900] shrink-0" aria-hidden="true" />
         )}
@@ -53,8 +52,9 @@ function NavDropdown({ id, label, links, openDropdown, setOpenDropdown, pathname
       {isOpen && (
         <div
           role="menu"
-          className="absolute top-full left-0 mt-1 min-w-[180px] bg-[#1a1f2e] border border-white/10 rounded-lg shadow-xl
-                     py-1 z-50 animate-fade-in"
+          className="absolute top-full left-0 mt-1.5 min-w-[200px] rounded-xl py-1.5 z-50 animate-fade-in
+                     bg-[#131921]/95 dark:bg-[#131921]/95 backdrop-blur-2xl
+                     border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)]"
           onMouseLeave={() => setOpenDropdown(null)}
         >
           {links.map(({ to, label: linkLabel }) => {
@@ -66,10 +66,10 @@ function NavDropdown({ id, label, links, openDropdown, setOpenDropdown, pathname
                 role="menuitem"
                 onClick={() => setOpenDropdown(null)}
                 aria-current={isActive ? 'page' : undefined}
-                className={`flex items-center gap-2 text-sm no-underline px-4 py-2 transition-colors duration-150 ${
+                className={`flex items-center gap-2 text-sm no-underline px-4 py-2 mx-1.5 rounded-lg transition-colors duration-150 ${
                   isActive
                     ? 'text-[#FF9900] bg-[#FF9900]/10'
-                    : 'text-gray-300 hover:text-white hover:bg-white/5'
+                    : 'text-gray-300 hover:text-white hover:bg-white/8'
                 }`}
               >
                 {isActive && (
@@ -91,6 +91,7 @@ function Navbar() {
   const [localSearch, setLocalSearch] = useState('');
   const [openDropdown, setOpenDropdown] = useState<DropdownId>(null);
   const [mobileAccordion, setMobileAccordion] = useState<DropdownId>(null);
+  const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -102,6 +103,14 @@ function Navbar() {
   const searchValue = onServicesPage ? (searchParams.get('q') || '') : localSearch;
 
   const closeMobile = () => setMobileOpen(false);
+
+  // Scroll detection for glass effect intensity
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 10);
+    handleScroll(); // init
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // Close dropdown on click outside or Escape
   const handleClickOutside = useCallback((e: MouseEvent) => {
@@ -168,7 +177,6 @@ function Navbar() {
         (el) => !el.closest('[aria-hidden="true"]'),
       );
 
-    // Focus the first focusable element when the menu opens
     const firstFocusable = getFocusableElements()[0];
     firstFocusable?.focus();
 
@@ -268,7 +276,14 @@ function Navbar() {
 
   return (
     <>
-      <nav className="sticky top-0 z-50 bg-[#131921]/90 backdrop-blur-xl border-b border-white/8" aria-label="Main navigation">
+      <nav
+        className={`sticky top-0 z-50 transition-all duration-300 ${
+          scrolled
+            ? 'bg-[#0f1219]/80 backdrop-blur-2xl border-b border-white/10 shadow-[0_1px_20px_rgba(0,0,0,0.3)]'
+            : 'bg-transparent backdrop-blur-sm border-b border-transparent'
+        }`}
+        aria-label="Main navigation"
+      >
         <div className="max-w-7xl mx-auto px-4 h-14 flex items-center gap-4">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 no-underline shrink-0" aria-label="x402 Bazaar — Home">
@@ -287,9 +302,12 @@ function Navbar() {
                 onChange={handleSearchChange}
                 placeholder={t.nav.searchPlaceholder}
                 autoComplete="off"
-                className="w-full bg-white/8 border border-white/10 rounded-lg pl-10 pr-9 py-2 text-sm text-white
-                           placeholder-gray-500 focus:outline-none focus:border-[#FF9900]/50 focus:bg-white/10
-                           focus:ring-1 focus:ring-[#FF9900]/20 transition-all duration-200"
+                className={`w-full rounded-xl pl-10 pr-9 py-2 text-sm text-white
+                           placeholder-gray-500 focus:outline-none transition-all duration-300
+                           ${scrolled
+                             ? 'bg-white/8 border border-white/10 focus:border-[#FF9900]/50 focus:bg-white/12 focus:ring-1 focus:ring-[#FF9900]/20'
+                             : 'bg-white/5 border border-white/8 focus:border-[#FF9900]/40 focus:bg-white/10'
+                           }`}
               />
               <svg
                 className="absolute left-3 w-4 h-4 text-gray-500 pointer-events-none"
@@ -346,7 +364,15 @@ function Navbar() {
         </div>
 
         {/* Nav strip — desktop dropdowns */}
-        <div ref={navStripRef} data-nav-strip className="hidden md:block border-t border-white/5 bg-[#232f3e]">
+        <div
+          ref={navStripRef}
+          data-nav-strip
+          className={`hidden md:block border-t transition-all duration-300 ${
+            scrolled
+              ? 'border-white/8 bg-white/[0.03]'
+              : 'border-white/5 bg-transparent'
+          }`}
+        >
           <div className="max-w-7xl mx-auto px-4 flex items-center gap-1 h-10">
             {dropdownGroups.map(({ id, label, links }) => (
               <NavDropdown
@@ -398,8 +424,8 @@ function Navbar() {
           {/* Panel — slides in from left */}
           <div
             ref={mobilePanelRef}
-            className={`relative w-[280px] max-w-[85vw] h-full bg-[#131921] border-r border-white/8
-                        flex flex-col transition-transform duration-300 ease-out shadow-2xl ${
+            className={`relative w-[280px] max-w-[85vw] h-full bg-[#0f1219]/95 backdrop-blur-2xl border-r border-white/10
+                        flex flex-col transition-transform duration-300 ease-out shadow-[4px_0_30px_rgba(0,0,0,0.4)] ${
               mobileOpen ? 'translate-x-0' : '-translate-x-full'
             }`}
           >
@@ -415,7 +441,7 @@ function Navbar() {
                     onChange={handleSearchChange}
                     placeholder={t.nav.searchPlaceholder}
                     autoComplete="off"
-                    className="w-full bg-white/8 border border-white/10 rounded-lg pl-9 pr-4 py-2.5 text-sm text-white
+                    className="w-full bg-white/8 border border-white/10 rounded-xl pl-9 pr-4 py-2.5 text-sm text-white
                                placeholder-gray-500 focus:outline-none focus:border-[#FF9900]/50
                                transition-all duration-200"
                   />

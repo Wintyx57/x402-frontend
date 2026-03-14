@@ -273,9 +273,10 @@ html.light ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); }
 html.light ::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.25); }
 
 /* Navbar + Footer light */
-html.light nav.sticky {
-  background: rgba(255, 255, 255, 0.85);
-  border-bottom-color: rgba(0, 0, 0, 0.08);
+html.light nav.sticky,
+html.light nav {
+  background: rgba(255, 255, 255, 0.7);
+  border-bottom-color: rgba(0, 0, 0, 0.06);
 }
 
 html.light nav .text-white,
@@ -288,7 +289,7 @@ html.light nav .text-gray-500 {
 }
 
 html.light [data-nav-strip] {
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.5);
 }
 
 html.light nav input {
