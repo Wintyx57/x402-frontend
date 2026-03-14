@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { TrailsWidget } from '0xtrails';
 import { useAccount, useSwitchChain } from 'wagmi';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
@@ -17,6 +17,11 @@ function ChainCard({
   isSelected: boolean; onClick: () => void; disabled?: boolean;
 }) {
   const img = chainImageUrl(chainId);
+  const [imgError, setImgError] = useState(false);
+  const handleImgError = useCallback(() => setImgError(true), []);
+
+  const showImg = img && !imgError;
+
   return (
     <button
       type="button"
@@ -35,8 +40,8 @@ function ChainCard({
           </svg>
         </span>
       )}
-      {img ? (
-        <img src={img} alt={name} className="w-9 h-9 rounded-full ring-2 ring-white/10" />
+      {showImg ? (
+        <img src={img} alt={name} className="w-9 h-9 rounded-full ring-2 ring-white/10" onError={handleImgError} />
       ) : (
         <div className={`w-9 h-9 rounded-full ${color} flex items-center justify-center text-white font-bold text-sm ring-2 ring-white/10`}>
           {name.charAt(0)}
