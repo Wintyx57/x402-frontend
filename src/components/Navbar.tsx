@@ -276,8 +276,10 @@ function Navbar() {
 
   return (
     <>
+      {/* Spacer — reserves space for the fixed navbar */}
+      <div className="h-14 md:h-24" />
       <nav
-        className={`sticky top-0 z-50 transition-all duration-300 ${
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           scrolled
             ? 'bg-[#0f1219]/80 backdrop-blur-2xl border-b border-white/10 shadow-[0_1px_20px_rgba(0,0,0,0.3)]'
             : 'bg-transparent backdrop-blur-sm border-b border-transparent'
