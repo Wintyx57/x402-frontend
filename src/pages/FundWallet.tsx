@@ -21,9 +21,9 @@ export default function FundWallet() {
   const howRef = useReveal();
 
   const steps = [
-    { icon: '1', title: f.step1Title || 'Choose Any Token', desc: f.step1Desc || 'Use any token from any chain. Trails finds the best route to USDC automatically.' },
-    { icon: '2', title: f.step2Title || 'One-Click Bridge', desc: f.step2Desc || 'Routes and bridges to your chosen destination — one transaction.' },
-    { icon: '3', title: f.step3Title || 'USDC on Destination', desc: f.step3Desc || 'USDC arrives on your chain. Ready for API payments.' },
+    { icon: '1', title: f.step1Title || 'Choose Any Token', desc: f.step1Desc || 'Use any token from any chain. Trails finds the best route to USDC automatically.', color: 'from-blue-500/20 to-blue-500/5' },
+    { icon: '2', title: f.step2Title || 'One-Click Bridge', desc: f.step2Desc || 'Routes and bridges to your chosen destination — one transaction.', color: 'from-[#FF9900]/20 to-[#FF9900]/5' },
+    { icon: '3', title: f.step3Title || 'USDC on Destination', desc: f.step3Desc || 'USDC arrives on your chain. Ready for API payments.', color: 'from-green-500/20 to-green-500/5' },
   ];
 
   const faqs = [
@@ -35,36 +35,79 @@ export default function FundWallet() {
 
   return (
     <TrailsProvider config={{ trailsApiKey: TRAILS_API_KEY }}>
-    <main className="min-h-screen animate-page-enter">
-      {/* Hero */}
-      <section ref={heroRef} className="reveal-section text-center py-16 px-4">
+    <main className="min-h-screen animate-page-enter relative overflow-hidden">
+
+      {/* ===== Background Effects ===== */}
+      {/* Main glow */}
+      <div
+        aria-hidden="true"
+        className="absolute top-32 left-1/2 -translate-x-1/2
+                   w-[800px] h-[600px] bg-[#FF9900]/15 rounded-full blur-[160px] animate-glow-pulse pointer-events-none"
+      />
+      {/* Secondary blue glow (left) */}
+      <div
+        aria-hidden="true"
+        className="absolute top-[500px] -left-40
+                   w-[500px] h-[500px] bg-blue-500/8 rounded-full blur-[120px] pointer-events-none"
+      />
+      {/* Tertiary purple glow (right) */}
+      <div
+        aria-hidden="true"
+        className="absolute top-[700px] -right-40
+                   w-[400px] h-[400px] bg-purple-500/8 rounded-full blur-[120px] pointer-events-none"
+      />
+      {/* Floating grid */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          backgroundImage: `
+            linear-gradient(rgba(255,153,0,0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,153,0,0.03) 1px, transparent 1px)
+          `,
+          backgroundSize: '50px 50px',
+          maskImage: 'radial-gradient(ellipse 70% 50% at 50% 30%, black 30%, transparent 100%)',
+          WebkitMaskImage: 'radial-gradient(ellipse 70% 50% at 50% 30%, black 30%, transparent 100%)',
+        }}
+      />
+
+      {/* ===== Hero ===== */}
+      <section ref={heroRef} className="reveal-section relative z-10 text-center py-16 sm:py-20 px-4">
         <div className="max-w-3xl mx-auto">
-          <span className="inline-block text-xs font-semibold tracking-wider uppercase text-[#FF9900] mb-4">
-            Powered by Trails + Multi-Chain
-          </span>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
+          <div className="flex items-center justify-center gap-2 mb-6">
+            <span className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1 rounded-full
+                           bg-[#FF9900]/10 border border-[#FF9900]/20 text-[#FF9900]">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#FF9900] inline-block animate-pulse" />
+              Powered by Trails
+            </span>
+            <span className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1 rounded-full
+                           bg-blue-500/10 border border-blue-500/20 text-blue-400">
+              Multi-Chain
+            </span>
+          </div>
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-5">
             {f.heroTitle || 'Fund Your Wallet'}
           </h1>
-          <p className="text-base sm:text-lg text-gray-400 max-w-xl mx-auto">
+          <p className="text-base sm:text-lg text-gray-400 max-w-xl mx-auto leading-relaxed">
             {f.heroSubtitle || 'Bridge USDC to Base, SKALE, or Polygon in 1 click. Pay for APIs with ultra-low gas.'}
           </p>
         </div>
       </section>
 
-      {/* Bridge Card */}
-      <section ref={widgetRef} className="reveal-section px-4 pb-16">
+      {/* ===== Bridge Card ===== */}
+      <section ref={widgetRef} className="reveal-section relative z-10 px-4 pb-20">
         <BridgeCard />
       </section>
 
-      {/* How it works */}
-      <section ref={howRef} className="reveal-section px-4 pb-16">
+      {/* ===== How it works ===== */}
+      <section ref={howRef} className="reveal-section relative z-10 px-4 pb-20">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-2xl font-bold text-center mb-10">{f.howTitle || 'How It Works'}</h2>
           <div className="grid sm:grid-cols-3 gap-6">
             {steps.map((s, i) => (
-              <div key={i} className="glass-card rounded-xl p-6 text-center space-y-3">
-                <div className="w-10 h-10 mx-auto rounded-full bg-[#FF9900]/20 text-[#FF9900] flex items-center justify-center font-bold text-lg">
-                  {s.icon}
+              <div key={i} className="glass-card rounded-xl p-6 text-center space-y-3 hover:border-[#FF9900]/20 transition-all duration-300">
+                <div className={`w-12 h-12 mx-auto rounded-2xl bg-gradient-to-b ${s.color} flex items-center justify-center`}>
+                  <span className="text-[#FF9900] font-bold text-lg">{s.icon}</span>
                 </div>
                 <h3 className="font-semibold">{s.title}</h3>
                 <p className="text-sm text-gray-400">{s.desc}</p>
@@ -74,13 +117,13 @@ export default function FundWallet() {
         </div>
       </section>
 
-      {/* FAQ */}
-      <section className="px-4 pb-20">
+      {/* ===== FAQ ===== */}
+      <section className="relative z-10 px-4 pb-20">
         <div className="max-w-2xl mx-auto">
           <h2 className="text-2xl font-bold text-center mb-8">{f.faqTitle || 'Frequently Asked Questions'}</h2>
-          <div className="space-y-4">
+          <div className="space-y-3">
             {faqs.map((faq, i) => (
-              <details key={i} className="glass-card rounded-xl p-4 group">
+              <details key={i} className="glass-card rounded-xl p-4 group hover:border-[#FF9900]/20 transition-all duration-300">
                 <summary className="font-medium cursor-pointer list-none flex items-center justify-between">
                   {faq.q}
                   <svg className="w-4 h-4 text-gray-400 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
