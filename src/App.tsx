@@ -87,7 +87,9 @@ const Quickstart = lazy(() => import('./pages/Quickstart'));
 const AdminCommunityAgent = lazy(() => import('./pages/AdminCommunityAgent'));
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 const FundWallet = lazy(() => import('./pages/FundWallet'));
+const ApiKeys = lazy(() => import('./pages/ApiKeys'));
 const ServiceDetail = lazy(() => import('./pages/ServiceDetail'));
+const Leaderboard = lazy(() => import('./pages/Leaderboard'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
 export default function App() {
@@ -121,6 +123,7 @@ export default function App() {
             <Route path="/for-providers" element={<ForProviders />} />
             <Route path="/budget" element={<Budget />} />
             <Route path="/fund" element={<FundWallet />} />
+            <Route path="/api-keys" element={<ApiKeys />} />
             <Route path="/creators" element={<Navigate to="/for-providers" replace />} />
             <Route path="/creators/dashboard" element={<CreatorDashboard />} />
             <Route path="/creators/onboarding" element={<Navigate to="/register" replace />} />
@@ -128,6 +131,7 @@ export default function App() {
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/admin/community-agent" element={<AdminCommunityAgent />} />
             <Route path="/services/:id" element={<ServiceDetail />} />
+            <Route path="/leaderboard" element={<Leaderboard />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>

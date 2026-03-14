@@ -426,6 +426,19 @@ export default function ServiceDetail() {
                   {service.trust_score}/100
                 </span>
               )}
+              {(service.free_calls_per_month ?? 0) > 0 && (
+                <span
+                  className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded font-medium
+                             bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                  title={`${service.free_calls_per_month} free calls per month — no payment required for these calls`}
+                  aria-label={`Free tier: ${service.free_calls_per_month} calls per month at no cost`}
+                >
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/>
+                  </svg>
+                  {service.free_calls_per_month} Free/mo
+                </span>
+              )}
             </div>
 
             {/* Star rating summary (inline in header) */}

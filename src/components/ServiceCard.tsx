@@ -194,6 +194,19 @@ function ServiceCard({ service, lastActivity, healthStatus = null, uptimePercent
                 {trustBadge.label}
               </span>
             )}
+            {(service.free_calls_per_month ?? 0) > 0 && (
+              <span
+                className="text-[11px] px-1.5 py-0.5 rounded shrink-0 font-medium flex items-center gap-0.5
+                           bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                aria-label={`${service.free_calls_per_month} free calls per month`}
+                title="Free tier available — no payment required for these calls"
+              >
+                <svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/>
+                </svg>
+                {service.free_calls_per_month} Free/mo
+              </span>
+            )}
           </div>
           <span className="inline-block text-xs mt-0.5 text-gray-300 capitalize">
             {service.tags?.find((tag: string) => !['x402-native', 'live'].includes(tag)) || service.tags?.[0]}

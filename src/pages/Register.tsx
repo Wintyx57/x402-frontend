@@ -109,7 +109,7 @@ export default function Register() {
   ];
 
   const [form, setForm] = useState({
-    name: '', description: '', url: '', price: '', tags: '', category: 'utility', method: 'GET', requiredParams: ''
+    name: '', description: '', url: '', price: '', tags: '', category: 'utility', method: 'GET', requiredParams: '', freeCallsPerMonth: ''
   });
   const [wizardStep, setWizardStep] = useState(1);
   const [paymentState, setPaymentState] = useState<'idle' | 'paying' | 'registering' | 'done' | 'error'>('idle');
@@ -165,6 +165,11 @@ export default function Register() {
     const params = form.requiredParams.split(',').map(p => p.trim()).filter(Boolean);
     if (params.length > 0) {
       payload.required_parameters = { required: params };
+    }
+    // Free tier: only include if > 0
+    const freeCallsVal = parseInt(form.freeCallsPerMonth, 10);
+    if (!isNaN(freeCallsVal) && freeCallsVal > 0) {
+      payload.free_calls_per_month = Math.min(freeCallsVal, 1000);
     }
     return payload;
   };
@@ -570,6 +575,37 @@ export default function Register() {
               <p id="params-hint" className="text-[11px] text-gray-600 mt-1">Comma-separated · Prevents failed calls &amp; wasted USDC</p>
             </div>
 
+            {/* Free Calls Per Month */}
+            <div>
+              <label className="flex items-center text-sm text-gray-400 mb-1.5">
+                Free Calls per Month
+                <FieldTooltip tip="Offer X free calls per user per month. When quota is reached, normal USDC payment applies. Set to 0 to disable free tier. Max 1000. Great for user acquisition.">
+                  ?
+                </FieldTooltip>
+              </label>
+              <div className="relative">
+                <input
+                  id="reg-free-calls"
+                  type="number"
+                  min="0"
+                  max="1000"
+                  step="1"
+                  value={form.freeCallsPerMonth}
+                  onChange={e => setForm({ ...form, freeCallsPerMonth: e.target.value })}
+                  placeholder="0"
+                  className="w-full bg-[#1a1f2e] border border-white/10 rounded-lg pl-4 pr-20 py-2.5 text-white placeholder-gray-600
+                             focus:outline-none focus:border-emerald-500/40 transition-all duration-300"
+                  aria-describedby="free-calls-hint"
+                />
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-500 pointer-events-none font-mono">
+                  calls/mo
+                </span>
+              </div>
+              <p id="free-calls-hint" className="text-[11px] text-gray-600 mt-1">
+                0 = disabled · max 1000 · resets monthly per user
+              </p>
+            </div>
+
             {error && (
               <div role="alert" aria-live="assertive" className="bg-red-500/10 border border-red-500/50 rounded-xl p-4 text-red-300 text-sm font-medium">
                 {error}
@@ -681,6 +717,14 @@ export default function Register() {
                 <div className="flex items-center justify-between py-2 border-b border-white/5">
                   <span className="text-sm text-gray-400">Required params</span>
                   <span className="text-sm text-amber-300 font-mono">{form.requiredParams}</span>
+                </div>
+              )}
+              {parseInt(form.freeCallsPerMonth, 10) > 0 && (
+                <div className="flex items-center justify-between py-2 border-b border-white/5">
+                  <span className="text-sm text-gray-400">Free calls/month</span>
+                  <span className="text-sm text-emerald-400 font-medium">
+                    {Math.min(parseInt(form.freeCallsPerMonth, 10), 1000)} per user
+                  </span>
                 </div>
               )}
             </div>

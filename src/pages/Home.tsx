@@ -364,152 +364,105 @@ export default function Home() {
         {/* Animated grid */}
         <FloatingGrid />
 
-        <div className="relative z-10 max-w-6xl mx-auto">
-          {/* Split layout: video left + content right */}
-          <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
+        {/* Subtle background video */}
+        <div aria-hidden="true" className="absolute inset-0 pointer-events-none overflow-hidden">
+          <video
+            className="absolute inset-0 w-full h-full object-cover opacity-[0.06]"
+            autoPlay
+            muted
+            playsInline
+            loop
+            src="/hero-1.mp4"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#0a0a0a]" />
+        </div>
 
-            {/* LEFT — Video playlist */}
-            <HeroVideo />
-
-            {/* RIGHT — Content */}
-            <div className="w-full lg:w-1/2 text-center lg:text-left">
-              {/* Badges */}
-              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2 mb-6 animate-fade-in-up">
-                <span className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1 rounded-full
-                                 bg-blue-500/10 border border-blue-500/20 text-blue-400">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-400 inline-block" />
-                  {t.home.badgeBase}
-                </span>
-                <span className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1 rounded-full
-                                 bg-[#FF9900]/10 border border-[#FF9900]/20 text-[#FF9900]">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#FF9900] inline-block" />
-                  {t.home.badgeX402}
-                </span>
-                <span className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1 rounded-full
-                                 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block" />
-                  {t.home.badgeSkale}
-                </span>
-                <a
-                  href="https://github.com/Wintyx57/x402-bazaar"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1 rounded-full
-                             bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:border-white/20 transition-colors no-underline"
-                >
-                  <GitHubIcon />
-                  {t.home.badgeOpenSource}
-                </a>
-              </div>
-
-              {/* Headline */}
-              <h1 className="text-3xl sm:text-5xl md:text-5xl lg:text-5xl font-bold text-white mb-4 animate-fade-in-up delay-100 leading-tight">
-                {t.home.heroTitle}{' '}
-                <span className="gradient-text">{t.home.heroTitleHighlight}</span>
-              </h1>
-
-              {/* Subline */}
-              <p className="text-gray-400 text-base sm:text-lg max-w-2xl mb-8 animate-fade-in-up delay-200">
-                {t.home.heroSubtitle}
-              </p>
-
-              {/* CTA buttons */}
-              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 mb-3 animate-fade-in-up delay-200">
-                <Link
-                  to="/services"
-                  className="gradient-btn text-white text-base font-semibold px-10 py-3.5 rounded-xl no-underline
-                             transition-all duration-200 hover:brightness-110 hover:scale-[1.02] animate-pulse-glow
-                             shadow-[0_0_24px_rgba(255,153,0,0.25)]"
-                  onClick={() => trackEvent('cta_hero_click', { variant: 'explore' })}
-                >
-                  {t.home.exploreCTA}
-                </Link>
-                <Link
-                  to="/register"
-                  className="border border-white/15 text-gray-300 text-base font-medium px-8 py-3.5 rounded-xl no-underline
-                             transition-all duration-200 hover:border-[#FF9900]/30 hover:text-white bg-transparent"
-                  onClick={() => trackEvent('cta_hero_click', { variant: 'list' })}
-                >
-                  {t.home.listApiCTA} →
-                </Link>
-              </div>
-
-              {/* Compare nudge */}
-              <div className="flex justify-center lg:justify-start mb-8 animate-fade-in-up delay-200">
-                <Link
-                  to="/compare"
-                  className="text-xs text-[#FF9900]/70 hover:text-[#FF9900] no-underline transition-colors duration-200 underline-offset-2 hover:underline"
-                >
-                  {t.home.compareCommission} →
-                </Link>
-              </div>
-
-              {/* CLI snippet */}
-              <div className="animate-fade-in-up delay-300 mb-8">
-                <button
-                  onClick={handleCopy}
-                  aria-label={t.home.cliCopyLabel}
-                  className="inline-flex items-center gap-3 bg-[#0d1117] border border-[#FF9900]/20 rounded-xl px-5 py-3 font-mono text-sm
-                             hover:border-[#FF9900]/40 transition-all duration-300 group cursor-pointer"
-                >
-                  <span className="text-gray-500 select-none">$</span>
-                  <span className="text-[#FF9900] font-medium">npx x402-bazaar init</span>
-                  <span className="text-gray-500 group-hover:text-[#FF9900] transition-colors">
-                    {copied ? <IconCheck /> : <IconCopy />}
-                  </span>
-                </button>
-                <p className="text-gray-400 text-xs mt-2">{t.home.cliHint}</p>
-              </div>
-            </div>
+        <div className="relative z-10 max-w-4xl mx-auto text-center">
+          {/* Badges */}
+          <div className="flex flex-wrap items-center justify-center gap-2 mb-8 animate-fade-in-up">
+            <span className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1 rounded-full
+                             bg-blue-500/10 border border-blue-500/20 text-blue-400">
+              <span className="w-1.5 h-1.5 rounded-full bg-blue-400 inline-block" />
+              {t.home.badgeBase}
+            </span>
+            <span className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1 rounded-full
+                             bg-[#FF9900]/10 border border-[#FF9900]/20 text-[#FF9900]">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#FF9900] inline-block" />
+              {t.home.badgeX402}
+            </span>
+            <span className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1 rounded-full
+                             bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block" />
+              {t.home.badgeSkale}
+            </span>
+            <a
+              href="https://github.com/Wintyx57/x402-bazaar"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1 rounded-full
+                         bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:border-white/20 transition-colors no-underline"
+            >
+              <GitHubIcon />
+              {t.home.badgeOpenSource}
+            </a>
           </div>
 
-          {/* Live stats — full width below split */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 mt-12 animate-fade-in-up delay-300">
-            <div className="glass-card rounded-xl p-4 text-center">
-              <div className="text-2xl sm:text-3xl font-bold gradient-text mb-1">
-                {loading
-                  ? <CountUp end={70} suffix="+" />
-                  : <CountUp end={services.length > 0 ? services.length : 70} suffix="+" />}
-              </div>
-              <div className="text-xs text-gray-400 uppercase tracking-wider">{t.home.statApis}</div>
-            </div>
-            <div className="glass-card rounded-xl p-4 text-center">
-              <div className="text-2xl sm:text-3xl font-bold text-white mb-1">
-                <CountUp end={stats?.totalPayments || 170} suffix="+" />
-              </div>
-              <div className="text-xs text-gray-400 uppercase tracking-wider">{t.home.statPayments}</div>
-            </div>
-            <div className="glass-card rounded-xl p-4 text-center">
-              <div className="text-2xl sm:text-3xl font-bold text-[#34D399] mb-1">
-                <CountUp end={stats?.externalProviders || 3} />
-              </div>
-              <div className="text-xs text-gray-400 uppercase tracking-wider">{t.home.statProviders}</div>
-            </div>
-            <div className="glass-card rounded-xl p-4 text-center">
-              <div className="text-2xl sm:text-3xl font-bold text-[#60A5FA] mb-1">
-                <CountUp end={stats?.integrations || 8} />
-              </div>
-              <div className="text-xs text-gray-400 uppercase tracking-wider">{t.home.statIntegrations}</div>
-            </div>
+          {/* Headline — concis et percutant */}
+          <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold text-white mb-6 animate-fade-in-up delay-100 leading-tight tracking-tight">
+            The API Marketplace
+            <br />
+            <span className="gradient-text">for AI Agents</span>
+          </h1>
+
+          {/* Subline — bénéfice immédiat */}
+          <p className="text-gray-400 text-lg sm:text-xl max-w-2xl mx-auto mb-10 animate-fade-in-up delay-200 leading-relaxed">
+            No API keys. No subscriptions. Your AI agent discovers, calls, and pays APIs automatically in USDC.
+          </p>
+
+          {/* 2 CTAs seulement */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12 animate-fade-in-up delay-200">
+            <Link
+              to="/services"
+              className="gradient-btn text-white text-base font-semibold px-10 py-4 rounded-xl no-underline
+                         transition-all duration-200 hover:brightness-110 hover:scale-[1.02] animate-pulse-glow
+                         shadow-[0_0_24px_rgba(255,153,0,0.25)] w-full sm:w-auto text-center"
+              onClick={() => trackEvent('cta_hero_click', { variant: 'explore' })}
+            >
+              Explore 74+ APIs
+            </Link>
+            <Link
+              to="/register"
+              className="border border-[#FF9900]/40 text-[#FF9900] text-base font-semibold px-8 py-4 rounded-xl no-underline
+                         transition-all duration-200 hover:border-[#FF9900]/70 hover:bg-[#FF9900]/5 bg-transparent
+                         w-full sm:w-auto text-center"
+              onClick={() => trackEvent('cta_hero_click', { variant: 'list' })}
+            >
+              List Your API — 95% Revenue
+            </Link>
           </div>
 
-          {/* Revenue split banner */}
-          <div className="mt-8 animate-fade-in-up delay-300">
-            <div className="inline-flex items-center gap-3 bg-[#FF9900]/8 border border-[#FF9900]/25 rounded-xl px-5 py-3 mx-auto">
-              <div className="w-8 h-8 rounded-full bg-[#FF9900]/15 border border-[#FF9900]/30 flex items-center justify-center shrink-0">
-                <svg className="w-4 h-4 text-[#FF9900]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+          {/* Stats bar — sous les CTAs, pas dans le hero */}
+          <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 animate-fade-in-up delay-300">
+            {[
+              {
+                value: loading ? '70+' : `${services.length > 0 ? services.length : 74}+`,
+                label: 'APIs',
+                color: 'text-[#FF9900]',
+              },
+              { value: '3', label: 'Blockchains', color: 'text-blue-400' },
+              { value: '10', label: 'Integrations', color: 'text-emerald-400' },
+              { value: '1543', label: 'Tests', color: 'text-violet-400' },
+            ].map((stat, i) => (
+              <div key={i} className="flex items-center gap-2">
+                <span className={`text-xl font-bold ${stat.color}`}>{stat.value}</span>
+                <span className="text-gray-500 text-sm">{stat.label}</span>
+                {i < 3 && <span className="text-gray-700 text-lg font-light hidden sm:inline">•</span>}
               </div>
-              <div className="text-left">
-                <p className="text-[#FF9900] text-sm font-bold leading-tight">Revenue split 95/5 — Providers keep 95%</p>
-                <p className="text-gray-400 text-xs mt-0.5">Native on-chain split · No subscription · Instant USDC payments</p>
-              </div>
-            </div>
+            ))}
           </div>
 
           {/* Trust bar — real providers */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-6 animate-fade-in-up delay-300">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-8 animate-fade-in-up delay-300">
             <span className="text-xs text-gray-500 uppercase tracking-widest shrink-0">Trusted by</span>
             <div className="flex flex-wrap items-center justify-center gap-2">
               {[
@@ -551,6 +504,32 @@ export default function Home() {
               ))}
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* ===== NO WALLET? NO PROBLEM. ===== */}
+      <section className="max-w-4xl mx-auto px-4 mb-16">
+        <div className="glass-card rounded-2xl p-8 sm:p-10 border border-blue-500/20 bg-gradient-to-br from-blue-500/5 to-violet-500/5 flex flex-col sm:flex-row items-center gap-6 sm:gap-10">
+          {/* Icone clé */}
+          <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-blue-500/10 border border-blue-500/25 shrink-0" aria-hidden="true">
+            <svg className="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z" />
+            </svg>
+          </div>
+          <div className="flex-1 text-center sm:text-left">
+            <h2 className="text-xl sm:text-2xl font-bold text-white mb-2">No Wallet? No Problem.</h2>
+            <p className="text-gray-400 text-sm sm:text-base leading-relaxed">
+              Use a simple API key to call any service. No crypto wallet needed. We handle the payments.
+            </p>
+          </div>
+          <Link
+            to="/api-keys"
+            className="shrink-0 px-6 py-3 bg-blue-500/15 hover:bg-blue-500/25 border border-blue-500/30 hover:border-blue-500/50
+                       text-blue-300 font-semibold rounded-xl transition-all duration-200 text-sm whitespace-nowrap no-underline"
+            onClick={() => trackEvent('cta_apikeys_click', { source: 'hero_section' })}
+          >
+            Get Your API Key →
+          </Link>
         </div>
       </section>
 

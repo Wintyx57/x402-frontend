@@ -6,6 +6,15 @@ import useSEO from '../hooks/useSEO';
 import { CHAIN_CONFIG } from '../config';
 import GitHubIcon from '../components/icons/GitHubIcon';
 
+// ---- Icone check ----
+function CheckIcon() {
+  return (
+    <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+    </svg>
+  );
+}
+
 export default function Pricing() {
   const { t } = useTranslation();
   useSEO({
@@ -157,14 +166,150 @@ export default function Pricing() {
   ];
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-10">
+    <div className="max-w-5xl mx-auto px-4 py-10">
       {/* Hero */}
       <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2 animate-fade-in-up">
         {t.pricing.title}
       </h1>
-      <p className="text-gray-400 text-lg mb-8 animate-fade-in-up delay-100">
+      <p className="text-gray-400 text-lg mb-12 animate-fade-in-up delay-100">
         {t.pricing.subtitle}
       </p>
+
+      {/* ===== SAAS TIERS ===== */}
+      <section className="mb-16" aria-label="Subscription plans">
+        <div className="text-center mb-10">
+          <p className="text-[#FF9900] text-xs font-semibold uppercase tracking-widest mb-3">Plans</p>
+          <h2 className="text-2xl sm:text-3xl font-bold text-white">Simple, transparent pricing</h2>
+          <p className="text-gray-400 text-sm mt-3 max-w-md mx-auto">
+            Start free, scale as you grow. Pay-per-call on top — no surprise bills.
+          </p>
+        </div>
+
+        <div className="grid sm:grid-cols-3 gap-6 items-stretch">
+
+          {/* FREE */}
+          <div className="glass-card rounded-2xl p-7 border border-white/10 flex flex-col animate-fade-in-up">
+            <div className="mb-6">
+              <p className="text-gray-400 text-xs font-semibold uppercase tracking-widest mb-3">Free</p>
+              <div className="flex items-end gap-1 mb-1">
+                <span className="text-4xl font-bold text-white">$0</span>
+                <span className="text-gray-500 text-sm mb-1">/month</span>
+              </div>
+              <p className="text-gray-500 text-xs">Forever free. No credit card required.</p>
+            </div>
+
+            <ul className="space-y-3 flex-1 mb-8" role="list">
+              {[
+                '500 API calls / month',
+                'Micro APIs only (≤$0.001/call)',
+                'Basic analytics',
+                'Community support',
+                '1 API key',
+              ].map((item) => (
+                <li key={item} className="flex items-start gap-2.5 text-sm text-gray-300">
+                  <span className="text-emerald-400 mt-0.5"><CheckIcon /></span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+
+            <Link
+              to="/api-keys"
+              className="w-full text-center glass text-gray-300 px-6 py-3 rounded-xl text-sm font-semibold
+                         no-underline hover:border-white/30 hover:text-white transition-all duration-200 block"
+            >
+              Get Started Free
+            </Link>
+          </div>
+
+          {/* PRO — mis en avant */}
+          <div className="relative rounded-2xl p-[1.5px] bg-gradient-to-b from-[#FF9900] via-[#FF9900]/60 to-[#FF9900]/20 flex flex-col animate-fade-in-up shadow-[0_0_40px_rgba(255,153,0,0.15)]" style={{ animationDelay: '80ms' }}>
+            {/* Badge Most Popular */}
+            <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 z-10">
+              <span className="bg-gradient-to-r from-[#FF9900] to-[#e68a00] text-white text-[10px] font-bold uppercase tracking-widest px-4 py-1.5 rounded-full shadow-lg whitespace-nowrap">
+                Most Popular
+              </span>
+            </div>
+            <div className="glass-card rounded-[14px] p-7 flex flex-col h-full bg-[#FF9900]/5">
+              <div className="mb-6">
+                <p className="text-[#FF9900] text-xs font-semibold uppercase tracking-widest mb-3">Pro</p>
+                <div className="flex items-end gap-1 mb-1">
+                  <span className="text-4xl font-bold text-white">$29</span>
+                  <span className="text-gray-400 text-sm mb-1">/month</span>
+                </div>
+                <p className="text-gray-400 text-xs">Everything in Free, plus more power.</p>
+              </div>
+
+              <ul className="space-y-3 flex-1 mb-8" role="list">
+                {[
+                  '10,000 API calls / month',
+                  'All APIs (all price tiers)',
+                  'Advanced analytics dashboard',
+                  'Priority support (48h SLA)',
+                  '5 API keys',
+                  'Free listing for your own APIs',
+                ].map((item) => (
+                  <li key={item} className="flex items-start gap-2.5 text-sm text-gray-200">
+                    <span className="text-[#FF9900] mt-0.5"><CheckIcon /></span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+
+              <a
+                href="mailto:contact.x402bazaar@gmail.com?subject=Pro%20Trial%20Request"
+                className="w-full text-center gradient-btn text-white px-6 py-3 rounded-xl text-sm font-semibold
+                           no-underline hover:brightness-110 hover:scale-[1.01] transition-all duration-200 block"
+              >
+                Start Pro Trial
+              </a>
+            </div>
+          </div>
+
+          {/* ENTERPRISE */}
+          <div className="glass-card rounded-2xl p-7 border border-violet-500/20 bg-violet-500/5 flex flex-col animate-fade-in-up" style={{ animationDelay: '160ms' }}>
+            <div className="mb-6">
+              <p className="text-violet-400 text-xs font-semibold uppercase tracking-widest mb-3">Enterprise</p>
+              <div className="flex items-end gap-1 mb-1">
+                <span className="text-4xl font-bold text-white">Custom</span>
+              </div>
+              <p className="text-gray-500 text-xs">Volume pricing, custom SLA.</p>
+            </div>
+
+            <ul className="space-y-3 flex-1 mb-8" role="list">
+              {[
+                'Unlimited API calls',
+                'Custom SLA (99.9% uptime)',
+                'Dedicated account manager',
+                'SSO / SAML authentication',
+                'Full audit logs',
+                'Custom integrations & webhooks',
+              ].map((item) => (
+                <li key={item} className="flex items-start gap-2.5 text-sm text-gray-300">
+                  <span className="text-violet-400 mt-0.5"><CheckIcon /></span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+
+            <a
+              href="mailto:contact.x402bazaar@gmail.com?subject=Enterprise%20Inquiry"
+              className="w-full text-center border border-violet-500/40 text-violet-300 px-6 py-3 rounded-xl text-sm font-semibold
+                         no-underline hover:border-violet-500/70 hover:bg-violet-500/10 transition-all duration-200 block"
+            >
+              Contact Sales
+            </a>
+          </div>
+        </div>
+
+        {/* Note pay-per-call */}
+        <p className="text-center text-gray-500 text-xs mt-6">
+          All plans include pay-per-call billing above the monthly quota.
+          <Link to="/pricing#calculator" className="text-[#FF9900] hover:text-[#FEBD69] ml-1 no-underline">
+            Use the calculator below
+          </Link>{' '}to estimate your costs.
+        </p>
+      </section>
 
       {/* How Pricing Works */}
       <section ref={howRef} className="reveal mb-10">
@@ -322,7 +467,7 @@ export default function Pricing() {
       </section>
 
       {/* Cost Calculator */}
-      <section ref={calculatorRef} className="reveal mb-10">
+      <section ref={calculatorRef} id="calculator" className="reveal mb-10">
         <h2 className="text-2xl font-bold text-white mb-2">{t.pricing.calculatorTitle}</h2>
         <p className="text-gray-400 text-sm mb-5">{t.pricing.calculatorDesc}</p>
         <div className="glass rounded-xl p-6 space-y-5">
