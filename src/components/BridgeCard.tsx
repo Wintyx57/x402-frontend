@@ -86,13 +86,15 @@ function DestChainCard({
   );
 }
 
-const PROGRESS_STEPS = [
-  'Signing transaction...',
-  'Broadcasting...',
-  'Confirming on source chain...',
-  'Bridging to destination...',
-  'Complete!',
-];
+function getProgressSteps(t: { fund: { progressStep0?: string; progressStep1?: string; progressStep2?: string; progressStep3?: string; progressStep4?: string } }) {
+  return [
+    t.fund.progressStep0 || 'Signing transaction...',
+    t.fund.progressStep1 || 'Broadcasting...',
+    t.fund.progressStep2 || 'Confirming on source chain...',
+    t.fund.progressStep3 || 'Bridging to destination...',
+    t.fund.progressStep4 || 'Complete!',
+  ];
+}
 
 function getProgressIndex(state: BridgeState): number {
   switch (state) {
@@ -111,6 +113,7 @@ export default function BridgeCard() {
   const { data: walletClient } = useWalletClient();
   const { balance: usdcBalance } = useUsdcBalance();
   const f = t.fund || {} as Record<string, string>;
+  const PROGRESS_STEPS = getProgressSteps(t);
 
   const [selectedDest, setSelectedDest] = useState<DestKey>('skale');
   const [recipient, setRecipient] = useState('');

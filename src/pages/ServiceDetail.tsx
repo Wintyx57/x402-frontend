@@ -361,13 +361,13 @@ export default function ServiceDetail() {
       <nav aria-label="Breadcrumb" className="mb-5">
         <ol className="flex items-center flex-wrap gap-1 text-xs text-gray-500" role="list">
           <li>
-            <Link to="/" className="hover:text-[#FF9900] no-underline transition-colors duration-150">Home</Link>
+            <Link to="/" className="hover:text-[#FF9900] no-underline transition-colors duration-150">{t.serviceDetail?.breadcrumbHome || 'Home'}</Link>
           </li>
           <li aria-hidden="true" className="mx-0.5">
             <svg className="w-3 h-3 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
           </li>
           <li>
-            <Link to="/services" className="hover:text-[#FF9900] no-underline transition-colors duration-150">Services</Link>
+            <Link to="/services" className="hover:text-[#FF9900] no-underline transition-colors duration-150">{t.serviceDetail?.breadcrumbServices || 'Services'}</Link>
           </li>
           {service.tags?.[0] && (
             <>
@@ -394,9 +394,9 @@ export default function ServiceDetail() {
           <svg className="w-4 h-4 text-[#FF9900]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
           </svg>
-          <span className="text-sm font-semibold text-white">x402 Endpoint</span>
+          <span className="text-sm font-semibold text-white">{t.serviceDetail?.endpointLabel || 'x402 Endpoint'}</span>
           <span className="text-xs bg-[#FF9900]/10 text-[#FF9900] px-2 py-0.5 rounded border border-[#FF9900]/20 ml-auto">
-            No SDK Required — Just HTTP
+            {t.serviceDetail?.noSdkBadge || 'No SDK Required — Just HTTP'}
           </span>
         </div>
         <div className="flex items-center gap-2">
@@ -406,7 +406,7 @@ export default function ServiceDetail() {
           <CopyButton text={`${API_URL}/api/call/${id}`} label="Copy" copiedLabel="Copied!" />
         </div>
         <p className="text-xs text-gray-500 mt-2">
-          Your API stays untouched. We handle payments through our proxy.
+          {t.serviceDetail?.proxyHint || 'Your API stays untouched. We handle payments through our proxy.'}
         </p>
       </div>
 
@@ -419,7 +419,7 @@ export default function ServiceDetail() {
               <h1 className="text-2xl font-bold text-white">{service.name}</h1>
               {isNative && (
                 <span className="text-xs bg-[#FF9900]/10 text-[#FF9900] px-2 py-0.5 rounded border border-[#FF9900]/20">
-                  Native
+                  {t.serviceDetail?.nativeBadge || 'Native'}
                 </span>
               )}
               {service.verified_status === 'mainnet_verified' && (
@@ -427,12 +427,12 @@ export default function ServiceDetail() {
                   <svg className="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
-                  Verified
+                  {t.serviceDetail?.verifiedBadge || 'Verified'}
                 </span>
               )}
               {service.verified_status === 'reachable' && (
                 <span className="text-xs bg-blue-500/10 text-blue-400 px-2 py-0.5 rounded border border-blue-500/20">
-                  Auto-tested
+                  {t.serviceDetail?.autoTestedBadge || 'Auto-tested'}
                 </span>
               )}
               {service.trust_score != null && (

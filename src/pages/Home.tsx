@@ -405,14 +405,14 @@ export default function Home() {
 
           {/* Headline — concis et percutant */}
           <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold text-white mb-6 animate-fade-in-up delay-100 leading-tight tracking-tight">
-            The API Marketplace
+            {t.home.heroTitleNew}
             <br />
-            <span className="gradient-text">for AI Agents</span>
+            <span className="gradient-text">{t.home.heroTitleHighlightNew}</span>
           </h1>
 
           {/* Subline — bénéfice immédiat */}
           <p className="text-gray-400 text-lg sm:text-xl max-w-2xl mx-auto mb-10 animate-fade-in-up delay-200 leading-relaxed">
-            No API keys. No subscriptions. Your AI agent discovers, calls, and pays APIs automatically in USDC.
+            {t.home.heroSubtitle}
           </p>
 
           {/* 2 CTAs seulement */}
@@ -424,7 +424,7 @@ export default function Home() {
                          shadow-[0_0_24px_rgba(255,153,0,0.25)] w-full sm:w-auto text-center"
               onClick={() => trackEvent('cta_hero_click', { variant: 'explore' })}
             >
-              Explore 74+ APIs
+              {t.home.exploreCTA}
             </Link>
             <Link
               to="/register"
@@ -433,7 +433,7 @@ export default function Home() {
                          w-full sm:w-auto text-center"
               onClick={() => trackEvent('cta_hero_click', { variant: 'list' })}
             >
-              List Your API — 95% Revenue
+              {t.home.listApiCTA}
             </Link>
           </div>
 
@@ -445,9 +445,9 @@ export default function Home() {
                 label: 'APIs',
                 color: 'text-[#FF9900]',
               },
-              { value: '3', label: 'Blockchains', color: 'text-blue-400' },
-              { value: '10', label: 'Integrations', color: 'text-emerald-400' },
-              { value: '1543', label: 'Tests', color: 'text-violet-400' },
+              { value: '3', label: t.home.heroStatBlockchains || 'Blockchains', color: 'text-blue-400' },
+              { value: '10', label: t.home.statIntegrations || 'Integrations', color: 'text-emerald-400' },
+              { value: '1543', label: t.home.heroStatTests || 'Tests', color: 'text-violet-400' },
             ].map((stat, i) => (
               <div key={i} className="flex items-center gap-2">
                 <span className={`text-xl font-bold ${stat.color}`}>{stat.value}</span>
@@ -459,7 +459,7 @@ export default function Home() {
 
           {/* Trust bar — real providers */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-8 animate-fade-in-up delay-300">
-            <span className="text-xs text-gray-500 uppercase tracking-widest shrink-0">Trusted by</span>
+            <span className="text-xs text-gray-500 uppercase tracking-widest shrink-0">{t.home.heroTrustedBy || 'Trusted by'}</span>
             <div className="flex flex-wrap items-center justify-center gap-2">
               {[
                 { name: 'Interzoid', url: 'https://api.interzoid.com', verified: true },
