@@ -25,11 +25,26 @@ function NavDropdown({ id, label, links, openDropdown, setOpenDropdown, pathname
   const isOpen = openDropdown === id;
   const hasActive = links.some(l => pathname === l.to || pathname.startsWith(l.to + '/'));
 
+  function handleKeyDown(e: React.KeyboardEvent<HTMLButtonElement>) {
+    if (e.key === 'Escape') {
+      setOpenDropdown(null);
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setOpenDropdown(id);
+      // Focus first menu item after open
+      setTimeout(() => {
+        const menu = document.querySelector(`[data-dropdown="${id}"]`);
+        if (menu) (menu.querySelector('[role="menuitem"]') as HTMLElement)?.focus();
+      }, 50);
+    }
+  }
+
   return (
     <div className="relative">
       <button
         onClick={() => setOpenDropdown(isOpen ? null : id)}
         onMouseEnter={() => setOpenDropdown(id)}
+        onKeyDown={handleKeyDown}
         className={`flex items-center gap-1 text-xs font-medium px-3 py-1.5 rounded-lg transition-colors duration-200 whitespace-nowrap cursor-pointer
           ${hasActive ? 'text-[#FF9900]' : 'text-gray-300 hover:text-white hover:bg-white/5'}
           ${isOpen ? 'bg-white/5' : ''}`}
@@ -52,6 +67,7 @@ function NavDropdown({ id, label, links, openDropdown, setOpenDropdown, pathname
       {isOpen && (
         <div
           role="menu"
+          data-dropdown={id}
           className="absolute top-full left-0 mt-1.5 min-w-[200px] rounded-xl py-1.5 z-50 animate-fade-in
                      bg-[#131921]/95 dark:bg-[#131921]/95 backdrop-blur-2xl
                      border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)]"

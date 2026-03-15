@@ -44,6 +44,9 @@ export default function WalletInfo() {
           <div ref={dropdownRef} className="relative">
             <button
               onClick={() => setDropdownOpen(!dropdownOpen)}
+              aria-expanded={dropdownOpen}
+              aria-haspopup="menu"
+              aria-label={`${t.connect.wallet}: ${displayBalance} USDC — ${shortAddress}`}
               className="flex items-center gap-2 text-xs font-medium px-3 py-1.5 rounded-lg
                          bg-white/8 border border-white/10 text-white hover:bg-white/12
                          transition-colors cursor-pointer"

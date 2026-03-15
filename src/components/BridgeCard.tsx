@@ -272,9 +272,9 @@ export default function BridgeCard() {
     <div className="max-w-lg mx-auto glass-card rounded-2xl p-4 sm:p-5 space-y-3">
 
       {/* ── FROM — Source Chain Pills ── */}
-      <div className="space-y-2">
+      <div role="group" aria-labelledby="bridge-from-label" className="space-y-2">
         <div className="flex items-center justify-between">
-          <label className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+          <label id="bridge-from-label" className="text-xs font-semibold uppercase tracking-wider text-gray-400">
             {f.fromLabel || 'From'}
           </label>
           {isSwitching && (
@@ -312,8 +312,8 @@ export default function BridgeCard() {
       </div>
 
       {/* ── TO — Destination Chain Cards (horizontal) ── */}
-      <div className="space-y-2">
-        <label className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+      <div role="group" aria-labelledby="bridge-to-label" className="space-y-2">
+        <label id="bridge-to-label" className="text-xs font-semibold uppercase tracking-wider text-gray-400">
           {f.toLabel || 'To'}
         </label>
         <div className="flex flex-col sm:flex-row gap-2">
@@ -393,7 +393,7 @@ export default function BridgeCard() {
               {/* ── Amount Input ── */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <label className="text-xs font-medium">Amount</label>
+                  <label htmlFor="bridge-amount" className="text-xs font-medium">Amount</label>
                   {usdcBalance && (
                     <span className="text-[11px] text-gray-400">
                       Balance: <span className="text-white font-medium">{parseFloat(usdcBalance).toFixed(2)} USDC</span>
@@ -402,6 +402,7 @@ export default function BridgeCard() {
                 </div>
                 <div className="relative">
                   <input
+                    id="bridge-amount"
                     type="text"
                     inputMode="decimal"
                     value={amount}

@@ -71,8 +71,10 @@ export default function EmbedSnippet({ serviceId, serviceName }: EmbedSnippetPro
           {tabs.map(tab => (
             <button
               key={tab.key}
+              id={`tab-${tab.key}`}
               role="tab"
               aria-selected={lang === tab.key}
+              aria-controls={`panel-${tab.key}`}
               onClick={() => setLang(tab.key)}
               className={`px-2.5 py-1 text-xs rounded-md transition-colors cursor-pointer border-none ${
                 lang === tab.key
@@ -87,9 +89,20 @@ export default function EmbedSnippet({ serviceId, serviceName }: EmbedSnippetPro
       </div>
       <div className="relative">
         <CopyButton text={snippet} label="Copy" copiedLabel="Copied!" />
-        <pre className="p-4 text-xs leading-relaxed overflow-x-auto font-mono text-green-400 bg-black/30 max-h-[240px] overflow-y-auto">
-          {snippet}
-        </pre>
+        {tabs.map(tab => (
+          <div
+            key={tab.key}
+            id={`panel-${tab.key}`}
+            role="tabpanel"
+            aria-labelledby={`tab-${tab.key}`}
+            tabIndex={0}
+            hidden={lang !== tab.key}
+          >
+            <pre className="p-4 text-xs leading-relaxed overflow-x-auto font-mono text-green-400 bg-black/30 max-h-[240px] overflow-y-auto">
+              {snippet}
+            </pre>
+          </div>
+        ))}
       </div>
     </div>
   );

@@ -763,7 +763,7 @@ export default function Register() {
             {/* Price + Tags row */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="flex items-center text-sm text-gray-400 mb-1.5">
+                <label htmlFor="reg-price" className="flex items-center text-sm text-gray-400 mb-1.5">
                   {t.register.priceLabel}
                   <FieldTooltip tip="Price per API call in USDC. Min 0.001 USDC. AI agents will pay this amount automatically per request. Suggested: 0.001–0.05 USDC for standard APIs.">
                     ?
@@ -780,10 +780,10 @@ export default function Register() {
                   />
                   <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-500 pointer-events-none font-mono">USDC</span>
                 </div>
-                <p id="price-hint" className="text-[11px] text-gray-600 mt-1">0.001 – 1000 USDC per call</p>
+                <p id="price-hint" className="text-[11px] text-gray-400 mt-1">0.001 – 1000 USDC per call</p>
               </div>
               <div>
-                <label className="flex items-center text-sm text-gray-400 mb-1.5">
+                <label htmlFor="reg-tags" className="flex items-center text-sm text-gray-400 mb-1.5">
                   {t.register.tagsLabel}
                   <FieldTooltip tip="Comma-separated keywords to help agents discover your API. Max 10 tags, 50 chars each. Example: weather, forecast, realtime">
                     ?
@@ -797,13 +797,13 @@ export default function Register() {
                              focus:outline-none focus:border-[#FF9900]/40 transition-all duration-300"
                   aria-describedby="tags-hint"
                 />
-                <p id="tags-hint" className="text-[11px] text-gray-600 mt-1">Comma-separated · max 10 tags</p>
+                <p id="tags-hint" className="text-[11px] text-gray-400 mt-1">Comma-separated · max 10 tags</p>
               </div>
             </div>
 
             {/* Required Parameters */}
             <div>
-              <label className="flex items-center text-sm text-gray-400 mb-1.5">
+              <label htmlFor="reg-params" className="flex items-center text-sm text-gray-400 mb-1.5">
                 Required Parameters
                 <FieldTooltip tip="Comma-separated list of parameters your API requires. This prevents AI agents from calling your API without the right params (and wasting USDC). Example: city, country">
                   ?
@@ -817,12 +817,12 @@ export default function Register() {
                            focus:outline-none focus:border-[#FF9900]/40 transition-all duration-300"
                 aria-describedby="params-hint"
               />
-              <p id="params-hint" className="text-[11px] text-gray-600 mt-1">Comma-separated · Prevents failed calls &amp; wasted USDC</p>
+              <p id="params-hint" className="text-[11px] text-gray-400 mt-1">Comma-separated · Prevents failed calls &amp; wasted USDC</p>
             </div>
 
             {/* Free Calls Per Month */}
             <div>
-              <label className="flex items-center text-sm text-gray-400 mb-1.5">
+              <label htmlFor="reg-free-calls" className="flex items-center text-sm text-gray-400 mb-1.5">
                 Free Calls per Month
                 <FieldTooltip tip="Offer X free calls per user per month. When quota is reached, normal USDC payment applies. Set to 0 to disable free tier. Max 1000. Great for user acquisition.">
                   ?
@@ -846,7 +846,7 @@ export default function Register() {
                   calls/mo
                 </span>
               </div>
-              <p id="free-calls-hint" className="text-[11px] text-gray-600 mt-1">
+              <p id="free-calls-hint" className="text-[11px] text-gray-400 mt-1">
                 0 = disabled · max 1000 · resets monthly per user
               </p>
             </div>

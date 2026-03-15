@@ -21,6 +21,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     localStorage.setItem('x402-lang', lang);
+    document.documentElement.lang = lang;
   }, [lang]);
 
   const t = translations[lang];
