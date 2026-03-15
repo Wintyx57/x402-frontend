@@ -9,6 +9,7 @@ import { usePublicStats } from '../hooks/usePublicStats';
 import ServiceCard from '../components/ServiceCard';
 import CategoryIcon from '../components/CategoryIcon';
 import GitHubIcon from '../components/icons/GitHubIcon';
+import { BaseLogo, SkaleLogo, PolygonLogo } from '../components/icons/ChainLogos';
 import { VALID_CATEGORIES } from '../data/categories';
 import { trackEvent } from '../lib/analytics';
 
@@ -378,18 +379,23 @@ export default function Home() {
           <div className="flex flex-wrap items-center justify-center gap-2 mb-8 animate-fade-in-up">
             <span className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1 rounded-full
                              bg-blue-500/10 border border-blue-500/20 text-blue-400">
-              <span className="w-1.5 h-1.5 rounded-full bg-blue-400 inline-block" />
+              <BaseLogo className="w-3.5 h-3.5" />
               {t.home.badgeBase}
+            </span>
+            <span className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1 rounded-full
+                             bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+              <SkaleLogo className="w-3.5 h-3.5 rounded-[4px]" />
+              {t.home.badgeSkale}
+            </span>
+            <span className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1 rounded-full
+                             bg-purple-500/10 border border-purple-500/20 text-purple-400">
+              <PolygonLogo className="w-3.5 h-3.5" />
+              {t.home.badgePolygon || 'Polygon'}
             </span>
             <span className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1 rounded-full
                              bg-[#FF9900]/10 border border-[#FF9900]/20 text-[#FF9900]">
               <span className="w-1.5 h-1.5 rounded-full bg-[#FF9900] inline-block" />
               {t.home.badgeX402}
-            </span>
-            <span className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1 rounded-full
-                             bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block" />
-              {t.home.badgeSkale}
             </span>
             <a
               href="https://github.com/Wintyx57/x402-bazaar"
@@ -933,7 +939,11 @@ export default function Home() {
               <div className="text-xs text-gray-400 mt-1">Native APIs</div>
             </div>
             <div className="text-center">
-              <div className="text-xl sm:text-3xl font-bold gradient-text">{t.home.network}</div>
+              <div className="flex items-center justify-center gap-2">
+                <BaseLogo className="w-6 h-6 sm:w-8 sm:h-8" />
+                <SkaleLogo className="w-6 h-6 sm:w-8 sm:h-8 rounded-md" />
+                <PolygonLogo className="w-6 h-6 sm:w-8 sm:h-8" />
+              </div>
               <div className="text-xs text-gray-400 mt-1">Blockchain</div>
             </div>
             <div className="text-center">

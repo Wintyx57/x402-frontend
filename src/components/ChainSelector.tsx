@@ -1,5 +1,12 @@
 import { useAccount, useSwitchChain } from 'wagmi';
 import { useTranslation } from '../i18n/LanguageContext';
+import { BaseLogo, SkaleLogo, PolygonLogo } from './icons/ChainLogos';
+
+const CHAIN_LOGOS: Record<number, React.ReactNode> = {
+  8453: <BaseLogo className="w-4 h-4" />,
+  1187947933: <SkaleLogo className="w-4 h-4 rounded-[3px]" />,
+  137: <PolygonLogo className="w-4 h-4" />,
+};
 
 const CHAINS = [
   { id: 8453, label: 'Base', gas: '~$0.001', color: 'bg-blue-500', free: false },
@@ -52,7 +59,7 @@ export default function ChainSelector() {
               } disabled:opacity-50`}
             >
               <div className="flex items-center gap-1.5 font-medium">
-                <span className={`w-2.5 h-2.5 rounded-full ${c.color} shrink-0`} aria-hidden="true" />
+                {CHAIN_LOGOS[c.id] || <span className={`w-2.5 h-2.5 rounded-full ${c.color} shrink-0`} aria-hidden="true" />}
                 <span>{c.label}</span>
                 {isActive && (
                   <span className="w-1.5 h-1.5 rounded-full bg-[#34D399] ml-0.5" aria-hidden="true" />

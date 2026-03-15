@@ -172,6 +172,7 @@ export const translations = {
       badgeBase: "Built on Base",
       badgeX402: "Powered by x402",
       badgeSkale: "SKALE Ultra-low Gas",
+      badgePolygon: "Polygon Low Gas",
       badgeOpenSource: "Open Source",
       cliCopyLabel: "Copy CLI command",
       // Hero CTA keys
@@ -1871,6 +1872,7 @@ def my_function(query: str) -> dict:
       badgeBase: "Construit sur Base",
       badgeX402: "Propulse par x402",
       badgeSkale: "SKALE Ultra-low Gas",
+      badgePolygon: "Polygon Low Gas",
       badgeOpenSource: "Open Source",
       cliCopyLabel: "Copier la commande CLI",
       // Hero CTA
