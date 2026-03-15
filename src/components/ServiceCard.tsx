@@ -1,9 +1,8 @@
-import { useState, memo } from 'react';
+import { useState, memo, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '../i18n/LanguageContext';
 import StarRating from './StarRating';
 import X402Logo from './icons/X402Logo';
-import { trackEvent } from '../lib/analytics';
 import type { Service } from '../types/service';
 
 function getDomain(url: string): string | null {
@@ -24,20 +23,6 @@ function isValidServiceUrl(url: string): boolean {
   } catch {
     return false;
   }
-}
-
-function timeAgo(dateStr: string | null, t: { serviceCard: { activeNow?: string } }): string | null {
-  if (!dateStr) return null;
-  const now = Date.now();
-  const then = new Date(dateStr).getTime();
-  const diffMs = now - then;
-  const diffMin = Math.floor(diffMs / 60000);
-  const diffH = Math.floor(diffMs / 3600000);
-  const diffD = Math.floor(diffMs / 86400000);
-  if (diffMin < 5) return t.serviceCard.activeNow || 'Active now';
-  if (diffMin < 60) return `${diffMin}m ago`;
-  if (diffH < 24) return `${diffH}h ago`;
-  return `${diffD}d ago`;
 }
 
 interface QualityTier {
@@ -75,14 +60,12 @@ function isNewService(createdAt: string | null | undefined): boolean {
 
 interface ServiceCardProps {
   service: Service;
-  lastActivity: string | null;
   healthStatus?: 'online' | 'offline' | null;
   uptimePercent?: number | null;
   reviewStats?: ReviewStats | null;
-  callCount?: number | null;
 }
 
-function ServiceCard({ service, lastActivity, healthStatus = null, uptimePercent = null, reviewStats = null, callCount = null }: ServiceCardProps) {
+function ServiceCard({ service, healthStatus = null, uptimePercent = null, reviewStats = null }: ServiceCardProps) {
   const { t } = useTranslation();
   const isFree = Number(service.price_usdc) === 0;
   const initial = service.name?.charAt(0)?.toUpperCase() || '?';
@@ -94,6 +77,70 @@ function ServiceCard({ service, lastActivity, healthStatus = null, uptimePercent
   const trustBadge = getTrustBadge(service.trust_score);
   const isNew = isNewService(service.created_at);
   const primaryCategory = service.tags?.find((tag: string) => !['x402-native', 'live'].includes(tag)) || service.tags?.[0];
+
+  // Build badges array, max 2 (priority: Native > Trust > Quality > AutoTested)
+  const badges = useMemo(() => {
+    const list: { key: string; el: JSX.Element }[] = [];
+    if (isNative) {
+      list.push({
+        key: 'native',
+        el: (
+          <span className="text-[11px] bg-[#FF9900]/10 text-[#FF9900] px-2 py-0.5 rounded-md border border-[#FF9900]/20 shrink-0">
+            {t.serviceCard.native}
+          </span>
+        ),
+      });
+    }
+    if (trustBadge) {
+      list.push({
+        key: 'trust',
+        el: (
+          <span
+            className="text-[11px] px-2 py-0.5 rounded-md shrink-0 font-medium flex items-center gap-0.5"
+            style={{
+              backgroundColor: `${trustBadge.bg}15`,
+              color: trustBadge.color,
+              border: `1px solid ${trustBadge.bg}30`,
+            }}
+            aria-label={`Trust score: ${trustBadge.label} out of 100`}
+            title="Proof of Quality score"
+          >
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 1l3.09 6.26L22 8.27l-5 4.87 1.18 6.88L12 16.77l-6.18 3.25L7 13.14 2 8.27l6.91-1.01z"/></svg>
+            {trustBadge.label}
+          </span>
+        ),
+      });
+    }
+    if (quality) {
+      list.push({
+        key: 'quality',
+        el: (
+          <span
+            className="text-[11px] px-2 py-0.5 rounded-md shrink-0 font-medium"
+            style={{
+              backgroundColor: `${quality.bg}15`,
+              color: quality.color,
+              border: `1px solid ${quality.bg}30`,
+            }}
+            aria-label={`${quality.label} tier - ${uptimePercent}% uptime over 7 days`}
+          >
+            {quality.label}
+          </span>
+        ),
+      });
+    }
+    if (service.verified_status === 'reachable') {
+      list.push({
+        key: 'auto-tested',
+        el: (
+          <span className="text-[11px] bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded-md border border-emerald-500/20 shrink-0">
+            {t.serviceCard.autoTested}
+          </span>
+        ),
+      });
+    }
+    return list.slice(0, 2);
+  }, [isNative, trustBadge, quality, service.verified_status, uptimePercent, t.serviceCard]);
 
   const handleCopyPrompt = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
@@ -115,8 +162,8 @@ function ServiceCard({ service, lastActivity, healthStatus = null, uptimePercent
 
   return (
     <div className="glass-card rounded-2xl p-5 sm:p-6 flex flex-col transition-all duration-300 ease-out
-                    hover:bg-white/[0.20] hover:border-[#FF9900]/45 hover:-translate-y-1.5
-                    hover:shadow-[0_0_30px_rgba(255,153,0,0.18),0_8px_32px_rgba(0,0,0,0.45)] group relative">
+                    hover:bg-white/[0.08] hover:border-white/20 hover:-translate-y-1.5
+                    hover:shadow-[0_0_20px_rgba(255,153,0,0.12),0_8px_32px_rgba(0,0,0,0.60)] group relative">
 
       {/* NEW badge */}
       {isNew && (
@@ -138,7 +185,7 @@ function ServiceCard({ service, lastActivity, healthStatus = null, uptimePercent
           ) : service.logo_url ? (
             <img
               src={service.logo_url}
-              alt={service.name}
+              alt=""
               className="w-8 h-8 object-contain"
               onError={() => setImgError(true)}
               loading="lazy"
@@ -146,7 +193,7 @@ function ServiceCard({ service, lastActivity, healthStatus = null, uptimePercent
           ) : domain && !imgError ? (
             <img
               src={`https://www.google.com/s2/favicons?domain=${domain}&sz=128`}
-              alt={service.name}
+              alt=""
               className="w-7 h-7 object-contain"
               onError={() => setImgError(true)}
               loading="lazy"
@@ -188,158 +235,56 @@ function ServiceCard({ service, lastActivity, healthStatus = null, uptimePercent
         </span>
       </div>
 
-      {/* ===== BODY: Description + Badges + Tags + Reviews + Activity ===== */}
+      {/* ===== BODY: Description + Badges + Reviews ===== */}
 
       {/* Description */}
       <p className="text-gray-300 text-sm mb-4 leading-relaxed line-clamp-3" title={service.description}>
         {service.description}
       </p>
 
-      {/* Quality badges row */}
-      <div className="flex flex-wrap gap-1.5 mb-4">
-        {isNative && (
-          <span className="text-[11px] bg-[#FF9900]/10 text-[#FF9900] px-2 py-0.5 rounded-md border border-[#FF9900]/20 shrink-0">
-            {t.serviceCard.native}
-          </span>
-        )}
-        {service.verified_status === 'reachable' && (
-          <span className="text-[11px] bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded-md border border-emerald-500/20 shrink-0">
-            {t.serviceCard.autoTested}
-          </span>
-        )}
-        {quality && (
-          <span
-            className="text-[11px] px-2 py-0.5 rounded-md shrink-0 font-medium"
-            style={{
-              backgroundColor: `${quality.bg}15`,
-              color: quality.color,
-              border: `1px solid ${quality.bg}30`,
-            }}
-            aria-label={`${quality?.label} tier - ${uptimePercent}% uptime over 7 days`}
-          >
-            {quality.label}
-          </span>
-        )}
-        {trustBadge && (
-          <span
-            className="text-[11px] px-2 py-0.5 rounded-md shrink-0 font-medium flex items-center gap-0.5"
-            style={{
-              backgroundColor: `${trustBadge.bg}15`,
-              color: trustBadge.color,
-              border: `1px solid ${trustBadge.bg}30`,
-            }}
-            aria-label={`Trust score: ${trustBadge.label} out of 100`}
-            title="Proof of Quality score"
-          >
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 1l3.09 6.26L22 8.27l-5 4.87 1.18 6.88L12 16.77l-6.18 3.25L7 13.14 2 8.27l6.91-1.01z"/></svg>
-            {trustBadge.label}
-          </span>
-        )}
-      </div>
-
-      {/* Tags + Reviews side by side */}
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex flex-wrap gap-1">
-          {service.tags?.slice(0, 3).map((tag: string) => (
-            <span key={tag} className="text-xs text-gray-300 bg-white/5 px-2 py-0.5 rounded-lg">
-              {tag}
-            </span>
-          ))}
-          {(service.tags?.length ?? 0) > 3 && (
-            <span className="text-xs text-gray-500 px-1">+{(service.tags?.length ?? 0) - 3}</span>
-          )}
-        </div>
-        {reviewStats && reviewStats.count > 0 && (
-          <div className="flex items-center gap-1.5 shrink-0">
-            <StarRating rating={reviewStats.average} size="sm" />
-            <span className="text-[10px] text-gray-300">
-              {reviewStats.average} ({reviewStats.count})
-            </span>
-          </div>
-        )}
-      </div>
-
-      {/* Activity + Call count subtle line */}
-      {(lastActivity || (callCount != null && callCount > 0)) && (
-        <div className="flex items-center gap-3 mb-3 text-[11px] text-gray-500">
-          {lastActivity && (
-            <span className="flex items-center gap-1">
-              <span className="w-1 h-1 rounded-full bg-[#34D399]" aria-hidden="true" />
-              {timeAgo(lastActivity, t)}
-            </span>
-          )}
-          {callCount != null && callCount > 0 && (
-            <span className="flex items-center gap-1">
-              <svg className="w-3 h-3 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
-              </svg>
-              {callCount >= 1000
-                ? `${(callCount / 1000).toFixed(1)}k calls`
-                : `${callCount} calls`}
-            </span>
-          )}
+      {/* Badges row — max 2 */}
+      {badges.length > 0 && (
+        <div className="flex flex-wrap gap-1.5 mb-3">
+          {badges.map(b => <span key={b.key}>{b.el}</span>)}
         </div>
       )}
 
-      {/* ===== FOOTER: Owner + Actions ===== */}
-      <div className="flex items-center justify-between pt-3 mt-auto border-t border-white/6">
-        <div className="flex items-center gap-2 text-xs text-gray-400">
-          <span className="font-mono">
-            {service.owner_address?.slice(0, 6)}...{service.owner_address?.slice(-4)}
+      {/* Reviews */}
+      {reviewStats && reviewStats.count > 0 && (
+        <div className="flex items-center gap-1.5 mb-3">
+          <StarRating rating={reviewStats.average} size="sm" />
+          <span className="text-[10px] text-gray-300">
+            {reviewStats.average} ({reviewStats.count})
           </span>
-          {service.tx_hash && /^0x[a-fA-F0-9]{64}$/.test(service.tx_hash) && (
-            <a
-              href={`https://basescan.org/tx/${service.tx_hash}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[#FF9900] no-underline hover:text-[#FEBD69]"
-              aria-label={`${t.serviceCard.verified} - Basescan (opens in new tab)`}
-            >
-              {t.serviceCard.verified}
-            </a>
-          )}
         </div>
-        <div className="flex items-center gap-2">
-          {isValidServiceUrl(service.url) && (
-            <button
-              onClick={handleCopyPrompt}
-              className="flex items-center gap-1 text-xs font-medium px-2 py-1 min-h-[44px] sm:min-h-0 rounded-md
-                         bg-white/5 text-gray-300 hover:text-white hover:bg-white/10
-                         transition-all duration-200 cursor-pointer border-none active:scale-95"
-              aria-label={copied ? t.serviceCard.copied : t.serviceCard.useWithAI}
-              title={t.serviceCard.useWithAI}
-            >
-              <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M12 2l2.5 7.5L22 12l-7.5 2.5L12 22l-2.5-7.5L2 12l7.5-2.5z"/>
-              </svg>
-              {copied ? t.serviceCard.copied : t.serviceCard.useWithAI}
-            </button>
-          )}
-          <Link
-            to={`/services/${service.id}`}
-            className="text-xs font-medium text-gray-300 hover:text-white no-underline min-h-[44px] sm:min-h-0 flex items-center
-                       opacity-100 transition-opacity duration-200"
-            onClick={e => e.stopPropagation()}
-            aria-label={`${t.serviceCard.reviewsFor} ${service.name}`}
+      )}
+
+      {/* ===== FOOTER: 2 CTAs only ===== */}
+      <div className="flex items-center justify-between pt-3 mt-auto border-t border-white/6">
+        {isValidServiceUrl(service.url) && (
+          <button
+            onClick={handleCopyPrompt}
+            className="flex items-center gap-1 text-xs font-medium px-2.5 py-1.5 min-h-[44px] sm:min-h-0 rounded-md
+                       bg-white/5 text-gray-300 hover:text-white hover:bg-white/10
+                       transition-all duration-200 cursor-pointer border-none active:scale-95"
+            aria-label={copied ? t.serviceCard.copied : t.serviceCard.useWithAI}
+            title={t.serviceCard.useWithAI}
           >
-            {t.serviceCard.reviews}
-          </Link>
-          {isValidServiceUrl(service.url) ? (
-            <a
-              href={service.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs font-medium text-[#FF9900] hover:text-[#FFB340] no-underline min-h-[44px] sm:min-h-0 flex items-center
-                         opacity-100 transition-opacity duration-200"
-              aria-label={`View API - ${service.name} (opens in new tab)`}
-              onClick={() => trackEvent("service_card_click", { service: service.name })}
-            >
-              {t.serviceCard.viewApi} &rarr;
-            </a>
-          ) : (
-            <span className="text-xs text-gray-500">{t.serviceCard.viewApi}</span>
-          )}
-        </div>
+            <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 2l2.5 7.5L22 12l-7.5 2.5L12 22l-2.5-7.5L2 12l7.5-2.5z"/>
+            </svg>
+            {copied ? t.serviceCard.copied : t.serviceCard.useWithAI}
+          </button>
+        )}
+        <Link
+          to={`/services/${service.id}`}
+          className="ml-auto text-xs font-medium text-[#FF9900] hover:text-[#FFB340] no-underline min-h-[44px] sm:min-h-0 flex items-center
+                     transition-colors duration-200"
+          onClick={e => e.stopPropagation()}
+          aria-label={`View details for ${service.name}`}
+        >
+          {t.serviceCard.viewApi} &rarr;
+        </Link>
       </div>
     </div>
   );

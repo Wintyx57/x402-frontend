@@ -198,7 +198,6 @@ export default function Home() {
   const { data: stats } = usePublicStats();
   const { data: servicesData, isLoading: loading, error: servicesError } = useServices();
   const services = Array.isArray(servicesData) ? servicesData : [];
-  const [activityMap, setActivityMap] = useState<Record<string, string>>({});
   const [avgLatency, setAvgLatency] = useState<number | null>(null);
   const [copied, setCopied] = useState(false);
   const { t } = useTranslation();
@@ -224,10 +223,6 @@ export default function Home() {
   useEffect(() => {
     const controller = new AbortController();
     const { signal } = controller;
-    fetch(`${API_URL}/api/services/activity`, { signal })
-      .then(r => r.json())
-      .then(data => setActivityMap(data || {}))
-      .catch(() => {});
     fetch(`${API_URL}/api/status`, { signal })
       .then(r => r.json())
       .then(data => {
@@ -894,7 +889,7 @@ export default function Home() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {freeServices.map((s, i) => (
               <div key={s.id} className="animate-fade-in-up" style={{ animationDelay: `${i * 75}ms` }}>
-                <ServiceCard service={s} lastActivity={activityMap[s.url]} />
+                <ServiceCard service={s} />
               </div>
             ))}
           </div>
@@ -913,7 +908,7 @@ export default function Home() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {paidServices.map((s, i) => (
               <div key={s.id} className="animate-fade-in-up" style={{ animationDelay: `${i * 75}ms` }}>
-                <ServiceCard service={s} lastActivity={activityMap[s.url]} />
+                <ServiceCard service={s} />
               </div>
             ))}
           </div>

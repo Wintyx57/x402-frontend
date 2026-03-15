@@ -18,7 +18,6 @@ export default function Services() {
   // Fetch review stats for all services in parallel (each result cached individually)
   const serviceIds = useMemo(() => services.map((s: Service) => s.id), [services]);
   const reviewStatsMap = useAllReviewStats(serviceIds);
-  const [activityMap, setActivityMap] = useState<Record<string, string>>({});
   const [uptimeMap, setUptimeMap] = useState<Record<string, number>>({});
   const [searchParams, setSearchParams] = useSearchParams();
   const { t } = useTranslation();
@@ -27,7 +26,6 @@ export default function Services() {
   const priceFilter = searchParams.get('price') || 'all';
   const category = searchParams.get('cat') || 'all';
   const sort = searchParams.get('sort') || 'name';
-  const maxPrice = parseFloat(searchParams.get('maxPrice') || '1');
   const sourceFilter = searchParams.get('source') || 'all';
 
   const setParam = (key: string, value: string) => {
@@ -97,13 +95,6 @@ export default function Services() {
     const controller = new AbortController();
     const signal = controller.signal;
 
-    fetch(`${API_URL}/api/services/activity`, { signal })
-      .then(r => r.json())
-      .then(data => setActivityMap(data || {}))
-      .catch(() => {});
-
-    // Note: healthMap removed — service.status comes from DB directly (updated by monitor + daily-tester)
-
     fetch(`${API_URL}/api/status/uptime?period=7d`, { signal })
       .then(r => r.json())
       .then(data => {
@@ -122,7 +113,7 @@ export default function Services() {
   }, []);
 
   // Helper: find the primary category of a service (first tag matching a known category)
-  const { getCategory, categoryCounts, freeCount, paidCount } = useMemo(() => {
+  const { getCategory, categoryCounts } = useMemo(() => {
     const categoryTags = CATEGORIES.filter(c => c.tag).map(c => c.tag);
     const getCategory = (s: Service) => s.tags?.find((t: string) => categoryTags.includes(t)) || null;
     const categoryCounts: Record<string, number> = { all: services.length };
@@ -130,9 +121,7 @@ export default function Services() {
       const cat = getCategory(s);
       if (cat) categoryCounts[cat] = (categoryCounts[cat] || 0) + 1;
     });
-    const freeCount = services.filter((s: Service) => Number(s.price_usdc) === 0).length;
-    const paidCount = services.filter((s: Service) => Number(s.price_usdc) > 0).length;
-    return { getCategory, categoryCounts, freeCount, paidCount };
+    return { getCategory, categoryCounts };
   }, [services]);
 
   // Filter
@@ -150,12 +139,11 @@ export default function Services() {
       const cat = CATEGORIES.find(c => c.key === category);
       if (cat?.tag && !s.tags?.includes(cat.tag)) return false;
     }
-    if (maxPrice < 1 && Number(s.price_usdc) > maxPrice) return false;
     if (sourceFilter === 'native' && !s.url?.startsWith('https://x402-api.onrender.com')) return false;
     if (sourceFilter === 'community' && s.url?.startsWith('https://x402-api.onrender.com')) return false;
     return true;
   // eslint-disable-next-line react-hooks/preserve-manual-memoization
-  }), [services, search, priceFilter, category, maxPrice, sourceFilter]);
+  }), [services, search, priceFilter, category, sourceFilter]);
 
   // Sort
   const sorted = useMemo(() => [...filtered].sort((a, b) => {
@@ -169,127 +157,100 @@ export default function Services() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
-      {/* Header row */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4">
-        <div>
-          <h1 className="text-3xl font-bold text-white">{t.services.title}</h1>
-          <p className="text-gray-500 text-sm mt-1">
-            {services.length} {t.services.apisAvailable}
-            <span className="text-gray-600 mx-2">|</span>
-            <span className="text-gray-400">{freeCount} {t.services.freeOnly}</span>
-            <span className="text-gray-600 mx-1">&middot;</span>
-            <span className="text-[#FF9900]">{paidCount} {t.services.paidOnly}</span>
-          </p>
-        </div>
-
-        {/* Sort */}
-        <div className="flex items-center gap-3 w-full sm:w-auto">
-          <select
-            value={sort}
-            onChange={e => setParam('sort', e.target.value)}
-            aria-label="Sort services by"
-            className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-gray-300
-                       focus:outline-none focus:border-[#FF9900]/50 cursor-pointer"
-          >
-            <option value="name">{t.services.sortName}</option>
-            <option value="price-asc">{t.services.sortPriceAsc}</option>
-            <option value="price-desc">{t.services.sortPriceDesc}</option>
-            <option value="newest">{t.services.sortNewest}</option>
-          </select>
-        </div>
+      {/* Zone A: Title + Count */}
+      <div className="mb-4">
+        <h1 className="text-2xl font-bold text-white">{t.services.title}</h1>
+        <p className="text-gray-400 text-sm mt-1">
+          {services.length} {t.services.apisAvailable}
+        </p>
       </div>
 
-      {/* Search bar */}
-      <div className="relative mb-4">
-        <label htmlFor="services-search" className="sr-only">{t.services.searchPlaceholder}</label>
-        <input
-          id="services-search"
-          type="text"
-          value={search}
-          onChange={e => setParam('q', e.target.value)}
-          placeholder={t.services.searchPlaceholder}
-          aria-label={t.services.searchPlaceholder}
-          className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-2.5 text-sm text-white
-                     placeholder-gray-500 focus:outline-none focus:border-[#FF9900]/50 focus:bg-white/8
-                     transition-all duration-200"
-        />
-        <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-        </svg>
-        {search && (
-          <button
-            onClick={() => setParam('q', '')}
-            aria-label={t.services.clearSearch || 'Clear search'}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white transition-colors
-                       bg-transparent border-none cursor-pointer p-1"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        )}
+      {/* Zone B: Search + Sort inline */}
+      <div className="flex items-center gap-3 mb-4">
+        <div className="relative flex-1">
+          <label htmlFor="services-search" className="sr-only">{t.services.searchPlaceholder}</label>
+          <input
+            id="services-search"
+            type="text"
+            value={search}
+            onChange={e => setParam('q', e.target.value)}
+            placeholder={t.services.searchPlaceholder}
+            aria-label={t.services.searchPlaceholder}
+            className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-2.5 text-sm text-white
+                       placeholder-gray-500 focus:outline-none focus:border-[#FF9900]/50 focus:bg-white/8
+                       transition-all duration-200"
+          />
+          <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          {search && (
+            <button
+              onClick={() => setParam('q', '')}
+              aria-label={t.services.clearSearch || 'Clear search'}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white transition-colors
+                         bg-transparent border-none cursor-pointer p-1"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          )}
+        </div>
+        <select
+          value={sort}
+          onChange={e => setParam('sort', e.target.value)}
+          aria-label="Sort services by"
+          className="bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-gray-300
+                     focus:outline-none focus:border-[#FF9900]/50 cursor-pointer shrink-0"
+        >
+          <option value="name">{t.services.sortName}</option>
+          <option value="price-asc">{t.services.sortPriceAsc}</option>
+          <option value="price-desc">{t.services.sortPriceDesc}</option>
+          <option value="newest">{t.services.sortNewest}</option>
+        </select>
       </div>
 
-      {/* Price filter pills */}
-      <div className="flex flex-wrap items-center gap-2 mb-3">
+      {/* Zone C: All filters on one scrollable line */}
+      <div className="flex items-center gap-2 mb-6 overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 sm:flex-wrap sm:overflow-visible">
+        {/* Price pills */}
         {['all', 'free', 'paid'].map(f => (
           <button
-            key={f}
+            key={`price-${f}`}
             onClick={() => setParam('price', f)}
             aria-pressed={priceFilter === f}
-            className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 cursor-pointer ${
+            className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 cursor-pointer whitespace-nowrap shrink-0 ${
               priceFilter === f
                 ? 'bg-[#FF9900]/15 text-[#FF9900] border border-[#FF9900]/25'
-                : 'bg-white/3 text-gray-500 hover:text-gray-300 hover:bg-white/5 border border-transparent'
+                : 'bg-white/3 text-gray-400 hover:text-gray-300 hover:bg-white/5 border border-transparent'
             }`}
           >
             {f === 'all' ? t.services.all : f === 'free' ? t.services.freeOnly : t.services.paidOnly}
           </button>
         ))}
-      </div>
 
-      {/* Advanced filters */}
-      <div className="flex flex-col sm:flex-row flex-wrap items-start sm:items-center gap-3 sm:gap-4 mb-3">
-        {/* Max price slider */}
-        <div className="flex items-center gap-2">
-          <label htmlFor="price-range-slider" className="text-xs text-gray-500 whitespace-nowrap">{t.services.maxPrice || 'Max price'}:</label>
-          <input
-            id="price-range-slider"
-            type="range"
-            min="0"
-            max="1"
-            step="0.005"
-            value={maxPrice}
-            onChange={e => setParam('maxPrice', e.target.value === '1' ? 'all' : e.target.value)}
-            aria-valuetext={maxPrice >= 1 ? (t.services.all || 'All') : `$${maxPrice}`}
-            className="w-32 sm:w-24 h-2 accent-[#FF9900] cursor-pointer"
-          />
-          <span className="text-xs text-[#FF9900] font-mono min-w-[3rem]">
-            {maxPrice >= 1 ? (t.services.all || 'All') : `$${maxPrice}`}
-          </span>
-        </div>
+        {/* Separator */}
+        <span className="w-px h-5 bg-white/10 shrink-0 hidden sm:block" />
 
-        {/* Source filter */}
-        <div className="flex items-center gap-1.5">
-          {['all', 'native', 'community'].map(f => (
-            <button
-              key={f}
-              onClick={() => setParam('source', f)}
-              aria-pressed={sourceFilter === f}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 cursor-pointer ${
-                sourceFilter === f
-                  ? 'bg-[#FF9900]/15 text-[#FF9900] border border-[#FF9900]/25'
-                  : 'bg-white/3 text-gray-500 hover:text-gray-300 hover:bg-white/5 border border-transparent'
-              }`}
-            >
-              {f === 'all' ? (t.services.sourceAll || 'All') : f === 'native' ? (t.services.sourceNative || 'x402 Native') : (t.services.sourceCommunity || 'Community')}
-            </button>
-          ))}
-        </div>
-      </div>
+        {/* Source pills */}
+        {['all', 'native', 'community'].map(f => (
+          <button
+            key={`source-${f}`}
+            onClick={() => setParam('source', f)}
+            aria-pressed={sourceFilter === f}
+            className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 cursor-pointer whitespace-nowrap shrink-0 ${
+              sourceFilter === f
+                ? 'bg-[#FF9900]/15 text-[#FF9900] border border-[#FF9900]/25'
+                : 'bg-white/3 text-gray-400 hover:text-gray-300 hover:bg-white/5 border border-transparent'
+            }`}
+          >
+            {f === 'all' ? (t.services.sourceAll || 'All') : f === 'native' ? (t.services.sourceNative || 'x402 Native') : (t.services.sourceCommunity || 'Community')}
+          </button>
+        ))}
 
-      {/* Category filter */}
-      <div className="flex overflow-x-auto items-center gap-1.5 mb-8 pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 sm:flex-wrap sm:overflow-visible">
+        {/* Separator */}
+        <span className="w-px h-5 bg-white/10 shrink-0 hidden sm:block" />
+
+        {/* Category pills */}
         {CATEGORIES.map(cat => {
           const count = categoryCounts[cat.key] || 0;
           const isActive = category === cat.key;
@@ -298,10 +259,10 @@ export default function Services() {
               key={cat.key}
               onClick={() => setParam('cat', cat.key)}
               aria-pressed={isActive}
-              className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer whitespace-nowrap shrink-0 sm:shrink ${
+              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 cursor-pointer whitespace-nowrap shrink-0 sm:shrink ${
                 isActive
                   ? 'bg-white/10 text-white border border-white/15'
-                  : 'bg-white/[0.02] text-gray-500 hover:text-gray-300 hover:bg-white/5 border border-transparent'
+                  : 'bg-white/[0.02] text-gray-400 hover:text-gray-300 hover:bg-white/5 border border-transparent'
               }`}
             >
               <CategoryIcon category={cat.key as any} className="w-3.5 h-3.5" />
@@ -313,8 +274,6 @@ export default function Services() {
           );
         })}
       </div>
-
-      <div className="border-b border-white/6 mb-6" />
 
       {/* Screen reader announcement for search results */}
       <div aria-live="polite" className="sr-only">
@@ -436,7 +395,6 @@ export default function Services() {
                     <div key={s.id} className="animate-fade-in-up" style={{ animationDelay: `${Math.min(i, 7) * 50}ms` }}>
                       <ServiceCard
                         service={s}
-                        lastActivity={activityMap[s.url]}
                         healthStatus={s.status === 'online' ? 'online' : s.status === 'offline' || s.status === 'degraded' ? 'offline' : undefined}
                         uptimePercent={uptimeMap[s.url]}
                         reviewStats={reviewStatsMap.get(s.id) ?? null}
@@ -467,7 +425,6 @@ export default function Services() {
                     <div key={s.id} className="animate-fade-in-up" style={{ animationDelay: `${Math.min(i, 7) * 50}ms` }}>
                       <ServiceCard
                         service={s}
-                        lastActivity={activityMap[s.url]}
                         healthStatus={s.status === 'online' ? 'online' : s.status === 'offline' || s.status === 'degraded' ? 'offline' : undefined}
                         uptimePercent={uptimeMap[s.url]}
                         reviewStats={reviewStatsMap.get(s.id) ?? null}
@@ -486,7 +443,6 @@ export default function Services() {
             <div key={s.id} className="animate-fade-in-up" style={{ animationDelay: `${Math.min(i, 11) * 50}ms` }}>
               <ServiceCard
                 service={s}
-                lastActivity={activityMap[s.url]}
                 healthStatus={s.status === 'online' ? 'online' : s.status === 'offline' || s.status === 'degraded' ? 'offline' : undefined}
                 uptimePercent={uptimeMap[s.url]}
                 reviewStats={reviewStatsMap.get(s.id) ?? null}
