@@ -112,9 +112,9 @@ function ServiceCard({ service, lastActivity, healthStatus = null, uptimePercent
   };
 
   return (
-    <div className="glass-card rounded-xl p-3 sm:p-5 transition-all duration-300 ease-out hover:bg-white/[0.14]
-                    hover:border-[#FF9900]/40 hover:-translate-y-1.5
-                    hover:shadow-[0_0_30px_rgba(255,153,0,0.15),0_8px_32px_rgba(0,0,0,0.4)] group relative">
+    <div className="glass-card rounded-xl p-3 sm:p-5 transition-all duration-300 ease-out hover:bg-white/[0.20]
+                    hover:border-[#FF9900]/45 hover:-translate-y-1.5
+                    hover:shadow-[0_0_30px_rgba(255,153,0,0.18),0_8px_32px_rgba(0,0,0,0.45)] group relative">
       {/* NEW badge */}
       {isNew && (
         <span
