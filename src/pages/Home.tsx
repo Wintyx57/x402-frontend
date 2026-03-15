@@ -132,7 +132,7 @@ function IntegrationBadge({ label, icon, href }: { label: string; icon: React.Re
   const inner = (
     <div className="flex flex-col items-center gap-2 group">
       <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center
-                      group-hover:border-[#FF9900]/40 group-hover:bg-[#FF9900]/5 transition-all duration-300">
+                      group-hover:border-[#FF9900]/50 group-hover:bg-[#FF9900]/10 group-hover:shadow-[0_0_16px_rgba(255,153,0,0.12)] transition-all duration-300">
         {icon}
       </div>
       <span className="text-xs text-gray-400 group-hover:text-gray-300 transition-colors">{label}</span>
@@ -603,7 +603,7 @@ export default function Home() {
             <div key={i} className="flex flex-col md:flex-row items-center gap-4 md:gap-0 flex-1">
               <div
                 className={`glass-card rounded-xl p-7 w-full max-w-xs mx-auto text-center animate-fade-in-up
-                           hover:border-[#FF9900]/20 transition-all duration-300 ${step.glow} relative`}
+                           hover:border-[#FF9900]/30 hover:bg-white/[0.06] transition-all duration-300 ${step.glow} relative`}
                 style={{ animationDelay: `${i * 100}ms` }}
               >
                 {/* Step number — top right */}
@@ -686,7 +686,7 @@ export default function Home() {
             <div
               key={card.title}
               className="glass-card rounded-xl p-6 text-center animate-fade-in-up
-                         hover:shadow-[0_0_24px_rgba(255,153,0,0.05)] hover:border-[#FF9900]/20 transition-all duration-300"
+                         hover:shadow-[0_0_28px_rgba(255,153,0,0.10)] hover:border-[#FF9900]/30 hover:bg-white/[0.06] transition-all duration-300"
               style={{ animationDelay: `${i * 80}ms` }}
             >
               <div className={`w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 border ${card.accent} ${card.bg}`}>
@@ -780,7 +780,7 @@ export default function Home() {
               ].map((provider, i) => (
                 <div
                   key={provider.name}
-                  className="glass rounded-xl p-4 border border-white/8 hover:border-[#FF9900]/20 transition-all duration-300 animate-fade-in-up"
+                  className="glass rounded-xl p-4 border border-white/8 hover:border-[#FF9900]/30 hover:bg-white/[0.06] hover:shadow-[0_0_20px_rgba(255,153,0,0.08)] transition-all duration-300 animate-fade-in-up"
                   style={{ animationDelay: `${i * 80}ms` }}
                 >
                   <div className="flex items-start justify-between gap-2 mb-2">
@@ -870,8 +870,8 @@ export default function Home() {
               key={cat}
               to={`/services?cat=${cat}`}
               className="no-underline glass-card rounded-lg p-3 text-center
-                         transition-all duration-200 hover:bg-white/[0.07] hover:border-[#FF9900]/30
-                         hover:shadow-[0_0_15px_rgba(255,153,0,0.06)] animate-fade-in-up"
+                         transition-all duration-200 hover:bg-white/[0.12] hover:border-[#FF9900]/35
+                         hover:shadow-[0_0_24px_rgba(255,153,0,0.12),0_4px_16px_rgba(0,0,0,0.3)] animate-fade-in-up"
               style={{ animationDelay: `${i * 40}ms` }}
             >
               <CategoryIcon category={cat} className="w-5 h-5 mx-auto mb-1.5" />

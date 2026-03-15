@@ -56,7 +56,7 @@ export default function Footer() {
   const { t } = useTranslation();
 
   return (
-    <footer className="border-t border-white/5 bg-[#131921]" role="contentinfo">
+    <footer className="border-t border-white/8 bg-gradient-to-b from-[#131921] to-[#0e1117]" role="contentinfo">
       <div className="max-w-7xl mx-auto px-4 py-10">
         {/* Main grid */}
         <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-8 mb-8">
