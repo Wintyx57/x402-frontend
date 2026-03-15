@@ -353,8 +353,8 @@ export default function Services() {
 
       {/* Grid */}
       {loading ? (
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-          {Array.from({ length: 12 }, (_, i) => (
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {Array.from({ length: 9 }, (_, i) => (
             <div key={i} className="animate-fade-in-up" style={{ animationDelay: `${i * 50}ms` }}>
               <ServiceCardSkeleton />
             </div>
@@ -431,7 +431,7 @@ export default function Services() {
                     {t.services.viewAll || 'View all'} &rarr;
                   </button>
                 </div>
-                <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
                   {catServices.map((s, i) => (
                     <div key={s.id} className="animate-fade-in-up" style={{ animationDelay: `${Math.min(i, 7) * 50}ms` }}>
                       <ServiceCard
@@ -462,7 +462,7 @@ export default function Services() {
                     {uncategorized.length}
                   </span>
                 </div>
-                <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
                   {uncategorized.map((s, i) => (
                     <div key={s.id} className="animate-fade-in-up" style={{ animationDelay: `${Math.min(i, 7) * 50}ms` }}>
                       <ServiceCard
@@ -481,7 +481,7 @@ export default function Services() {
         </div>
       ) : (
         /* Flat grid when filtering by category or searching */
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {sorted.map((s, i) => (
             <div key={s.id} className="animate-fade-in-up" style={{ animationDelay: `${Math.min(i, 11) * 50}ms` }}>
               <ServiceCard

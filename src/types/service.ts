@@ -14,5 +14,5 @@ export interface Service {
   last_checked_at?: string;
   trust_score?: number | null;
   trust_score_updated_at?: string | null;
-  free_calls_per_month?: number | null;
+  logo_url?: string | null;
 }

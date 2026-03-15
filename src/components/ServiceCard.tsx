@@ -2,6 +2,7 @@ import { useState, memo } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '../i18n/LanguageContext';
 import StarRating from './StarRating';
+import X402Logo from './icons/X402Logo';
 import { trackEvent } from '../lib/analytics';
 import type { Service } from '../types/service';
 
@@ -92,6 +93,7 @@ function ServiceCard({ service, lastActivity, healthStatus = null, uptimePercent
   const quality = getQualityTier(uptimePercent);
   const trustBadge = getTrustBadge(service.trust_score);
   const isNew = isNewService(service.created_at);
+  const primaryCategory = service.tags?.find((tag: string) => !['x402-native', 'live'].includes(tag)) || service.tags?.[0];
 
   const handleCopyPrompt = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
@@ -112,9 +114,10 @@ function ServiceCard({ service, lastActivity, healthStatus = null, uptimePercent
   };
 
   return (
-    <div className="glass-card rounded-xl p-3 sm:p-5 transition-all duration-300 ease-out hover:bg-white/[0.20]
-                    hover:border-[#FF9900]/45 hover:-translate-y-1.5
+    <div className="glass-card rounded-2xl p-5 sm:p-6 flex flex-col transition-all duration-300 ease-out
+                    hover:bg-white/[0.20] hover:border-[#FF9900]/45 hover:-translate-y-1.5
                     hover:shadow-[0_0_30px_rgba(255,153,0,0.18),0_8px_32px_rgba(0,0,0,0.45)] group relative">
+
       {/* NEW badge */}
       {isNew && (
         <span
@@ -126,24 +129,40 @@ function ServiceCard({ service, lastActivity, healthStatus = null, uptimePercent
         </span>
       )}
 
-      {/* Top row: logo + name + price */}
-      <div className="flex items-start gap-3 mb-3">
-        <div className="w-9 h-9 rounded-lg bg-[#232f3e] flex items-center justify-center shrink-0 overflow-hidden">
-          {domain && !imgError ? (
+      {/* ===== HEADER: Logo + Name + Price ===== */}
+      <div className="flex items-start gap-4 mb-4">
+        {/* Logo 48px */}
+        <div className="w-12 h-12 rounded-xl bg-[#1a1f2e] border border-white/8 flex items-center justify-center shrink-0 overflow-hidden">
+          {isNative ? (
+            <X402Logo className="w-12 h-12" />
+          ) : service.logo_url ? (
             <img
-              src={`https://www.google.com/s2/favicons?domain=${domain}&sz=64`}
+              src={service.logo_url}
               alt={service.name}
-              className="w-6 h-6 object-contain"
+              className="w-8 h-8 object-contain"
+              onError={() => setImgError(true)}
+              loading="lazy"
+            />
+          ) : domain && !imgError ? (
+            <img
+              src={`https://www.google.com/s2/favicons?domain=${domain}&sz=128`}
+              alt={service.name}
+              className="w-7 h-7 object-contain"
               onError={() => setImgError(true)}
               loading="lazy"
             />
           ) : (
-            <span className="text-sm font-bold text-[#FF9900]">{initial}</span>
+            <span className="text-lg font-bold text-[#FF9900]">{initial}</span>
           )}
         </div>
+
+        {/* Name + Category + Status */}
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-1.5 flex-wrap">
-            <h3 className="text-white font-semibold text-sm leading-tight truncate" title={service.name}>{service.name}</h3>
+          <h3 className="text-white font-semibold text-[15px] leading-snug truncate" title={service.name}>
+            {service.name}
+          </h3>
+          <div className="flex items-center gap-2 mt-1">
+            <span className="text-xs text-gray-400 capitalize">{primaryCategory}</span>
             {healthStatus === 'online' && (
               <span className="flex items-center gap-1 text-[10px] text-[#34D399] shrink-0">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#34D399] animate-pulse" aria-hidden="true" />
@@ -156,63 +175,11 @@ function ServiceCard({ service, lastActivity, healthStatus = null, uptimePercent
                 {t.serviceCard.offline || 'Offline'}
               </span>
             )}
-            {isNative && (
-              <span className="text-[11px] bg-[#FF9900]/10 text-[#FF9900] px-1.5 py-0.5 rounded border border-[#FF9900]/20 shrink-0">
-                {t.serviceCard.native}
-              </span>
-            )}
-            {service.verified_status === 'reachable' && (
-              <span className="text-[11px] bg-emerald-500/10 text-emerald-400 px-1.5 py-0.5 rounded border border-emerald-500/20 shrink-0">
-                {t.serviceCard.autoTested}
-              </span>
-            )}
-            {quality && (
-              <span
-                className="text-[11px] px-1.5 py-0.5 rounded shrink-0 font-medium"
-                style={{
-                  backgroundColor: `${quality.bg}15`,
-                  color: quality.color,
-                  border: `1px solid ${quality.bg}30`,
-                }}
-                aria-label={`${quality?.label} tier - ${uptimePercent}% uptime over 7 days`}
-              >
-                {quality.label}
-              </span>
-            )}
-            {trustBadge && (
-              <span
-                className="text-[11px] px-1.5 py-0.5 rounded shrink-0 font-medium flex items-center gap-0.5"
-                style={{
-                  backgroundColor: `${trustBadge.bg}15`,
-                  color: trustBadge.color,
-                  border: `1px solid ${trustBadge.bg}30`,
-                }}
-                aria-label={`Trust score: ${trustBadge.label} out of 100`}
-                title="Proof of Quality score"
-              >
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 1l3.09 6.26L22 8.27l-5 4.87 1.18 6.88L12 16.77l-6.18 3.25L7 13.14 2 8.27l6.91-1.01z"/></svg>
-                {trustBadge.label}
-              </span>
-            )}
-            {(service.free_calls_per_month ?? 0) > 0 && (
-              <span
-                className="text-[11px] px-1.5 py-0.5 rounded shrink-0 font-medium flex items-center gap-0.5
-                           bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
-                aria-label={`${service.free_calls_per_month} free calls per month`}
-                title="Free tier available — no payment required for these calls"
-              >
-                <svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/>
-                </svg>
-                {service.free_calls_per_month} Free/mo
-              </span>
-            )}
           </div>
-          <span className="inline-block text-xs mt-0.5 text-gray-300 capitalize">
-            {service.tags?.find((tag: string) => !['x402-native', 'live'].includes(tag)) || service.tags?.[0]}
-          </span>
         </div>
-        <span className={`shrink-0 font-mono text-xs font-bold px-2.5 py-1 rounded-lg ${
+
+        {/* Price badge */}
+        <span className={`shrink-0 font-mono text-sm font-bold px-3 py-1.5 rounded-lg ${
           isFree
             ? 'bg-[#34D399]/10 text-[#34D399] border border-[#34D399]/20'
             : 'bg-[#FF9900]/10 text-[#FF9900] border border-[#FF9900]/20'
@@ -221,57 +188,101 @@ function ServiceCard({ service, lastActivity, healthStatus = null, uptimePercent
         </span>
       </div>
 
-      {/* Star rating (if reviews exist) */}
-      {reviewStats && reviewStats.count > 0 && (
-        <div className="flex items-center gap-1.5 mb-2">
-          <StarRating rating={reviewStats.average} size="sm" />
-          <span className="text-[10px] text-gray-300">
-            {reviewStats.average} ({reviewStats.count})
-          </span>
-        </div>
-      )}
+      {/* ===== BODY: Description + Badges + Tags + Reviews + Activity ===== */}
 
       {/* Description */}
-      <p className="text-gray-300 text-xs mb-3 leading-relaxed line-clamp-2" title={service.description}>
+      <p className="text-gray-300 text-sm mb-4 leading-relaxed line-clamp-3" title={service.description}>
         {service.description}
       </p>
 
-      {/* Activity badge */}
-      {lastActivity && (
-        <div className="flex items-center gap-1.5 mb-2">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#34D399] animate-pulse" aria-hidden="true" />
-          <span className="text-xs text-gray-300">{timeAgo(lastActivity, t)}</span>
-        </div>
-      )}
-
-      {/* Tags */}
-      <div className="flex flex-wrap gap-1 mb-3">
-        {service.tags?.slice(0, 3).map((tag: string) => (
-          <span key={tag} className="text-xs text-gray-300 bg-white/5 px-2 py-0.5 rounded-lg">
-            {tag}
+      {/* Quality badges row */}
+      <div className="flex flex-wrap gap-1.5 mb-4">
+        {isNative && (
+          <span className="text-[11px] bg-[#FF9900]/10 text-[#FF9900] px-2 py-0.5 rounded-md border border-[#FF9900]/20 shrink-0">
+            {t.serviceCard.native}
           </span>
-        ))}
-        {(service.tags?.length ?? 0) > 3 && (
-          <span className="text-xs text-gray-500 px-1">+{(service.tags?.length ?? 0) - 3}</span>
+        )}
+        {service.verified_status === 'reachable' && (
+          <span className="text-[11px] bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded-md border border-emerald-500/20 shrink-0">
+            {t.serviceCard.autoTested}
+          </span>
+        )}
+        {quality && (
+          <span
+            className="text-[11px] px-2 py-0.5 rounded-md shrink-0 font-medium"
+            style={{
+              backgroundColor: `${quality.bg}15`,
+              color: quality.color,
+              border: `1px solid ${quality.bg}30`,
+            }}
+            aria-label={`${quality?.label} tier - ${uptimePercent}% uptime over 7 days`}
+          >
+            {quality.label}
+          </span>
+        )}
+        {trustBadge && (
+          <span
+            className="text-[11px] px-2 py-0.5 rounded-md shrink-0 font-medium flex items-center gap-0.5"
+            style={{
+              backgroundColor: `${trustBadge.bg}15`,
+              color: trustBadge.color,
+              border: `1px solid ${trustBadge.bg}30`,
+            }}
+            aria-label={`Trust score: ${trustBadge.label} out of 100`}
+            title="Proof of Quality score"
+          >
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 1l3.09 6.26L22 8.27l-5 4.87 1.18 6.88L12 16.77l-6.18 3.25L7 13.14 2 8.27l6.91-1.01z"/></svg>
+            {trustBadge.label}
+          </span>
         )}
       </div>
 
-      {/* Call count */}
-      {callCount != null && callCount > 0 && (
-        <div className="flex items-center gap-1 mb-2">
-          <svg className="w-3 h-3 text-gray-500 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
-          </svg>
-          <span className="text-[11px] text-gray-500">
-            {callCount >= 1000
-              ? `${(callCount / 1000).toFixed(1)}k calls`
-              : `${callCount} calls`}
-          </span>
+      {/* Tags + Reviews side by side */}
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex flex-wrap gap-1">
+          {service.tags?.slice(0, 3).map((tag: string) => (
+            <span key={tag} className="text-xs text-gray-300 bg-white/5 px-2 py-0.5 rounded-lg">
+              {tag}
+            </span>
+          ))}
+          {(service.tags?.length ?? 0) > 3 && (
+            <span className="text-xs text-gray-500 px-1">+{(service.tags?.length ?? 0) - 3}</span>
+          )}
+        </div>
+        {reviewStats && reviewStats.count > 0 && (
+          <div className="flex items-center gap-1.5 shrink-0">
+            <StarRating rating={reviewStats.average} size="sm" />
+            <span className="text-[10px] text-gray-300">
+              {reviewStats.average} ({reviewStats.count})
+            </span>
+          </div>
+        )}
+      </div>
+
+      {/* Activity + Call count subtle line */}
+      {(lastActivity || (callCount != null && callCount > 0)) && (
+        <div className="flex items-center gap-3 mb-3 text-[11px] text-gray-500">
+          {lastActivity && (
+            <span className="flex items-center gap-1">
+              <span className="w-1 h-1 rounded-full bg-[#34D399]" aria-hidden="true" />
+              {timeAgo(lastActivity, t)}
+            </span>
+          )}
+          {callCount != null && callCount > 0 && (
+            <span className="flex items-center gap-1">
+              <svg className="w-3 h-3 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+              </svg>
+              {callCount >= 1000
+                ? `${(callCount / 1000).toFixed(1)}k calls`
+                : `${callCount} calls`}
+            </span>
+          )}
         </div>
       )}
 
-      {/* Bottom row: owner + verify + actions */}
-      <div className="flex items-center justify-between pt-2 border-t border-white/5">
+      {/* ===== FOOTER: Owner + Actions ===== */}
+      <div className="flex items-center justify-between pt-3 mt-auto border-t border-white/6">
         <div className="flex items-center gap-2 text-xs text-gray-400">
           <span className="font-mono">
             {service.owner_address?.slice(0, 6)}...{service.owner_address?.slice(-4)}

@@ -891,7 +891,7 @@ export default function Home() {
               {t.home.viewAll} &rarr;
             </Link>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {freeServices.map((s, i) => (
               <div key={s.id} className="animate-fade-in-up" style={{ animationDelay: `${i * 75}ms` }}>
                 <ServiceCard service={s} lastActivity={activityMap[s.url]} />
@@ -910,7 +910,7 @@ export default function Home() {
               {t.home.viewAll} &rarr;
             </Link>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {paidServices.map((s, i) => (
               <div key={s.id} className="animate-fade-in-up" style={{ animationDelay: `${i * 75}ms` }}>
                 <ServiceCard service={s} lastActivity={activityMap[s.url]} />
