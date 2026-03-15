@@ -45,9 +45,9 @@ export default function FundWallet() {
       />
 
       {/* ===== Hero ===== */}
-      <section ref={heroRef} className="reveal-section relative z-10 text-center py-16 sm:py-20 px-4">
+      <section ref={heroRef} className="reveal-section relative z-10 text-center py-8 sm:py-10 px-4">
         <div className="max-w-3xl mx-auto">
-          <div className="flex items-center justify-center gap-2 mb-6">
+          <div className="flex items-center justify-center gap-2 mb-3">
             <span className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1 rounded-full
                            bg-[#FF9900]/10 border border-[#FF9900]/20 text-[#FF9900]">
               <span className="w-1.5 h-1.5 rounded-full bg-[#FF9900] inline-block animate-pulse" />
@@ -58,17 +58,17 @@ export default function FundWallet() {
               Multi-Chain
             </span>
           </div>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-5">
+          <h1 className="text-2xl sm:text-3xl font-bold mb-2">
             {f.heroTitle || 'Fund Your Wallet'}
           </h1>
-          <p className="text-base sm:text-lg text-gray-400 max-w-xl mx-auto leading-relaxed">
+          <p className="text-sm sm:text-base text-gray-400 max-w-xl mx-auto leading-relaxed">
             {f.heroSubtitle || 'Bridge USDC to Base, SKALE, or Polygon in 1 click. Pay for APIs with ultra-low gas.'}
           </p>
         </div>
       </section>
 
       {/* ===== Bridge Card ===== */}
-      <section ref={widgetRef} className="reveal-section relative z-10 px-4 pb-20">
+      <section ref={widgetRef} className="reveal-section relative z-10 px-4 pb-6">
         <BridgeCard />
       </section>
 
