@@ -9,7 +9,16 @@ export interface PublicStats {
   totalPayments?: number;
   totalPayments24h?: number;
   uptime?: number;
-  [key: string]: any;
+  uptimePercent?: number;
+  integrations?: number;
+  tests?: number;
+  monitoring?: {
+    overall?: string;
+    online?: number;
+    total?: number;
+    lastCheck?: string;
+  };
+  topEndpoints?: Array<{ endpoint: string; count: number }>;
 }
 
 async function fetchPublicStats(): Promise<PublicStats> {

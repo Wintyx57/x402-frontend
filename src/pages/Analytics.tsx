@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from '../i18n/LanguageContext';
+import type { translations } from '../i18n/translations';
 import { useReveal } from '../hooks/useReveal';
 import useSEO from '../hooks/useSEO';
 import { usePublicStats } from '../hooks/usePublicStats';
 import { API_URL } from '../config';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Tooltip, Legend, ArcElement } from 'chart.js';
 import { Bar, Doughnut } from 'react-chartjs-2';
+
+type TDict = typeof translations.en;
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend, ArcElement);
 
@@ -35,7 +38,7 @@ interface Endpoint {
   count: number;
 }
 
-function TopEndpointsChart({ endpoints, t }: { endpoints: Endpoint[]; t: Record<string, any> }) {
+function TopEndpointsChart({ endpoints, t }: { endpoints: Endpoint[]; t: TDict }) {
   if (!endpoints || endpoints.length === 0) return null;
 
   const data = {
@@ -88,7 +91,14 @@ function TopEndpointsChart({ endpoints, t }: { endpoints: Endpoint[]; t: Record<
   );
 }
 
-function MonitoringStatus({ monitoring, uptimePercent, t }: { monitoring: Record<string, any>; uptimePercent: number | null; t: Record<string, any> }) {
+interface MonitoringData {
+  overall?: string;
+  online?: number;
+  total?: number;
+  lastCheck?: string;
+}
+
+function MonitoringStatus({ monitoring, uptimePercent, t }: { monitoring: MonitoringData; uptimePercent: number | null; t: TDict }) {
   const isOperational = monitoring?.overall === 'operational' || monitoring?.overall === 'healthy';
   const isDegraded = monitoring?.overall === 'degraded';
   const statusColor = isOperational ? '#34D399' : isDegraded ? '#FBBF24' : '#EF4444';
@@ -131,7 +141,7 @@ function MonitoringStatus({ monitoring, uptimePercent, t }: { monitoring: Record
   );
 }
 
-function PaymentsDoughnut({ totalPayments, apiCalls, t }: { totalPayments: number | null; apiCalls: number | null; t: Record<string, any> }) {
+function PaymentsDoughnut({ totalPayments, apiCalls, t }: { totalPayments: number | null; apiCalls: number | null; t: TDict }) {
   if (!totalPayments && !apiCalls) return null;
 
   const data = {
@@ -180,7 +190,7 @@ interface Activity {
   time?: string;
 }
 
-function RecentActivity({ activities, t }: { activities: Activity[] | null; t: Record<string, any> }) {
+function RecentActivity({ activities, t }: { activities: Activity[] | null; t: TDict }) {
   if (!activities || activities.length === 0) return null;
 
   const typeEmoji: Record<string, string> = { payment: '\uD83D\uDCB0', api_call: '\u26A1', register: '\uD83C\uDD95', '402': '\uD83D\uDD12', error: '\u274C' };
@@ -262,17 +272,17 @@ export default function Analytics() {
       {loading ? (
         <div className="flex flex-col items-center justify-center py-20 gap-4">
           <div className="w-8 h-8 border-2 border-[#FF9900]/20 border-t-[#FF9900] rounded-full animate-spin" />
-          <p className="text-xs text-gray-500">{(t.analytics as any).loadingLabel || 'Loading analytics...'}</p>
+          <p className="text-xs text-gray-500">{t.analytics.loadingLabel || 'Loading analytics...'}</p>
         </div>
       ) : error && !stats ? (
         <div className="glass-card rounded-xl p-8 text-center">
-          <p className="text-gray-400 mb-2">{(t.analytics as any).errorLabel || 'Unable to load analytics'}</p>
+          <p className="text-gray-400 mb-2">{t.analytics.errorLabel || 'Unable to load analytics'}</p>
           <p className="text-xs text-gray-600">{error}</p>
           <button
             onClick={() => refetch()}
             className="mt-4 px-4 py-2 text-xs text-[#FF9900] border border-[#FF9900]/20 rounded-lg hover:bg-[#FF9900]/10 transition-colors cursor-pointer"
           >
-            {(t.analytics as any).retryLabel || 'Retry'}
+            {t.analytics.retryLabel || 'Retry'}
           </button>
         </div>
       ) : !stats ? (

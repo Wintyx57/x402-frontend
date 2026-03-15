@@ -1,18 +1,27 @@
 import { useEffect, useState, useCallback } from 'react';
 import { API_URL } from '../config';
 import { useTranslation } from '../i18n/LanguageContext';
+import type { translations } from '../i18n/translations';
 import useSEO from '../hooks/useSEO';
 import { useStatus as useStatusQuery } from '../hooks/useStatus';
 
+type TDict = typeof translations.en;
+
+interface StatusConfig {
+  color: string;
+  text: string;
+  ring: string;
+}
+
 function StatusBadge({ overall }: { overall: string }) {
   const { t } = useTranslation();
-  const config = {
+  const config: Record<string, StatusConfig> = {
     operational: { color: 'bg-emerald-500', text: t.status?.operational || 'All Systems Operational', ring: 'ring-emerald-500/30' },
     degraded: { color: 'bg-amber-500', text: t.status?.degraded || 'Degraded Performance', ring: 'ring-amber-500/30' },
     major_outage: { color: 'bg-red-500', text: t.status?.majorOutage || 'Major Outage', ring: 'ring-red-500/30' },
     unknown: { color: 'bg-gray-500', text: t.status?.unknown || 'Checking...', ring: 'ring-gray-500/30' },
   };
-  const c = (config as Record<string, any>)[overall] || config.unknown;
+  const c: StatusConfig = config[overall] ?? config.unknown;
 
   return (
     <div className={`inline-flex items-center gap-3 px-6 py-3 rounded-full glass-card ring-2 ${c.ring}`}>
@@ -22,7 +31,14 @@ function StatusBadge({ overall }: { overall: string }) {
   );
 }
 
-function EndpointCard({ ep, t }: { ep: any; t: any }) {
+interface Endpoint {
+  label: string;
+  endpoint: string;
+  status: string;
+  latency: number;
+}
+
+function EndpointCard({ ep, t }: { ep: Endpoint; t: TDict }) {
   const isOnline = ep.status === 'online';
   return (
     <div className="glass-card rounded-lg p-4 flex items-center gap-3 hover:bg-white/5 transition-colors">
@@ -43,7 +59,7 @@ function EndpointCard({ ep, t }: { ep: any; t: any }) {
   );
 }
 
-function UptimeBar({ uptime }: { uptime: any }) {
+function UptimeBar({ uptime }: { uptime: number | null }) {
   const pct = uptime ?? 0;
   let color = 'bg-emerald-500';
   if (pct < 99) color = 'bg-amber-500';
@@ -63,9 +79,22 @@ function UptimeBar({ uptime }: { uptime: any }) {
 
 export default function Status() {
   const { t } = useTranslation();
+  interface UptimeData {
+    success?: boolean;
+    overallUptime?: number;
+    endpoints?: Array<{ endpoint: string; uptime: number | null }>;
+  }
+
+  interface StatusData {
+    overall?: string;
+    onlineCount?: number;
+    totalCount?: number;
+    endpoints?: Endpoint[];
+  }
+
   const { data: statusRaw, isLoading: statusLoading, error: statusError, dataUpdatedAt } = useStatusQuery();
-  const status = statusRaw as Record<string, any> | undefined;
-  const [uptime, setUptime] = useState<Record<string, any> | null>(null);
+  const status = statusRaw as StatusData | undefined;
+  const [uptime, setUptime] = useState<UptimeData | null>(null);
   const [period, setPeriod] = useState('24h');
   const loading = statusLoading;
   const lastRefresh = dataUpdatedAt ? new Date(dataUpdatedAt) : null;
@@ -170,8 +199,8 @@ export default function Status() {
           </div>
         ) : status?.endpoints?.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {status?.endpoints.map((ep: any) => {
-              const uptimeData = uptime?.endpoints?.find((u: any) => u.endpoint === ep.endpoint);
+            {status?.endpoints.map((ep: Endpoint) => {
+              const uptimeData = uptime?.endpoints?.find((u) => u.endpoint === ep.endpoint);
               return (
                 <div key={ep.endpoint}>
                   <EndpointCard ep={ep} t={t} />

@@ -1,7 +1,10 @@
 import { useTranslation } from '../i18n/LanguageContext';
+import type { translations } from '../i18n/translations';
 import { useReveal } from '../hooks/useReveal';
 import useSEO from '../hooks/useSEO';
 import { Link } from 'react-router-dom';
+
+type CompareDict = typeof translations.en.compare;
 
 const FEATURES = [
   { key: 'agentSupport', x402: true, rapidapi: false },
@@ -34,7 +37,7 @@ function CrossIcon() {
   );
 }
 
-function renderValue(val: any) {
+function renderValue(val: boolean | string) {
   if (val === true) return <CheckIcon />;
   if (val === false) return <CrossIcon />;
   return <span className="text-sm text-white font-medium">{val}</span>;
@@ -82,7 +85,7 @@ export default function Compare() {
             key={key}
             className={`grid grid-cols-3 px-5 py-3.5 items-center ${i % 2 === 0 ? 'bg-white/[0.02]' : ''} ${i < FEATURES.length - 1 ? 'border-b border-white/5' : ''}`}
           >
-            <div className="text-sm text-gray-300">{(c as Record<string, any>)[`feature_${key}`] || key}</div>
+            <div className="text-sm text-gray-300">{(c as CompareDict & Record<string, string>)[`feature_${key}`] || key}</div>
             <div className="flex justify-center">{renderValue(x402)}</div>
             <div className="flex justify-center">{renderValue(rapidapi)}</div>
           </div>

@@ -1,20 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { useAccount } from 'wagmi';
 import { API_URL } from '../config';
-
-export interface Service {
-  id: string;
-  name: string;
-  url: string;
-  description: string;
-  price_usdc: number;
-  owner_address: string;
-  tags: string[];
-  status: string;
-  last_checked_at: string | null;
-  created_at: string;
-  required_parameters: any;
-}
+import type { Service } from '../types/service';
+export type { Service } from '../types/service';
 
 export function useMyServices() {
     const { address, isConnected } = useAccount();
