@@ -84,7 +84,6 @@ const Budget = lazy(() => import('./pages/Budget'));
 // CreatorDashboard redirected to /my-apis — kept for potential reuse
 // const CreatorDashboard = lazy(() => import('./pages/CreatorDashboard'));
 const Quickstart = lazy(() => import('./pages/Quickstart'));
-const AdminCommunityAgent = lazy(() => import('./pages/AdminCommunityAgent'));
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 const FundWallet = lazy(() => import('./pages/FundWallet'));
 const ServiceDetail = lazy(() => import('./pages/ServiceDetail'));
@@ -127,7 +126,6 @@ export default function App() {
             <Route path="/creators/onboarding" element={<Navigate to="/register" replace />} />
             <Route path="/quickstart" element={<Quickstart />} />
             <Route path="/admin" element={<AdminDashboard />} />
-            <Route path="/admin/community-agent" element={<AdminCommunityAgent />} />
             <Route path="/services/:id" element={<ServiceDetail />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
