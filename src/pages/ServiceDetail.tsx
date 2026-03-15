@@ -647,19 +647,19 @@ export default function ServiceDetail() {
           <svg className="w-4 h-4 text-[#FF9900]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
           </svg>
-          Payment Info
+          {t.serviceDetail?.paymentInfo || 'Payment Info'}
         </h2>
 
         <div className="grid sm:grid-cols-2 gap-4 text-sm">
           <div>
-            <span className="text-xs text-gray-500 block mb-1">Price</span>
+            <span className="text-xs text-gray-500 block mb-1">{t.serviceDetail?.price || 'Price'}</span>
             <span className={`font-mono font-bold ${isFree ? 'text-[#34D399]' : 'text-[#FF9900]'}`}>
               {isFree ? 'Free' : `$${service.price_usdc} USDC`}
             </span>
           </div>
 
           <div>
-            <span className="text-xs text-gray-500 block mb-1">Chain</span>
+            <span className="text-xs text-gray-500 block mb-1">{t.serviceDetail?.chain || 'Chain'}</span>
             <div className="flex flex-col gap-1">
               <span className={`font-medium text-sm ${chainKey === 'base' ? 'text-white' : 'text-gray-300'}`}>Base (USDC) <span className="text-gray-500 font-normal text-xs">— default</span></span>
               <span className={`font-medium text-sm ${chainKey === 'skale' ? 'text-white' : 'text-gray-300'}`}>SKALE on Base (USDC) <span className="text-gray-500 font-normal text-xs">— ultra-low gas</span></span>
@@ -668,14 +668,14 @@ export default function ServiceDetail() {
           </div>
 
           <div>
-            <span className="text-xs text-gray-500 block mb-1">Owner</span>
+            <span className="text-xs text-gray-500 block mb-1">{t.serviceDetail?.owner || 'Owner'}</span>
             <span className="font-mono text-gray-300 text-xs">
               {service.owner_address?.slice(0, 6)}...{service.owner_address?.slice(-4)}
             </span>
           </div>
 
           <div>
-            <span className="text-xs text-gray-500 block mb-1">Protocol</span>
+            <span className="text-xs text-gray-500 block mb-1">{t.serviceDetail?.protocol || 'Protocol'}</span>
             <span className="text-gray-300">HTTP 402 / x402</span>
           </div>
         </div>
@@ -700,7 +700,7 @@ export default function ServiceDetail() {
 
       {/* ── EMBED THIS API ── */}
       <div className="mb-6">
-        <EmbedSnippet serviceId={service.id} serviceName={service.name} />
+        <EmbedSnippet serviceId={service.id} serviceName={service.name} chainKey={chainKey} />
       </div>
 
       {/* ── 5. REVIEWS ── */}

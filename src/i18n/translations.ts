@@ -608,6 +608,11 @@ export const translations = {
       parameters: "Parameters",
       response: "Response",
       free: "Free",
+      paymentInfo: "Payment Info",
+      price: "Price",
+      chain: "Chain",
+      owner: "Owner",
+      protocol: "Protocol",
     },
     register: {
       title: "Register a Service",
@@ -2302,6 +2307,11 @@ def my_function(query: str) -> dict:
       parameters: "Paramètres",
       response: "Réponse",
       free: "Gratuit",
+      paymentInfo: "Infos de paiement",
+      price: "Prix",
+      chain: "Réseau",
+      owner: "Propriétaire",
+      protocol: "Protocole",
     },
     register: {
       title: "Enregistrer un service",

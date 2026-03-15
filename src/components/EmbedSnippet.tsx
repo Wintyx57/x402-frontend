@@ -6,11 +6,12 @@ type Lang = 'curl' | 'javascript' | 'python';
 interface EmbedSnippetProps {
   serviceId: string;
   serviceName?: string;
+  chainKey?: string;
 }
 
 const PROXY_BASE = 'https://x402-api.onrender.com/api/call';
 
-function getSnippet(serviceId: string, lang: Lang): string {
+function getSnippet(serviceId: string, lang: Lang, chainKey: string): string {
   const url = `${PROXY_BASE}/${serviceId}`;
 
   if (lang === 'curl') {
@@ -18,7 +19,7 @@ function getSnippet(serviceId: string, lang: Lang): string {
 curl -X POST "${url}" \\
   -H "Content-Type: application/json" \\
   -H "X-Payment-TxHash: YOUR_TX_HASH" \\
-  -H "X-Payment-Chain: skale"`;
+  -H "X-Payment-Chain: ${chainKey}"`;
   }
 
   if (lang === 'javascript') {
@@ -28,7 +29,7 @@ const res = await fetch("${url}", {
   headers: {
     "Content-Type": "application/json",
     "X-Payment-TxHash": txHash,
-    "X-Payment-Chain": "skale"
+    "X-Payment-Chain": "${chainKey}"
   },
   body: JSON.stringify({ /* your params */ })
 });
@@ -42,16 +43,16 @@ res = requests.post(
     "${url}",
     headers={
         "X-Payment-TxHash": tx_hash,
-        "X-Payment-Chain": "skale"
+        "X-Payment-Chain": "${chainKey}"
     },
     json={},  # your params
 )
 print(res.json())`;
 }
 
-export default function EmbedSnippet({ serviceId, serviceName }: EmbedSnippetProps) {
+export default function EmbedSnippet({ serviceId, serviceName, chainKey = 'skale' }: EmbedSnippetProps) {
   const [lang, setLang] = useState<Lang>('curl');
-  const snippet = getSnippet(serviceId, lang);
+  const snippet = getSnippet(serviceId, lang, chainKey);
   const tabs: { key: Lang; label: string }[] = [
     { key: 'curl', label: 'cURL' },
     { key: 'javascript', label: 'JavaScript' },
