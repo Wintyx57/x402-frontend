@@ -30,8 +30,8 @@ export default function StudioTab({ adminFetch }: Props) {
         body: JSON.stringify({ strategy, platforms: selectedPlatforms }),
       });
       setPreview(data.contents || (data.content ? { preview: data.content } : null));
-    } catch (err: any) {
-      setResult({ type: 'error', message: err.message });
+    } catch (err: unknown) {
+      setResult({ type: 'error', message: err instanceof Error ? err.message : String(err) });
     } finally {
       setLoading(false);
     }
@@ -48,8 +48,8 @@ export default function StudioTab({ adminFetch }: Props) {
       const successes = data.results ? Object.values(data.results).filter(r => r.success).length : 0;
       setResult({ type: 'success', message: `Published to ${successes} platform(s)` });
       setPreview(null);
-    } catch (err: any) {
-      setResult({ type: 'error', message: err.message });
+    } catch (err: unknown) {
+      setResult({ type: 'error', message: err instanceof Error ? err.message : String(err) });
     } finally {
       setPublishing(false);
     }

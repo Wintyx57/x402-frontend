@@ -53,8 +53,8 @@ function EditModal({ service, onClose, onSave }: {
       }
       await onSave(updates);
       onClose();
-    } catch (err: any) {
-      setError(err.message || 'Failed to update');
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to update');
     } finally {
       setSaving(false);
     }

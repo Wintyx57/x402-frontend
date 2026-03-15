@@ -62,12 +62,12 @@ export function useApi<T = unknown>(): UseApiReturn<T> {
       setData(result);
       setLoading(false);
       return result;
-    } catch (err: any) {
+    } catch (err: unknown) {
       clearTimeout(timeoutId);
-      if (err.name === 'AbortError') {
+      if (err instanceof Error && err.name === 'AbortError') {
         setError('Request timed out. Please try again.');
       } else {
-        setError(err.message || 'An unexpected error occurred.');
+        setError(err instanceof Error ? err.message : 'An unexpected error occurred.');
       }
       setLoading(false);
       throw err;

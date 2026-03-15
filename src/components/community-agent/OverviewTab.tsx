@@ -46,8 +46,9 @@ export default function OverviewTab({ adminFetch }: Props) {
       setHealth(h);
       setStats(s);
       setError(null);
-    } catch (err: any) {
-      if (err.message !== 'Unauthorized') setError(err.message);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      if (msg !== 'Unauthorized') setError(msg);
     } finally {
       setLoading(false);
     }
