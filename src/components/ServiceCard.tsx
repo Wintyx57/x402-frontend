@@ -161,7 +161,7 @@ function ServiceCard({ service, healthStatus = null, uptimePercent = null, revie
   };
 
   return (
-    <div className="glass-card rounded-2xl p-5 sm:p-6 flex flex-col transition-all duration-300 ease-out
+    <div className="glass-card rounded-2xl p-5 sm:p-6 flex flex-col h-full transition-all duration-300 ease-out
                     hover:bg-white/[0.08] hover:border-white/20 hover:-translate-y-1.5
                     hover:shadow-[0_0_20px_rgba(255,153,0,0.12),0_8px_32px_rgba(0,0,0,0.60)] group relative">
 

@@ -392,7 +392,7 @@ export default function Services() {
                 </div>
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
                   {catServices.map((s, i) => (
-                    <div key={s.id} className="animate-fade-in-up" style={{ animationDelay: `${Math.min(i, 7) * 50}ms` }}>
+                    <div key={s.id} className="animate-fade-in-up h-full" style={{ animationDelay: `${Math.min(i, 7) * 50}ms` }}>
                       <ServiceCard
                         service={s}
                         healthStatus={s.status === 'online' ? 'online' : s.status === 'offline' || s.status === 'degraded' ? 'offline' : undefined}
@@ -422,7 +422,7 @@ export default function Services() {
                 </div>
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
                   {uncategorized.map((s, i) => (
-                    <div key={s.id} className="animate-fade-in-up" style={{ animationDelay: `${Math.min(i, 7) * 50}ms` }}>
+                    <div key={s.id} className="animate-fade-in-up h-full" style={{ animationDelay: `${Math.min(i, 7) * 50}ms` }}>
                       <ServiceCard
                         service={s}
                         healthStatus={s.status === 'online' ? 'online' : s.status === 'offline' || s.status === 'degraded' ? 'offline' : undefined}
@@ -440,7 +440,7 @@ export default function Services() {
         /* Flat grid when filtering by category or searching */
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {sorted.map((s, i) => (
-            <div key={s.id} className="animate-fade-in-up" style={{ animationDelay: `${Math.min(i, 11) * 50}ms` }}>
+            <div key={s.id} className="animate-fade-in-up h-full" style={{ animationDelay: `${Math.min(i, 11) * 50}ms` }}>
               <ServiceCard
                 service={s}
                 healthStatus={s.status === 'online' ? 'online' : s.status === 'offline' || s.status === 'degraded' ? 'offline' : undefined}
