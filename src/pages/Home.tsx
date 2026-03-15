@@ -118,8 +118,8 @@ function HeroVideo() {
           autoPlay
           muted
           playsInline
+          preload="none"
           onEnded={playNext}
-          aria-label="x402 Bazaar demo"
           aria-hidden="true"
         />
         <div className="absolute inset-0 rounded-2xl border border-[#FF9900]/10 pointer-events-none" />
@@ -367,6 +367,7 @@ export default function Home() {
             muted
             playsInline
             loop
+            preload="none"
             src="/hero-1.mp4"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#0a0a0a]" />
