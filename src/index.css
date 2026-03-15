@@ -125,15 +125,6 @@ a, button, [role="button"] {
   transition: all 0.2s ease-in-out;
 }
 
-/* Trails widget inline — remove wrapper chrome so it blends into our glass-card */
-.trails-inline-widget > div {
-  border: none !important;
-  box-shadow: none !important;
-  background: transparent !important;
-  padding: 0 !important;
-  border-radius: 0 !important;
-}
-
 @utility surface-card {
   background: #1a1f2e;
   border: 1px solid rgba(255, 255, 255, 0.12);

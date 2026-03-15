@@ -63,6 +63,19 @@ export function getDestinationConfig(dest: DestKey, recipient: `0x${string}`) {
   }
 }
 
+// USDC contract addresses per source chain (all 6 decimals)
+export const SOURCE_USDC: Record<number, `0x${string}`> = {
+  1: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',     // Ethereum
+  8453: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',   // Base
+  137: '0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359',    // Polygon
+  10: '0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85',     // Optimism
+  42161: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',  // Arbitrum
+};
+
+export function getSourceUsdcAddress(chainId: number): `0x${string}` | undefined {
+  return SOURCE_USDC[chainId];
+}
+
 // Chain image URL from Sequence CDN
 export function chainImageUrl(chainId: number): string | null {
   // SKALE on Base is not in the Sequence CDN

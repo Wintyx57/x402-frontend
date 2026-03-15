@@ -1,14 +1,17 @@
-import { useState, useCallback } from 'react';
-import { TrailsWidget } from '0xtrails';
-import { useAccount, useSwitchChain } from 'wagmi';
+import { useState, useCallback, useEffect, useRef } from 'react';
+import { useQuote, TradeType } from '0xtrails';
+import { useAccount, useSwitchChain, useWalletClient } from 'wagmi';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { parseUnits } from 'viem';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '../i18n/LanguageContext';
-import { useTheme } from '../context/ThemeContext';
-import { SOURCE_CHAINS, DEST_CHAINS, getDestinationConfig, chainImageUrl } from '../lib/bridge-config';
+import { SOURCE_CHAINS, DEST_CHAINS, getDestinationConfig, chainImageUrl, SOURCE_USDC } from '../lib/bridge-config';
 import type { DestKey } from '../lib/bridge-config';
+import { useUsdcBalance } from '../hooks/useUsdcBalance';
 
 const TRAILS_API_KEY = import.meta.env.VITE_TRAILS_API_KEY || '';
+
+type BridgeState = 'idle' | 'quoting' | 'quoted' | 'signing' | 'pending' | 'confirming' | 'success' | 'error';
 
 function ChainCard({
   name, chainId, color, subtitle, isSelected, onClick, disabled,
@@ -52,172 +55,151 @@ function ChainCard({
   );
 }
 
-// Deep CSS customization — widget blends into glass-card design
-function useWidgetCss(isDark: boolean): string {
-  if (isDark) {
-    return `
-      --trails-primary: #FF9900;
-      --trails-primary-hover: #e68a00;
-      --trails-primary-disabled: rgba(255,153,0,0.3);
-      --trails-primary-disabled-text: rgba(255,255,255,0.4);
-      --trails-text-primary: #E8E4E0;
-      --trails-text-secondary: #9ca3af;
-      --trails-text-tertiary: #6b7280;
-      --trails-text-muted: #4b5563;
-      --trails-text-inverse: #ffffff;
-      --trails-bg-primary: transparent;
-      --trails-bg-secondary: rgba(255,255,255,0.04);
-      --trails-bg-secondary-hover: rgba(255,255,255,0.08);
-      --trails-bg-tertiary: rgba(255,255,255,0.06);
-      --trails-bg-card: rgba(255,255,255,0.04);
-      --trails-bg-overlay: rgba(15,18,25,0.95);
-      --trails-border-primary: rgba(255,255,255,0.12);
-      --trails-border-secondary: rgba(255,255,255,0.15);
-      --trails-border-tertiary: rgba(255,255,255,0.06);
-      --trails-input-bg: rgba(255,255,255,0.04);
-      --trails-input-border: rgba(255,255,255,0.12);
-      --trails-input-text: #E8E4E0;
-      --trails-input-placeholder: #6b7280;
-      --trails-input-focus-border: #FF9900;
-      --trails-dropdown-bg: #1a1f2e;
-      --trails-dropdown-border: rgba(255,255,255,0.12);
-      --trails-dropdown-text: #E8E4E0;
-      --trails-dropdown-hover-bg: rgba(255,255,255,0.08);
-      --trails-dropdown-selected-bg: rgba(255,153,0,0.12);
-      --trails-dropdown-selected-text: #FF9900;
-      --trails-dropdown-focus-border: #FF9900;
-      --trails-list-bg: #1a1f2e;
-      --trails-list-border: rgba(255,255,255,0.12);
-      --trails-list-hover-bg: rgba(255,255,255,0.06);
-      --trails-list-item-bg: transparent;
-      --trails-list-item-selected-bg: rgba(255,153,0,0.1);
-      --trails-hover-bg: rgba(255,255,255,0.06);
-      --trails-hover-text: #ffffff;
-      --trails-modal-button-bg: #FF9900;
-      --trails-modal-button-hover-bg: #e68a00;
-      --trails-modal-button-text: #ffffff;
-      --trails-modal-button-shadow: 0 4px 14px rgba(255,153,0,0.25);
-      --trails-success-bg: rgba(34,197,94,0.12);
-      --trails-success-text: #4ade80;
-      --trails-success-border: rgba(34,197,94,0.25);
-      --trails-warning-bg: rgba(234,179,8,0.12);
-      --trails-warning-text: #facc15;
-      --trails-warning-border: rgba(234,179,8,0.25);
-      --trails-error-bg: rgba(239,68,68,0.12);
-      --trails-error-text: #f87171;
-      --trails-error-border: rgba(239,68,68,0.25);
-      --trails-shadow: none;
-      --trails-widget-border: none;
-      --trails-border-radius-widget: 0px;
-      --trails-border-radius-button: 12px;
-      --trails-border-radius-input: 12px;
-      --trails-border-radius-dropdown: 12px;
-      --trails-border-radius-container: 12px;
-      --trails-border-radius-list: 12px;
-      --trails-border-radius-list-button: 10px;
-      --trails-border-radius-large-button: 14px;
-      --trails-percentage-button-bg: rgba(255,255,255,0.08);
-      --trails-percentage-button-text: #9ca3af;
-      --trails-percentage-button-hover-bg: rgba(255,153,0,0.15);
-      --trails-focus-ring: rgba(255,153,0,0.4);
-    `;
+const PROGRESS_STEPS = [
+  'Signing transaction...',
+  'Broadcasting...',
+  'Confirming on source chain...',
+  'Bridging to destination...',
+  'Complete!',
+];
+
+function getProgressIndex(state: BridgeState): number {
+  switch (state) {
+    case 'signing': return 0;
+    case 'pending': return 1;
+    case 'confirming': return 2;
+    case 'success': return 4;
+    default: return -1;
   }
-  return `
-    --trails-primary: #FF9900;
-    --trails-primary-hover: #e68a00;
-    --trails-primary-disabled: #e5e7eb;
-    --trails-primary-disabled-text: #9ca3af;
-    --trails-text-primary: #111827;
-    --trails-text-secondary: #4b5563;
-    --trails-text-tertiary: #6b7280;
-    --trails-text-muted: #9ca3af;
-    --trails-text-inverse: #ffffff;
-    --trails-bg-primary: transparent;
-    --trails-bg-secondary: #f9fafb;
-    --trails-bg-secondary-hover: #f3f4f6;
-    --trails-bg-tertiary: #f3f4f6;
-    --trails-bg-card: #ffffff;
-    --trails-bg-overlay: rgba(255,255,255,0.98);
-    --trails-border-primary: #e5e7eb;
-    --trails-border-secondary: #d1d5db;
-    --trails-border-tertiary: #f3f4f6;
-    --trails-input-bg: #ffffff;
-    --trails-input-border: #d1d5db;
-    --trails-input-text: #111827;
-    --trails-input-placeholder: #9ca3af;
-    --trails-input-focus-border: #FF9900;
-    --trails-dropdown-bg: #ffffff;
-    --trails-dropdown-border: #e5e7eb;
-    --trails-dropdown-text: #111827;
-    --trails-dropdown-hover-bg: #f9fafb;
-    --trails-dropdown-selected-bg: rgba(255,153,0,0.08);
-    --trails-dropdown-selected-text: #FF9900;
-    --trails-dropdown-focus-border: #FF9900;
-    --trails-list-bg: #ffffff;
-    --trails-list-border: #e5e7eb;
-    --trails-list-hover-bg: #f9fafb;
-    --trails-list-item-bg: transparent;
-    --trails-list-item-selected-bg: rgba(255,153,0,0.06);
-    --trails-hover-bg: #f3f4f6;
-    --trails-hover-text: #111827;
-    --trails-modal-button-bg: #FF9900;
-    --trails-modal-button-hover-bg: #e68a00;
-    --trails-modal-button-text: #ffffff;
-    --trails-modal-button-shadow: 0 4px 14px rgba(255,153,0,0.2);
-    --trails-success-bg: #f0fdf4;
-    --trails-success-text: #16a34a;
-    --trails-success-border: #bbf7d0;
-    --trails-warning-bg: #fffbeb;
-    --trails-warning-text: #d97706;
-    --trails-warning-border: #fde68a;
-    --trails-error-bg: #fef2f2;
-    --trails-error-text: #dc2626;
-    --trails-error-border: #fecaca;
-    --trails-shadow: none;
-    --trails-widget-border: none;
-    --trails-border-radius-widget: 0px;
-    --trails-border-radius-button: 12px;
-    --trails-border-radius-input: 12px;
-    --trails-border-radius-dropdown: 12px;
-    --trails-border-radius-container: 12px;
-    --trails-border-radius-list: 12px;
-    --trails-border-radius-list-button: 10px;
-    --trails-border-radius-large-button: 14px;
-    --trails-percentage-button-bg: #e5e7eb;
-    --trails-percentage-button-text: #6b7280;
-    --trails-percentage-button-hover-bg: rgba(255,153,0,0.12);
-    --trails-focus-ring: rgba(255,153,0,0.4);
-  `;
 }
 
 export default function BridgeCard() {
   const { t } = useTranslation();
-  const { theme } = useTheme();
   const { address, isConnected, chain } = useAccount();
   const { switchChain, isPending: isSwitching } = useSwitchChain();
+  const { data: walletClient } = useWalletClient();
+  const { balance: usdcBalance } = useUsdcBalance();
   const f = t.fund || {} as Record<string, string>;
 
   const [selectedDest, setSelectedDest] = useState<DestKey>('skale');
   const [recipient, setRecipient] = useState('');
-  const [bridgeComplete, setBridgeComplete] = useState(false);
+  const [amount, setAmount] = useState('');
+  const [bridgeState, setBridgeState] = useState<BridgeState>('idle');
   const [bridgedAmount, setBridgedAmount] = useState<string | null>(null);
-  const [bridgeSessionId, setBridgeSessionId] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [swapResult, setSwapResult] = useState<{ originTxHash?: string | null; destTxHash?: string | null } | null>(null);
 
   const actualRecipient = (recipient || address || '') as `0x${string}`;
   const isValidRecipient = actualRecipient && actualRecipient.startsWith('0x') && actualRecipient.length === 42;
-  const isDark = theme === 'dark';
 
   const selectedChain = DEST_CHAINS.find((c) => c.key === selectedDest)!;
   const destConfig = isValidRecipient ? getDestinationConfig(selectedDest, actualRecipient) : null;
   const sourceChain = SOURCE_CHAINS.find((c) => c.id === chain?.id);
   const sourceChainName = sourceChain?.name || chain?.name || 'Unknown';
 
-  const widgetCss = useWidgetCss(isDark);
+  const fromChainId = chain?.id || 8453;
+  const fromToken = SOURCE_USDC[fromChainId];
+
+  // Parse amount — USDC is 6 decimals on all source chains
+  const parsedAmount = (() => {
+    try {
+      const num = parseFloat(amount);
+      if (isNaN(num) || num <= 0) return undefined;
+      return parseUnits(amount, 6).toString();
+    } catch {
+      return undefined;
+    }
+  })();
+
+  const { quote, send, isLoadingQuote, quoteError, quoteErrorPrettified, refetchQuote } = useQuote({
+    walletClient: walletClient ?? undefined,
+    fromTokenAddress: fromToken,
+    fromChainId,
+    toTokenAddress: destConfig?.toToken,
+    toChainId: destConfig?.toChainId,
+    toAddress: destConfig?.toAddress,
+    toCalldata: destConfig?.toCalldata,
+    swapAmount: parsedAmount,
+    tradeType: TradeType.EXACT_INPUT,
+    apiKey: TRAILS_API_KEY || undefined,
+    checkoutOnHandlers: {
+      triggerCheckoutComplete: () => {
+        setBridgeState('success');
+      },
+      triggerCheckoutError: () => {
+        setBridgeState('error');
+        setErrorMessage('Bridge transaction failed. Please try again.');
+      },
+    },
+  });
+
+  // Derive quoting/quoted states from hook
+  useEffect(() => {
+    if (bridgeState === 'signing' || bridgeState === 'pending' || bridgeState === 'confirming' || bridgeState === 'success' || bridgeState === 'error') return;
+    if (!parsedAmount || !isValidRecipient || !fromToken) {
+      setBridgeState('idle');
+    } else if (isLoadingQuote) {
+      setBridgeState('quoting');
+    } else if (quote && !quoteError) {
+      setBridgeState('quoted');
+    } else {
+      setBridgeState('idle');
+    }
+  }, [isLoadingQuote, quote, quoteError, parsedAmount, isValidRecipient, fromToken, bridgeState]);
+
+  // Auto-refetch quote every 30s
+  const refetchRef = useRef(refetchQuote);
+  refetchRef.current = refetchQuote;
+  useEffect(() => {
+    if (bridgeState !== 'quoted') return;
+    const id = setInterval(() => refetchRef.current?.(), 30000);
+    return () => clearInterval(id);
+  }, [bridgeState]);
+
+  async function handleBridge() {
+    if (!send || !quote) return;
+    setBridgeState('signing');
+    setErrorMessage(null);
+    try {
+      const result = await send();
+      if (result) {
+        setBridgedAmount(quote.destinationAmountDisplay || quote.destinationAmountFormatted || null);
+        setSwapResult({
+          originTxHash: result.originTransaction?.transactionHash,
+          destTxHash: result.destinationTransaction?.transactionHash,
+        });
+        setBridgeState('success');
+      }
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Unknown error';
+      if (msg.includes('rejected') || msg.includes('denied') || msg.includes('User rejected')) {
+        setBridgeState('quoted');
+        return;
+      }
+      setBridgeState('error');
+      setErrorMessage(msg);
+    }
+  }
+
+  function handleReset() {
+    setBridgeState('idle');
+    setBridgedAmount(null);
+    setErrorMessage(null);
+    setSwapResult(null);
+    setAmount('');
+  }
+
+  function setAmountPercent(pct: number) {
+    if (!usdcBalance) return;
+    const val = (parseFloat(usdcBalance) * pct / 100);
+    if (val <= 0) return;
+    setAmount(val.toFixed(6).replace(/\.?0+$/, ''));
+  }
 
   const buttonTextMap: Record<DestKey, string> = {
-    base: f.bridgeButtonBase || 'Bridge USDC to Base',
-    skale: f.bridgeButtonSkale || 'Bridge USDC to SKALE',
-    polygon: f.bridgeButtonPolygon || 'Bridge USDC to Polygon',
+    base: f.bridgeButtonBase || 'Bridge to Base',
+    skale: f.bridgeButtonSkale || 'Bridge to SKALE',
+    polygon: f.bridgeButtonPolygon || 'Bridge to Polygon',
   };
 
   const successTimingMap: Record<DestKey, string> = {
@@ -226,23 +208,9 @@ export default function BridgeCard() {
     polygon: f.successTimingPolygon || 'USDC arrives on Polygon in ~2-5 minutes.',
   };
 
-  function handleCheckoutQuote({ quote }: { sessionId: string; quote: { destinationTokenAmount?: string } }) {
-    if (quote?.destinationTokenAmount) {
-      setBridgedAmount((Number(quote.destinationTokenAmount) / 1e6).toFixed(2));
-    }
-  }
-
-  function handleBridgeComplete({ sessionId }: { sessionId: string }) {
-    if (import.meta.env.DEV) console.log('Bridge complete! Session:', sessionId);
-    setBridgeComplete(true);
-    setBridgeSessionId(sessionId);
-  }
-
-  function handleReset() {
-    setBridgeComplete(false);
-    setBridgeSessionId(null);
-    setBridgedAmount(null);
-  }
+  const isBridging = bridgeState === 'signing' || bridgeState === 'pending' || bridgeState === 'confirming';
+  const isComplete = bridgeState === 'success';
+  const progressIdx = getProgressIndex(bridgeState);
 
   // Not connected
   if (!isConnected) {
@@ -277,7 +245,7 @@ export default function BridgeCard() {
             {f.fromLabel || 'From'}
           </label>
           {isSwitching && (
-            <span className="text-xs text-[#FF9900] animate-pulse">{f.switchingChain || 'Switching...'}</span>
+            <span className="text-xs text-[#FF9900] animate-pulse">{f.switchChain || 'Switching...'}</span>
           )}
         </div>
         <div className="grid grid-cols-5 gap-2">
@@ -289,7 +257,7 @@ export default function BridgeCard() {
               color={sc.color}
               subtitle={sc.gas}
               isSelected={chain?.id === sc.id}
-              disabled={isSwitching || bridgeComplete}
+              disabled={isSwitching || isBridging || isComplete}
               onClick={() => {
                 if (chain?.id !== sc.id && switchChain) {
                   switchChain({ chainId: sc.id });
@@ -323,7 +291,7 @@ export default function BridgeCard() {
               color={dc.color}
               subtitle={`${dc.time} · Gas ${dc.gas}`}
               isSelected={selectedDest === dc.key}
-              disabled={bridgeComplete}
+              disabled={isBridging || isComplete}
               onClick={() => setSelectedDest(dc.key)}
             />
           ))}
@@ -331,7 +299,7 @@ export default function BridgeCard() {
       </div>
 
       {/* Route Summary */}
-      {!bridgeComplete && (
+      {!isComplete && (
         <div className="flex items-center gap-3 px-5 py-3 glass-card rounded-xl">
           <div className="flex items-center gap-2">
             <span className={`w-2.5 h-2.5 rounded-full ${sourceChain?.color || 'bg-gray-500'}`} />
@@ -354,9 +322,9 @@ export default function BridgeCard() {
         </div>
       )}
 
-      {/* Recipient + Inline Widget + Success */}
+      {/* Bridge Card — Amount + Quote + Button */}
       <div className="glass-card rounded-2xl p-5 space-y-4">
-        {!bridgeComplete && (
+        {!isComplete && (
           <>
             {/* Recipient */}
             <div className="space-y-2">
@@ -366,34 +334,176 @@ export default function BridgeCard() {
                 value={recipient}
                 onChange={(e) => setRecipient(e.target.value)}
                 placeholder={address || '0x...'}
-                className="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-white/[0.04] font-mono text-sm focus:outline-none focus:ring-2 focus:ring-[#FF9900]/40 focus:border-[#FF9900]/40 transition-all"
+                disabled={isBridging}
+                className="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-white/[0.04] font-mono text-sm focus:outline-none focus:ring-2 focus:ring-[#FF9900]/40 focus:border-[#FF9900]/40 transition-all disabled:opacity-50"
               />
               <p className="text-xs text-gray-500">{f.recipientHint || 'Leave empty to use your connected wallet address'}</p>
             </div>
 
-            {/* Inline Trails Widget — token selector, amount, quote, execute */}
             {isValidRecipient && TRAILS_API_KEY && destConfig && (
-              <div className="trails-inline-widget">
-                <TrailsWidget
-                  key={`trails-${selectedDest}-${actualRecipient}`}
-                  apiKey={TRAILS_API_KEY}
-                  mode="fund"
-                  renderInline
-                  toChainId={destConfig.toChainId}
-                  toToken={destConfig.toToken}
-                  toAddress={destConfig.toAddress}
-                  toCalldata={destConfig.toCalldata}
-                  hideDisconnect
-                  theme={isDark ? 'dark' : 'light'}
-                  customCss={widgetCss}
-                  onCheckoutQuote={handleCheckoutQuote}
-                  onCheckoutComplete={handleBridgeComplete}
-                  onCheckoutError={({ error }: { sessionId: string; error: unknown }) => {
-                    console.error('Bridge error:', error);
-                  }}
-                  buttonText={buttonTextMap[selectedDest]}
-                />
-              </div>
+              <>
+                {/* Amount Input */}
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <label className="text-sm font-medium">Amount</label>
+                    {usdcBalance && (
+                      <span className="text-xs text-gray-400">
+                        Balance: <span className="text-white font-medium">{parseFloat(usdcBalance).toFixed(2)} USDC</span>
+                      </span>
+                    )}
+                  </div>
+                  <div className="relative">
+                    <input
+                      type="text"
+                      inputMode="decimal"
+                      value={amount}
+                      onChange={(e) => {
+                        const v = e.target.value.replace(/[^0-9.]/g, '');
+                        if (v.split('.').length <= 2) setAmount(v);
+                      }}
+                      placeholder="0.00"
+                      disabled={isBridging}
+                      className="w-full px-4 py-4 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-white/[0.04] text-2xl font-bold text-center focus:outline-none focus:ring-2 focus:ring-[#FF9900]/40 focus:border-[#FF9900]/40 transition-all disabled:opacity-50 placeholder:text-gray-500"
+                    />
+                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-semibold text-gray-400">USDC</span>
+                  </div>
+                  {/* Quick % buttons */}
+                  <div className="flex gap-2">
+                    {[25, 50, 75].map((pct) => (
+                      <button
+                        key={pct}
+                        type="button"
+                        disabled={isBridging || !usdcBalance}
+                        onClick={() => setAmountPercent(pct)}
+                        className="flex-1 py-1.5 rounded-lg text-xs font-medium border border-white/10 bg-white/[0.04] hover:bg-[#FF9900]/10 hover:border-[#FF9900]/30 text-gray-400 hover:text-[#FF9900] transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+                      >
+                        {pct}%
+                      </button>
+                    ))}
+                    <button
+                      type="button"
+                      disabled={isBridging || !usdcBalance}
+                      onClick={() => setAmountPercent(100)}
+                      className="flex-1 py-1.5 rounded-lg text-xs font-medium border border-white/10 bg-white/[0.04] hover:bg-[#FF9900]/10 hover:border-[#FF9900]/30 text-gray-400 hover:text-[#FF9900] transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+                    >
+                      MAX
+                    </button>
+                  </div>
+                </div>
+
+                {/* Quote Display */}
+                {bridgeState === 'quoting' && (
+                  <div className="flex items-center justify-center gap-2 py-3">
+                    <div className="w-4 h-4 border-2 border-[#FF9900] border-t-transparent rounded-full animate-spin" />
+                    <span className="text-sm text-gray-400">Fetching quote...</span>
+                  </div>
+                )}
+
+                {quote && bridgeState === 'quoted' && (
+                  <div className="space-y-2 p-3 rounded-xl bg-white/[0.03] border border-white/5">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-400">You receive</span>
+                      <span className="text-sm font-bold text-white">
+                        ~{quote.destinationAmountDisplay || quote.destinationAmountFormatted} {quote.destinationToken?.symbol || 'USDC'}
+                      </span>
+                    </div>
+                    {quote.totalFeesUsdDisplay && quote.totalFeesUsdDisplay !== '$0.00' && (
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs text-gray-500">Fees</span>
+                        <span className="text-xs text-gray-400">{quote.totalFeesUsdDisplay}</span>
+                      </div>
+                    )}
+                    {quote.gasCostUsdDisplay && quote.gasCostUsdDisplay !== '$0.00' && (
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs text-gray-500">Gas</span>
+                        <span className="text-xs text-gray-400">{quote.gasCostUsdDisplay}</span>
+                      </div>
+                    )}
+                    {quote.completionEstimateDisplay && (
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs text-gray-500">Est. time</span>
+                        <span className="text-xs text-gray-400">{quote.completionEstimateDisplay}</span>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {quoteError && !isLoadingQuote && parsedAmount && (
+                  <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20">
+                    <p className="text-sm text-red-400">{quoteErrorPrettified || 'Failed to fetch quote. Try a different amount.'}</p>
+                  </div>
+                )}
+
+                {/* Progress Overlay */}
+                {isBridging && (
+                  <div className="space-y-3 p-4 rounded-xl bg-[#FF9900]/5 border border-[#FF9900]/15">
+                    {/* Progress bar */}
+                    <div className="h-1.5 rounded-full bg-white/10 overflow-hidden">
+                      <div
+                        className="h-full rounded-full bg-gradient-to-r from-[#FF9900] to-[#e68a00] transition-all duration-700 ease-out"
+                        style={{ width: `${Math.max(10, ((progressIdx + 1) / PROGRESS_STEPS.length) * 100)}%` }}
+                      />
+                    </div>
+                    {/* Steps */}
+                    <div className="space-y-1.5">
+                      {PROGRESS_STEPS.slice(0, progressIdx + 2).map((step, i) => (
+                        <div key={step} className="flex items-center gap-2">
+                          {i <= progressIdx ? (
+                            <svg className="w-3.5 h-3.5 text-[#FF9900]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                            </svg>
+                          ) : (
+                            <div className="w-3.5 h-3.5 border-2 border-[#FF9900] border-t-transparent rounded-full animate-spin" />
+                          )}
+                          <span className={`text-xs ${i <= progressIdx ? 'text-gray-400' : 'text-[#FF9900] font-medium'}`}>
+                            {step}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Error state */}
+                {bridgeState === 'error' && errorMessage && (
+                  <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20 space-y-2">
+                    <p className="text-sm text-red-400">{errorMessage}</p>
+                    <button
+                      onClick={() => { setBridgeState('idle'); setErrorMessage(null); }}
+                      className="text-xs text-[#FF9900] hover:underline font-medium cursor-pointer"
+                    >
+                      Try again
+                    </button>
+                  </div>
+                )}
+
+                {/* Bridge Button */}
+                {!isBridging && bridgeState !== 'error' && (
+                  <button
+                    type="button"
+                    disabled={!send || !quote || bridgeState !== 'quoted'}
+                    onClick={handleBridge}
+                    className="w-full py-4 rounded-xl bg-[#FF9900] hover:bg-[#e68a00] text-white font-bold text-base
+                      shadow-[0_0_24px_rgba(255,153,0,0.3)] hover:shadow-[0_0_32px_rgba(255,153,0,0.45)]
+                      transition-all duration-200 disabled:opacity-40 disabled:shadow-none disabled:cursor-not-allowed cursor-pointer"
+                  >
+                    {bridgeState === 'quoting' ? (
+                      <span className="flex items-center justify-center gap-2">
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        Getting quote...
+                      </span>
+                    ) : (
+                      buttonTextMap[selectedDest]
+                    )}
+                  </button>
+                )}
+
+                {!fromToken && (
+                  <div className="p-3 rounded-xl bg-yellow-500/10 border border-yellow-500/20">
+                    <p className="text-sm text-yellow-400">USDC is not available on this source chain. Try switching to Base, Ethereum, Polygon, Optimism, or Arbitrum.</p>
+                  </div>
+                )}
+              </>
             )}
 
             {/* Invalid recipient */}
@@ -413,7 +523,7 @@ export default function BridgeCard() {
         )}
 
         {/* Success */}
-        {bridgeComplete && (
+        {isComplete && (
           <div className="space-y-4">
             <div className="p-5 bg-green-500/10 border border-green-500/20 rounded-xl space-y-3">
               <div className="flex items-center gap-2">
@@ -424,14 +534,14 @@ export default function BridgeCard() {
                 </span>
                 <p className="text-sm font-semibold text-green-400">{f.successTitle || 'Bridge initiated!'}</p>
               </div>
-              {bridgedAmount && (
-                <p className="text-sm text-green-300"><strong>{f.successAmount || 'Amount'}:</strong> {bridgedAmount} USDC</p>
+              {(bridgedAmount || amount) && (
+                <p className="text-sm text-green-300"><strong>{f.successAmount || 'Amount'}:</strong> {bridgedAmount || amount} USDC</p>
               )}
               <p className="text-sm text-green-300">
                 <strong>{f.successRecipient || 'Recipient'}:</strong> {actualRecipient.slice(0, 6)}...{actualRecipient.slice(-4)}
               </p>
-              {bridgeSessionId && (
-                <p className="text-xs text-green-300/70">Session: {bridgeSessionId.slice(0, 16)}...</p>
+              {swapResult?.originTxHash && (
+                <p className="text-xs text-green-300/70">TX: {swapResult.originTxHash.slice(0, 16)}...</p>
               )}
               <p className="text-sm text-green-300/80 pt-1">{successTimingMap[selectedDest]}</p>
               <Link to="/services" className="inline-flex items-center gap-1 mt-1 text-sm text-[#FF9900] hover:underline font-semibold">
