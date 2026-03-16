@@ -5,7 +5,7 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { parseUnits, erc20Abi, maxUint256 } from 'viem';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '../i18n/LanguageContext';
-import { SOURCE_CHAINS, DEST_CHAINS, getDestinationConfig, chainImageUrl, SOURCE_USDC, USDC_BASE, TRAILS_ROUTER_ADDRESS } from '../lib/bridge-config';
+import { SOURCE_CHAINS, DEST_CHAINS, getDestinationConfig, chainImageUrl, SOURCE_USDC, USDC_BASE, IMA_DEPOSIT_BOX } from '../lib/bridge-config';
 import type { DestKey } from '../lib/bridge-config';
 import { useUsdcBalance } from '../hooks/useUsdcBalance';
 import { useUsdcAllowance } from '../hooks/useUsdcAllowance';
@@ -151,7 +151,7 @@ export default function BridgeCard() {
   const needsApprovalCheck = fromChainId === 8453 && selectedDest === 'skale';
   const { data: allowanceData, refetch: refetchAllowance } = useUsdcAllowance(
     needsApprovalCheck ? address : undefined,
-    TRAILS_ROUTER_ADDRESS,
+    IMA_DEPOSIT_BOX,
   );
   const { writeContract: writeApprove, data: approveTxHash, isPending: isApprovePending, reset: resetApprove } = useWriteContract();
   const { isLoading: isApproveConfirming, isSuccess: isApproveConfirmed } = useWaitForTransactionReceipt({ hash: approveTxHash });
@@ -174,7 +174,7 @@ export default function BridgeCard() {
       address: USDC_BASE,
       abi: erc20Abi,
       functionName: 'approve',
-      args: [TRAILS_ROUTER_ADDRESS, maxUint256],
+      args: [IMA_DEPOSIT_BOX, maxUint256],
       chainId: 8453,
     });
   }
