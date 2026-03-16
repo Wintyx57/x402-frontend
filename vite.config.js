@@ -21,23 +21,26 @@ export default defineConfig({
       output: {
         manualChunks(id) {
           if (id.includes('node_modules')) {
+            // Trails SDK — lazy-loaded only via /fund page
             if (
               id.includes('0xtrails') ||
-              id.includes('@0xsequence') ||
-              id.includes('trails')
+              id.includes('@0xsequence')
             ) {
               return 'vendor-trails';
             }
-            if (
-              id.includes('@metamask') ||
-              id.includes('metamask-sdk')
-            ) {
-              return 'vendor-metamask';
+            // WalletConnect — isolated (very heavy, used by rainbowkit)
+            if (id.includes('@walletconnect')) {
+              return 'vendor-walletconnect';
             }
+            // Web3 core: viem + wagmi + metamask + rainbow + react-query — tightly coupled
+            // (circular deps between these libs), keep together to avoid rollup warnings
             if (
+              id.includes('/viem/') ||
               id.includes('wagmi') ||
-              id.includes('viem') ||
-              id.includes('@rainbow-me')
+              id.includes('@metamask') ||
+              id.includes('metamask-sdk') ||
+              id.includes('@rainbow-me') ||
+              id.includes('@tanstack/react-query')
             ) {
               return 'vendor-web3';
             }
