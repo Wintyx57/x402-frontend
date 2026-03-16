@@ -37,9 +37,9 @@ export type DestKey = 'base' | 'skale' | 'polygon';
 
 // Destination chains — 3 visual cards
 export const DEST_CHAINS: { id: number; key: DestKey; name: string; color: string; time: string; gas: string }[] = [
-  { id: 8453, key: 'base', name: 'Base', color: 'bg-blue-500', time: '~1-2 min', gas: '~$0.001' },
-  { id: 1187947933, key: 'skale', name: 'SKALE on Base', color: 'bg-green-500', time: '5-15 min', gas: '~$0.0007' },
-  { id: 137, key: 'polygon', name: 'Polygon', color: 'bg-purple-500', time: '~2-5 min', gas: '~$0.001' },
+  { id: 8453, key: 'base', name: 'Base', color: 'bg-blue-500', time: '~10-30s', gas: '~$0.001' },
+  { id: 1187947933, key: 'skale', name: 'SKALE on Base', color: 'bg-green-500', time: '~15-45s', gas: '~$0.0007' },
+  { id: 137, key: 'polygon', name: 'Polygon', color: 'bg-purple-500', time: '~10-30s', gas: '~$0.001' },
 ];
 
 // Encode SKALE IMA bridge calldata
