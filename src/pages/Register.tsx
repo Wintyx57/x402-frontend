@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
+import { useAccount, useWriteContract, useWaitForTransactionReceipt, useSignMessage } from 'wagmi';
 import { parseUnits } from 'viem';
 import { API_URL, USDC_ABI, CHAIN_CONFIG } from '../config';
 import { useTranslation } from '../i18n/LanguageContext';
@@ -122,6 +122,17 @@ export default function Register() {
   const [form, setForm] = useState({
     name: '', description: '', url: '', price: '', tags: '', category: 'utility', method: 'GET', requiredParams: '', freeCallsPerMonth: ''
   });
+
+  // Multi-service state for full mode
+  type ServiceFormData = {
+    name: string; description: string; url: string; price: string;
+    tags: string; category: string; method: string; requiredParams: string;
+  };
+  const [services, setServices] = useState<ServiceFormData[]>([]);
+  const [batchLoading, setBatchLoading] = useState(false);
+  const [batchResult, setBatchResult] = useState<any>(null);
+  const { signMessageAsync } = useSignMessage();
+
   const [wizardStep, setWizardStep] = useState(1);
   const [paymentState, setPaymentState] = useState<'idle' | 'paying' | 'registering' | 'done' | 'error'>('idle');
   const [txHash, setTxHash] = useState<`0x${string}` | null>(null);
@@ -160,6 +171,41 @@ export default function Register() {
       userTags.unshift(form.category);
     }
     return userTags;
+  };
+
+  const totalServiceCount = 1 + services.length;
+
+  const addService = () => {
+    if (totalServiceCount >= 50) return;
+    setServices([...services, {
+      name: '', description: '', url: '', price: '',
+      tags: '', category: 'utility', method: 'GET', requiredParams: '',
+    }]);
+  };
+
+  const removeService = (index: number) => {
+    setServices(services.filter((_, i) => i !== index));
+  };
+
+  const updateService = (index: number, field: string, value: string) => {
+    const updated = [...services];
+    updated[index] = { ...updated[index], [field]: value };
+    setServices(updated);
+  };
+
+  const buildServicePayload = (svc: ServiceFormData) => {
+    const userTags = svc.tags.split(',').map(t => t.trim()).filter(Boolean);
+    if (svc.category && !userTags.includes(svc.category)) userTags.unshift(svc.category);
+    const payload: Record<string, unknown> = {
+      name: svc.name,
+      description: svc.description,
+      url: svc.url,
+      price: parseFloat(svc.price),
+      tags: userTags,
+    };
+    const params = svc.requiredParams.split(',').map(p => p.trim()).filter(Boolean);
+    if (params.length > 0) payload.required_parameters = { required: params };
+    return payload;
   };
 
   // Build registration payload (reused in both 402 probe and final POST)
@@ -329,6 +375,59 @@ export default function Register() {
     }
   };
 
+  const handleBatchRegister = async () => {
+    // Validate all services
+    const allServices = [form, ...services];
+    for (let i = 0; i < allServices.length; i++) {
+      const svc = allServices[i];
+      if (!svc.name.trim()) return setError(`Service ${i + 1}: name is required`);
+      try { new URL(svc.url); } catch { return setError(`Service ${i + 1}: invalid URL`); }
+      const p = parseFloat(svc.price);
+      if (isNaN(p) || p < 0.001 || p > 1000) return setError(`Service ${i + 1}: price must be 0.001-1000 USDC`);
+    }
+
+    if (!isConnected || !address) {
+      setError(t.register.connectError as string);
+      return;
+    }
+
+    setBatchLoading(true);
+    setError(null);
+
+    try {
+      const timestamp = Date.now();
+      const message = `batch-register:${address}:${allServices.length}:${timestamp}`;
+      const signature = await signMessageAsync({ message });
+
+      const payload = {
+        services: allServices.map(svc => buildServicePayload(svc)),
+        ownerAddress: address,
+        signature,
+        timestamp,
+      };
+
+      const res = await fetch(`${API_URL}/batch-register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || err.message || 'Batch registration failed');
+      }
+
+      const data = await res.json();
+      setBatchResult(data);
+      trackEvent('batch_register_success', { count: allServices.length });
+    } catch (err: unknown) {
+      const e = err as Record<string, any>;
+      setError(e.message || 'Batch registration failed');
+    } finally {
+      setBatchLoading(false);
+    }
+  };
+
   // Category label mapping
   const categoryLabels: Record<string, string> = {
     ai: t.register.catAi || 'AI & ML',
@@ -468,9 +567,13 @@ export default function Register() {
                 value={quickForm.url}
                 onChange={e => setQuickForm({ ...quickForm, url: e.target.value })}
                 placeholder="https://api.example.com/endpoint"
+                aria-describedby="url-hint-quick"
                 className="w-full bg-[#1a1f2e] border border-white/10 rounded-lg px-4 py-3 text-white text-lg placeholder-gray-600
                            focus:outline-none focus:border-[#FF9900]/40 transition-all duration-300"
               />
+              <p className="text-[11px] text-amber-400/70 mt-1" id="url-hint-quick">
+                {t.register.urlHint || "Enter your API's direct endpoint URL, not a proxy or wrapper."}
+              </p>
             </div>
 
             {/* Price with presets */}
@@ -620,8 +723,61 @@ export default function Register() {
         </div>
       )}
 
+      {/* ---- Batch Register Success ---- */}
+      {batchResult && (
+        <div className="max-w-2xl mx-auto animate-fade-in-up">
+          <div className="glass glow-orange-lg rounded-2xl p-10 text-center relative overflow-hidden">
+            <div aria-hidden="true" className="absolute inset-0 pointer-events-none"
+              style={{ backgroundImage: 'radial-gradient(ellipse 60% 40% at 50% 0%, rgba(255,153,0,0.15) 0%, transparent 70%)' }} />
+            <div className="relative z-10">
+              <div className="w-20 h-20 rounded-full bg-[#34D399]/10 border-2 border-[#34D399]/30 flex items-center justify-center mx-auto mb-6">
+                <svg className="w-10 h-10 text-[#34D399]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <h2 className="text-[#FF9900] text-2xl font-bold mb-2">
+                {batchResult.data?.length} {t.register.batchSuccess || 'services registered successfully!'}
+              </h2>
+              <p className="text-gray-400 text-sm mb-6">All services are now live on x402 Bazaar.</p>
+
+              <div className="space-y-2 mb-6 text-left">
+                {batchResult.data?.map((svc: any) => (
+                  <div key={svc.id} className="glass rounded-lg p-3 flex items-center justify-between">
+                    <div>
+                      <span className="text-white text-sm font-medium">{svc.name}</span>
+                      <span className="text-gray-500 text-xs ml-2">${svc.price_usdc} USDC</span>
+                    </div>
+                    <Link
+                      to={`/services/${svc.id}`}
+                      className="text-xs text-[#FF9900] no-underline hover:text-[#FEBD69]"
+                    >
+                      View &rarr;
+                    </Link>
+                  </div>
+                ))}
+              </div>
+
+              <div className="flex flex-wrap justify-center gap-3">
+                <Link
+                  to="/services"
+                  className="inline-flex items-center gap-2 gradient-btn text-white font-medium text-sm px-5 py-2.5 rounded-xl no-underline hover:brightness-110 transition-all"
+                >
+                  {t.register.viewServices || 'View all services'} &rarr;
+                </Link>
+                <button
+                  onClick={() => { setBatchResult(null); setServices([]); setForm({ name: '', description: '', url: '', price: '', tags: '', category: 'utility', method: 'GET', requiredParams: '', freeCallsPerMonth: '' }); }}
+                  className="inline-flex items-center gap-2 glass border border-white/15 text-gray-300 hover:text-white text-sm font-medium px-5 py-2.5 rounded-xl transition-colors cursor-pointer"
+                >
+                  Register More
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* ---- Full Registration (existing wizard) ---- */}
-      {mode === 'full' && (
+      {mode === 'full' && !batchResult && (
         <>
 
       {/* ---- Progress bar ---- */}
@@ -717,9 +873,13 @@ export default function Register() {
                 id="reg-url" type="url" required aria-required="true" value={form.url}
                 onChange={e => setForm({ ...form, url: e.target.value })}
                 placeholder={t.register.urlPlaceholder}
+                aria-describedby="url-hint-full"
                 className="w-full bg-[#1a1f2e] border border-white/10 rounded-lg px-4 py-2.5 text-white placeholder-gray-600
                            focus:outline-none focus:border-[#FF9900]/40 transition-all duration-300"
               />
+              <p className="text-[11px] text-amber-400/70 mt-1" id="url-hint-full">
+                {t.register.urlHint || "Enter your API's direct endpoint URL, not a proxy or wrapper."}
+              </p>
             </div>
 
             {/* Category + Method row */}
@@ -851,20 +1011,107 @@ export default function Register() {
               </p>
             </div>
 
+            {/* Additional services */}
+            {services.map((svc, idx) => (
+              <div key={idx} className="glass rounded-xl p-4 space-y-3 border border-white/10 relative">
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-xs text-[#FF9900] font-semibold">Service {idx + 2}</span>
+                  <button
+                    type="button"
+                    onClick={() => removeService(idx)}
+                    className="text-xs text-red-400 hover:text-red-300 transition-colors cursor-pointer bg-transparent border-none"
+                    aria-label={`${t.register.removeService || 'Remove'} service ${idx + 2}`}
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                  </button>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <input
+                    type="text" placeholder="Service Name" value={svc.name}
+                    onChange={e => updateService(idx, 'name', e.target.value)}
+                    className="w-full bg-[#1a1f2e] border border-white/10 rounded-lg px-3 py-2 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-[#FF9900]/40 transition-all"
+                  />
+                  <input
+                    type="number" step="0.001" min="0.001" placeholder="Price (USDC)" value={svc.price}
+                    onChange={e => updateService(idx, 'price', e.target.value)}
+                    className="w-full bg-[#1a1f2e] border border-white/10 rounded-lg px-3 py-2 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-[#FF9900]/40 transition-all"
+                  />
+                </div>
+                <input
+                  type="url" placeholder="https://api.example.com/endpoint" value={svc.url}
+                  onChange={e => updateService(idx, 'url', e.target.value)}
+                  className="w-full bg-[#1a1f2e] border border-white/10 rounded-lg px-3 py-2 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-[#FF9900]/40 transition-all"
+                />
+                <p className="text-[11px] text-amber-400/70 -mt-2">{t.register.urlHint || "Enter your API's direct endpoint URL, not a proxy or wrapper."}</p>
+                <textarea
+                  rows={2} placeholder="Description (optional)" value={svc.description}
+                  onChange={e => updateService(idx, 'description', e.target.value)}
+                  className="w-full bg-[#1a1f2e] border border-white/10 rounded-lg px-3 py-2 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-[#FF9900]/40 transition-all resize-none"
+                />
+                <input
+                  type="text" placeholder="Tags (comma-separated)" value={svc.tags}
+                  onChange={e => updateService(idx, 'tags', e.target.value)}
+                  className="w-full bg-[#1a1f2e] border border-white/10 rounded-lg px-3 py-2 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-[#FF9900]/40 transition-all"
+                />
+              </div>
+            ))}
+
+            {/* Add another + counter */}
+            <div className="flex items-center justify-between">
+              <button
+                type="button"
+                onClick={addService}
+                disabled={totalServiceCount >= 50}
+                className="text-sm text-[#FF9900] hover:text-[#FEBD69] transition-colors cursor-pointer bg-transparent border-none disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                {t.register.addAnother || '+ Add another tool'}
+              </button>
+              {totalServiceCount > 1 && (
+                <span className="text-xs text-gray-500">
+                  {totalServiceCount} / 50 {t.register.serviceCount || 'services'}
+                </span>
+              )}
+            </div>
+
             {error && (
               <div role="alert" aria-live="assertive" className="bg-red-500/10 border border-red-500/50 rounded-xl p-4 text-red-300 text-sm font-medium">
                 {error}
               </div>
             )}
 
-            <button
-              type="button"
-              onClick={handleGoToStep3}
-              className="w-full gradient-btn text-white py-3 rounded-xl font-medium
-                         cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:glow-orange"
-            >
-              Next: Review &amp; Pay &rarr;
-            </button>
+            {totalServiceCount === 1 ? (
+              <button
+                type="button"
+                onClick={handleGoToStep3}
+                className="w-full gradient-btn text-white py-3 rounded-xl font-medium
+                           cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:glow-orange"
+              >
+                Next: Review &amp; Pay &rarr;
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={handleBatchRegister}
+                disabled={batchLoading}
+                className="w-full gradient-btn text-white py-3 rounded-xl font-medium
+                           cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:glow-orange
+                           disabled:opacity-40 flex items-center justify-center gap-2"
+              >
+                {batchLoading ? (
+                  <>
+                    <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                    </svg>
+                    Signing &amp; Registering...
+                  </>
+                ) : (
+                  `${t.register.registerAll || 'Register All'} (${totalServiceCount} ${t.register.serviceCount || 'services'})`
+                )}
+              </button>
+            )}
           </div>
 
           {/* Live Preview Card — 2 cols */}
