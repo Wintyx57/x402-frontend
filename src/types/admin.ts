@@ -1,5 +1,15 @@
 /* ─── Admin Dashboard Types ─── */
 
+export interface AgentWalletBalances {
+  address: string;
+  address_full: string;
+  skale: { credits: number; usdc: number };
+  base: { usdc: number; eth: number };
+  polygon: { usdc: number; pol: number };
+  total_usdc: number;
+  timestamp: string;
+}
+
 export interface StatsData {
   totalServices: number;
   totalPayments: number;
@@ -10,6 +20,7 @@ export interface StatsData {
   network: string;
   explorer: string;
   usdcContract: string;
+  agentWallet?: AgentWalletBalances;
 }
 
 export interface AnalyticsData {

@@ -121,6 +121,43 @@ export default function OverviewTab({ adminFetch }: { adminFetch: AdminFetch }) 
         </div>
       )}
 
+      {/* Agent Wallet (unified) */}
+      {stats?.agentWallet && (
+        <div className="glass-card rounded-xl p-5">
+          <div className="flex items-center gap-2 mb-4">
+            <div className="w-8 h-8 rounded-full bg-purple-500/15 flex items-center justify-center text-sm">&#9881;</div>
+            <div>
+              <p className="text-xs text-gray-500 uppercase tracking-wider">Wallet Agent Unifie</p>
+              <p className="text-xs font-mono text-gray-400">{stats.agentWallet.address_full}</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-4">
+            {/* SKALE */}
+            <div className="rounded-lg bg-white/[0.03] border border-white/5 p-3">
+              <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-2">SKALE on Base</p>
+              <p className="text-lg font-bold text-white">{stats.agentWallet.skale.usdc.toFixed(2)} <span className="text-xs text-gray-400">USDC</span></p>
+              <p className="text-xs text-gray-500 mt-1">{stats.agentWallet.skale.credits.toFixed(2)} CREDITS</p>
+            </div>
+            {/* Base */}
+            <div className="rounded-lg bg-white/[0.03] border border-white/5 p-3">
+              <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-2">Base</p>
+              <p className="text-lg font-bold text-white">{stats.agentWallet.base.usdc.toFixed(2)} <span className="text-xs text-gray-400">USDC</span></p>
+              <p className="text-xs text-gray-500 mt-1">{stats.agentWallet.base.eth.toFixed(6)} ETH</p>
+            </div>
+            {/* Polygon */}
+            <div className="rounded-lg bg-white/[0.03] border border-white/5 p-3">
+              <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-2">Polygon</p>
+              <p className="text-lg font-bold text-white">{stats.agentWallet.polygon.usdc.toFixed(2)} <span className="text-xs text-gray-400">USDC</span></p>
+              <p className="text-xs text-gray-500 mt-1">{stats.agentWallet.polygon.pol.toFixed(4)} POL</p>
+            </div>
+          </div>
+          <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/5">
+            <span className="text-xs text-gray-500">Total USDC (3 chains)</span>
+            <span className="text-sm font-bold text-[#FF9900]">${stats.agentWallet.total_usdc.toFixed(4)}</span>
+          </div>
+        </div>
+      )}
+
       {/* 6 KPI Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
         <KPICard label="Revenue brut total" value={`$${Number(totalRevenue).toFixed(4)}`} sub="USDC encaisse" icon="&#9650;" color="#34D399" />
