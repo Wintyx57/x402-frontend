@@ -267,7 +267,7 @@ export default function MyApis() {
                     <Link to={`/services/${service.id}`} className="text-white font-medium text-sm hover:text-[#FF9900] no-underline transition-colors truncate">
                       {service.name}
                     </Link>
-                    <StatusBadge status={service.status} />
+                    <StatusBadge status={service.status || 'unknown'} />
                   </div>
                   <p className="text-xs text-gray-400 truncate">{service.url}</p>
                   {service.tags && service.tags.length > 0 && (

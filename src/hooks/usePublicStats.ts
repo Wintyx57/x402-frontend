@@ -19,6 +19,8 @@ export interface PublicStats {
     lastCheck?: string;
   };
   topEndpoints?: Array<{ endpoint: string; count: number }>;
+  externalProviders?: number;
+  usdcVolume?: number;
 }
 
 async function fetchPublicStats(): Promise<PublicStats> {

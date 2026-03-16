@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { API_URL } from '../config';
 import { useTranslation } from '../i18n/LanguageContext';
@@ -90,44 +90,6 @@ function FloatingGrid() {
 }
 
 // ---- Integration badge ----
-// ---- Hero video playlist (alternates between 2 clips) ----
-const HERO_VIDEOS = ['/hero-1.mp4', '/hero-2.mp4'];
-
-function HeroVideo() {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [idx, setIdx] = useState(0);
-
-  const playNext = useCallback(() => {
-    setIdx((prev) => (prev + 1) % HERO_VIDEOS.length);
-  }, []);
-
-  useEffect(() => {
-    const vid = videoRef.current;
-    if (!vid) return;
-    vid.src = HERO_VIDEOS[idx];
-    const p = vid.play();
-    if (p) p.catch(() => {});
-  }, [idx]);
-
-  return (
-    <div className="w-full lg:w-1/2 animate-fade-in-up">
-      <div className="relative aspect-video rounded-2xl overflow-hidden border border-white/10
-                      bg-[#0d1117] shadow-[0_0_40px_rgba(255,153,0,0.08)]">
-        <video
-          ref={videoRef}
-          className="w-full h-full object-cover"
-          autoPlay
-          muted
-          playsInline
-          preload="none"
-          onEnded={playNext}
-          aria-hidden="true"
-        />
-        <div className="absolute inset-0 rounded-2xl border border-[#FF9900]/10 pointer-events-none" />
-      </div>
-    </div>
-  );
-}
 
 function IntegrationBadge({ label, icon, href }: { label: string; icon: React.ReactNode; href?: string }) {
   const inner = (
@@ -177,17 +139,6 @@ const IconOpen = () => (
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
   </svg>
 );
-const IconCopy = () => (
-  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-    <rect x="9" y="9" width="13" height="13" rx="2" ry="2" strokeWidth={2}/>
-    <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" strokeWidth={2}/>
-  </svg>
-);
-const IconCheck = () => (
-  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-  </svg>
-);
 const IconExternal = () => (
   <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
@@ -200,7 +151,6 @@ export default function Home() {
   const { data: servicesData, isLoading: loading, error: servicesError } = useServices();
   const services = Array.isArray(servicesData) ? servicesData : [];
   const [avgLatency, setAvgLatency] = useState<number | null>(null);
-  const [copied, setCopied] = useState(false);
   const { t } = useTranslation();
 
   // Reveal refs
@@ -235,12 +185,6 @@ export default function Home() {
       .catch(() => {});
     return () => controller.abort();
   }, []);
-
-  const handleCopy = () => {
-    try { navigator.clipboard.writeText('npx x402-bazaar init'); } catch { /* non-critique */ }
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
 
   // Category data
   const categoryCounts: Record<string, number> = {};

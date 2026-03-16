@@ -1,4 +1,4 @@
-import { useState, memo, useMemo } from 'react';
+import React, { useState, memo, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '../i18n/LanguageContext';
 import StarRating from './StarRating';
@@ -80,7 +80,7 @@ function ServiceCard({ service, healthStatus = null, uptimePercent = null, revie
 
   // Build badges array, max 2 (priority: Native > Trust > Quality > AutoTested)
   const badges = useMemo(() => {
-    const list: { key: string; el: JSX.Element }[] = [];
+    const list: { key: string; el: React.ReactElement }[] = [];
     if (isNative) {
       list.push({
         key: 'native',

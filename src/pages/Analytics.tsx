@@ -98,7 +98,7 @@ interface MonitoringData {
   lastCheck?: string;
 }
 
-function MonitoringStatus({ monitoring, uptimePercent, t }: { monitoring: MonitoringData; uptimePercent: number | null; t: TDict }) {
+function MonitoringStatus({ monitoring, uptimePercent, t }: { monitoring?: MonitoringData; uptimePercent?: number | null; t: TDict }) {
   const isOperational = monitoring?.overall === 'operational' || monitoring?.overall === 'healthy';
   const isDegraded = monitoring?.overall === 'degraded';
   const statusColor = isOperational ? '#34D399' : isDegraded ? '#FBBF24' : '#EF4444';
@@ -329,7 +329,7 @@ export default function Analytics() {
               uptimePercent={stats.uptimePercent}
               t={t}
             />
-            <TopEndpointsChart endpoints={stats.topEndpoints} t={t} />
+            <TopEndpointsChart endpoints={stats.topEndpoints || []} t={t} />
           </div>
 
           {/* Charts row 2: Doughnut + Recent Activity */}

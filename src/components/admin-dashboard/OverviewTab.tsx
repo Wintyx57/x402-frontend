@@ -192,7 +192,7 @@ export default function OverviewTab({ adminFetch }: { adminFetch: AdminFetch }) 
                   options={{
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { legend: { display: false }, tooltip: { ...CHART_TOOLTIP, callbacks: { label: (ctx) => `${ctx.dataset.label}: $${ctx.parsed.y.toFixed(4)}` } } },
+                    plugins: { legend: { display: false }, tooltip: { ...CHART_TOOLTIP, callbacks: { label: (ctx) => `${ctx.dataset.label}: $${(ctx.parsed.y ?? 0).toFixed(4)}` } } },
                     scales: {
                       x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#6B7280', font: { size: 11 } } },
                       y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#6B7280', font: { size: 11 }, callback: (v) => `$${v}` } },
@@ -226,7 +226,7 @@ export default function OverviewTab({ adminFetch }: { adminFetch: AdminFetch }) 
                   options={{
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { legend: { display: false }, tooltip: { ...CHART_TOOLTIP, callbacks: { label: (ctx) => `${ctx.dataset.label}: $${ctx.parsed.y.toFixed(4)}` } } },
+                    plugins: { legend: { display: false }, tooltip: { ...CHART_TOOLTIP, callbacks: { label: (ctx) => `${ctx.dataset.label}: $${(ctx.parsed.y ?? 0).toFixed(4)}` } } },
                     scales: {
                       x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#6B7280', font: { size: 11 } } },
                       y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#6B7280', font: { size: 11 }, callback: (v) => `$${v}` } },

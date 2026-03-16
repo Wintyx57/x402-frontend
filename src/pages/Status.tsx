@@ -197,9 +197,9 @@ export default function Status() {
               <div key={i} className="glass-card rounded-lg p-4 animate-shimmer h-16" />
             ))}
           </div>
-        ) : status?.endpoints?.length > 0 ? (
+        ) : (status?.endpoints?.length ?? 0) > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {status?.endpoints.map((ep: Endpoint) => {
+            {status?.endpoints?.map((ep: Endpoint) => {
               const uptimeData = uptime?.endpoints?.find((u) => u.endpoint === ep.endpoint);
               return (
                 <div key={ep.endpoint}>
