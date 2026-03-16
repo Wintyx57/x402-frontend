@@ -5,6 +5,9 @@ import { TRAILS_ROUTER_PLACEHOLDER_AMOUNT } from '0xtrails';
 export const USDC_BASE = '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913' as const;
 export const USDC_POLYGON = '0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359' as const;
 
+// Trails Router — spender for USDC approval on same-chain-same-token flows (Base → SKALE)
+export const TRAILS_ROUTER_ADDRESS = '0xF8A739B9F24E297a98b7aba7A9cdFDBD457F6fF8' as const;
+
 // SKALE IMA Bridge DepositBoxERC20 on Base
 export const IMA_DEPOSIT_BOX = '0x7f54e52D08C911eAbB4fDF00Ad36ccf07F867F61' as const;
 const SKALE_CHAIN_NAME = 'winged-bubbly-grumium';

@@ -1,13 +1,14 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { useQuote, TradeType } from '0xtrails';
-import { useAccount, useSwitchChain, useWalletClient } from 'wagmi';
+import { useAccount, useSwitchChain, useWalletClient, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { parseUnits } from 'viem';
+import { parseUnits, erc20Abi, maxUint256 } from 'viem';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '../i18n/LanguageContext';
-import { SOURCE_CHAINS, DEST_CHAINS, getDestinationConfig, chainImageUrl, SOURCE_USDC } from '../lib/bridge-config';
+import { SOURCE_CHAINS, DEST_CHAINS, getDestinationConfig, chainImageUrl, SOURCE_USDC, USDC_BASE, TRAILS_ROUTER_ADDRESS } from '../lib/bridge-config';
 import type { DestKey } from '../lib/bridge-config';
 import { useUsdcBalance } from '../hooks/useUsdcBalance';
+import { useUsdcAllowance } from '../hooks/useUsdcAllowance';
 
 const TRAILS_API_KEY = import.meta.env.VITE_TRAILS_API_KEY || '';
 
@@ -146,6 +147,38 @@ export default function BridgeCard() {
     }
   })();
 
+  // ── USDC Allowance for Trails Router (Base → SKALE optimization) ──
+  const needsApprovalCheck = fromChainId === 8453 && selectedDest === 'skale';
+  const { data: allowanceData, refetch: refetchAllowance } = useUsdcAllowance(
+    needsApprovalCheck ? address : undefined,
+    TRAILS_ROUTER_ADDRESS,
+  );
+  const { writeContract: writeApprove, data: approveTxHash, isPending: isApprovePending, reset: resetApprove } = useWriteContract();
+  const { isLoading: isApproveConfirming, isSuccess: isApproveConfirmed } = useWaitForTransactionReceipt({ hash: approveTxHash });
+
+  const hasEnoughAllowance = (() => {
+    if (!needsApprovalCheck || !parsedAmount) return true;
+    if (allowanceData === undefined) return true; // loading, assume OK
+    return (allowanceData as bigint) >= BigInt(parsedAmount);
+  })();
+
+  // Refetch allowance after approval confirmed
+  useEffect(() => {
+    if (isApproveConfirmed) {
+      refetchAllowance();
+    }
+  }, [isApproveConfirmed, refetchAllowance]);
+
+  function handleApprove() {
+    writeApprove({
+      address: USDC_BASE,
+      abi: erc20Abi,
+      functionName: 'approve',
+      args: [TRAILS_ROUTER_ADDRESS, maxUint256],
+      chainId: 8453,
+    });
+  }
+
   const { quote, send, isLoadingQuote, quoteError, quoteErrorPrettified, refetchQuote } = useQuote({
     walletClient: walletClient ?? undefined,
     fromTokenAddress: fromToken,
@@ -222,6 +255,7 @@ export default function BridgeCard() {
     setErrorMessage(null);
     setSwapResult(null);
     setAmount('');
+    resetApprove();
   }
 
   function setAmountPercent(pct: number) {
@@ -525,8 +559,61 @@ export default function BridgeCard() {
                 </div>
               )}
 
+              {/* ── Approve + Bridge Stepper (Base → SKALE) ── */}
+              {!isBridging && bridgeState !== 'error' && needsApprovalCheck && !hasEnoughAllowance && parsedAmount && (
+                <div className="space-y-2.5">
+                  {/* Stepper indicators */}
+                  <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/[0.03] border border-white/5">
+                    <div className={`flex items-center gap-1.5 ${isApproveConfirmed ? 'text-green-400' : 'text-[#FF9900]'}`}>
+                      {isApproveConfirmed ? (
+                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                        </svg>
+                      ) : (
+                        <span className="w-4 h-4 rounded-full border-2 border-current flex items-center justify-center text-[9px] font-bold">1</span>
+                      )}
+                      <span className="text-xs font-medium">Approve USDC</span>
+                    </div>
+                    <svg className="w-3 h-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                    <div className="flex items-center gap-1.5 text-gray-500">
+                      <span className="w-4 h-4 rounded-full border-2 border-current flex items-center justify-center text-[9px] font-bold">2</span>
+                      <span className="text-xs font-medium">Bridge</span>
+                    </div>
+                  </div>
+
+                  {/* Approve button */}
+                  <button
+                    type="button"
+                    disabled={isApprovePending || isApproveConfirming}
+                    onClick={handleApprove}
+                    className="w-full py-3 rounded-xl bg-[#FF9900] hover:bg-[#e68a00] text-white font-bold text-sm
+                      shadow-[0_0_20px_rgba(255,153,0,0.3)] hover:shadow-[0_0_28px_rgba(255,153,0,0.45)]
+                      transition-all duration-200 disabled:opacity-40 disabled:shadow-none disabled:cursor-not-allowed cursor-pointer"
+                  >
+                    {isApprovePending ? (
+                      <span className="flex items-center justify-center gap-2">
+                        <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        Sign in wallet...
+                      </span>
+                    ) : isApproveConfirming ? (
+                      <span className="flex items-center justify-center gap-2">
+                        <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        Confirming approval...
+                      </span>
+                    ) : (
+                      'Approve USDC (one-time)'
+                    )}
+                  </button>
+                  <p className="text-[10px] text-gray-500 text-center">
+                    One-time approval. Future bridges will only need 1 signature.
+                  </p>
+                </div>
+              )}
+
               {/* ── Bridge Button ── */}
-              {!isBridging && bridgeState !== 'error' && (
+              {!isBridging && bridgeState !== 'error' && (hasEnoughAllowance || !needsApprovalCheck || !parsedAmount) && (
                 <button
                   type="button"
                   disabled={!send || !quote || bridgeState !== 'quoted'}
