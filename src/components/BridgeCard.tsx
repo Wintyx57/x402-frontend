@@ -238,9 +238,9 @@ export default function BridgeCard() {
   };
 
   const successTimingMap: Record<DestKey, string> = {
-    base: f.successTimingBase || 'USDC arrives on Base in ~1-2 minutes.',
-    skale: f.successTimingSkale || 'IMA bridge takes 5-15 min to deliver to SKALE.',
-    polygon: f.successTimingPolygon || 'USDC arrives on Polygon in ~2-5 minutes.',
+    base: f.successTimingBase || 'USDC arrives on Base in ~10-30 seconds.',
+    skale: f.successTimingSkale || 'IMA bridge delivers to SKALE in ~15-45 seconds.',
+    polygon: f.successTimingPolygon || 'USDC arrives on Polygon in ~10-30 seconds.',
   };
 
   const isBridging = bridgeState === 'signing' || bridgeState === 'pending' || bridgeState === 'confirming';
