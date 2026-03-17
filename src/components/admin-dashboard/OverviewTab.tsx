@@ -175,7 +175,7 @@ export default function OverviewTab({ adminFetch }: { adminFetch: AdminFetch }) 
           {analytics.dailyVolume?.length > 0 && (
             <div className="glass-card rounded-xl p-5">
               <h3 className="text-sm font-semibold text-white mb-4">Volume journalier (7j)</h3>
-              <div style={{ height: '200px' }}>
+              <div className="h-[200px]">
                 <Bar
                   data={{
                     labels: analytics.dailyVolume.slice(-7).map(d => new Date(d.date).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' })),
@@ -207,7 +207,7 @@ export default function OverviewTab({ adminFetch }: { adminFetch: AdminFetch }) 
           {analytics.cumulativeRevenue?.length > 0 && (
             <div className="glass-card rounded-xl p-5">
               <h3 className="text-sm font-semibold text-white mb-4">Revenue cumule (14j)</h3>
-              <div style={{ height: '200px' }}>
+              <div className="h-[200px]">
                 <Line
                   data={{
                     labels: analytics.cumulativeRevenue.slice(-14).map(d => new Date(d.date).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' })),
@@ -241,7 +241,7 @@ export default function OverviewTab({ adminFetch }: { adminFetch: AdminFetch }) 
           {analytics.topServices?.length > 0 && (
             <div className="glass-card rounded-xl p-5">
               <h3 className="text-sm font-semibold text-white mb-4">Top 8 endpoints</h3>
-              <div style={{ height: `${Math.max(analytics.topServices.slice(0, 8).length * 32, 200)}px` }}>
+              <div style={{ height: `${Math.max(analytics.topServices.slice(0, 8).length * 32, 200)}px` }} className="min-h-[200px]">
                 <Bar
                   data={{
                     labels: analytics.topServices.slice(0, 8).map(ep => ep.endpoint.length > 22 ? ep.endpoint.slice(0, 20) + '...' : ep.endpoint),
@@ -272,7 +272,7 @@ export default function OverviewTab({ adminFetch }: { adminFetch: AdminFetch }) 
           {revenue?.by_chain && Object.keys(revenue.by_chain).length > 0 && (
             <div className="glass-card rounded-xl p-5">
               <h3 className="text-sm font-semibold text-white mb-4">Revenue par chain</h3>
-              <div style={{ height: '200px' }} className="flex items-center justify-center">
+              <div className="h-[200px] flex items-center justify-center">
                 <Doughnut
                   data={{
                     labels: Object.keys(revenue.by_chain).map(c => c.charAt(0).toUpperCase() + c.slice(1)),

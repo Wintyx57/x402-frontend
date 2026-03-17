@@ -16,6 +16,7 @@ export default function ServicesTab({ adminFetch }: { adminFetch: AdminFetch }) 
   const [sortDir, setSortDir] = useState<SortDir>('asc');
   const [deleteTarget, setDeleteTarget] = useState<ServiceItem | null>(null);
   const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   const fetchServices = useCallback(async () => {
     setLoading(true);
@@ -40,7 +41,7 @@ export default function ServicesTab({ adminFetch }: { adminFetch: AdminFetch }) 
       setServices(prev => prev.filter(s => s.id !== deleteTarget.id));
       setDeleteTarget(null);
     } catch (e) {
-      alert(`Erreur: ${(e as Error).message}`);
+      setDeleteError((e as Error).message);
     } finally {
       setDeleting(false);
     }
@@ -107,6 +108,13 @@ export default function ServicesTab({ adminFetch }: { adminFetch: AdminFetch }) 
       {error && (
         <div className="glass-card rounded-xl p-4 border border-red-500/20">
           <p className="text-sm text-red-400">{error}</p>
+        </div>
+      )}
+
+      {deleteError && (
+        <div className="rounded-xl p-4 border border-red-500/20 bg-red-500/5 flex items-center justify-between">
+          <p className="text-sm text-red-400">Erreur de suppression : {deleteError}</p>
+          <button onClick={() => setDeleteError(null)} className="text-red-400/60 hover:text-red-400 text-xs ml-4">Fermer</button>
         </div>
       )}
 
@@ -202,11 +210,11 @@ export default function ServicesTab({ adminFetch }: { adminFetch: AdminFetch }) 
                   </td>
                   <td className="px-4 py-3 text-center">
                     <button
-                      onClick={() => setDeleteTarget(s)}
-                      className="text-red-400/60 hover:text-red-400 transition-colors"
+                      onClick={() => { setDeleteTarget(s); setDeleteError(null); }}
+                      className="text-[10px] px-2 py-1 rounded bg-red-500/10 text-red-400/70 hover:bg-red-500/20 hover:text-red-400 border border-red-500/10 hover:border-red-500/20 transition-colors"
                       title="Supprimer"
                     >
-                      &#10005;
+                      Suppr.
                     </button>
                   </td>
                 </tr>
@@ -226,8 +234,9 @@ export default function ServicesTab({ adminFetch }: { adminFetch: AdminFetch }) 
         <ConfirmModal
           title="Supprimer ce service ?"
           message={`"${deleteTarget.name}" sera supprime definitivement. Cette action est irreversible.`}
-          confirmLabel={deleting ? 'Suppression...' : 'Supprimer'}
+          confirmLabel="Supprimer"
           danger
+          loading={deleting}
           onConfirm={handleDelete}
           onCancel={() => setDeleteTarget(null)}
         />

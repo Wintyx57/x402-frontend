@@ -27,7 +27,7 @@ function LoginModal({ onLogin }: { onLogin: (token: string) => void }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-      <form onSubmit={submit} className="glass-strong rounded-2xl p-8 w-full max-w-sm mx-4">
+      <form onSubmit={submit} className="bg-[#1e2332] border border-white/15 shadow-2xl rounded-2xl p-8 w-full max-w-sm mx-4 animate-fade-in">
         <div className="flex items-center gap-3 mb-6">
           <div className="w-10 h-10 rounded-xl bg-[#FF9900]/10 flex items-center justify-center text-xl">&#9776;</div>
           <div>
@@ -100,24 +100,39 @@ export default function AdminDashboard() {
         <div className="flex items-center gap-4">
           <Link to="/" className="text-sm text-gray-400 hover:text-[#FF9900] transition-colors">&larr; Back</Link>
           <h1 className="text-xl font-bold text-white">Admin Dashboard</h1>
+          <div className="flex items-center gap-1.5 text-xs text-green-400">
+            <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+            Connecte
+          </div>
         </div>
-        <button onClick={handleLogout} className="text-sm text-gray-400 hover:text-red-400 transition-colors">
-          Logout
-        </button>
+        <div className="flex items-center gap-4">
+          <span className="text-xs text-gray-500 hidden sm:block">{new Date().toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })}</span>
+          <button
+            onClick={handleLogout}
+            className="text-xs px-3 py-1.5 rounded-lg border border-red-500/20 text-red-400/70 hover:bg-red-500/10 hover:text-red-400 hover:border-red-500/30 transition-colors"
+          >
+            Logout
+          </button>
+        </div>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 mb-6 overflow-x-auto pb-1">
+      <div className="flex gap-1 mb-6 overflow-x-auto pb-1 border-b border-white/5">
         {TABS.map(tab => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`text-sm px-4 py-2 rounded-lg whitespace-nowrap transition-colors ${
+            className={`text-sm px-4 py-2.5 whitespace-nowrap transition-colors relative ${
               activeTab === tab
-                ? 'bg-[#FF9900]/20 text-[#FF9900] font-semibold'
-                : 'text-gray-400 hover:text-white hover:bg-white/5'
+                ? 'text-[#FF9900] font-semibold'
+                : 'text-gray-400 hover:text-white'
             }`}
-          >{tab}</button>
+          >
+            {tab}
+            {activeTab === tab && (
+              <div className="absolute bottom-0 left-2 right-2 h-0.5 bg-[#FF9900] rounded-full" />
+            )}
+          </button>
         ))}
       </div>
 

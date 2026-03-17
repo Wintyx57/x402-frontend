@@ -17,6 +17,7 @@ export default function BudgetsTab({ adminFetch }: { adminFetch: AdminFetch }) {
   // Delete
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
   const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   const fetchBudgets = useCallback(async () => {
     setLoading(true);
@@ -66,7 +67,7 @@ export default function BudgetsTab({ adminFetch }: { adminFetch: AdminFetch }) {
       setBudgets(prev => prev.filter(b => b.wallet !== deleteTarget));
       setDeleteTarget(null);
     } catch (e) {
-      alert(`Erreur: ${(e as Error).message}`);
+      setDeleteError((e as Error).message);
     } finally {
       setDeleting(false);
     }
@@ -85,6 +86,13 @@ export default function BudgetsTab({ adminFetch }: { adminFetch: AdminFetch }) {
       {error && (
         <div className="glass-card rounded-xl p-4 border border-red-500/20">
           <p className="text-sm text-red-400">{error}</p>
+        </div>
+      )}
+
+      {deleteError && (
+        <div className="rounded-xl p-4 border border-red-500/20 bg-red-500/5 flex items-center justify-between">
+          <p className="text-sm text-red-400">Erreur de suppression : {deleteError}</p>
+          <button onClick={() => setDeleteError(null)} className="text-red-400/60 hover:text-red-400 text-xs ml-4">Fermer</button>
         </div>
       )}
 
@@ -186,11 +194,11 @@ export default function BudgetsTab({ adminFetch }: { adminFetch: AdminFetch }) {
                     <td className="px-4 py-3 text-center text-gray-400 capitalize">{b.period}</td>
                     <td className="px-4 py-3 text-center">
                       <button
-                        onClick={() => setDeleteTarget(b.wallet)}
-                        className="text-red-400/60 hover:text-red-400 transition-colors"
+                        onClick={() => { setDeleteTarget(b.wallet); setDeleteError(null); }}
+                        className="text-[10px] px-2 py-1 rounded bg-red-500/10 text-red-400/70 hover:bg-red-500/20 hover:text-red-400 border border-red-500/10 hover:border-red-500/20 transition-colors"
                         title="Supprimer"
                       >
-                        &#10005;
+                        Suppr.
                       </button>
                     </td>
                   </tr>
@@ -211,8 +219,9 @@ export default function BudgetsTab({ adminFetch }: { adminFetch: AdminFetch }) {
         <ConfirmModal
           title="Supprimer ce budget ?"
           message={`Le budget pour ${deleteTarget.slice(0, 10)}... sera supprime. L'agent n'aura plus de limite de depenses.`}
-          confirmLabel={deleting ? 'Suppression...' : 'Supprimer'}
+          confirmLabel="Supprimer"
           danger
+          loading={deleting}
           onConfirm={handleDelete}
           onCancel={() => setDeleteTarget(null)}
         />
