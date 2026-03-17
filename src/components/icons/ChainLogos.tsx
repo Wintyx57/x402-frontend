@@ -15,31 +15,15 @@ export function BaseLogo({ className = 'w-5 h-5' }: LogoProps) {
   );
 }
 
-/** Official SKALE Network logo mark — teal hexagonal S */
+/** Official SKALE Network logo — real logo from skale-logo.jpg */
 export function SkaleLogo({ className = 'w-5 h-5' }: LogoProps) {
   return (
-    <svg className={className} viewBox="0 0 120 120" fill="none" aria-hidden="true">
-      <defs>
-        <linearGradient id="skale-g" x1="0" y1="0" x2="120" y2="120" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#46BDC6" />
-          <stop offset="1" stopColor="#2BA3AA" />
-        </linearGradient>
-      </defs>
-      <rect width="120" height="120" rx="24" fill="#1A1C2B" />
-      {/* Upper diamond */}
-      <path d="M60 20L88 38V62L60 80L32 62V38L60 20Z" fill="url(#skale-g)" opacity="0.35" />
-      {/* Lower diamond */}
-      <path d="M60 40L88 58V82L60 100L32 82V58L60 40Z" fill="url(#skale-g)" opacity="0.35" />
-      {/* Center S-path */}
-      <path
-        d="M72 38L60 30L40 42V56L60 68L80 56V70L60 82L48 74"
-        stroke="url(#skale-g)"
-        strokeWidth="5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        fill="none"
-      />
-    </svg>
+    <img
+      src="/skale-logo.jpg"
+      alt=""
+      className={className}
+      aria-hidden="true"
+    />
   );
 }
 

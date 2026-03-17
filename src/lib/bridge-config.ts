@@ -82,7 +82,7 @@ export function getSourceUsdcAddress(chainId: number): `0x${string}` | undefined
 // Chain image URL from Sequence CDN
 export function chainImageUrl(chainId: number): string | null {
   // SKALE on Base is not in the Sequence CDN
-  if (chainId === 1187947933) return null;
+  if (chainId === 1187947933) return '/skale-logo.jpg';
   return `https://assets.sequence.info/images/networks/large/${chainId}.webp`;
 }
 

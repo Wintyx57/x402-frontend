@@ -164,6 +164,7 @@ export default function Home() {
   const statsRef = useReveal();
   const ctaRef = useReveal();
   const fundRef = useReveal();
+  const partnerRef = useReveal();
 
   useSEO({
     title: 'x402 Bazaar — The API Marketplace for AI Agents',
@@ -465,6 +466,57 @@ export default function Home() {
           </svg>
         </Link>
       </div>
+
+      {/* ── SKALE Partner Section ── */}
+      <section ref={partnerRef} className="reveal max-w-4xl mx-auto px-4 mb-10">
+        <div className="glass-card rounded-2xl p-6 md:p-8 border border-white/10 relative overflow-hidden">
+          {/* Label */}
+          <div className="flex justify-center mb-5">
+            <span className="text-[10px] uppercase tracking-[0.2em] text-gray-400 bg-white/5 border border-white/10 px-3 py-1 rounded-full">
+              {t.home.partnerLabel}
+            </span>
+          </div>
+
+          <div className="flex flex-col md:flex-row items-center gap-6 md:gap-10">
+            {/* Logo */}
+            <div className="shrink-0">
+              <img
+                src="/skale-logo.jpg"
+                alt="SKALE Network"
+                className="w-28 h-28 sm:w-36 sm:h-36 rounded-2xl"
+              />
+            </div>
+
+            {/* Content */}
+            <div className="flex-1 text-center md:text-left">
+              <h2 className="text-xl sm:text-2xl font-bold text-white mb-2">{t.home.partnerTitle}</h2>
+              <p className="text-gray-400 text-sm leading-relaxed mb-4">{t.home.partnerDesc}</p>
+
+              {/* Feature badges */}
+              <div className="flex flex-wrap justify-center md:justify-start gap-2 mb-5">
+                {[t.home.partnerFeature1, t.home.partnerFeature2, t.home.partnerFeature3].map((feat) => (
+                  <span key={feat} className="text-xs bg-white/5 border border-white/10 text-gray-300 px-3 py-1.5 rounded-lg">
+                    {feat}
+                  </span>
+                ))}
+              </div>
+
+              {/* CTA */}
+              <a
+                href="https://skale.space"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-sm text-gray-300 hover:text-white transition-colors no-underline group"
+              >
+                {t.home.partnerCta}
+                <svg className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Fund Wallet CTA */}
       <section ref={fundRef} className="reveal max-w-4xl mx-auto px-4 mb-10">
