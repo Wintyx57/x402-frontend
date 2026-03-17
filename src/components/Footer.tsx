@@ -213,7 +213,7 @@ export default function Footer() {
             Built on{' '}
             <span className="text-[#FF9900] font-medium">x402 Protocol</span>
             {' '}&middot;{' '}
-            Powered by <BaseLogo className="w-3.5 h-3.5 inline-block align-text-bottom" /> Base, <SkaleLogo className="w-3.5 h-3.5 inline-block align-text-bottom rounded-sm" /> <span className="text-[#34D399]">SKALE</span> &amp; <PolygonLogo className="w-3.5 h-3.5 inline-block align-text-bottom" /> Polygon
+            Powered by <SkaleLogo className="w-3.5 h-3.5 inline-block align-text-bottom rounded-sm" /> <span className="text-[#34D399]">SKALE</span>, <BaseLogo className="w-3.5 h-3.5 inline-block align-text-bottom" /> Base &amp; <PolygonLogo className="w-3.5 h-3.5 inline-block align-text-bottom" /> Polygon
           </p>
           <div className="flex items-center gap-4">
             <p className="text-xs text-gray-400">&copy; 2026 x402 Bazaar</p>

@@ -199,8 +199,8 @@ curl -H "X-Payment-TxHash: 0xabc123..." \\
   "payment_details": {
     "amount": 0.05,
     "currency": "USDC",
-    "network": "base",
-    "chainId": 8453,
+    "network": "skale",
+    "chainId": 1187947933,
     "recipient": "0xServerWallet...",
     "action": "Search services"
   }

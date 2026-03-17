@@ -321,14 +321,14 @@ export default function Home() {
           {/* Badges */}
           <div className="flex flex-wrap items-center justify-center gap-2 mb-8 animate-fade-in-up">
             <span className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1 rounded-full
-                             bg-blue-500/10 border border-blue-500/20 text-blue-400">
-              <BaseLogo className="w-3.5 h-3.5" />
-              {t.home.badgeBase}
-            </span>
-            <span className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1 rounded-full
                              bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
               <SkaleLogo className="w-3.5 h-3.5 rounded-[4px]" />
               {t.home.badgeSkale}
+            </span>
+            <span className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1 rounded-full
+                             bg-blue-500/10 border border-blue-500/20 text-blue-400">
+              <BaseLogo className="w-3.5 h-3.5" />
+              {t.home.badgeBase}
             </span>
             <span className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1 rounded-full
                              bg-purple-500/10 border border-purple-500/20 text-purple-400">

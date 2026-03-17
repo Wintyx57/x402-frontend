@@ -240,7 +240,7 @@ export default function ServiceDetail() {
   const [urlCopied, setUrlCopied] = useState(false);
   const [reviewPage, setReviewPage] = useState(1);
 
-  const chainKey = (chain?.id && CHAIN_KEY_MAP[chain.id]) || 'base';
+  const chainKey = (chain?.id && CHAIN_KEY_MAP[chain.id]) || 'skale';
 
   // ── TanStack Query: reviews + stats ──
   const {
@@ -648,9 +648,9 @@ export default function ServiceDetail() {
           <div>
             <span className="text-xs text-gray-500 block mb-1">{t.serviceDetail?.chain || 'Chain'}</span>
             <div className="flex flex-col gap-1">
-              <span className={`font-medium text-sm ${chainKey === 'base' ? 'text-white' : 'text-gray-300'}`}>Base (USDC) <span className="text-gray-500 font-normal text-xs">— default</span></span>
-              <span className={`font-medium text-sm ${chainKey === 'skale' ? 'text-white' : 'text-gray-300'}`}>SKALE on Base (USDC) <span className="text-gray-500 font-normal text-xs">— ultra-low gas</span></span>
-              <span className={`font-medium text-sm ${chainKey === 'polygon' ? 'text-white' : 'text-gray-300'}`}>Polygon (USDC) <span className="text-gray-500 font-normal text-xs">— low gas</span></span>
+              <span className={`font-medium text-sm ${chainKey === 'skale' ? 'text-white' : 'text-gray-300'}`}>SKALE on Base (USDC) <span className="text-gray-500 font-normal text-xs">— recommended</span></span>
+              <span className={`font-medium text-sm ${chainKey === 'base' ? 'text-white' : 'text-gray-300'}`}>Base (USDC)</span>
+              <span className={`font-medium text-sm ${chainKey === 'polygon' ? 'text-white' : 'text-gray-300'}`}>Polygon (USDC)</span>
             </div>
           </div>
 

@@ -26,7 +26,7 @@ export const skaleOnBase: Chain = {
 };
 
 const projectId = import.meta.env.VITE_WALLETCONNECT_PROJECT_ID || '';
-const chains = [base, baseSepolia, skaleOnBase, mainnet, polygon, optimism, arbitrum] as const;
+const chains = [skaleOnBase, base, baseSepolia, mainnet, polygon, optimism, arbitrum] as const;
 
 function buildConfig() {
   // If projectId is available, use RainbowKit's getDefaultConfig (includes WalletConnect)

@@ -30,8 +30,8 @@ export default function Quickstart({ d }: Props) {
   "payment_details": {
     "amount": 0.01,
     "currency": "USDC",
-    "network": "base",
-    "chainId": 8453,
+    "network": "skale",
+    "chainId": 1187947933,
     "recipient": "0xfb1c...2430",
     "action": "Random Joke API"
   }

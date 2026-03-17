@@ -9,8 +9,8 @@ const CHAIN_LOGOS: Record<number, React.ReactNode> = {
 };
 
 const CHAINS = [
-  { id: 8453, label: 'Base', gas: '~$0.001', color: 'bg-blue-500', free: false },
   { id: 1187947933, label: 'SKALE on Base', gas: '~$0.0007', color: 'bg-green-500', free: false },
+  { id: 8453, label: 'Base', gas: '~$0.001', color: 'bg-blue-500', free: false },
   { id: 137, label: 'Polygon', gas: '~$0.001', color: 'bg-purple-500', free: false },
 ];
 
