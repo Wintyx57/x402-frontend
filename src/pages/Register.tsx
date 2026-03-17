@@ -8,8 +8,9 @@ import { Link, useSearchParams } from 'react-router-dom';
 import ChainSelector from '../components/ChainSelector';
 import { trackEvent } from '../lib/analytics';
 import EmbedSnippet from '../components/EmbedSnippet';
+import { useConnectModal } from '@rainbow-me/rainbowkit';
 
-const REGISTER_COST = 1;
+// Registration is free — rate-limited to prevent spam
 const PRICE_PRESETS = [0.001, 0.005, 0.01];
 
 const CATEGORIES = ['ai', 'data', 'devtools', 'utility', 'social', 'finance', 'other'];
@@ -94,6 +95,7 @@ function CheckItem({ done, label }: { done: boolean; label: string }) {
 export default function Register() {
   const { address, isConnected, chain } = useAccount();
   const { writeContractAsync } = useWriteContract();
+  const { openConnectModal } = useConnectModal();
   const { t } = useTranslation();
   const [searchParams] = useSearchParams();
 
@@ -247,7 +249,7 @@ export default function Register() {
     if (isProcessing) return;
     setError(null);
 
-    if (!isConnected) {
+    if (!isConnected || !address) {
       setError(t.register.connectError as string);
       return;
     }
@@ -255,83 +257,40 @@ export default function Register() {
     try {
       setPaymentState('paying');
       setPaymentStep(1);
-      const res402 = await fetch(`${API_URL}/register`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(buildPayload()),
-      });
 
-      if (res402.status !== 402) {
-        throw new Error(`Unexpected response: ${res402.status}`);
-      }
-
-      const { payment_details } = await res402.json();
-
-      // Resolve USDC contract and RPC from user's current chain
-      const currentChainConfig = CHAIN_CONFIG[(chain?.id as number) ?? 8453] || CHAIN_CONFIG[8453];
-      const usdcContract = currentChainConfig.usdcContract;
-
+      // EIP-191 signature (free registration, no USDC payment)
+      const timestamp = Date.now();
+      const message = `batch-register:${address}:1:${timestamp}`;
       setPaymentStep(2);
-      const hash = await writeContractAsync({
-        address: usdcContract as `0x${string}`,
-        abi: USDC_ABI,
-        functionName: 'transfer',
-        args: [
-          payment_details.recipient,
-          parseUnits(String(payment_details.amount), 6),
-        ],
-      });
+      const signature = await signMessageAsync({ message });
 
-      setTxHash(hash);
       setPaymentState('registering');
       setPaymentStep(3);
 
-      let confirmed = false;
-      for (let i = 0; i < 30; i++) {
-        await new Promise(r => setTimeout(r, 2000));
-        try {
-          const receiptRes = await fetch(currentChainConfig.rpcUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              jsonrpc: '2.0', method: 'eth_getTransactionReceipt',
-              params: [hash], id: 1
-            })
-          });
-          const { result: receipt } = await receiptRes.json();
-          if (receipt && receipt.status === '0x1') {
-            confirmed = true;
-            break;
-          }
-        } catch { /* polling receipt — erreur non critique */ }
-      }
-
-      if (!confirmed) throw new Error('Transaction not confirmed after 60s');
-
-      setPaymentStep(4);
-      const resRegister = await fetch(`${API_URL}/register`, {
+      const res = await fetch(`${API_URL}/batch-register`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Payment-TxHash': hash,
-          'X-Payment-Chain': currentChainConfig.key,
-        },
-        body: JSON.stringify(buildPayload()),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          services: [buildServicePayload(form)],
+          ownerAddress: address,
+          signature,
+          timestamp,
+        }),
       });
 
-      if (!resRegister.ok) {
-        const err = await resRegister.json();
+      if (!res.ok) {
+        const err = await res.json();
         throw new Error(err.message || err.error || 'Registration failed');
       }
 
-      const data = await resRegister.json();
+      const data = await res.json();
       setResult(data);
       setPaymentState('done');
       setPaymentStep(0);
       trackEvent('register_success');
     } catch (err: unknown) {
       const e = err as Record<string, any>;
-      const safeMessages = ['Transaction not confirmed', 'User rejected', 'Unexpected response'];
+      const safeMessages = ['User rejected', 'Unexpected response'];
       const isSafe = safeMessages.some(m => e.message?.includes(m));
       setError(isSafe ? e.message : 'Registration failed. Please try again.');
       setPaymentState('error');
@@ -344,6 +303,12 @@ export default function Register() {
   const handleQuickRegister = async () => {
     setQuickError(null);
 
+    // Wallet must be connected for EIP-191 signature
+    if (!isConnected) {
+      openConnectModal?.();
+      return setQuickError('Please connect your wallet first to sign the registration');
+    }
+
     // Validate
     try { new URL(quickForm.url); } catch { return setQuickError('Invalid URL format'); }
     const price = parseFloat(quickForm.price);
@@ -352,6 +317,11 @@ export default function Register() {
 
     setQuickLoading(true);
     try {
+      // EIP-191 signature required by backend
+      const timestamp = Date.now();
+      const message = `quick-register:${quickForm.url}:${quickForm.wallet}:${timestamp}`;
+      const signature = await signMessageAsync({ message });
+
       const res = await fetch(`${API_URL}/quick-register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -359,6 +329,8 @@ export default function Register() {
           url: quickForm.url,
           price,
           ownerAddress: quickForm.wallet,
+          signature,
+          timestamp,
         }),
       });
       if (!res.ok) {
@@ -521,11 +493,11 @@ export default function Register() {
       <p className="text-gray-400 mb-2 animate-fade-in-up delay-100">
         {mode === 'quick'
           ? (t.quickRegister?.subtitle || 'Paste your URL, set a price, start earning. No payment required.')
-          : t.register.subtitle.replace('{cost}', String(REGISTER_COST))}
+          : t.register.subtitle}
       </p>
       {mode === 'full' && (
         <p className="text-sm text-[#FF9900]/80 font-medium mb-8 animate-fade-in-up delay-100">
-          One-time 1 USDC anti-spam deposit &middot; 95% revenue share on all calls
+          Free registration &middot; 95% revenue share on all calls
         </p>
       )}
 
@@ -791,7 +763,7 @@ export default function Register() {
         </div>
         <div className={`h-0.5 flex-1 rounded-full transition-all duration-500 ${wizardStep >= 3 ? 'bg-[#FF9900]/50' : 'bg-white/10'}`} aria-hidden="true" />
         <div role="listitem">
-          <StepIndicator num={3} label="Pay" active={wizardStep >= 3} current={wizardStep === 3} />
+          <StepIndicator num={3} label="Confirm" active={wizardStep >= 3} current={wizardStep === 3} />
         </div>
       </div>
 
@@ -807,7 +779,7 @@ export default function Register() {
             <div>
               <h2 className="text-xl font-bold text-white mb-2">Connect Your Wallet</h2>
               <p className="text-gray-400 text-sm">
-                You'll need <span className="text-[#FF9900] font-semibold">1 USDC on Base</span> to register your API.
+                Connect your wallet to verify ownership and register your API for free.
               </p>
             </div>
 
@@ -1088,7 +1060,7 @@ export default function Register() {
                 className="w-full gradient-btn text-white py-3 rounded-xl font-medium
                            cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:glow-orange"
               >
-                Next: Review &amp; Pay &rarr;
+                Next: Review &amp; Confirm &rarr;
               </button>
             ) : (
               <button
@@ -1175,11 +1147,11 @@ export default function Register() {
         </div>
       )}
 
-      {/* ---- STEP 3 — Review & Pay ---- */}
+      {/* ---- STEP 3 — Review & Confirm ---- */}
       {wizardStep === 3 && (
         <div className="max-w-lg mx-auto animate-fade-in-up">
           <div className="glass-card rounded-xl p-8 space-y-6">
-            <h2 className="text-xl font-bold text-white text-center">Review &amp; Pay</h2>
+            <h2 className="text-xl font-bold text-white text-center">Review &amp; Confirm</h2>
 
             {/* Summary */}
             <div className="space-y-3">
@@ -1221,11 +1193,11 @@ export default function Register() {
               )}
             </div>
 
-            {/* Registration cost */}
+            {/* Registration info */}
             <div className="glass rounded-xl p-4 text-center">
-              <p className="text-xs text-gray-400 mb-1">One-time registration deposit</p>
-              <p className="text-2xl font-bold text-[#FF9900]">1 USDC</p>
-              <p className="text-xs text-gray-500 mt-1">Anti-spam fee &middot; 95% revenue on all future calls</p>
+              <p className="text-xs text-gray-400 mb-1">Registration</p>
+              <p className="text-2xl font-bold text-[#34D399]">Free</p>
+              <p className="text-xs text-gray-500 mt-1">Wallet signature only &middot; 95% revenue on all future calls</p>
             </div>
 
             {error && (
@@ -1271,7 +1243,7 @@ export default function Register() {
                   )}
                   {paymentState === 'paying' ? t.register.paying :
                    paymentState === 'registering' ? t.register.confirming :
-                   `Register & Pay ${REGISTER_COST} USDC`}
+                   'Register API'}
                 </button>
               </form>
 
