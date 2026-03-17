@@ -2,7 +2,7 @@ import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import { API_URL } from '../config';
 
 async function fetchServices() {
-  const res = await fetch(`${API_URL}/api/services?limit=100`);
+  const res = await fetch(`${API_URL}/api/services?limit=200`);
   if (!res.ok) throw new Error(`Failed to fetch services (${res.status})`);
   const json = await res.json();
   // Backend may return { data: [...], pagination } or a raw array
