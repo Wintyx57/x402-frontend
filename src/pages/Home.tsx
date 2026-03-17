@@ -373,7 +373,7 @@ export default function Home() {
                          shadow-[0_0_24px_rgba(255,153,0,0.25)] w-full sm:w-auto text-center"
               onClick={() => trackEvent('cta_hero_click', { variant: 'explore' })}
             >
-              {t.home.exploreCTA}
+              {t.home.exploreCTA.replace('{count}', String(stats?.services || 100))}
             </Link>
             <Link
               to="/register"
@@ -880,7 +880,7 @@ export default function Home() {
                 className="gradient-btn text-white px-8 py-3 rounded-xl text-sm font-semibold no-underline
                            hover:brightness-110 hover:scale-[1.02] transition-all duration-200 animate-pulse-glow"
               >
-                {t.home.exploreCTA}
+                {t.home.exploreCTA.replace('{count}', String(stats?.services || 100))}
               </Link>
               <Link
                 to="/register"
