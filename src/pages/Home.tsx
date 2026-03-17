@@ -163,8 +163,6 @@ export default function Home() {
   const paidRef = useReveal();
   const statsRef = useReveal();
   const ctaRef = useReveal();
-  const fundRef = useReveal();
-  const partnerRef = useReveal();
 
   useSEO({
     title: 'x402 Bazaar — The API Marketplace for AI Agents',
@@ -366,7 +364,7 @@ export default function Home() {
             {t.home.heroSubtitle}
           </p>
 
-          {/* 2 CTAs seulement */}
+          {/* 3 CTAs */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12 animate-fade-in-up delay-200">
             <Link
               to="/services"
@@ -385,6 +383,18 @@ export default function Home() {
               onClick={() => trackEvent('cta_hero_click', { variant: 'list' })}
             >
               {t.home.listApiCTA}
+            </Link>
+            <Link
+              to="/fund"
+              className="border border-white/20 text-gray-300 text-base font-semibold px-8 py-4 rounded-xl no-underline
+                         transition-all duration-200 hover:border-white/40 hover:text-white hover:bg-white/5 bg-transparent
+                         w-full sm:w-auto text-center inline-flex items-center justify-center gap-2"
+              onClick={() => trackEvent('cta_hero_click', { variant: 'fund' })}
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+              </svg>
+              {t.home.fundCtaBtn}
             </Link>
           </div>
 
@@ -408,136 +418,26 @@ export default function Home() {
             ))}
           </div>
 
-          {/* Trust bar — real providers */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-8 animate-fade-in-up delay-300">
-            <span className="text-xs text-gray-500 uppercase tracking-widest shrink-0">{t.home.heroTrustedBy || 'Trusted by'}</span>
-            <div className="flex flex-wrap items-center justify-center gap-2">
-              {[
-                { name: 'Interzoid', url: 'https://api.interzoid.com', verified: true },
-                { name: 'AgentsHere', url: null, verified: true },
-                { name: 'Fia Signals', url: 'https://x402.fiasignals.com', verified: false },
-              ].map(({ name, url, verified }) => (
-                url ? (
-                  <a
-                    key={name}
-                    href={url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full
-                               bg-white/5 border border-white/10 text-gray-300 hover:border-[#FF9900]/30
-                               hover:text-white transition-colors no-underline"
-                  >
-                    {verified && (
-                      <svg className="w-3 h-3 text-emerald-400 shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-label="Verified">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                      </svg>
-                    )}
-                    {name}
-                  </a>
-                ) : (
-                  <span
-                    key={name}
-                    className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full
-                               bg-white/5 border border-white/10 text-gray-300"
-                  >
-                    {verified && (
-                      <svg className="w-3 h-3 text-emerald-400 shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-label="Verified">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                      </svg>
-                    )}
-                    {name}
-                  </span>
-                )
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Provider CTA ── */}
-      <div className="text-center py-4 animate-fade-in-up">
-        <Link
-          to="/register"
-          className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-[#FF9900] transition-colors no-underline group"
-        >
-          <span>{t.home?.providerCtaInline || 'API Provider? Monetize any URL in 10 seconds'}</span>
-          <svg className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
-        </Link>
-      </div>
-
-      {/* ── SKALE Partner Section ── */}
-      <section ref={partnerRef} className="reveal max-w-4xl mx-auto px-4 mb-10">
-        <div className="glass-card rounded-2xl p-6 md:p-8 border border-white/10 relative overflow-hidden">
-          {/* Label */}
-          <div className="flex justify-center mb-5">
-            <span className="text-[10px] uppercase tracking-[0.2em] text-gray-400 bg-white/5 border border-white/10 px-3 py-1 rounded-full">
-              {t.home.partnerLabel}
-            </span>
-          </div>
-
-          <div className="flex flex-col md:flex-row items-center gap-6 md:gap-10">
-            {/* Logo */}
-            <div className="shrink-0">
-              <img
-                src="/skale-logo.jpg"
-                alt="SKALE Network"
-                className="w-28 h-28 sm:w-36 sm:h-36 rounded-2xl"
-              />
-            </div>
-
-            {/* Content */}
-            <div className="flex-1 text-center md:text-left">
-              <h2 className="text-xl sm:text-2xl font-bold text-white mb-2">{t.home.partnerTitle}</h2>
-              <p className="text-gray-400 text-sm leading-relaxed mb-4">{t.home.partnerDesc}</p>
-
-              {/* Feature badges */}
-              <div className="flex flex-wrap justify-center md:justify-start gap-2 mb-5">
-                {[t.home.partnerFeature1, t.home.partnerFeature2, t.home.partnerFeature3].map((feat) => (
-                  <span key={feat} className="text-xs bg-white/5 border border-white/10 text-gray-300 px-3 py-1.5 rounded-lg">
-                    {feat}
-                  </span>
-                ))}
+          {/* Powered by SKALE — visible above the fold */}
+          <div className="flex items-center justify-center gap-3 mt-8 animate-fade-in-up delay-300">
+            <a href="https://skale.space" target="_blank" rel="noopener noreferrer"
+               className="inline-flex items-center gap-3 px-5 py-2.5 rounded-xl
+                          bg-white/5 border border-white/10 hover:border-white/20
+                          transition-all duration-200 no-underline group">
+              <img src="/skale-logo.jpg" alt="SKALE Network" className="w-8 h-8 rounded-lg" />
+              <div className="flex flex-col">
+                <span className="text-xs text-gray-500 leading-none">Powered by</span>
+                <span className="text-sm font-semibold text-white leading-tight">SKALE Network</span>
               </div>
-
-              {/* CTA */}
-              <a
-                href="https://skale.space"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-sm text-gray-300 hover:text-white transition-colors no-underline group"
-              >
-                {t.home.partnerCta}
-                <svg className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                </svg>
-              </a>
-            </div>
+              <div className="flex gap-1.5 ml-2">
+                <span className="text-[10px] bg-white/5 text-gray-400 px-2 py-0.5 rounded-md">~$0.0007 gas</span>
+                <span className="text-[10px] bg-white/5 text-gray-400 px-2 py-0.5 rounded-md hidden sm:inline">Instant</span>
+              </div>
+            </a>
           </div>
         </div>
       </section>
 
-      {/* Fund Wallet CTA */}
-      <section ref={fundRef} className="reveal max-w-4xl mx-auto px-4 mb-10">
-        <div className="glass-card rounded-2xl p-6 md:p-8 flex flex-col md:flex-row items-center gap-5 md:gap-8 border border-[#FF9900]/20 bg-[#FF9900]/5">
-          <div className="flex items-center justify-center w-14 h-14 rounded-xl bg-[#FF9900]/15 border border-[#FF9900]/30 shrink-0" aria-hidden="true">
-            <svg className="w-7 h-7 text-[#FF9900]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-            </svg>
-          </div>
-          <div className="flex-1 text-center md:text-left">
-            <h2 className="text-lg font-bold text-white mb-1">{t.home.fundCta}</h2>
-            <p className="text-gray-400 text-sm">{t.home.fundCtaDesc}</p>
-          </div>
-          <Link
-            to="/fund"
-            className="shrink-0 px-6 py-2.5 bg-[#FF9900] hover:bg-[#e68a00] text-white font-semibold rounded-xl transition-colors text-sm whitespace-nowrap"
-          >
-            {t.home.fundCtaBtn} →
-          </Link>
-        </div>
-      </section>
 
       {/* Error banner */}
       {servicesError && (
