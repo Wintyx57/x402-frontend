@@ -17,6 +17,8 @@ export default function ServicesTab({ adminFetch }: { adminFetch: AdminFetch }) 
   const [deleteTarget, setDeleteTarget] = useState<ServiceItem | null>(null);
   const [deleting, setDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
+  const [verifyingId, setVerifyingId] = useState<string | null>(null);
+  const [verifyResult, setVerifyResult] = useState<Record<string, { status: 'success' | 'error'; message: string }>>({});
 
   const fetchServices = useCallback(async () => {
     setLoading(true);
@@ -44,6 +46,20 @@ export default function ServicesTab({ adminFetch }: { adminFetch: AdminFetch }) 
       setDeleteError((e as Error).message);
     } finally {
       setDeleting(false);
+    }
+  };
+
+  const handleVerify = async (s: ServiceItem) => {
+    setVerifyingId(s.id);
+    setVerifyResult(prev => { const n = { ...prev }; delete n[s.id]; return n; });
+    try {
+      const res = await adminFetch<{ success: boolean; report?: { verdict: string } }>(`/api/admin/services/${s.id}/verify`, { method: 'POST' });
+      setVerifyResult(prev => ({ ...prev, [s.id]: { status: 'success', message: res.report?.verdict || 'OK' } }));
+      fetchServices();
+    } catch (e) {
+      setVerifyResult(prev => ({ ...prev, [s.id]: { status: 'error', message: (e as Error).message } }));
+    } finally {
+      setVerifyingId(null);
     }
   };
 
@@ -209,19 +225,40 @@ export default function ServicesTab({ adminFetch }: { adminFetch: AdminFetch }) 
                     {s.quick_registered ? <span className="text-[#FF9900]">&#9889;</span> : '—'}
                   </td>
                   <td className="px-4 py-3 text-center">
-                    <button
-                      onClick={() => { setDeleteTarget(s); setDeleteError(null); }}
-                      className="text-[10px] px-2 py-1 rounded bg-red-500/10 text-red-400/70 hover:bg-red-500/20 hover:text-red-400 border border-red-500/10 hover:border-red-500/20 transition-colors"
-                      title="Supprimer"
-                    >
-                      Suppr.
-                    </button>
+                    <div className="flex items-center gap-1.5 justify-center">
+                      <button
+                        onClick={() => handleVerify(s)}
+                        disabled={verifyingId === s.id}
+                        className="text-[10px] px-2 py-1 rounded bg-blue-500/10 text-blue-400/70 hover:bg-blue-500/20 hover:text-blue-400 border border-blue-500/10 hover:border-blue-500/20 transition-colors disabled:opacity-50"
+                        title="Re-verify"
+                      >
+                        {verifyingId === s.id ? '...' : 'Verify'}
+                      </button>
+                      <button
+                        onClick={() => { setDeleteTarget(s); setDeleteError(null); }}
+                        className="text-[10px] px-2 py-1 rounded bg-red-500/10 text-red-400/70 hover:bg-red-500/20 hover:text-red-400 border border-red-500/10 hover:border-red-500/20 transition-colors"
+                        title="Supprimer"
+                      >
+                        Suppr.
+                      </button>
+                    </div>
+                    {verifyResult[s.id] && (
+                      <p className={`text-[9px] mt-0.5 ${verifyResult[s.id].status === 'success' ? 'text-green-400' : 'text-red-400'}`}>
+                        {verifyResult[s.id].message}
+                      </p>
+                    )}
                   </td>
                 </tr>
               ))}
               {filtered.length === 0 && (
                 <tr>
-                  <td colSpan={9} className="px-4 py-8 text-center text-gray-500">Aucun service trouve</td>
+                  <td colSpan={9} className="px-4 py-8 text-center text-gray-500">
+                    <div className="flex flex-col items-center gap-2 py-4">
+                      <span className="text-2xl">&#128230;</span>
+                      <p className="text-sm text-gray-400">Aucun service trouve</p>
+                      <p className="text-xs text-gray-600">Modifiez vos filtres ou enregistrez un nouveau service</p>
+                    </div>
+                  </td>
                 </tr>
               )}
             </tbody>

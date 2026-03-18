@@ -13,6 +13,14 @@ import {
 } from 'chart.js';
 import { Bar, Line, Doughnut } from 'react-chartjs-2';
 import type { AdminFetch, StatsData, AnalyticsData, RevenueOverview } from '../../types/admin';
+import { txExplorerUrl } from '../../types/admin';
+
+interface ERC8004Status {
+  feedback_wallet: { address: string; credits: number } | null;
+  last_push: { pushed?: number; total?: number; timestamp?: string } | null;
+  services: { with_agent_id: number; with_trust_score: number };
+  env: { AGENT_PRIVATE_KEY: boolean; ERC8004_FEEDBACK_KEY: boolean };
+}
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, PointElement, LineElement, ArcElement, Tooltip, Legend, Filler);
 
@@ -41,21 +49,29 @@ export default function OverviewTab({ adminFetch }: { adminFetch: AdminFetch }) 
   const [stats, setStats] = useState<StatsData | null>(null);
   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
   const [revenue, setRevenue] = useState<RevenueOverview | null>(null);
+  const [erc8004, setErc8004] = useState<ERC8004Status | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [walletRefreshing, setWalletRefreshing] = useState(false);
+  const [walletTimestamp, setWalletTimestamp] = useState<string | null>(null);
+  const [pushingErc, setPushingErc] = useState(false);
+  const [pushResult, setPushResult] = useState<string | null>(null);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      const [s, a, r] = await Promise.all([
+      const [s, a, r, e] = await Promise.all([
         adminFetch<StatsData>('/api/stats'),
         adminFetch<AnalyticsData>('/api/analytics'),
         adminFetch<RevenueOverview>('/api/admin/revenue').catch(() => null),
+        adminFetch<ERC8004Status>('/api/admin/erc8004/status').catch(() => null),
       ]);
       setStats(s);
       setAnalytics(a);
       setRevenue(r);
+      setErc8004(e);
+      if (s?.agentWallet?.timestamp) setWalletTimestamp(s.agentWallet.timestamp);
     } catch (e) {
       if ((e as Error).message !== 'Unauthorized') setError((e as Error).message);
     } finally {
@@ -124,11 +140,40 @@ export default function OverviewTab({ adminFetch }: { adminFetch: AdminFetch }) 
       {/* Agent Wallet (unified) */}
       {stats?.agentWallet && (
         <div className="glass-card rounded-xl p-5">
-          <div className="flex items-center gap-2 mb-4">
-            <div className="w-8 h-8 rounded-full bg-purple-500/15 flex items-center justify-center text-sm">&#9881;</div>
-            <div>
-              <p className="text-xs text-gray-500 uppercase tracking-wider">Wallet Agent Unifie</p>
-              <p className="text-xs font-mono text-gray-400">{stats.agentWallet.address_full}</p>
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-full bg-purple-500/15 flex items-center justify-center text-sm">&#9881;</div>
+              <div>
+                <p className="text-xs text-gray-500 uppercase tracking-wider">Wallet Agent Unifie</p>
+                <p className="text-xs font-mono text-gray-400">{stats.agentWallet.address_full}</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              {walletTimestamp && (
+                <span className="text-[10px] text-gray-600">
+                  {(() => {
+                    const ago = Math.round((Date.now() - new Date(walletTimestamp).getTime()) / 60000);
+                    return ago < 1 ? 'a l\'instant' : `il y a ${ago} min`;
+                  })()}
+                </span>
+              )}
+              <button
+                onClick={async () => {
+                  setWalletRefreshing(true);
+                  try {
+                    const w = await adminFetch<StatsData['agentWallet']>('/api/admin/agent-wallet');
+                    if (w && stats) {
+                      setStats({ ...stats, agentWallet: w });
+                      setWalletTimestamp(w.timestamp);
+                    }
+                  } catch { /* ignore */ } finally { setWalletRefreshing(false); }
+                }}
+                disabled={walletRefreshing}
+                className="text-xs text-gray-500 hover:text-[#FF9900] transition-colors disabled:opacity-50"
+                title="Rafraichir"
+              >
+                {walletRefreshing ? <span className="inline-block w-3 h-3 border border-[#FF9900]/30 border-t-[#FF9900] rounded-full animate-spin" /> : <span>&#8635;</span>}
+              </button>
             </div>
           </div>
           <div className="grid grid-cols-3 gap-4">
@@ -155,6 +200,67 @@ export default function OverviewTab({ adminFetch }: { adminFetch: AdminFetch }) 
             <span className="text-xs text-gray-500">Total USDC (3 chains)</span>
             <span className="text-sm font-bold text-[#FF9900]">${stats.agentWallet.total_usdc.toFixed(4)}</span>
           </div>
+        </div>
+      )}
+
+      {/* ERC-8004 Identity & Reputation */}
+      {erc8004 && (
+        <div className="glass-card rounded-xl p-5">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-full bg-[#FF9900]/15 flex items-center justify-center text-sm">&#9878;</div>
+              <div>
+                <p className="text-xs text-gray-500 uppercase tracking-wider">ERC-8004 Identity & Reputation</p>
+                <p className="text-[10px] text-gray-600">On-chain agent NFTs + TrustScore push</p>
+              </div>
+            </div>
+            <button
+              onClick={async () => {
+                setPushingErc(true);
+                setPushResult(null);
+                try {
+                  const res = await adminFetch<{ pushed?: number; total?: number; error?: string }>('/api/admin/erc8004/push', { method: 'POST' });
+                  setPushResult(res.error ? `Erreur: ${res.error}` : `Push OK — ${res.pushed}/${res.total} scores`);
+                  const e2 = await adminFetch<ERC8004Status>('/api/admin/erc8004/status').catch(() => null);
+                  if (e2) setErc8004(e2);
+                } catch (e) {
+                  setPushResult(`Erreur: ${(e as Error).message}`);
+                } finally { setPushingErc(false); }
+              }}
+              disabled={pushingErc}
+              className="text-xs px-3 py-1.5 rounded-lg bg-[#FF9900]/10 text-[#FF9900] hover:bg-[#FF9900]/20 border border-[#FF9900]/20 transition-colors disabled:opacity-50"
+            >
+              {pushingErc ? 'Push en cours...' : 'Force Push'}
+            </button>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <div className="rounded-lg bg-white/[0.03] border border-white/5 p-3 text-center">
+              <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-1">Agent NFTs</p>
+              <p className="text-xl font-bold text-white">{erc8004.services.with_agent_id}</p>
+            </div>
+            <div className="rounded-lg bg-white/[0.03] border border-white/5 p-3 text-center">
+              <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-1">Avec TrustScore</p>
+              <p className="text-xl font-bold text-white">{erc8004.services.with_trust_score}</p>
+            </div>
+            <div className="rounded-lg bg-white/[0.03] border border-white/5 p-3 text-center">
+              <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-1">Dernier push</p>
+              <p className="text-sm font-medium text-white">
+                {erc8004.last_push?.timestamp
+                  ? new Date(erc8004.last_push.timestamp).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })
+                  : '—'}
+              </p>
+            </div>
+            <div className="rounded-lg bg-white/[0.03] border border-white/5 p-3 text-center">
+              <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-1">Wallets</p>
+              <div className="flex items-center justify-center gap-2 text-xs">
+                <span className={erc8004.env.AGENT_PRIVATE_KEY ? 'text-green-400' : 'text-red-400'}>Registry {erc8004.env.AGENT_PRIVATE_KEY ? '&#10003;' : '&#10007;'}</span>
+                <span className={erc8004.env.ERC8004_FEEDBACK_KEY ? 'text-green-400' : 'text-red-400'}>Feedback {erc8004.env.ERC8004_FEEDBACK_KEY ? '&#10003;' : '&#10007;'}</span>
+              </div>
+            </div>
+          </div>
+          {pushResult && (
+            <p className={`text-xs mt-3 ${pushResult.startsWith('Erreur') ? 'text-red-400' : 'text-green-400'}`}>{pushResult}</p>
+          )}
         </div>
       )}
 
@@ -310,7 +416,7 @@ export default function OverviewTab({ adminFetch }: { adminFetch: AdminFetch }) 
                   <span className="text-gray-400 truncate flex-1">{a.detail?.slice(0, 50)}</span>
                   {a.amount > 0 && <span className="text-blue-300 font-semibold shrink-0">+${Number(a.amount).toFixed(4)}</span>}
                   {a.txHash && (
-                    <a href={`https://basescan.org/tx/${a.txHash}`} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-[#FF9900] shrink-0">↗</a>
+                    <a href={txExplorerUrl(a.txHash, a.chain)} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-[#FF9900] shrink-0">↗</a>
                   )}
                   <span className="text-gray-600 shrink-0 w-10 text-right">
                     {a.time ? new Date(a.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}

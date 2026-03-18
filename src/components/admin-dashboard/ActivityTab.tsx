@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import type { AdminFetch, ActivityItem } from '../../types/admin';
+import { txExplorerUrl } from '../../types/admin';
 
 const TYPE_COLORS: Record<string, string> = {
   payment: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
@@ -113,6 +114,7 @@ export default function ActivityTab({ adminFetch }: { adminFetch: AdminFetch }) 
                 <th className="text-left px-4 py-3">Type</th>
                 <th className="text-left px-4 py-3">Detail</th>
                 <th className="text-right px-4 py-3">Montant</th>
+                <th className="text-center px-4 py-3">Chain</th>
                 <th className="text-right px-4 py-3">Date</th>
                 <th className="text-center px-4 py-3">Lien</th>
               </tr>
@@ -129,13 +131,23 @@ export default function ActivityTab({ adminFetch }: { adminFetch: AdminFetch }) 
                   <td className="px-4 py-3 text-right">
                     {a.amount > 0 ? <span className="text-blue-300 font-mono">${Number(a.amount).toFixed(4)}</span> : <span className="text-gray-600">—</span>}
                   </td>
+                  <td className="px-4 py-3 text-center">
+                    {a.chain ? (
+                      <span className={`text-[10px] px-1.5 py-0.5 rounded border ${
+                        a.chain === 'base' ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' :
+                        a.chain === 'skale' ? 'bg-purple-500/10 text-purple-400 border-purple-500/20' :
+                        a.chain === 'polygon' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' :
+                        'bg-gray-500/10 text-gray-400 border-gray-500/20'
+                      }`}>{a.chain}</span>
+                    ) : <span className="text-gray-600">—</span>}
+                  </td>
                   <td className="px-4 py-3 text-right text-gray-500">
                     {a.time ? new Date(a.time).toLocaleString('fr-FR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) : '—'}
                   </td>
                   <td className="px-4 py-3 text-center">
                     {a.txHash ? (
                       <a
-                        href={`https://basescan.org/tx/${a.txHash}`}
+                        href={txExplorerUrl(a.txHash, a.chain)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-gray-500 hover:text-[#FF9900] transition-colors"
@@ -146,7 +158,13 @@ export default function ActivityTab({ adminFetch }: { adminFetch: AdminFetch }) 
               ))}
               {filtered.length === 0 && (
                 <tr>
-                  <td colSpan={5} className="px-4 py-8 text-center text-gray-500">Aucune activite trouvee</td>
+                  <td colSpan={6} className="px-4 py-8 text-center text-gray-500">
+                    <div className="flex flex-col items-center gap-2 py-4">
+                      <span className="text-2xl">&#128196;</span>
+                      <p className="text-sm text-gray-400">Aucune activite trouvee</p>
+                      <p className="text-xs text-gray-600">Les appels API et paiements apparaitront ici</p>
+                    </div>
+                  </td>
                 </tr>
               )}
             </tbody>

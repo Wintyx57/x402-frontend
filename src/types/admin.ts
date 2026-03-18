@@ -40,6 +40,21 @@ export interface ActivityItem {
   amount: number;
   time: string;
   txHash?: string;
+  chain?: string;
+}
+
+export const CHAIN_EXPLORERS: Record<string, string> = {
+  base: 'https://basescan.org',
+  skale: 'https://skale-base-explorer.skalenodes.com',
+  polygon: 'https://polygonscan.com',
+};
+
+export function txExplorerUrl(txHash: string, chain?: string): string {
+  return `${CHAIN_EXPLORERS[chain || 'base'] || CHAIN_EXPLORERS.base}/tx/${txHash}`;
+}
+
+export function addressExplorerUrl(address: string, chain?: string): string {
+  return `${CHAIN_EXPLORERS[chain || 'base'] || CHAIN_EXPLORERS.base}/address/${address}`;
 }
 
 export interface RevenueOverview {

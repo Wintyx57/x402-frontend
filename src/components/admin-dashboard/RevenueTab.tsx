@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { AdminFetch, RevenueOverview, PayoutsResponse, FeeSplitterData } from '../../types/admin';
+import { txExplorerUrl } from '../../types/admin';
 
 export default function RevenueTab({ adminFetch }: { adminFetch: AdminFetch }) {
   const [revenue, setRevenue] = useState<RevenueOverview | null>(null);
@@ -217,7 +218,7 @@ export default function RevenueTab({ adminFetch }: { adminFetch: AdminFetch }) {
                         <span className="text-gray-600 uppercase">{p.chain}</span>
                         {p.tx_hash_in && (
                           <a
-                            href={`https://basescan.org/tx/${p.tx_hash_in}`}
+                            href={txExplorerUrl(p.tx_hash_in, p.chain)}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-gray-600 hover:text-[#FF9900]"

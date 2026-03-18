@@ -94,6 +94,17 @@ textarea:focus-visible {
 }
 
 
+/* ========== SELECT OPTIONS (dark dropdown on all OS themes) ========== */
+select option {
+  background-color: #1e2332;
+  color: #fff;
+}
+
+html.light select option {
+  background-color: #ffffff;
+  color: #1a1a2e;
+}
+
 /* ========== SCREEN READER UTILITIES ========== */
 .sr-only {
   position: absolute;

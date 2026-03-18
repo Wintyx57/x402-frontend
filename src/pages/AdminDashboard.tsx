@@ -12,8 +12,16 @@ import TrustScoreTab from '../components/admin-dashboard/TrustScoreTab';
 import MonitoringTab from '../components/admin-dashboard/MonitoringTab';
 import BudgetsTab from '../components/admin-dashboard/BudgetsTab';
 
-const TABS = ['Vue d\'ensemble', 'Services', 'Revenus', 'Activite', 'Trust Scores', 'Monitoring', 'Budgets'] as const;
-type Tab = (typeof TABS)[number];
+const TAB_CONFIG = [
+  { label: 'Vue d\'ensemble', icon: '\u25C8' },
+  { label: 'Services', icon: '\u25A3' },
+  { label: 'Revenus', icon: '\u2726' },
+  { label: 'Activit\u00e9', icon: '\u25D5' },
+  { label: 'Trust Scores', icon: '\u2605' },
+  { label: 'Monitoring', icon: '\u25CE' },
+  { label: 'Budgets', icon: '\u2B21' },
+] as const;
+const TABS = TAB_CONFIG.map(t => t.label);
 
 function LoginModal({ onLogin }: { onLogin: (token: string) => void }) {
   const [value, setValue] = useState('');
@@ -57,7 +65,7 @@ function LoginModal({ onLogin }: { onLogin: (token: string) => void }) {
 export default function AdminDashboard() {
   useSEO({ title: 'Admin Dashboard', noindex: true });
   const [showLogin, setShowLogin] = useState(!sessionStorage.getItem(STORAGE_KEY));
-  const [activeTab, setActiveTab] = useState<Tab>('Vue d\'ensemble');
+  const [activeTab, setActiveTab] = useState<string>('Vue d\'ensemble');
 
   const adminFetch: AdminFetch = useCallback(async <T,>(path: string, options?: RequestInit): Promise<T> => {
     const token = sessionStorage.getItem(STORAGE_KEY) || '';
@@ -106,6 +114,12 @@ export default function AdminDashboard() {
           </div>
         </div>
         <div className="flex items-center gap-4">
+          <Link
+            to="/admin/community-agent"
+            className="text-xs px-3 py-1.5 rounded-lg border border-purple-500/20 text-purple-400/70 hover:bg-purple-500/10 hover:text-purple-400 hover:border-purple-500/30 transition-colors hidden sm:inline-flex items-center gap-1"
+          >
+            <span>&#9881;</span> Community Agent
+          </Link>
           <span className="text-xs text-gray-500 hidden sm:block">{new Date().toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })}</span>
           <button
             onClick={handleLogout}
@@ -118,18 +132,19 @@ export default function AdminDashboard() {
 
       {/* Tabs */}
       <div className="flex gap-1 mb-6 overflow-x-auto pb-1 border-b border-white/5">
-        {TABS.map(tab => (
+        {TAB_CONFIG.map(({ label, icon }) => (
           <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
+            key={label}
+            onClick={() => setActiveTab(label)}
             className={`text-sm px-4 py-2.5 whitespace-nowrap transition-colors relative ${
-              activeTab === tab
+              activeTab === label
                 ? 'text-[#FF9900] font-semibold'
                 : 'text-gray-400 hover:text-white'
             }`}
           >
-            {tab}
-            {activeTab === tab && (
+            <span className="mr-1.5 opacity-70">{icon}</span>
+            {label}
+            {activeTab === label && (
               <div className="absolute bottom-0 left-2 right-2 h-0.5 bg-[#FF9900] rounded-full" />
             )}
           </button>
@@ -140,7 +155,7 @@ export default function AdminDashboard() {
       {activeTab === 'Vue d\'ensemble' && <OverviewTab adminFetch={adminFetch} />}
       {activeTab === 'Services' && <ServicesTab adminFetch={adminFetch} />}
       {activeTab === 'Revenus' && <RevenueTab adminFetch={adminFetch} />}
-      {activeTab === 'Activite' && <ActivityTab adminFetch={adminFetch} />}
+      {activeTab === 'Activit\u00e9' && <ActivityTab adminFetch={adminFetch} />}
       {activeTab === 'Trust Scores' && <TrustScoreTab adminFetch={adminFetch} />}
       {activeTab === 'Monitoring' && <MonitoringTab adminFetch={adminFetch} />}
       {activeTab === 'Budgets' && <BudgetsTab adminFetch={adminFetch} />}

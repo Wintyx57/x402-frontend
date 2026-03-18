@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { AdminFetch, DailyTesterStatus, ServiceItem } from '../../types/admin';
+import { txExplorerUrl } from '../../types/admin';
 
 export default function MonitoringTab({ adminFetch }: { adminFetch: AdminFetch }) {
   const [tester, setTester] = useState<DailyTesterStatus | null>(null);
@@ -111,7 +112,7 @@ export default function MonitoringTab({ adminFetch }: { adminFetch: AdminFetch }
                       <td className="px-3 py-2 text-center text-gray-500 uppercase">{r.chain || '—'}</td>
                       <td className="px-3 py-2 text-center">
                         {r.txHash ? (
-                          <a href={`https://basescan.org/tx/${r.txHash}`} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-[#FF9900]">↗</a>
+                          <a href={txExplorerUrl(r.txHash, r.chain)} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-[#FF9900]">↗</a>
                         ) : '—'}
                       </td>
                     </tr>

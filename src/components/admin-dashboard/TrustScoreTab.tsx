@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, Fragment } from 'react';
 import ConfirmModal from './ConfirmModal';
 import type { AdminFetch, TrustScoreService, TrustBreakdown } from '../../types/admin';
 
@@ -116,9 +116,8 @@ export default function TrustScoreTab({ adminFetch }: { adminFetch: AdminFetch }
             </thead>
             <tbody>
               {services.map((s, i) => (
-                <>
+                <Fragment key={s.id}>
                   <tr
-                    key={s.id}
                     className="border-b border-white/5 hover:bg-white/[0.02] transition-colors cursor-pointer"
                     onClick={() => handleExpand(s.id)}
                   >
@@ -180,11 +179,17 @@ export default function TrustScoreTab({ adminFetch }: { adminFetch: AdminFetch }
                       </td>
                     </tr>
                   )}
-                </>
+                </Fragment>
               ))}
               {services.length === 0 && (
                 <tr>
-                  <td colSpan={7} className="px-4 py-8 text-center text-gray-500">Aucun score disponible</td>
+                  <td colSpan={7} className="px-4 py-8 text-center text-gray-500">
+                    <div className="flex flex-col items-center gap-2 py-4">
+                      <span className="text-2xl">&#9733;</span>
+                      <p className="text-sm text-gray-400">Aucun score disponible</p>
+                      <p className="text-xs text-gray-600">Les scores de confiance seront calcules automatiquement</p>
+                    </div>
+                  </td>
                 </tr>
               )}
             </tbody>

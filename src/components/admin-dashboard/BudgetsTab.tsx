@@ -206,7 +206,13 @@ export default function BudgetsTab({ adminFetch }: { adminFetch: AdminFetch }) {
               })}
               {budgets.length === 0 && (
                 <tr>
-                  <td colSpan={7} className="px-4 py-8 text-center text-gray-500">Aucun budget configure</td>
+                  <td colSpan={7} className="px-4 py-8 text-center text-gray-500">
+                    <div className="flex flex-col items-center gap-2 py-4">
+                      <span className="text-2xl">&#128176;</span>
+                      <p className="text-sm text-gray-400">Aucun budget configure</p>
+                      <p className="text-xs text-gray-600">Creez un budget ci-dessus pour limiter les depenses d'un agent</p>
+                    </div>
+                  </td>
                 </tr>
               )}
             </tbody>
