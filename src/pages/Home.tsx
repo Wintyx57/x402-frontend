@@ -932,12 +932,12 @@ export default function Home() {
       <section className="max-w-7xl mx-auto px-4 pb-16">
         <Link
           to="/agent"
-          className="block glass-card rounded-2xl p-6 sm:p-8 hover:border-red-500/20 transition-all no-underline group"
+          className="block glass-card rounded-2xl p-6 sm:p-8 hover:border-emerald-500/20 transition-all no-underline group"
         >
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
             <div className="flex items-center gap-3">
-              <span className="live-dot" />
-              <span className="text-xs font-bold text-red-400 uppercase tracking-wider">LIVE</span>
+              <span className="live-dot-static" />
+              <span className="text-[10px] font-semibold text-emerald-400 uppercase tracking-[0.12em]">Live Agent</span>
             </div>
             <div className="flex-1">
               <h3 className="text-lg font-bold text-white mb-1 group-hover:text-[#FF9900] transition-colors">
@@ -947,7 +947,7 @@ export default function Home() {
                 {t.liveAgent?.subtitle || 'This autonomous agent calls 3 space APIs and pays real USDC — twice a day, fully automated.'}
               </p>
             </div>
-            <span className="text-gray-500 group-hover:text-[#FF9900] transition-colors text-xl">→</span>
+            <span className="text-gray-500 group-hover:text-[#FF9900] transition-colors text-xl">&rarr;</span>
           </div>
         </Link>
       </section>

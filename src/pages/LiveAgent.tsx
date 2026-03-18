@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '../i18n/LanguageContext';
+import { useReveal } from '../hooks/useReveal';
 import useSEO from '../hooks/useSEO';
 import { useLiveAgent, useLiveAgentHistory } from '../hooks/useLiveAgent';
 import type { AgentReport, AgentHistoryItem } from '../hooks/useLiveAgent';
@@ -22,6 +23,17 @@ function timeAgo(dateStr: string): string {
   return `${days}d ago`;
 }
 
+// --- SVG Check Icon ---
+function CheckIcon() {
+  return (
+    <span className="check-circle">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+        <path d="M2.5 5L4.5 7L7.5 3" stroke="#10B981" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    </span>
+  );
+}
+
 // --- TX Badge ---
 function TxBadge({ hash, cost, explorerBase }: { hash: string | null; cost: number; explorerBase: string }) {
   if (!hash) return null;
@@ -30,9 +42,10 @@ function TxBadge({ hash, cost, explorerBase }: { hash: string | null; cost: numb
       href={`${explorerBase}/${hash}`}
       target="_blank"
       rel="noopener noreferrer"
+      aria-label={`Transaction ${truncHash(hash)} — ${cost} USDC`}
       className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg
-                 bg-emerald-500/15 border border-emerald-500/30 text-emerald-400
-                 text-xs font-mono hover:bg-emerald-500/25 transition-colors no-underline"
+                 bg-emerald-500/10 border border-emerald-500/25 text-emerald-400
+                 text-xs font-mono hover:bg-emerald-500/20 hover:scale-[1.02] transition-all no-underline"
     >
       <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
       {truncHash(hash)} &middot; {cost} USDC
@@ -43,32 +56,44 @@ function TxBadge({ hash, cost, explorerBase }: { hash: string | null; cost: numb
 // --- Live Badge ---
 function LiveBadge() {
   return (
-    <span className="inline-flex items-center gap-1.5 text-xs font-bold text-red-400 uppercase tracking-wider">
+    <span
+      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full
+                 bg-emerald-500/10 border border-emerald-500/25"
+      role="status"
+      aria-label="Live feed"
+    >
       <span className="live-dot" />
-      LIVE
+      <span className="text-emerald-400 font-semibold text-[10px] uppercase tracking-[0.12em]">
+        LIVE
+      </span>
+    </span>
+  );
+}
+
+// --- Section Label ---
+function SectionLabel({ children }: { children: string }) {
+  return (
+    <span className="block text-[10px] font-semibold uppercase tracking-[0.12em] text-gray-500 mb-2">
+      {children}
     </span>
   );
 }
 
 // --- Globe CSS (ISS) ---
 function IssGlobe({ lat, lon }: { lat: number; lon: number }) {
-  // Convert lat/lon to CSS position on a circle
-  // lat: -90..90, lon: -180..180
-  const normLat = (90 - lat) / 180; // 0 (north) to 1 (south)
-  const normLon = (lon + 180) / 360; // 0 (west) to 1 (east)
-  const dotX = 20 + normLon * 60; // percent
+  const normLat = (90 - lat) / 180;
+  const normLon = (lon + 180) / 360;
+  const dotX = 20 + normLon * 60;
   const dotY = 10 + normLat * 80;
 
   return (
     <div className="iss-globe-container">
       <div className="iss-globe">
-        {/* Grid lines */}
         <div className="globe-grid" />
-        {/* ISS dot */}
         <div
           className="iss-dot"
           style={{ left: `${dotX}%`, top: `${dotY}%` }}
-          title={`${lat.toFixed(1)}°, ${lon.toFixed(1)}°`}
+          title={`${lat.toFixed(1)}, ${lon.toFixed(1)}`}
         />
       </div>
     </div>
@@ -105,17 +130,19 @@ function SpacexCountdown({ targetDate }: { targetDate: string }) {
 
   return (
     <div className="flex items-center gap-2">
-      <span className="text-xs text-gray-500 mr-1">T-</span>
+      <span className="text-[10px] tracking-[0.14em] text-gray-500 font-semibold mr-1">T-</span>
       {blocks.map((b, i) => (
         <div key={b.label} className="flex items-center gap-2">
           <div className="countdown-block">
-            <span className="text-xl sm:text-2xl font-mono font-bold text-white leading-none">
+            <span className={`text-3xl sm:text-4xl font-mono font-light leading-none tabular-nums ${
+              b.label === 'SEC' ? 'text-[#FF9900]' : 'text-white'
+            }`} style={b.label === 'SEC' ? { textShadow: '0 0 12px rgba(255,153,0,0.4)' } : undefined}>
               {String(b.val).padStart(2, '0')}
             </span>
-            <span className="text-[10px] text-gray-500 uppercase tracking-wider">{b.label}</span>
+            <span className="text-[10px] tracking-[0.14em] text-gray-500 font-semibold">{b.label}</span>
           </div>
           {i < blocks.length - 1 && (
-            <span className="text-gray-600 text-lg font-light">:</span>
+            <span className="text-2xl text-gray-700 font-extralight">:</span>
           )}
         </div>
       ))}
@@ -126,39 +153,45 @@ function SpacexCountdown({ targetDate }: { targetDate: string }) {
 // --- Payment Flow Diagram ---
 function PaymentFlow({ report }: { report: AgentReport }) {
   const { t } = useTranslation();
+  const ref = useReveal();
   const wallet = report.agent_wallet
     ? `${report.agent_wallet.slice(0, 6)}...${report.agent_wallet.slice(-4)}`
     : '0xAgent';
 
   const flows = [
-    { emoji: '🔭', label: 'NASA', cost: report.nasa?.cost || 0.005, hash: report.nasa?.tx_hash },
-    { emoji: '🛰️', label: 'ISS', cost: report.iss?.cost || 0.003, hash: report.iss?.tx_hash },
-    { emoji: '🚀', label: 'SpaceX', cost: report.spacex?.cost || 0.005, hash: report.spacex?.tx_hash },
+    { label: 'NASA APOD', cost: report.nasa?.cost || 0.005, hash: report.nasa?.tx_hash },
+    { label: 'ISS TRACKER', cost: report.iss?.cost || 0.003, hash: report.iss?.tx_hash },
+    { label: 'SPACEX', cost: report.spacex?.cost || 0.005, hash: report.spacex?.tx_hash },
   ];
 
-  return (
-    <div className="glass-card rounded-2xl p-6 sm:p-8">
-      <h3 className="text-lg font-semibold text-white mb-6">{t.liveAgent?.paymentFlow || 'Payment Flow'}</h3>
+  const la = t.liveAgent || {} as Record<string, string>;
 
-      <div className="space-y-3">
+  return (
+    <div ref={ref} className="glass-card rounded-2xl p-6 sm:p-8 reveal animate-fade-in-up delay-300">
+      <SectionLabel>{la.paymentFlow || 'PAYMENT FLOW'}</SectionLabel>
+
+      <div className="space-y-3 mt-4">
         {flows.map((f) => (
           <div key={f.label} className="flex items-center gap-3 text-sm">
-            <span className="font-mono text-gray-400 w-28 shrink-0">🏦 {wallet}</span>
+            <span className="shrink-0 w-28">
+              <span className="block text-[10px] tracking-wider text-gray-500 font-semibold">AGENT</span>
+              <span className="font-mono text-sm text-gray-400">{wallet}</span>
+            </span>
             <span className="payment-flow-arrow flex-1" />
-            <span className="text-[#FF9900] font-mono text-xs w-16 text-center">{f.cost} USDC</span>
+            <span className="text-[#FF9900] font-mono text-xs w-16 text-center tabular-nums">{f.cost} USDC</span>
             <span className="payment-flow-arrow flex-1" />
-            <span className="w-24 text-right">
-              {f.emoji} {f.label}
-              {f.hash && <span className="ml-1 text-emerald-400">✓</span>}
+            <span className="w-28 text-right flex items-center justify-end gap-1.5">
+              <span className="text-[10px] tracking-wider text-gray-400 font-semibold">{f.label}</span>
+              {f.hash && <CheckIcon />}
             </span>
           </div>
         ))}
       </div>
 
       <div className="mt-6 pt-4 border-t border-white/8 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-gray-500">
-        <span>{t.liveAgent?.totalCost || 'Total cost per run'}: <strong className="text-white">0.013 USDC</strong></span>
-        <span>{t.liveAgent?.runsPerDay || '2 runs/day'}</span>
-        <span>{t.liveAgent?.paymentFlowDesc || 'Real USDC payments on SKALE — $0.0007 gas per transaction'}</span>
+        <span>{la.totalCost || 'Total cost per run'}: <strong className="text-white">0.013 USDC</strong></span>
+        <span>{la.runsPerDay || '2 runs/day'}</span>
+        <span>{la.paymentFlowDesc || 'Real USDC payments on SKALE — $0.0007 gas per transaction'}</span>
       </div>
     </div>
   );
@@ -167,16 +200,19 @@ function PaymentFlow({ report }: { report: AgentReport }) {
 // --- History Timeline ---
 function PastRuns({ reports }: { reports: AgentHistoryItem[] }) {
   const { t } = useTranslation();
+  const ref = useReveal();
   if (!reports || reports.length === 0) return null;
 
+  const la = t.liveAgent || {} as Record<string, string>;
+
   return (
-    <div>
-      <h3 className="text-lg font-semibold text-white mb-4">{t.liveAgent?.pastRuns || 'Past Reports'}</h3>
-      <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-thin">
+    <div ref={ref} className="reveal animate-fade-in-up delay-500">
+      <SectionLabel>{la.pastRuns || 'PAST REPORTS'}</SectionLabel>
+      <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-thin timeline-scroll mt-3">
         {reports.map((r) => (
           <div
             key={r.id}
-            className="glass-card rounded-xl p-4 min-w-[220px] shrink-0 hover:scale-[1.02] transition-transform"
+            className="glass-card card-hover-lift rounded-xl p-4 min-w-[220px] shrink-0"
           >
             {r.nasa_url && (
               <div className="w-full h-24 rounded-lg overflow-hidden mb-3 bg-white/5">
@@ -191,7 +227,7 @@ function PastRuns({ reports }: { reports: AgentHistoryItem[] }) {
             <p className="text-xs text-gray-400 mb-1">{r.nasa_date || timeAgo(r.run_at)}</p>
             <p className="text-sm text-white font-medium truncate">{r.nasa_title || 'Report'}</p>
             <div className="flex items-center gap-2 mt-2 text-xs text-gray-500">
-              <span>{r.total_cost} USDC</span>
+              <span className="font-mono tabular-nums">{r.total_cost} USDC</span>
               <span>&middot;</span>
               <span>{r.tx_count} tx</span>
               <span
@@ -207,11 +243,56 @@ function PastRuns({ reports }: { reports: AgentHistoryItem[] }) {
   );
 }
 
+// --- Collapsible NASA Explanation ---
+function NasaExplanation({ text, label }: { text: string; label: string }) {
+  const [expanded, setExpanded] = useState(false);
+  const ref = useReveal();
+
+  return (
+    <div ref={ref} className="glass-card rounded-2xl p-6 reveal animate-fade-in-up delay-400">
+      <button
+        onClick={() => setExpanded(!expanded)}
+        className="w-full flex items-center justify-between text-left cursor-pointer bg-transparent border-none p-0"
+      >
+        <SectionLabel>{label}</SectionLabel>
+        <svg
+          className={`w-5 h-5 text-gray-400 transition-transform ${expanded ? 'rotate-180' : ''}`}
+          fill="none" stroke="currentColor" viewBox="0 0 24 24"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+      <div className={`overflow-hidden transition-all duration-300 ${expanded ? 'max-h-[2000px] mt-4' : 'max-h-0'}`}>
+        <p className="text-base text-gray-300 leading-relaxed whitespace-pre-line">{text}</p>
+      </div>
+    </div>
+  );
+}
+
+// --- Loading Skeleton ---
+function LoadingSkeleton() {
+  return (
+    <div className="min-h-screen pb-20 animate-page-enter">
+      {/* Hero skeleton */}
+      <div className="w-full h-[420px] sm:h-[520px] animate-shimmer rounded-none" />
+      {/* Cards skeleton */}
+      <div className="max-w-7xl mx-auto px-4 mt-6 grid md:grid-cols-2 gap-5">
+        <div className="h-[280px] rounded-2xl animate-shimmer" />
+        <div className="h-[280px] rounded-2xl animate-shimmer" />
+      </div>
+    </div>
+  );
+}
+
 // --- Main Page ---
 export default function LiveAgent() {
   const { t } = useTranslation();
   const { data: report, isLoading } = useLiveAgent();
   const { data: historyData } = useLiveAgentHistory(10);
+  const heroRef = useReveal();
+  const issRef = useReveal();
+  const spacexRef = useReveal();
+  const ctaRef = useReveal();
 
   useSEO({
     title: 'Live AI Agent — x402 Bazaar',
@@ -223,23 +304,18 @@ export default function LiveAgent() {
   const hasData = report && report.status !== 'no_data';
   const history = historyData?.reports || [];
 
-  // Memoize explorer base URL
   const explorerBase = useMemo(() => {
     return report?.explorer_base_url || 'https://skale-base-explorer.skalenodes.com/tx';
   }, [report?.explorer_base_url]);
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen pt-8 pb-20 px-4 flex items-center justify-center">
-        <div className="animate-pulse text-gray-500">Loading agent data...</div>
-      </div>
-    );
+    return <LoadingSkeleton />;
   }
 
   if (!hasData) {
     return (
-      <div className="min-h-screen pt-20 pb-20 px-4">
-        <div className="max-w-2xl mx-auto text-center">
+      <div className="min-h-screen pt-20 pb-20 px-4 animate-page-enter">
+        <div className="max-w-2xl mx-auto text-center animate-fade-in-up">
           <LiveBadge />
           <h1 className="text-3xl font-bold text-white mt-4 mb-4">
             {la.title || 'Live AI Agent'}
@@ -249,10 +325,10 @@ export default function LiveAgent() {
           </p>
           <div className="glass-card rounded-2xl p-8 text-left">
             <p className="text-sm text-gray-400 mb-4">{la.subtitle || 'This autonomous agent calls 3 space APIs and pays real USDC — twice a day, fully automated.'}</p>
-            <ul className="space-y-2 text-sm text-gray-300">
-              <li>🔭 NASA Astronomy Picture of the Day — 0.005 USDC</li>
-              <li>🛰️ ISS Real-time Position &amp; Crew — 0.003 USDC</li>
-              <li>🚀 SpaceX Upcoming Launches — 0.005 USDC</li>
+            <ul className="space-y-2 text-sm text-gray-300 list-disc list-inside">
+              <li>NASA Astronomy Picture of the Day — 0.005 USDC</li>
+              <li>ISS Real-time Position & Crew — 0.003 USDC</li>
+              <li>SpaceX Upcoming Launches — 0.005 USDC</li>
             </ul>
             <p className="text-xs text-gray-500 mt-4">Runs at 8:00 AM and 8:00 PM UTC on SKALE on Base</p>
           </div>
@@ -267,11 +343,10 @@ export default function LiveAgent() {
   const nasaImageUrl = nasa?.media_type === 'image' ? (nasa.hdurl || nasa.url) : null;
 
   return (
-    <div className="min-h-screen pb-20">
+    <div className="min-h-screen pb-20 animate-page-enter">
 
       {/* ======= SECTION 1: NASA HERO ======= */}
       <section className="relative w-full min-h-[420px] sm:min-h-[520px] flex items-end overflow-hidden">
-        {/* Background image */}
         {nasaImageUrl && (
           <img
             src={nasaImageUrl}
@@ -279,22 +354,21 @@ export default function LiveAgent() {
             className="absolute inset-0 w-full h-full object-cover"
           />
         )}
-        {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0f] via-[#0a0a0f]/60 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0f] via-[#0a0a0f]/70 to-[#0a0a0f]/20" />
 
-        {/* Content */}
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 pb-8 pt-20">
-          <div className="flex items-center gap-3 mb-3">
+        <div ref={heroRef} className="relative z-10 w-full max-w-7xl mx-auto px-4 pb-8 pt-20 reveal animate-fade-in-up">
+          <div className="flex items-center gap-3 mb-4">
             <LiveBadge />
             <span className="text-xs text-gray-400">
               {report.run_at ? timeAgo(report.run_at) : ''}
             </span>
           </div>
-          <h1 className="text-2xl sm:text-4xl font-bold text-white mb-2 max-w-3xl">
+          <SectionLabel>NASA ASTRONOMY PICTURE OF THE DAY</SectionLabel>
+          <h1 className="text-3xl sm:text-5xl font-bold text-white mb-2 max-w-3xl">
             {nasa?.title || la.title || 'Live AI Agent'}
           </h1>
-          <p className="text-sm text-gray-300 mb-4">
-            {nasa?.date} — NASA Astronomy Picture of the Day
+          <p className="text-sm font-mono text-gray-400 mb-4">
+            {nasa?.date}
           </p>
           {nasa?.tx_hash && (
             <TxBadge hash={nasa.tx_hash} cost={nasa.cost || 0.005} explorerBase={explorerBase} />
@@ -306,11 +380,14 @@ export default function LiveAgent() {
       <section className="max-w-7xl mx-auto px-4 -mt-6 relative z-10">
         <div className="grid md:grid-cols-2 gap-5">
           {/* ISS Card */}
-          <div className="glass-card rounded-2xl p-6">
+          <div ref={issRef} className="glass-card card-hover-lift rounded-2xl p-6 border-l-2 border-l-[#00D4FF]/30 reveal animate-fade-in-up delay-100">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-base font-semibold text-white flex items-center gap-2">
-                🌍 {la.issTitle || 'ISS Position'}
-              </h2>
+              <div>
+                <SectionLabel>ISS TRACKER</SectionLabel>
+                <h2 className="text-lg font-semibold text-white">
+                  International Space Station
+                </h2>
+              </div>
               {iss?.tx_hash && (
                 <TxBadge hash={iss.tx_hash} cost={iss.cost || 0.003} explorerBase={explorerBase} />
               )}
@@ -319,17 +396,25 @@ export default function LiveAgent() {
             {iss?.position ? (
               <>
                 <IssGlobe lat={iss.position.lat} lon={iss.position.lon} />
-                <div className="mt-4 space-y-1">
-                  <p className="text-sm text-white font-mono">
-                    {iss.position.lat.toFixed(2)}° {iss.position.lat >= 0 ? 'N' : 'S'},&nbsp;
-                    {iss.position.lon.toFixed(2)}° {iss.position.lon >= 0 ? 'E' : 'W'}
-                  </p>
-                  {iss.crew?.count > 0 && (
-                    <p className="text-xs text-gray-400">
-                      {(la.issCrew || '{count} astronauts aboard').replace('{count}', String(iss.crew.count))}
-                    </p>
-                  )}
+                <div className="mt-4 flex items-center gap-6">
+                  <div>
+                    <span className="block text-[10px] tracking-wider text-gray-500 font-semibold">LAT</span>
+                    <span className="font-mono text-xl text-[#00D4FF] tabular-nums">
+                      {iss.position.lat.toFixed(2)}{iss.position.lat >= 0 ? 'N' : 'S'}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="block text-[10px] tracking-wider text-gray-500 font-semibold">LON</span>
+                    <span className="font-mono text-xl text-[#00D4FF] tabular-nums">
+                      {iss.position.lon.toFixed(2)}{iss.position.lon >= 0 ? 'E' : 'W'}
+                    </span>
+                  </div>
                 </div>
+                {iss.crew?.count > 0 && (
+                  <p className="text-xs text-gray-400 mt-2">
+                    {(la.issCrew || '{count} astronauts aboard').replace('{count}', String(iss.crew.count))}
+                  </p>
+                )}
               </>
             ) : (
               <p className="text-sm text-gray-500">ISS data unavailable</p>
@@ -337,11 +422,14 @@ export default function LiveAgent() {
           </div>
 
           {/* SpaceX Card */}
-          <div className="glass-card rounded-2xl p-6">
+          <div ref={spacexRef} className="glass-card card-hover-lift rounded-2xl p-6 reveal animate-fade-in-up delay-200">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-base font-semibold text-white flex items-center gap-2">
-                🚀 {la.spacexTitle || 'Next SpaceX Launch'}
-              </h2>
+              <div>
+                <SectionLabel>SPACEX</SectionLabel>
+                <h2 className="text-lg font-semibold text-white">
+                  {spacex?.name || (la.spacexTitle || 'Next SpaceX Launch')}
+                </h2>
+              </div>
               {spacex?.tx_hash && (
                 <TxBadge hash={spacex.tx_hash} cost={spacex.cost || 0.005} explorerBase={explorerBase} />
               )}
@@ -349,7 +437,6 @@ export default function LiveAgent() {
 
             {spacex?.name ? (
               <>
-                <p className="text-lg font-semibold text-white mb-4">{spacex.name}</p>
                 {spacex.date_utc && <SpacexCountdown targetDate={spacex.date_utc} />}
                 {spacex.details && (
                   <p className="text-xs text-gray-400 mt-4 line-clamp-3">{spacex.details}</p>
@@ -370,7 +457,7 @@ export default function LiveAgent() {
       {/* ======= SECTION 4: NASA Explanation ======= */}
       {nasa?.explanation && (
         <section className="max-w-7xl mx-auto px-4 mt-10">
-          <NasaExplanation text={nasa.explanation} label={la.explanation || 'Full Explanation'} />
+          <NasaExplanation text={nasa.explanation} label={la.explanation || 'FULL EXPLANATION'} />
         </section>
       )}
 
@@ -383,7 +470,7 @@ export default function LiveAgent() {
 
       {/* ======= SECTION 6: CTA ======= */}
       <section className="max-w-7xl mx-auto px-4 mt-14">
-        <div className="glass-card rounded-2xl p-8 sm:p-10 text-center">
+        <div ref={ctaRef} className="gradient-cta rounded-2xl p-8 sm:p-10 text-center reveal animate-fade-in-up delay-500">
           <h2 className="text-2xl font-bold text-white mb-3">
             {la.ctaTitle || 'Build your own x402 agent'}
           </h2>
@@ -409,31 +496,6 @@ export default function LiveAgent() {
           </div>
         </div>
       </section>
-    </div>
-  );
-}
-
-// --- Collapsible NASA Explanation ---
-function NasaExplanation({ text, label }: { text: string; label: string }) {
-  const [expanded, setExpanded] = useState(false);
-
-  return (
-    <div className="glass-card rounded-2xl p-6">
-      <button
-        onClick={() => setExpanded(!expanded)}
-        className="w-full flex items-center justify-between text-left cursor-pointer bg-transparent border-none p-0"
-      >
-        <h3 className="text-base font-semibold text-white">{label}</h3>
-        <svg
-          className={`w-5 h-5 text-gray-400 transition-transform ${expanded ? 'rotate-180' : ''}`}
-          fill="none" stroke="currentColor" viewBox="0 0 24 24"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
-      </button>
-      <div className={`overflow-hidden transition-all duration-300 ${expanded ? 'max-h-[2000px] mt-4' : 'max-h-0'}`}>
-        <p className="text-sm text-gray-300 leading-relaxed whitespace-pre-line">{text}</p>
-      </div>
     </div>
   );
 }
