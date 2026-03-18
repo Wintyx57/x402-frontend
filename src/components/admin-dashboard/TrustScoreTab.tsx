@@ -184,10 +184,20 @@ export default function TrustScoreTab({ adminFetch }: { adminFetch: AdminFetch }
               {services.length === 0 && (
                 <tr>
                   <td colSpan={7} className="px-4 py-8 text-center text-gray-500">
-                    <div className="flex flex-col items-center gap-2 py-4">
-                      <span className="text-2xl">&#9733;</span>
+                    <div className="flex flex-col items-center gap-3 py-6">
+                      <span className="text-3xl">&#9733;</span>
                       <p className="text-sm text-gray-400">Aucun score disponible</p>
-                      <p className="text-xs text-gray-600">Les scores de confiance seront calcules automatiquement</p>
+                      <p className="text-xs text-gray-500 max-w-md">
+                        Les scores sont calcules automatiquement toutes les 6h a partir des donnees de monitoring.
+                        Cliquez "Recalculer tous les scores" pour forcer le calcul immediatement.
+                      </p>
+                      <button
+                        onClick={() => setShowRecalc(true)}
+                        disabled={recalculating}
+                        className="mt-2 text-xs px-4 py-2 rounded-lg bg-[#FF9900]/10 text-[#FF9900] hover:bg-[#FF9900]/20 transition-colors disabled:opacity-50"
+                      >
+                        {recalculating ? 'Recalcul en cours...' : 'Recalculer maintenant'}
+                      </button>
                     </div>
                   </td>
                 </tr>
