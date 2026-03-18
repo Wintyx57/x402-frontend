@@ -266,6 +266,7 @@ function Navbar() {
 
   const exploreLinks: NavLink[] = [
     { to: '/services', label: t.nav.services },
+    { to: '/agent', label: t.nav.liveAgent || 'Live Agent' },
     { to: '/fund', label: t.nav.fund },
     { to: '/playground', label: t.nav.playground },
     { to: '/compare', label: t.nav.compare },

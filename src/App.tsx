@@ -88,6 +88,7 @@ const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 const FundWallet = lazy(() => import('./pages/FundWallet'));
 const ServiceDetail = lazy(() => import('./pages/ServiceDetail'));
 const MyApis = lazy(() => import('./pages/MyApis'));
+const LiveAgent = lazy(() => import('./pages/LiveAgent'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
 export default function App() {
@@ -126,6 +127,7 @@ export default function App() {
             <Route path="/creators/onboarding" element={<Navigate to="/register" replace />} />
             <Route path="/quickstart" element={<Quickstart />} />
             <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/agent" element={<LiveAgent />} />
             <Route path="/services/:id" element={<ServiceDetail />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
