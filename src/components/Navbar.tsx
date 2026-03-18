@@ -5,7 +5,7 @@ import WalletInfo from './WalletInfo';
 import LanguageToggle from './LanguageToggle';
 import DarkModeToggle from './DarkModeToggle';
 
-type DropdownId = 'marketplace' | 'providers' | 'dev' | null;
+type DropdownId = 'developers' | 'providers' | null;
 
 interface NavLink {
   to: string;
@@ -31,7 +31,6 @@ function NavDropdown({ id, label, links, openDropdown, setOpenDropdown, pathname
     } else if (e.key === 'ArrowDown') {
       e.preventDefault();
       setOpenDropdown(id);
-      // Focus first menu item after open
       setTimeout(() => {
         const menu = document.querySelector(`[data-dropdown="${id}"]`);
         if (menu) (menu.querySelector('[role="menuitem"]') as HTMLElement)?.focus();
@@ -43,7 +42,6 @@ function NavDropdown({ id, label, links, openDropdown, setOpenDropdown, pathname
     <div className="relative">
       <button
         onClick={() => setOpenDropdown(isOpen ? null : id)}
-        onMouseEnter={() => setOpenDropdown(id)}
         onKeyDown={handleKeyDown}
         className={`flex items-center gap-1 text-xs font-medium px-3 py-1.5 rounded-lg transition-colors duration-200 whitespace-nowrap cursor-pointer
           ${hasActive ? 'text-[#FF9900]' : 'text-gray-300 hover:text-white hover:bg-white/5'}
@@ -71,7 +69,6 @@ function NavDropdown({ id, label, links, openDropdown, setOpenDropdown, pathname
           className="absolute top-full left-0 mt-1.5 min-w-[200px] rounded-xl py-1.5 z-50 animate-fade-in
                      bg-[#131921]/95 dark:bg-[#131921]/95 backdrop-blur-2xl
                      border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)]"
-          onMouseLeave={() => setOpenDropdown(null)}
         >
           {links.map(({ to, label: linkLabel }) => {
             const isActive = pathname === to || pathname.startsWith(to + '/');
@@ -101,6 +98,91 @@ function NavDropdown({ id, label, links, openDropdown, setOpenDropdown, pathname
   );
 }
 
+interface SearchOverlayProps {
+  open: boolean;
+  onClose: () => void;
+  searchValue: string;
+  onSearchChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onSearchSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+  onClearSearch: () => void;
+  placeholder: string;
+}
+
+function SearchOverlay({ open, onClose, searchValue, onSearchChange, onSearchSubmit, onClearSearch, placeholder }: SearchOverlayProps) {
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (open) {
+      setTimeout(() => inputRef.current?.focus(), 50);
+    }
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    document.addEventListener('keydown', handleKey);
+    return () => document.removeEventListener('keydown', handleKey);
+  }, [open, onClose]);
+
+  if (!open) return null;
+
+  return (
+    <div
+      className="fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm animate-fade-in"
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Search"
+    >
+      <div
+        className="max-w-xl mx-auto mt-20 px-4"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <form onSubmit={(e) => { onSearchSubmit(e); onClose(); }} role="search">
+          <div className="relative flex items-center">
+            <label htmlFor="overlay-search" className="sr-only">{placeholder}</label>
+            <input
+              ref={inputRef}
+              id="overlay-search"
+              type="search"
+              value={searchValue}
+              onChange={onSearchChange}
+              placeholder={placeholder}
+              autoComplete="off"
+              className="w-full bg-[#131921]/95 backdrop-blur-2xl border border-white/15 rounded-xl
+                         pl-11 pr-10 py-3.5 text-base text-white placeholder-gray-500
+                         focus:outline-none focus:border-[#FF9900]/50 focus:ring-1 focus:ring-[#FF9900]/20
+                         shadow-[0_8px_32px_rgba(0,0,0,0.4)] transition-all duration-200"
+            />
+            <svg
+              className="absolute left-3.5 w-5 h-5 text-gray-500 pointer-events-none"
+              fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            {searchValue && (
+              <button
+                type="button"
+                onClick={onClearSearch}
+                className="absolute right-3 w-5 h-5 flex items-center justify-center text-gray-500
+                           hover:text-gray-300 transition-colors cursor-pointer bg-transparent border-none p-0"
+                aria-label="Clear search"
+              >
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" className="w-4 h-4" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            )}
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
 function Navbar() {
   const { t } = useTranslation();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -108,10 +190,11 @@ function Navbar() {
   const [openDropdown, setOpenDropdown] = useState<DropdownId>(null);
   const [mobileAccordion, setMobileAccordion] = useState<DropdownId>(null);
   const [scrolled, setScrolled] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
-  const navStripRef = useRef<HTMLDivElement>(null);
+  const navLinksRef = useRef<HTMLDivElement>(null);
   const mobilePanelRef = useRef<HTMLDivElement>(null);
   const hamburgerRef = useRef<HTMLButtonElement>(null);
 
@@ -123,14 +206,26 @@ function Navbar() {
   // Scroll detection for glass effect intensity
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 10);
-    handleScroll(); // init
+    handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Cmd+K / Ctrl+K shortcut
+  useEffect(() => {
+    const handleCmdK = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setSearchOpen(prev => !prev);
+      }
+    };
+    document.addEventListener('keydown', handleCmdK);
+    return () => document.removeEventListener('keydown', handleCmdK);
+  }, []);
+
   // Close dropdown on click outside or Escape
   const handleClickOutside = useCallback((e: MouseEvent) => {
-    if (navStripRef.current && !navStripRef.current.contains(e.target as Node)) {
+    if (navLinksRef.current && !navLinksRef.current.contains(e.target as Node)) {
       setOpenDropdown(null);
     }
   }, []);
@@ -264,37 +359,32 @@ function Navbar() {
     }
   };
 
-  const exploreLinks: NavLink[] = [
-    { to: '/services', label: t.nav.services },
-    { to: '/agent', label: t.nav.liveAgent || 'Live Agent' },
-    { to: '/fund', label: t.nav.fund },
+  const developerLinks: NavLink[] = [
+    { to: '/quickstart', label: t.nav.quickstart || 'Quickstart' },
+    { to: '/integrate', label: t.nav.integrate },
     { to: '/playground', label: t.nav.playground },
+    { to: '/agent', label: t.nav.liveAgent || 'Live Agent' },
     { to: '/compare', label: t.nav.compare },
   ];
 
   const providerLinks: NavLink[] = [
-    { to: '/my-apis', label: t.myApis?.title || 'My APIs' },
-    { to: '/register?mode=quick', label: t.nav?.quickMonetize || 'Quick Monetize' },
-    { to: '/for-providers', label: t.nav.forProviders },
+    { to: '/for-providers', label: t.nav.whyX402 || 'Why x402?' },
     { to: '/register', label: t.nav.register },
-  ];
-
-  const devLinks: NavLink[] = [
-    { to: '/quickstart', label: 'Quickstart' },
-    { to: '/docs', label: t.nav.docs },
-    { to: '/integrate', label: t.nav.integrate },
+    { to: '/register?mode=quick', label: t.nav.quickMonetize || 'Quick Monetize' },
   ];
 
   const dropdownGroups = [
-    { id: 'marketplace' as DropdownId, label: 'Explore', links: exploreLinks },
-    { id: 'providers' as DropdownId, label: 'For Providers', links: providerLinks },
-    { id: 'dev' as DropdownId, label: t.nav.forDevelopers, links: devLinks },
+    { id: 'developers' as DropdownId, label: t.nav.forDevelopers, links: developerLinks },
+    { id: 'providers' as DropdownId, label: t.nav.forProviders, links: providerLinks },
   ];
+
+  const isApisActive = pathname === '/services' || pathname.startsWith('/services/');
+  const isDocsActive = pathname === '/docs' || pathname.startsWith('/docs/');
 
   return (
     <>
       {/* Spacer — reserves space for the fixed navbar */}
-      <div className="h-14 md:h-24" />
+      <div className="h-14" />
       <nav
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           scrolled
@@ -303,59 +393,83 @@ function Navbar() {
         }`}
         aria-label="Main navigation"
       >
-        <div className="max-w-7xl mx-auto px-4 h-14 flex items-center gap-4">
+        <div className="max-w-7xl mx-auto px-4 h-14 flex items-center gap-3">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 no-underline shrink-0" aria-label="x402 Bazaar — Home">
             <span className="text-[#FF9900] font-bold text-xl">x402</span>
             <span className="hidden sm:inline text-white text-lg font-light">Bazaar</span>
           </Link>
 
-          {/* Search bar — desktop */}
-          <form onSubmit={handleSearch} className="hidden sm:flex flex-1 max-w-xl mx-auto" role="search">
-            <div className="relative flex items-center w-full">
-              <label htmlFor="nav-search" className="sr-only">{t.nav.searchPlaceholder}</label>
-              <input
-                id="nav-search"
-                type="search"
-                value={searchValue}
-                onChange={handleSearchChange}
-                placeholder={t.nav.searchPlaceholder}
-                autoComplete="off"
-                className={`w-full rounded-xl pl-10 pr-9 py-2 text-sm text-white
-                           placeholder-gray-500 focus:outline-none transition-all duration-300
-                           ${scrolled
-                             ? 'bg-white/8 border border-white/10 focus:border-[#FF9900]/50 focus:bg-white/12 focus:ring-1 focus:ring-[#FF9900]/20'
-                             : 'bg-white/5 border border-white/8 focus:border-[#FF9900]/40 focus:bg-white/10'
-                           }`}
+          {/* Desktop nav links */}
+          <div ref={navLinksRef} className="hidden md:flex items-center gap-1 ml-4">
+            {/* APIs — direct link */}
+            <Link
+              to="/services"
+              className={`text-xs font-medium px-3 py-1.5 rounded-lg transition-colors duration-200 whitespace-nowrap no-underline ${
+                isApisActive ? 'text-[#FF9900]' : 'text-gray-300 hover:text-white hover:bg-white/5'
+              }`}
+            >
+              {t.nav.apis || 'APIs'}
+            </Link>
+
+            {/* Dropdowns */}
+            {dropdownGroups.map(({ id, label, links }) => (
+              <NavDropdown
+                key={id}
+                id={id}
+                label={label}
+                links={links}
+                openDropdown={openDropdown}
+                setOpenDropdown={setOpenDropdown}
+                pathname={pathname}
               />
-              <svg
-                className="absolute left-3 w-4 h-4 text-gray-500 pointer-events-none"
-                fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-              {searchValue && (
-                <button
-                  type="button"
-                  onClick={clearSearch}
-                  className="absolute right-2.5 w-5 h-5 flex items-center justify-center text-gray-500
-                             hover:text-gray-300 transition-colors cursor-pointer bg-transparent border-none p-0"
-                  aria-label="Clear search"
-                >
-                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" className="w-3.5 h-3.5" aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              )}
-            </div>
-          </form>
+            ))}
+
+            {/* Docs — direct link */}
+            <Link
+              to="/docs"
+              className={`text-xs font-medium px-3 py-1.5 rounded-lg transition-colors duration-200 whitespace-nowrap no-underline ${
+                isDocsActive ? 'text-[#FF9900]' : 'text-gray-300 hover:text-white hover:bg-white/5'
+              }`}
+            >
+              {t.nav.docs}
+            </Link>
+          </div>
+
+          {/* Spacer */}
+          <div className="flex-1" />
 
           {/* Right actions */}
           <div className="flex items-center gap-2 shrink-0">
+            {/* Search button — compact Ctrl+K */}
+            <button
+              onClick={() => setSearchOpen(true)}
+              className="hidden sm:flex items-center gap-1.5 text-xs text-gray-500 hover:text-gray-300
+                         bg-white/5 hover:bg-white/8 border border-white/10 rounded-lg
+                         px-2.5 py-1.5 transition-all duration-200 cursor-pointer"
+              aria-label="Search (Ctrl+K)"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <kbd className="text-[10px] font-mono text-gray-600 bg-white/5 px-1 py-0.5 rounded">Ctrl+K</kbd>
+            </button>
+
             <DarkModeToggle />
             <LanguageToggle />
             <WalletInfo />
+
+            {/* CTA — List Your API (desktop) */}
+            <Link
+              to="/register"
+              className="hidden md:inline-flex items-center gap-1 gradient-btn text-white text-xs font-semibold
+                         px-3.5 py-1.5 rounded-lg no-underline transition-all duration-200 hover:brightness-110 whitespace-nowrap"
+            >
+              {t.nav.listYourApi || 'List Your API'}
+              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+              </svg>
+            </Link>
 
             {/* Mobile hamburger */}
             <button
@@ -379,45 +493,6 @@ function Navbar() {
                 mobileOpen ? '-translate-y-[7px] -rotate-45 bg-[#FF9900]' : 'bg-gray-300'
               }`} />
             </button>
-          </div>
-        </div>
-
-        {/* Nav strip — desktop dropdowns */}
-        <div
-          ref={navStripRef}
-          data-nav-strip
-          className={`hidden md:block border-t transition-all duration-300 ${
-            scrolled
-              ? 'border-white/8 bg-white/[0.03]'
-              : 'border-white/5 bg-transparent'
-          }`}
-        >
-          <div className="max-w-7xl mx-auto px-4 flex items-center gap-1 h-10">
-            {dropdownGroups.map(({ id, label, links }) => (
-              <NavDropdown
-                key={id}
-                id={id}
-                label={label}
-                links={links}
-                openDropdown={openDropdown}
-                setOpenDropdown={setOpenDropdown}
-                pathname={pathname}
-              />
-            ))}
-            {/* Active page indicator — right aligned */}
-            <div className="ml-auto flex items-center gap-1.5">
-              {(() => {
-                const allLinks = [...exploreLinks, ...providerLinks, ...devLinks];
-                const active = allLinks.find(l => pathname === l.to || (l.to !== '/' && pathname.startsWith(l.to + '/')));
-                if (!active) return null;
-                return (
-                  <span className="text-xs text-gray-500 flex items-center gap-1.5">
-                    <span className="w-1 h-1 rounded-full bg-[#FF9900]" aria-hidden="true" />
-                    {active.label}
-                  </span>
-                );
-              })()}
-            </div>
           </div>
         </div>
 
@@ -473,6 +548,21 @@ function Navbar() {
 
             {/* Nav items */}
             <nav className="flex-1 overflow-y-auto px-3 py-3 flex flex-col gap-1" aria-label="Mobile navigation links">
+              {/* Direct link: APIs */}
+              <Link
+                to="/services"
+                onClick={closeMobile}
+                className={`flex items-center gap-2 text-sm no-underline px-3 py-2.5 rounded-lg font-medium transition-colors duration-200 ${
+                  isApisActive
+                    ? 'text-[#FF9900] bg-[#FF9900]/8'
+                    : 'text-gray-300 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                {isApisActive && <span className="w-1.5 h-1.5 rounded-full bg-[#FF9900]" aria-hidden="true" />}
+                {t.nav.apis || 'APIs'}
+              </Link>
+
+              {/* Accordion groups */}
               {dropdownGroups.map(({ id, label, links }) => {
                 const isAccordionOpen = mobileAccordion === id;
                 const hasActive = links.some(l => pathname === l.to || pathname.startsWith(l.to + '/'));
@@ -525,6 +615,20 @@ function Navbar() {
                   </div>
                 );
               })}
+
+              {/* Direct link: Docs */}
+              <Link
+                to="/docs"
+                onClick={closeMobile}
+                className={`flex items-center gap-2 text-sm no-underline px-3 py-2.5 rounded-lg font-medium transition-colors duration-200 ${
+                  isDocsActive
+                    ? 'text-[#FF9900] bg-[#FF9900]/8'
+                    : 'text-gray-300 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                {isDocsActive && <span className="w-1.5 h-1.5 rounded-full bg-[#FF9900]" aria-hidden="true" />}
+                {t.nav.docs}
+              </Link>
             </nav>
 
             {/* Bottom — Register CTA */}
@@ -535,12 +639,23 @@ function Navbar() {
                 className="block w-full gradient-btn text-white text-center text-sm font-semibold
                            py-2.5 rounded-xl no-underline transition-all duration-200 hover:brightness-110"
               >
-                List Your API — 95% Revenue
+                {t.nav.listYourApiCta || 'List Your API — 95% Revenue'}
               </Link>
             </div>
           </div>
         </div>
       </nav>
+
+      {/* Search overlay (Ctrl+K) */}
+      <SearchOverlay
+        open={searchOpen}
+        onClose={() => setSearchOpen(false)}
+        searchValue={searchValue}
+        onSearchChange={handleSearchChange}
+        onSearchSubmit={handleSearch}
+        onClearSearch={clearSearch}
+        placeholder={t.nav.searchPlaceholder}
+      />
     </>
   );
 }

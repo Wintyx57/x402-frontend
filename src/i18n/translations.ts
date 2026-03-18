@@ -29,6 +29,11 @@ export const translations = {
       sourceCode: "Source code",
       reportIssue: "Report an issue",
       quickMonetize: "Quick Monetize",
+      apis: "APIs",
+      quickstart: "Quickstart",
+      whyX402: "Why x402?",
+      listYourApi: "List Your API",
+      listYourApiCta: "List Your API — 95% Revenue",
     },
     connect: {
       connectWallet: "Connect Wallet",
@@ -1768,6 +1773,11 @@ def my_function(query: str) -> dict:
       sourceCode: "Code source",
       reportIssue: "Signaler un problème",
       quickMonetize: "Monetisation Rapide",
+      apis: "APIs",
+      quickstart: "Quickstart",
+      whyX402: "Pourquoi x402 ?",
+      listYourApi: "Lister votre API",
+      listYourApiCta: "Lister votre API — 95% Revenue",
     },
     connect: {
       connectWallet: "Connecter Wallet",
