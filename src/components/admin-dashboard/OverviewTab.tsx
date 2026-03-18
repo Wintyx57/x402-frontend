@@ -12,15 +12,8 @@ import {
   Filler,
 } from 'chart.js';
 import { Bar, Line, Doughnut } from 'react-chartjs-2';
-import type { AdminFetch, StatsData, AnalyticsData, RevenueOverview } from '../../types/admin';
+import type { AdminFetch, StatsData, AnalyticsData, RevenueOverview, ERC8004Status, ERC8004PushResult } from '../../types/admin';
 import { txExplorerUrl } from '../../types/admin';
-
-interface ERC8004Status {
-  feedback_wallet: { address: string; credits: number } | null;
-  last_push: { pushed?: number; total?: number; timestamp?: string } | null;
-  services: { with_agent_id: number; with_trust_score: number };
-  env: { AGENT_PRIVATE_KEY: boolean; ERC8004_FEEDBACK_KEY: boolean };
-}
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, PointElement, LineElement, ArcElement, Tooltip, Legend, Filler);
 
@@ -56,6 +49,7 @@ export default function OverviewTab({ adminFetch }: { adminFetch: AdminFetch }) 
   const [walletTimestamp, setWalletTimestamp] = useState<string | null>(null);
   const [pushingErc, setPushingErc] = useState(false);
   const [pushResult, setPushResult] = useState<string | null>(null);
+  const [pushDetails, setPushDetails] = useState<ERC8004PushResult | null>(null);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -218,9 +212,16 @@ export default function OverviewTab({ adminFetch }: { adminFetch: AdminFetch }) 
               onClick={async () => {
                 setPushingErc(true);
                 setPushResult(null);
+                setPushDetails(null);
                 try {
-                  const res = await adminFetch<{ pushed?: number; total?: number; error?: string }>('/api/admin/erc8004/push', { method: 'POST' });
-                  setPushResult(res.error ? `Erreur: ${res.error}` : `Push OK — ${res.pushed}/${res.total} scores`);
+                  const res = await adminFetch<ERC8004PushResult>('/api/admin/erc8004/push', { method: 'POST' });
+                  setPushDetails(res);
+                  if (res.error) {
+                    setPushResult(`Erreur: ${res.error}`);
+                  } else {
+                    const dur = res.duration_ms ? ` (${(res.duration_ms / 1000).toFixed(1)}s)` : '';
+                    setPushResult(`Push termine — ${res.pushed}/${res.total} OK, ${res.failed} echoues${dur}`);
+                  }
                   const e2 = await adminFetch<ERC8004Status>('/api/admin/erc8004/status').catch(() => null);
                   if (e2) setErc8004(e2);
                 } catch (e) {
@@ -233,7 +234,9 @@ export default function OverviewTab({ adminFetch }: { adminFetch: AdminFetch }) 
               {pushingErc ? 'Push en cours...' : 'Force Push'}
             </button>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+
+          {/* 6-card grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
             <div className="rounded-lg bg-white/[0.03] border border-white/5 p-3 text-center">
               <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-1">Agent NFTs</p>
               <p className="text-xl font-bold text-white">{erc8004.services.with_agent_id}</p>
@@ -249,17 +252,94 @@ export default function OverviewTab({ adminFetch }: { adminFetch: AdminFetch }) 
                   ? new Date(erc8004.last_push.timestamp).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })
                   : '—'}
               </p>
+              {erc8004.last_push?.duration_ms != null && (
+                <p className="text-[10px] text-gray-600 mt-0.5">{(erc8004.last_push.duration_ms / 1000).toFixed(1)}s</p>
+              )}
             </div>
             <div className="rounded-lg bg-white/[0.03] border border-white/5 p-3 text-center">
-              <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-1">Wallets</p>
-              <div className="flex items-center justify-center gap-2 text-xs">
-                <span className={erc8004.env.AGENT_PRIVATE_KEY ? 'text-green-400' : 'text-red-400'}>Registry {erc8004.env.AGENT_PRIVATE_KEY ? '&#10003;' : '&#10007;'}</span>
-                <span className={erc8004.env.ERC8004_FEEDBACK_KEY ? 'text-green-400' : 'text-red-400'}>Feedback {erc8004.env.ERC8004_FEEDBACK_KEY ? '&#10003;' : '&#10007;'}</span>
+              <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-1">Push echoues</p>
+              <p className={`text-xl font-bold ${(erc8004.last_push?.failed ?? 0) > 0 ? 'text-red-400' : 'text-green-400'}`}>
+                {erc8004.last_push?.failed ?? 0}
+              </p>
+            </div>
+            <div className="rounded-lg bg-white/[0.03] border border-white/5 p-3 text-center">
+              <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-1">CREDITS Feedback</p>
+              {(() => {
+                const bal = erc8004.feedback_wallet?.credits_balance;
+                const num = bal ? parseFloat(bal) : null;
+                const low = num !== null && num < 0.5;
+                return (
+                  <p className={`text-lg font-bold ${low ? 'text-yellow-400' : 'text-white'}`}>
+                    {num !== null ? num.toFixed(2) : '—'}
+                    {low && <span className="text-[10px] ml-1">&#9888;</span>}
+                  </p>
+                );
+              })()}
+            </div>
+            <div className="rounded-lg bg-white/[0.03] border border-white/5 p-3 text-center">
+              <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-1">Auto-refill</p>
+              <div className="flex items-center justify-center gap-1.5">
+                <div className={`w-2 h-2 rounded-full ${erc8004.auto_refill?.enabled ? 'bg-green-400' : 'bg-red-400'}`} />
+                <span className="text-xs text-white">{erc8004.auto_refill?.enabled ? 'Actif' : 'Inactif'}</span>
               </div>
+              {erc8004.auto_refill?.enabled && (
+                <p className="text-[10px] text-gray-600 mt-0.5">seuil: {erc8004.auto_refill.threshold_credits}</p>
+              )}
             </div>
           </div>
+
+          {/* Wallets status */}
+          <div className="flex items-center gap-4 mt-3 text-xs">
+            <span className={erc8004.env.AGENT_PRIVATE_KEY ? 'text-green-400' : 'text-red-400'}>
+              Registry {erc8004.env.AGENT_PRIVATE_KEY ? '\u2713' : '\u2717'}
+            </span>
+            <span className={erc8004.env.ERC8004_FEEDBACK_KEY ? 'text-green-400' : 'text-red-400'}>
+              Feedback {erc8004.env.ERC8004_FEEDBACK_KEY ? '\u2713' : '\u2717'}
+            </span>
+          </div>
+
+          {/* Explorer links */}
+          <div className="flex flex-wrap items-center gap-3 mt-3 pt-3 border-t border-white/5 text-[10px]">
+            <a href="https://skale-base-explorer.skalenodes.com/address/0x8004A169Bfb5af70e78040Be7C05e81a4e0fFCb2" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-[#FF9900] transition-colors">
+              Identity Registry &#8599;
+            </a>
+            <a href="https://skale-base-explorer.skalenodes.com/address/0x8004BAa1c6cE3b5f0C1F05319F1E39bB73AC2eCd" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-[#FF9900] transition-colors">
+              Reputation Registry &#8599;
+            </a>
+            {erc8004.feedback_wallet?.address && (
+              <a href={`https://skale-base-explorer.skalenodes.com/address/${erc8004.feedback_wallet.address}`} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-[#FF9900] transition-colors">
+                Feedback Wallet &#8599;
+              </a>
+            )}
+          </div>
+
+          {/* Push result */}
           {pushResult && (
             <p className={`text-xs mt-3 ${pushResult.startsWith('Erreur') ? 'text-red-400' : 'text-green-400'}`}>{pushResult}</p>
+          )}
+
+          {/* Push failures detail */}
+          {pushDetails?.failures && pushDetails.failures.length > 0 && (
+            <div className="mt-2 max-h-[150px] overflow-y-auto rounded-lg border border-red-500/10 bg-red-500/5">
+              <table className="w-full text-[11px]">
+                <thead>
+                  <tr className="text-gray-500 uppercase tracking-wider border-b border-red-500/10">
+                    <th className="text-left px-3 py-1.5">Agent ID</th>
+                    <th className="text-left px-3 py-1.5">Nom</th>
+                    <th className="text-left px-3 py-1.5">Erreur</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {pushDetails.failures.map((f, i) => (
+                    <tr key={i} className="border-b border-red-500/5">
+                      <td className="px-3 py-1 text-gray-400">{f.agentId}</td>
+                      <td className="px-3 py-1 text-white truncate max-w-[120px]">{f.name}</td>
+                      <td className="px-3 py-1 text-red-400/80 truncate max-w-[200px]">{f.error}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
         </div>
       )}

@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import ConfirmModal from './ConfirmModal';
 import type { AdminFetch, RevenueOverview, PayoutsResponse, FeeSplitterData } from '../../types/admin';
 import { txExplorerUrl } from '../../types/admin';
 
@@ -18,6 +19,14 @@ export default function RevenueTab({ adminFetch }: { adminFetch: AdminFetch }) {
   // FeeSplitter
   const [withdrawing, setWithdrawing] = useState(false);
   const [withdrawResult, setWithdrawResult] = useState<string | null>(null);
+
+  // Distribute
+  const [showDistribute, setShowDistribute] = useState(false);
+  const [distributeProvider, setDistributeProvider] = useState('');
+  const [distributeAmount, setDistributeAmount] = useState('');
+  const [distributing, setDistributing] = useState(false);
+  const [distributeResult, setDistributeResult] = useState<string | null>(null);
+  const [showDistributeConfirm, setShowDistributeConfirm] = useState(false);
 
   // Expanded providers
   const [expandedWallets, setExpandedWallets] = useState<Set<string>>(new Set());
@@ -309,6 +318,87 @@ export default function RevenueTab({ adminFetch }: { adminFetch: AdminFetch }) {
               )}
               {withdrawResult && (
                 <p className={`text-xs mt-2 ${withdrawResult.startsWith('Erreur') ? 'text-red-400' : 'text-green-400'}`}>{withdrawResult}</p>
+              )}
+
+              {/* Distribute to provider */}
+              <div className="mt-4 pt-4 border-t border-white/10">
+                <button
+                  onClick={() => { setShowDistribute(!showDistribute); setDistributeResult(null); }}
+                  className="text-xs text-gray-400 hover:text-[#FF9900] transition-colors flex items-center gap-1"
+                >
+                  <span>{showDistribute ? '\u25BC' : '\u25B6'}</span>
+                  Distribuer a un provider
+                </button>
+
+                {showDistribute && (
+                  <div className="mt-3 space-y-3">
+                    <div>
+                      <label className="text-[10px] text-gray-500 uppercase tracking-wider block mb-1">Adresse provider</label>
+                      <input
+                        type="text"
+                        value={distributeProvider}
+                        onChange={e => setDistributeProvider(e.target.value)}
+                        placeholder="0x..."
+                        className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-xs text-white placeholder-gray-500 outline-none focus:border-[#FF9900]/40 font-mono"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-[10px] text-gray-500 uppercase tracking-wider block mb-1">Montant USDC</label>
+                      <input
+                        type="number"
+                        value={distributeAmount}
+                        onChange={e => setDistributeAmount(e.target.value)}
+                        placeholder="0.00"
+                        min="0"
+                        step="0.01"
+                        className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-xs text-white placeholder-gray-500 outline-none focus:border-[#FF9900]/40 font-mono"
+                      />
+                    </div>
+                    <button
+                      onClick={() => setShowDistributeConfirm(true)}
+                      disabled={distributing || !distributeProvider.match(/^0x[a-fA-F0-9]{40}$/) || !distributeAmount || parseFloat(distributeAmount) <= 0 || parseFloat(distributeAmount) > 10000}
+                      className="w-full py-2 rounded-lg bg-purple-500/10 text-purple-400 text-xs font-semibold hover:bg-purple-500/20 border border-purple-500/20 transition-colors disabled:opacity-50"
+                    >
+                      {distributing ? 'Distribution en cours...' : 'Distribuer'}
+                    </button>
+                    {distributeResult && (
+                      <p className={`text-xs ${distributeResult.startsWith('Erreur') ? 'text-red-400' : 'text-green-400'}`}>{distributeResult}</p>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {/* Distribute Confirm Modal */}
+              {showDistributeConfirm && (
+                <ConfirmModal
+                  title="Confirmer la distribution"
+                  message={`Distribuer ${distributeAmount} USDC a ${distributeProvider.slice(0, 8)}...${distributeProvider.slice(-6)} via FeeSplitter ?`}
+                  confirmLabel="Distribuer"
+                  loading={distributing}
+                  onConfirm={async () => {
+                    setDistributing(true);
+                    setDistributeResult(null);
+                    setShowDistributeConfirm(false);
+                    try {
+                      const res = await adminFetch<{ success: boolean; txHash?: string; error?: string }>('/api/admin/fee-splitter/distribute', {
+                        method: 'POST',
+                        body: JSON.stringify({ provider: distributeProvider, amount_usdc: parseFloat(distributeAmount) }),
+                      });
+                      if (res.success) {
+                        const link = res.txHash ? ` tx: ${res.txHash.slice(0, 18)}...` : '';
+                        setDistributeResult(`Distribution OK${link}`);
+                        setDistributeProvider('');
+                        setDistributeAmount('');
+                        fetchAll();
+                      } else {
+                        setDistributeResult(`Erreur: ${res.error}`);
+                      }
+                    } catch (e) {
+                      setDistributeResult(`Erreur: ${(e as Error).message}`);
+                    } finally { setDistributing(false); }
+                  }}
+                  onCancel={() => setShowDistributeConfirm(false)}
+                />
               )}
             </>
           )}

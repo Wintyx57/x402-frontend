@@ -1,12 +1,40 @@
 import { useState, useEffect, useCallback } from 'react';
-import type { AdminFetch, DailyTesterStatus, ServiceItem } from '../../types/admin';
+import type { AdminFetch, DailyTesterStatus, ServiceItem, SystemHealth } from '../../types/admin';
 import { txExplorerUrl } from '../../types/admin';
+
+const API_BASE = import.meta.env.VITE_API_URL || '';
+
+function formatUptime(seconds: number): string {
+  const d = Math.floor(seconds / 86400);
+  const h = Math.floor((seconds % 86400) / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  if (d > 0) return `${d}j ${h}h`;
+  if (h > 0) return `${h}h ${m}m`;
+  return `${m}m`;
+}
+
+function latencyColor(ms?: number): string {
+  if (ms == null) return 'text-gray-400';
+  if (ms < 100) return 'text-green-400';
+  if (ms <= 500) return 'text-yellow-400';
+  return 'text-red-400';
+}
 
 export default function MonitoringTab({ adminFetch }: { adminFetch: AdminFetch }) {
   const [tester, setTester] = useState<DailyTesterStatus | null>(null);
   const [services, setServices] = useState<ServiceItem[]>([]);
+  const [health, setHealth] = useState<SystemHealth | null>(null);
+  const [healthLoading, setHealthLoading] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const fetchHealth = useCallback(async () => {
+    setHealthLoading(true);
+    try {
+      const res = await fetch(`${API_BASE}/health/deep`);
+      if (res.ok) setHealth(await res.json());
+    } catch { /* non-critical */ } finally { setHealthLoading(false); }
+  }, []);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -15,6 +43,7 @@ export default function MonitoringTab({ adminFetch }: { adminFetch: AdminFetch }
       const [t, s] = await Promise.all([
         adminFetch<DailyTesterStatus>('/api/admin/daily-tester').catch(() => null),
         adminFetch<{ data: ServiceItem[] }>('/api/services?limit=200').catch(() => ({ data: [] })),
+        fetchHealth(),
       ]);
       setTester(t);
       setServices(s.data || []);
@@ -23,7 +52,7 @@ export default function MonitoringTab({ adminFetch }: { adminFetch: AdminFetch }
     } finally {
       setLoading(false);
     }
-  }, [adminFetch]);
+  }, [adminFetch, fetchHealth]);
 
   useEffect(() => { fetchData(); }, [fetchData]);
 
@@ -58,6 +87,75 @@ export default function MonitoringTab({ adminFetch }: { adminFetch: AdminFetch }
       {error && (
         <div className="glass-card rounded-xl p-4 border border-red-500/20">
           <p className="text-sm text-red-400">{error}</p>
+        </div>
+      )}
+
+      {/* System Health */}
+      {health && (
+        <div className="glass-card rounded-xl p-5">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <h3 className="text-sm font-semibold text-white">Sante Systeme</h3>
+              <span className={`text-[10px] px-2 py-0.5 rounded border ${
+                health.status === 'ok'
+                  ? 'bg-green-500/10 text-green-400 border-green-500/20'
+                  : 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20'
+              }`}>
+                {health.status === 'ok' ? 'OK' : 'Degrade'}
+              </span>
+              <span className="text-[10px] text-gray-600">v{health.version}</span>
+              <span className="text-[10px] text-gray-600">uptime: {formatUptime(health.uptime_seconds)}</span>
+            </div>
+            <button
+              onClick={fetchHealth}
+              disabled={healthLoading}
+              className="text-xs text-gray-500 hover:text-[#FF9900] transition-colors disabled:opacity-50"
+            >
+              {healthLoading ? <span className="inline-block w-3 h-3 border border-[#FF9900]/30 border-t-[#FF9900] rounded-full animate-spin" /> : <span>&#8635;</span>}
+            </button>
+          </div>
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
+            {Object.entries(health.checks).map(([name, check]) => {
+              const isOk = check.status === 'ok' || check.status === 'connected';
+              const label: Record<string, string> = {
+                supabase: 'Supabase', base_rpc: 'Base RPC', skale_rpc: 'SKALE RPC',
+                polygon_rpc: 'Polygon RPC', fee_splitter: 'FeeSplitter', erc8004: 'ERC-8004',
+              };
+              return (
+                <div key={name} className="rounded-lg bg-white/[0.03] border border-white/5 p-3">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className={`w-2 h-2 rounded-full ${isOk ? 'bg-green-400' : 'bg-red-400'}`} />
+                    <p className="text-xs font-medium text-white">{label[name] || name}</p>
+                  </div>
+                  <div className="space-y-0.5 text-[10px]">
+                    {check.latency_ms != null && (
+                      <p className={latencyColor(check.latency_ms)}>{check.latency_ms}ms</p>
+                    )}
+                    {check.block_number != null && (
+                      <p className="text-gray-500">block #{check.block_number.toLocaleString()}</p>
+                    )}
+                    {check.contract && (
+                      <p className="text-gray-600 font-mono truncate">{check.contract.slice(0, 10)}...{check.contract.slice(-6)}</p>
+                    )}
+                    {check.pending_usdc != null && (
+                      <p className="text-gray-400">pending: ${parseFloat(check.pending_usdc).toFixed(4)}</p>
+                    )}
+                    {check.push_in_progress != null && (
+                      <p className={check.push_in_progress ? 'text-yellow-400' : 'text-gray-600'}>
+                        push: {check.push_in_progress ? 'en cours' : 'idle'}
+                      </p>
+                    )}
+                    {check.services_with_agent_id != null && (
+                      <p className="text-gray-500">{check.services_with_agent_id} agents</p>
+                    )}
+                    {check.error && (
+                      <p className="text-red-400 truncate">{check.error}</p>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
       )}
 

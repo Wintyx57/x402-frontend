@@ -165,4 +165,49 @@ export interface BudgetItem {
   alerts_triggered?: string[];
 }
 
+/* ─── ERC-8004 Types ─── */
+
+export interface ERC8004Status {
+  feedback_wallet: { address: string; credits_balance: string | null; configured: boolean } | null;
+  last_push: {
+    pushed?: number; failed?: number; total?: number;
+    timestamp?: string; duration_ms?: number; error?: string;
+  } | null;
+  auto_refill: { enabled: boolean; threshold_credits: string; refill_amount_credits: string };
+  services: { with_agent_id: number; with_trust_score: number };
+  env: { AGENT_PRIVATE_KEY: boolean; ERC8004_FEEDBACK_KEY: boolean };
+}
+
+export interface ERC8004PushResult {
+  success: boolean; pushed: number; failed: number; total: number;
+  duration_ms: number;
+  failures?: { agentId: number; name: string; error: string }[];
+  error?: string;
+}
+
+/* ─── Trust Diagnostic ─── */
+
+export interface TrustDiagnostic {
+  monitoring_checks: { total_rows: number; unique_endpoints: number };
+  daily_checks: { total_rows: number };
+  sample_monitoring: { endpoint: string; status: string; latency: number; checked_at: string }[];
+  sample_daily: { endpoint: string; overall_status: string; call_latency_ms: number; checked_at: string }[];
+  sample_services: { id: string; path: string; trust_score: number | null; erc8004_agent_id: number | null }[];
+  cutoff_date: string;
+}
+
+/* ─── System Health ─── */
+
+export interface HealthCheck {
+  status: string; latency_ms?: number; block_number?: number; url?: string; error?: string;
+  configured?: boolean; initialized?: boolean; contract?: string;
+  pending_usdc?: string; feedback_wallet_configured?: boolean;
+  push_in_progress?: boolean; services_with_agent_id?: number;
+}
+
+export interface SystemHealth {
+  status: 'ok' | 'degraded'; timestamp: string; version: string;
+  uptime_seconds: number; checks: Record<string, HealthCheck>;
+}
+
 export type AdminFetch = <T = unknown>(path: string, options?: RequestInit) => Promise<T>;
