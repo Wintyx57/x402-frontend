@@ -49,9 +49,9 @@ export default function ForProviders() {
       serviceType: 'API Marketplace',
       offers: {
         '@type': 'Offer',
-        price: '1.00',
+        price: '0',
         priceCurrency: 'USD',
-        description: 'One-time listing fee of 1 USDC. Keep 95% of all revenue.',
+        description: 'Free registration. Keep 95% of all revenue.',
       },
       areaServed: 'Worldwide',
       audience: {

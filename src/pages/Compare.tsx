@@ -17,7 +17,7 @@ const FEATURES = [
   { key: 'auditTrail', x402: true, rapidapi: false },
   { key: 'multiChain', x402: true, rapidapi: false },
   { key: 'mcpSupport', x402: true, rapidapi: false },
-  { key: 'listingFee', x402: '1 USDC', rapidapi: 'Free' },
+  { key: 'listingFee', x402: 'Free', rapidapi: 'Free' },
   { key: 'minSpend', x402: '$0.003', rapidapi: '$5/mo' },
 ];
 
