@@ -210,4 +210,19 @@ export interface SystemHealth {
   uptime_seconds: number; checks: Record<string, HealthCheck>;
 }
 
+/* ─── Usage Metrics ─── */
+
+export interface UsageMetrics {
+  calls_today: number;
+  calls_this_week: number;
+  calls_this_month: number;
+  calls_all_time: number;
+  unique_wallets: number;
+  growth_rate_percent: number;
+  success_rate_percent: number;
+  errors_this_week: number;
+  new_services_this_week: number;
+  hourly_distribution: number[];
+}
+
 export type AdminFetch = <T = unknown>(path: string, options?: RequestInit) => Promise<T>;
