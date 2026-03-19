@@ -3,7 +3,26 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from '../i18n/LanguageContext';
 import StarRating from './StarRating';
 import X402Logo from './icons/X402Logo';
+import CategoryIcon from './CategoryIcon';
 import type { Service } from '../types/service';
+
+const CATEGORY_BG: Record<string, string> = {
+  ai:            'bg-violet-500/15 border-violet-500/25',
+  finance:       'bg-emerald-500/15 border-emerald-500/25',
+  data:          'bg-blue-500/15 border-blue-500/25',
+  developer:     'bg-cyan-500/15 border-cyan-500/25',
+  media:         'bg-pink-500/15 border-pink-500/25',
+  security:      'bg-emerald-400/15 border-emerald-400/25',
+  location:      'bg-amber-500/15 border-amber-500/25',
+  communication: 'bg-indigo-500/15 border-indigo-500/25',
+  seo:           'bg-teal-500/15 border-teal-500/25',
+  scraping:      'bg-orange-500/15 border-orange-500/25',
+  fun:           'bg-rose-500/15 border-rose-500/25',
+};
+
+function getCategoryBg(category: string | undefined): string {
+  return (category && CATEGORY_BG[category]) || 'bg-[#1a1f2e] border-white/8';
+}
 
 function getDomain(url: string): string | null {
   try {
@@ -179,9 +198,13 @@ function ServiceCard({ service, healthStatus = null, uptimePercent = null, revie
       {/* ===== HEADER: Logo + Name + Price ===== */}
       <div className="flex items-start gap-4 mb-4">
         {/* Logo 48px */}
-        <div className="w-12 h-12 rounded-xl bg-[#1a1f2e] border border-white/8 flex items-center justify-center shrink-0 overflow-hidden">
+        <div className={`w-12 h-12 rounded-xl border flex items-center justify-center shrink-0 overflow-hidden ${
+          isNative ? getCategoryBg(primaryCategory) : 'bg-[#1a1f2e] border-white/8'
+        }`}>
           {isNative ? (
-            <X402Logo className="w-12 h-12" />
+            primaryCategory
+              ? <CategoryIcon category={primaryCategory as Parameters<typeof CategoryIcon>[0]['category']} className="w-6 h-6" />
+              : <X402Logo className="w-12 h-12" />
           ) : service.logo_url ? (
             <img
               src={service.logo_url}

@@ -408,7 +408,7 @@ export default function Home() {
               },
               { value: '3', label: t.home.heroStatBlockchains || 'Blockchains', color: 'text-blue-400' },
               { value: '10', label: t.home.statIntegrations || 'Integrations', color: 'text-emerald-400' },
-              { value: '1543', label: t.home.heroStatTests || 'Tests', color: 'text-violet-400' },
+              { value: '1863', label: t.home.heroStatTests || 'Tests', color: 'text-violet-400' },
             ].map((stat, i) => (
               <div key={i} className="flex items-center gap-2">
                 <span className={`text-xl font-bold ${stat.color}`}>{stat.value}</span>
@@ -449,7 +449,7 @@ export default function Home() {
       )}
 
       {/* ===== HOW IT WORKS ===== */}
-      <section ref={howRef} className="reveal max-w-5xl mx-auto px-4 mb-24">
+      <section ref={howRef} className="reveal-section max-w-5xl mx-auto px-4 mb-24">
         <div className="text-center mb-12">
           <p className="text-[#FF9900] text-xs font-semibold uppercase tracking-widest mb-3">{t.home.howLabel}</p>
           <h2 className="text-2xl sm:text-3xl font-bold text-white">{t.home.howItWorks}</h2>
@@ -545,7 +545,7 @@ export default function Home() {
       </section>
 
       {/* ===== VALUE PROPS ===== */}
-      <section ref={valueProRef} className="reveal max-w-5xl mx-auto px-4 mb-24">
+      <section ref={valueProRef} className="reveal-section max-w-5xl mx-auto px-4 mb-24">
         <div className="text-center mb-12">
           <p className="text-[#FF9900] text-xs font-semibold uppercase tracking-widest mb-3">{t.home.whyLabel}</p>
           <h2 className="text-2xl sm:text-3xl font-bold text-white">{t.home.valueProTitle}</h2>
@@ -598,7 +598,7 @@ export default function Home() {
       </section>
 
       {/* ===== INTEGRATIONS ===== */}
-      <section ref={integrationsRef} className="reveal max-w-4xl mx-auto px-4 mb-24">
+      <section ref={integrationsRef} className="reveal-section max-w-4xl mx-auto px-4 mb-24">
         <div className="text-center mb-10">
           <p className="text-[#FF9900] text-xs font-semibold uppercase tracking-widest mb-3">{t.home.integrationsLabel}</p>
           <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3">{t.home.integrationsTitle}</h2>
@@ -614,7 +614,7 @@ export default function Home() {
       </section>
 
       {/* ===== SOCIAL PROOF / TRACTION ===== */}
-      <section ref={socialRef} className="reveal max-w-5xl mx-auto px-4 mb-24">
+      <section ref={socialRef} className="reveal-section max-w-5xl mx-auto px-4 mb-24">
         <div className="glass-card rounded-2xl p-8 sm:p-10 border border-white/10">
           <div className="text-center mb-10">
             <p className="text-[#FF9900] text-xs font-semibold uppercase tracking-widest mb-3">{t.home.tractionLabel}</p>
@@ -755,7 +755,7 @@ export default function Home() {
       </section>
 
       {/* ===== CATEGORIES ===== */}
-      <section ref={catRef} className="reveal max-w-7xl mx-auto px-4 mb-20">
+      <section ref={catRef} className="reveal-section max-w-7xl mx-auto px-4 mb-20">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-bold text-white">{t.home.browseByCategory}</h2>
           <Link to="/services" className="text-xs text-[#FF9900] no-underline hover:text-[#FEBD69]">
@@ -780,9 +780,21 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Loading skeletons while services load */}
+      {loading && (
+        <section className="max-w-7xl mx-auto px-4 mb-16">
+          <div className="h-6 w-40 bg-white/5 rounded-lg mb-6 animate-shimmer" />
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[1, 2, 3].map(i => (
+              <div key={i} className="glass-card rounded-2xl p-6 h-56 animate-shimmer" />
+            ))}
+          </div>
+        </section>
+      )}
+
       {/* ===== FREE APIs ===== */}
       {freeServices.length > 0 && (
-        <section ref={freeRef} className="reveal max-w-7xl mx-auto px-4 mb-16">
+        <section ref={freeRef} className="reveal-section max-w-7xl mx-auto px-4 mb-16">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-bold text-white">{t.home.freeApisTitle}</h2>
             <Link to="/services?price=free" className="text-xs text-[#FF9900] no-underline hover:text-[#FEBD69]">
@@ -801,7 +813,7 @@ export default function Home() {
 
       {/* ===== PREMIUM APIs ===== */}
       {paidServices.length > 0 && (
-        <section ref={paidRef} className="reveal max-w-7xl mx-auto px-4 mb-16">
+        <section ref={paidRef} className="reveal-section max-w-7xl mx-auto px-4 mb-16">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-bold text-white">{t.home.premiumApisTitle}</h2>
             <Link to="/services?price=paid" className="text-xs text-[#FF9900] no-underline hover:text-[#FEBD69]">
@@ -820,7 +832,7 @@ export default function Home() {
 
       {/* ===== STATS BAR ===== */}
       {stats && (
-        <section ref={statsRef} className="reveal max-w-5xl mx-auto px-4 mb-20">
+        <section ref={statsRef} className="reveal-section max-w-5xl mx-auto px-4 mb-20">
           <div className="glass-card rounded-xl p-4 sm:p-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
             <div className="text-center">
               <div className="text-xl sm:text-3xl font-bold text-white">
@@ -866,7 +878,7 @@ export default function Home() {
       )}
 
       {/* ===== FINAL CTA ===== */}
-      <section ref={ctaRef} className="reveal max-w-5xl mx-auto px-4 mb-20">
+      <section ref={ctaRef} className="reveal-section max-w-5xl mx-auto px-4 mb-20">
         {/* Main CTA banner */}
         <div className="gradient-cta glow-orange rounded-2xl p-10 sm:p-14 text-center mb-5 relative overflow-hidden">
           <div aria-hidden="true" className="absolute inset-0 pointer-events-none"
