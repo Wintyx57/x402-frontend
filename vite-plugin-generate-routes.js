@@ -158,6 +158,10 @@ function patchMeta(html, route) {
     .replace(/(<link rel="canonical" href=")[^"]*"/, `$1${url}"`);
 }
 
+// Routes with dynamic children (e.g. /services/:id, /blog/:slug)
+// must be generated as directory/index.html to avoid Vercel routing conflicts
+const ROUTES_WITH_CHILDREN = ['/services', '/blog'];
+
 export function generateRoutePages() {
   return {
     name: 'vite-generate-route-pages',
@@ -176,7 +180,13 @@ export function generateRoutePages() {
 
       for (const route of STATIC_ROUTES) {
         const routeName = route.path.slice(1); // strip leading /
-        const outputPath = path.join(distDir, `${routeName}.html`);
+
+        // Routes with dynamic children: generate dir/index.html
+        // so /services → services/index.html, leaving /services/:id for SPA rewrites
+        const hasChildren = ROUTES_WITH_CHILDREN.includes(route.path);
+        const outputPath = hasChildren
+          ? path.join(distDir, routeName, 'index.html')
+          : path.join(distDir, `${routeName}.html`);
 
         // Don't overwrite if already generated
         if (fs.existsSync(outputPath)) continue;
