@@ -309,7 +309,7 @@ export default function BlogArticle() {
           {/* Article Content */}
           <div
             className="prose prose-invert max-w-none space-y-6 text-gray-300 leading-relaxed"
-            dangerouslySetInnerHTML={{ __html: content }}
+            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content, { ALLOWED_TAGS: ['h1','h2','h3','h4','p','a','strong','em','code','pre','ul','li','ol','blockquote','hr','br','span','div','img','table','thead','tbody','tr','th','td'], ALLOWED_ATTR: ['href','class','data-language','target','rel','src','alt','width','height'] }) }}
           />
 
           <hr className="border-white/5 my-8 mt-12" />
