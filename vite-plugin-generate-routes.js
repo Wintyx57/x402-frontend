@@ -10,12 +10,9 @@ import path from 'path';
 const BASE_URL = 'https://x402bazaar.org';
 const OG_IMAGE = 'https://x402bazaar.org/og-image.png';
 
+// NOTE: Do NOT add /services or /blog here — they have dynamic children
+// (/services/:id, /blog/:slug) and pre-rendered directories block Vercel rewrites.
 const STATIC_ROUTES = [
-  {
-    path: '/services',
-    title: 'API Services Catalog | x402 Bazaar',
-    description: '70+ pay-per-call APIs for AI agents. Browse and compare endpoints across 11 categories. USDC micropayments on Base & SKALE.',
-  },
   {
     path: '/pricing',
     title: 'Pricing | x402 Bazaar',
@@ -71,11 +68,7 @@ const STATIC_ROUTES = [
     title: 'Documentation | x402 Bazaar',
     description: 'Full documentation for x402 Bazaar. API reference, SDK guides, x402 protocol specs, and integration tutorials.',
   },
-  {
-    path: '/blog',
-    title: 'Blog | x402 Bazaar',
-    description: 'Articles about x402 protocol, AI agent monetization, USDC micropayments, and API marketplace news.',
-  },
+  // /blog removed — has dynamic children (/blog/:slug)
   {
     path: '/about',
     title: 'About x402 Bazaar — The First AI-Native API Marketplace',
