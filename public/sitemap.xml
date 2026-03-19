@@ -19,13 +19,8 @@
   <!-- Documentation -->
   <url><loc>https://x402bazaar.org/docs</loc><lastmod>2026-03-06</lastmod><changefreq>monthly</changefreq><priority>0.75</priority></url>
 
-  <!-- Blog articles -->
+  <!-- Blog -->
   <url><loc>https://x402bazaar.org/blog</loc><lastmod>2026-03-06</lastmod><changefreq>weekly</changefreq><priority>0.65</priority></url>
-  <url><loc>https://x402bazaar.org/blog/01-introduction</loc><lastmod>2026-02-28</lastmod><changefreq>monthly</changefreq><priority>0.60</priority></url>
-  <url><loc>https://x402bazaar.org/blog/02-monetize-api</loc><lastmod>2026-02-28</lastmod><changefreq>monthly</changefreq><priority>0.60</priority></url>
-  <url><loc>https://x402bazaar.org/blog/03-langchain-tutorial</loc><lastmod>2026-02-28</lastmod><changefreq>monthly</changefreq><priority>0.60</priority></url>
-  <url><loc>https://x402bazaar.org/blog/04-mcp-claude-tutorial</loc><lastmod>2026-02-28</lastmod><changefreq>monthly</changefreq><priority>0.60</priority></url>
-  <url><loc>https://x402bazaar.org/blog/05-lessons-learned</loc><lastmod>2026-02-28</lastmod><changefreq>monthly</changefreq><priority>0.60</priority></url>
 
   <!-- Informational & trust pages -->
   <url><loc>https://x402bazaar.org/about</loc><lastmod>2026-03-06</lastmod><changefreq>monthly</changefreq><priority>0.60</priority></url>
