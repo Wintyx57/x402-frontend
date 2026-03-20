@@ -533,7 +533,17 @@ export default function Register() {
             </div>
             <div className="text-[#FF9900] text-2xl font-bold mb-2 animate-fade-in-up delay-100">{t.register.successTitle}</div>
             <p className="text-white font-semibold text-lg mb-1 animate-fade-in-up delay-100">{result?.data?.name || 'Your API'}</p>
-            <p className="text-gray-400 text-sm mb-8 animate-fade-in-up delay-200">{t.register.successDesc}</p>
+            <p className="text-gray-400 text-sm mb-4 animate-fade-in-up delay-200">{t.register.successDesc}</p>
+            {result?.credential_validation?.status === 'warning' && (
+              <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-3 mb-4 text-yellow-300 text-xs text-left animate-fade-in-up delay-200">
+                <span className="font-semibold">Credential warning:</span> {result.credential_validation.message}
+              </div>
+            )}
+            {result?.credential_validation?.status === 'valid' && (
+              <div className="bg-green-500/10 border border-green-500/30 rounded-xl p-3 mb-4 text-green-300 text-xs text-left animate-fade-in-up delay-200">
+                Credentials verified successfully against upstream.
+              </div>
+            )}
             <div className="grid sm:grid-cols-3 gap-3 mb-8 animate-fade-in-up delay-200">
               {[
                 { icon: '01', text: 'Your API is now live on the marketplace' },
@@ -798,7 +808,17 @@ export default function Register() {
                     </svg>
                   </div>
                   <h2 className="text-[#FF9900] text-2xl font-bold mb-2">API Listed!</h2>
-                  <p className="text-gray-400 text-sm mb-6">Your API is live on x402 Bazaar. AI agents can now discover and pay for it.</p>
+                  <p className="text-gray-400 text-sm mb-4">Your API is live on x402 Bazaar. AI agents can now discover and pay for it.</p>
+                  {quickResult.credential_validation?.status === 'warning' && (
+                    <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-3 mb-4 text-yellow-300 text-xs text-left">
+                      <span className="font-semibold">Credential warning:</span> {quickResult.credential_validation.message}
+                    </div>
+                  )}
+                  {quickResult.credential_validation?.status === 'valid' && (
+                    <div className="bg-green-500/10 border border-green-500/30 rounded-xl p-3 mb-4 text-green-300 text-xs text-left">
+                      Credentials verified successfully against upstream.
+                    </div>
+                  )}
                   <div className="glass rounded-xl p-4 mb-6 text-left">
                     <p className="text-xs text-gray-400 mb-2">x402 Proxy Endpoint</p>
                     <div className="flex items-center gap-2">
@@ -1249,7 +1269,23 @@ export default function Register() {
                 <h2 className="text-[#FF9900] text-2xl font-bold mb-2">
                   {batchResult.data?.length} {t.register.batchSuccess || 'services registered successfully!'}
                 </h2>
-                <p className="text-gray-400 text-sm mb-6">All services are now live on x402 Bazaar.</p>
+                <p className="text-gray-400 text-sm mb-4">All services are now live on x402 Bazaar.</p>
+                {batchResult.credential_errors?.length > 0 && (
+                  <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-3 mb-4 text-red-300 text-xs text-left">
+                    <span className="font-semibold">Credential errors:</span>
+                    {batchResult.credential_errors.map((e: any, i: number) => (
+                      <p key={i} className="mt-1">{e.name}: {e.error}</p>
+                    ))}
+                  </div>
+                )}
+                {batchResult.credential_warnings?.length > 0 && (
+                  <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-3 mb-4 text-yellow-300 text-xs text-left">
+                    <span className="font-semibold">Credential warnings:</span>
+                    {batchResult.credential_warnings.map((w: any, i: number) => (
+                      <p key={i} className="mt-1">{w.name}: {w.warning}</p>
+                    ))}
+                  </div>
+                )}
                 <div className="space-y-2 mb-6 text-left">
                   {batchResult.data?.map((svc: any) => (
                     <div key={svc.id} className="glass rounded-lg p-3 flex items-center justify-between">

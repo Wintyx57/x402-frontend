@@ -1043,6 +1043,16 @@ export default function ImportOpenAPI() {
                     <p className="text-gray-400 text-sm">{results.spec_title}</p>
                   )}
                 </div>
+                {(results as any).credential_validation?.status === 'warning' && (
+                  <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-3 mt-3 text-yellow-300 text-xs text-left">
+                    <span className="font-semibold">Credential warning:</span> {(results as any).credential_validation.message}
+                  </div>
+                )}
+                {(results as any).credential_validation?.status === 'valid' && (
+                  <div className="bg-green-500/10 border border-green-500/30 rounded-xl p-3 mt-3 text-green-300 text-xs text-left">
+                    Credentials verified successfully against upstream.
+                  </div>
+                )}
                 <div className="flex items-center gap-8">
                   <div className="text-center">
                     <p className="text-3xl font-bold text-[#34D399]">{results.imported}</p>
