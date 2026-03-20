@@ -68,6 +68,10 @@ export default function Paywall() {
         if (data.payment_details?.recipient) {
           data._recipient = data.payment_details.recipient;
         }
+        // 402 response means the link is active (backend returns 410 for inactive)
+        if (data.error === 'Payment Required') {
+          data.is_active = true;
+        }
         setLinkData(data);
         setLoading(false);
       })
