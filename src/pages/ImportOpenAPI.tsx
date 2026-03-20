@@ -5,6 +5,11 @@ import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { useTranslation } from '../i18n/LanguageContext';
 import useSEO from '../hooks/useSEO';
 import { API_URL } from '../config';
+import CredentialsSection, {
+  buildCredentialsPayload,
+  type CredentialType,
+  type CredentialItem,
+} from '../components/CredentialsSection';
 
 // ---- Constants ----
 const PRICE_PRESETS = [0.001, 0.005, 0.01];
@@ -170,6 +175,11 @@ export default function ImportOpenAPI() {
   const [tagsInput, setTagsInput] = useState('');
   const [tags, setTags] = useState<string[]>([]);
 
+  // ---- Step 3: Credentials (apply to all imported endpoints) ----
+  const [showCredentials, setShowCredentials] = useState(false);
+  const [credentialType, setCredentialType] = useState<CredentialType>('bearer');
+  const [credentialItems, setCredentialItems] = useState<CredentialItem[]>([{ key: '', value: '' }]);
+
   // ---- Step 4: Sign & Import ----
   const [isSigning, setIsSigning] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
@@ -326,6 +336,8 @@ export default function ImportOpenAPI() {
         .filter((ep, i) => !selected.has(i) && !ep.already_registered)
         .map((ep) => ep.path);
 
+      const importCredentials = buildCredentialsPayload(credentialType, credentialItems);
+
       let resp: Response;
       if (file) {
         // BUG FIX 3: re-upload the file and send correct fields for import endpoint
@@ -341,6 +353,9 @@ export default function ImportOpenAPI() {
         if (tags.length > 0) {
           form.append('defaultTags', JSON.stringify(tags));
         }
+        if (importCredentials) {
+          form.append('credentials', JSON.stringify(importCredentials));
+        }
         resp = await fetch(`${API_URL}/api/import-openapi`, { method: 'POST', body: form });
       } else {
         // BUG FIX 3: backend re-parses the spec — send specUrl + correct field names
@@ -355,6 +370,7 @@ export default function ImportOpenAPI() {
             timestamp,
             excludePaths: excludePaths.length > 0 ? excludePaths : undefined,
             defaultTags: tags.length > 0 ? tags : undefined,
+            ...(importCredentials ? { credentials: importCredentials } : {}),
           }),
         });
       }
@@ -387,6 +403,9 @@ export default function ImportOpenAPI() {
     setResults(null);
     setImportError('');
     setParseError('');
+    setShowCredentials(false);
+    setCredentialType('bearer');
+    setCredentialItems([{ key: '', value: '' }]);
   };
 
   // ---- Step labels ----
@@ -843,6 +862,16 @@ export default function ImportOpenAPI() {
                   </div>
                 )}
               </div>
+
+              {/* API Authentication — applied to all imported endpoints */}
+              <CredentialsSection
+                showCredentials={showCredentials}
+                onToggle={() => setShowCredentials((v) => !v)}
+                credentialType={credentialType}
+                onTypeChange={setCredentialType}
+                credentialItems={credentialItems}
+                onItemsChange={setCredentialItems}
+              />
             </div>
 
             <div className="mt-8 flex justify-between gap-3">

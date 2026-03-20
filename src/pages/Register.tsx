@@ -11,6 +11,11 @@ import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { CHAIN_CONFIG, USDC_ABI } from '../config';
 import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { parseUnits } from 'viem';
+import CredentialsSection, {
+  buildCredentialsPayload,
+  type CredentialType,
+  type CredentialItem,
+} from '../components/CredentialsSection';
 
 const PRICE_PRESETS = [0.001, 0.005, 0.01];
 const PAYLINK_PRICE_PRESETS = [0.001, 0.01, 0.05, 0.10, 1.00];
@@ -229,6 +234,15 @@ export default function Register() {
   const [paymentStep, setPaymentStep] = useState(0);
   const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash: txHash ?? undefined });
 
+  // ---- Credentials state (shared for quick + full forms) ----
+  const [quickShowCredentials, setQuickShowCredentials] = useState(false);
+  const [quickCredentialType, setQuickCredentialType] = useState<CredentialType>('bearer');
+  const [quickCredentialItems, setQuickCredentialItems] = useState<CredentialItem[]>([{ key: '', value: '' }]);
+
+  const [fullShowCredentials, setFullShowCredentials] = useState(false);
+  const [fullCredentialType, setFullCredentialType] = useState<CredentialType>('bearer');
+  const [fullCredentialItems, setFullCredentialItems] = useState<CredentialItem[]>([{ key: '', value: '' }]);
+
   // ---- Payment Link state ----
   const [paylinkForm, setPaylinkForm] = useState({ title: '', description: '', targetUrl: '', price: '0.05', wallet: '' });
   const [paylinkLoading, setPaylinkLoading] = useState(false);
@@ -305,12 +319,16 @@ export default function Register() {
     setServices(updated);
   };
 
-  const buildServicePayload = (svc: ServiceFormData) => {
+  const buildServicePayload = (svc: ServiceFormData, withCredentials = false) => {
     const userTags = svc.tags.split(',').map(tag => tag.trim()).filter(Boolean);
     if (svc.category && !userTags.includes(svc.category)) userTags.unshift(svc.category);
     const payload: Record<string, unknown> = { name: svc.name, description: svc.description, url: svc.url, price: parseFloat(svc.price), tags: userTags };
     const params = svc.requiredParams.split(',').map(p => p.trim()).filter(Boolean);
     if (params.length > 0) payload.required_parameters = { required: params };
+    if (withCredentials) {
+      const fullCredentials = buildCredentialsPayload(fullCredentialType, fullCredentialItems);
+      if (fullCredentials) payload.credentials = fullCredentials;
+    }
     return payload;
   };
 
@@ -322,6 +340,8 @@ export default function Register() {
     if (params.length > 0) payload.required_parameters = { required: params };
     const freeCallsVal = parseInt(form.freeCallsPerMonth, 10);
     if (!isNaN(freeCallsVal) && freeCallsVal > 0) payload.free_calls_per_month = Math.min(freeCallsVal, 1000);
+    const fullCredentials = buildCredentialsPayload(fullCredentialType, fullCredentialItems);
+    if (fullCredentials) payload.credentials = fullCredentials;
     return payload;
   };
 
@@ -384,10 +404,18 @@ export default function Register() {
       const timestamp = Date.now();
       const message = `quick-register:${quickForm.url}:${quickForm.wallet}:${timestamp}`;
       const signature = await signMessageAsync({ message });
+      const quickCredentials = buildCredentialsPayload(quickCredentialType, quickCredentialItems);
       const res = await fetch(`${API_URL}/quick-register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url: quickForm.url, price, ownerAddress: quickForm.wallet, signature, timestamp }),
+        body: JSON.stringify({
+          url: quickForm.url,
+          price,
+          ownerAddress: quickForm.wallet,
+          signature,
+          timestamp,
+          ...(quickCredentials ? { credentials: quickCredentials } : {}),
+        }),
       });
       if (!res.ok) { const err = await res.json(); throw new Error(err.error || err.message || 'Registration failed'); }
       const data = await res.json();
@@ -419,7 +447,7 @@ export default function Register() {
       const res = await fetch(`${API_URL}/batch-register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ services: allServices.map(svc => buildServicePayload(svc)), ownerAddress: address, signature, timestamp }),
+        body: JSON.stringify({ services: allServices.map(svc => buildServicePayload(svc, true)), ownerAddress: address, signature, timestamp }),
       });
       if (!res.ok) { const err = await res.json(); throw new Error(err.error || err.message || 'Batch registration failed'); }
       const data = await res.json();
@@ -725,6 +753,16 @@ export default function Register() {
                   </div>
                 </div>
 
+                {/* API Authentication */}
+                <CredentialsSection
+                  showCredentials={quickShowCredentials}
+                  onToggle={() => setQuickShowCredentials((v) => !v)}
+                  credentialType={quickCredentialType}
+                  onTypeChange={setQuickCredentialType}
+                  credentialItems={quickCredentialItems}
+                  onItemsChange={setQuickCredentialItems}
+                />
+
                 {quickError && (
                   <div role="alert" className="bg-red-500/10 border border-red-500/50 rounded-xl p-4 text-red-300 text-sm">
                     {quickError}
@@ -879,6 +917,16 @@ export default function Register() {
                     {t.register.urlHint || "Enter your API's direct endpoint URL, not a proxy or wrapper."}
                   </p>
                 </div>
+
+                {/* API Authentication */}
+                <CredentialsSection
+                  showCredentials={fullShowCredentials}
+                  onToggle={() => setFullShowCredentials((v) => !v)}
+                  credentialType={fullCredentialType}
+                  onTypeChange={setFullCredentialType}
+                  credentialItems={fullCredentialItems}
+                  onItemsChange={setFullCredentialItems}
+                />
 
                 {/* Category + Method */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
