@@ -89,6 +89,7 @@ const FundWallet = lazy(() => import('./pages/FundWallet'));
 const ServiceDetail = lazy(() => import('./pages/ServiceDetail'));
 const MyApis = lazy(() => import('./pages/MyApis'));
 const LiveAgent = lazy(() => import('./pages/LiveAgent'));
+const ImportOpenAPI = lazy(() => import('./pages/ImportOpenAPI'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
 export default function App() {
@@ -129,6 +130,7 @@ export default function App() {
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/agent" element={<LiveAgent />} />
             <Route path="/services/:id" element={<ServiceDetail />} />
+            <Route path="/import" element={<ImportOpenAPI />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>

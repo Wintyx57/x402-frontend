@@ -136,6 +136,28 @@ export default function ForProviders() {
         </div>
       </div>
 
+      {/* Bulk Import CTA */}
+      <div className="glass-card rounded-xl p-6 mb-12 border border-[#FF9900]/20">
+        <div className="flex flex-col sm:flex-row items-center gap-4">
+          <div className="w-12 h-12 rounded-xl bg-[#FF9900]/10 flex items-center justify-center shrink-0">
+            <svg className="w-6 h-6 text-[#FF9900]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+            </svg>
+          </div>
+          <div className="flex-1 text-center sm:text-left">
+            <h3 className="text-white font-semibold text-sm mb-1">
+              {(((t as unknown) as Record<string, Record<string, string>>).importOpenAPI || {}).importTitle || 'Have an OpenAPI spec?'}
+            </h3>
+            <p className="text-gray-400 text-xs">
+              {(((t as unknown) as Record<string, Record<string, string>>).importOpenAPI || {}).importDesc || 'Import all your endpoints at once. Upload your OpenAPI/Swagger spec and list 100+ APIs in 2 minutes.'}
+            </p>
+          </div>
+          <Link to="/import" className="gradient-btn px-5 py-2 rounded-lg text-white text-sm font-medium hover:opacity-90 transition-opacity no-underline whitespace-nowrap">
+            {(((t as unknown) as Record<string, Record<string, string>>).importOpenAPI || {}).importCta || 'Import Spec'}
+          </Link>
+        </div>
+      </div>
+
       {/* Proxy diagram */}
       <div className="glass-card rounded-xl p-6 mb-12">
         <h3 className="text-sm font-semibold text-white mb-4 text-center">Zero Integration Required</h3>

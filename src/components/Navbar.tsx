@@ -371,6 +371,7 @@ function Navbar() {
     { to: '/for-providers', label: t.nav.whyX402 || 'Why x402?' },
     { to: '/register', label: t.nav.register },
     { to: '/register?mode=quick', label: t.nav.quickMonetize || 'Quick Monetize' },
+    { to: '/import', label: (t.nav as Record<string, string>).importOpenAPI || 'Import OpenAPI' },
   ];
 
   const dropdownGroups = [
