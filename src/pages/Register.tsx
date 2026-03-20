@@ -474,7 +474,7 @@ export default function Register() {
 
   const handleCopyPaylink = () => {
     if (!paylinkResult) return;
-    navigator.clipboard.writeText(paylinkResult.share_url);
+    navigator.clipboard.writeText(paylinkResult.payment_link?.paywall_url);
     setPaylinkCopied(true);
     setTimeout(() => setPaylinkCopied(false), 2000);
   };
@@ -1396,7 +1396,7 @@ export default function Register() {
                       {(t.paymentLinks as any)?.shareLink || 'Share this link'}
                     </p>
                     <div className="flex items-center gap-2">
-                      <code className="text-sm text-[#A78BFA] font-mono flex-1 truncate">{paylinkResult.share_url}</code>
+                      <code className="text-sm text-[#A78BFA] font-mono flex-1 truncate">{paylinkResult.payment_link?.paywall_url}</code>
                       <button
                         onClick={handleCopyPaylink}
                         className="px-3 py-1.5 rounded-lg text-xs bg-[#A78BFA]/10 text-[#A78BFA] border border-[#A78BFA]/20 hover:bg-[#A78BFA]/20 transition-colors cursor-pointer whitespace-nowrap"
