@@ -90,6 +90,7 @@ const ServiceDetail = lazy(() => import('./pages/ServiceDetail'));
 const MyApis = lazy(() => import('./pages/MyApis'));
 const LiveAgent = lazy(() => import('./pages/LiveAgent'));
 const ImportOpenAPI = lazy(() => import('./pages/ImportOpenAPI'));
+const Paywall = lazy(() => import('./pages/Paywall'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
 export default function App() {
@@ -131,6 +132,7 @@ export default function App() {
             <Route path="/agent" element={<LiveAgent />} />
             <Route path="/services/:id" element={<ServiceDetail />} />
             <Route path="/import" element={<ImportOpenAPI />} />
+            <Route path="/pay/:id" element={<Paywall />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>

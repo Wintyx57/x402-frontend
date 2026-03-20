@@ -372,6 +372,7 @@ function Navbar() {
     { to: '/register', label: t.nav.register },
     { to: '/register?mode=quick', label: t.nav.quickMonetize || 'Quick Monetize' },
     { to: '/import', label: (t.nav as Record<string, string>).importOpenAPI || 'Import OpenAPI' },
+    { to: '/register?mode=paylink', label: (t.nav as Record<string, string>).paymentLinks || 'Payment Links' },
   ];
 
   const dropdownGroups = [
