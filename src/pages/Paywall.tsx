@@ -16,6 +16,8 @@ interface PaymentLinkData {
   owner_address: string;
   is_active: boolean;
   created_at: string;
+  _recipient?: string;
+  payment_details?: { recipient: string };
 }
 
 type PayState = 'idle' | 'paying' | 'confirming' | 'accessing' | 'done' | 'error';
@@ -51,6 +53,10 @@ export default function Paywall() {
     setLoading(true);
     fetch(`${API_URL}/api/payment-links/${id}`)
       .then(async (res) => {
+        if (res.status === 402) {
+          // 402 = Payment Required — this IS the link data (title, price, payment_details)
+          return res.json();
+        }
         if (!res.ok) {
           const err = await res.json().catch(() => ({}));
           throw new Error(err.message || 'Payment link not found');
@@ -58,6 +64,10 @@ export default function Paywall() {
         return res.json();
       })
       .then((data) => {
+        // Extract recipient from payment_details for the USDC transfer
+        if (data.payment_details?.recipient) {
+          data._recipient = data.payment_details.recipient;
+        }
         setLinkData(data);
         setLoading(false);
       })
@@ -72,10 +82,18 @@ export default function Paywall() {
     if (!isConfirmed || !txHash || payState !== 'confirming') return;
 
     setPayState('accessing');
+    // Map wagmi chainId to backend chain key
+    const chainId = chain?.id ?? 8453;
+    const chainKeyMap: Record<number, string> = { 8453: 'base', 1187947933: 'skale', 137: 'polygon' };
+    const payChain = chainKeyMap[chainId] || 'base';
+
     fetch(`${API_URL}/api/payment-links/${id}/access`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ txHash }),
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Payment-TxHash': txHash,
+        'X-Payment-Chain': payChain,
+      },
     })
       .then(async (res) => {
         if (!res.ok) {
@@ -121,7 +139,7 @@ export default function Paywall() {
         abi: USDC_ABI,
         functionName: 'transfer',
         args: [
-          linkData.owner_address as `0x${string}`,
+          (linkData._recipient || linkData.owner_address) as `0x${string}`,
           parseUnits(String(linkData.price_usdc), decimals),
         ],
       });
