@@ -6,7 +6,7 @@ export function useUsdcBalance() {
     const { address } = useAccount();
     const chainId = useChainId();
     const chainConfig = CHAIN_CONFIG[chainId];
-    const decimals = chainId === 1187947933 ? 18 : 6;
+    const decimals = 6; // All chains use 6-decimal USDC (Base, SKALE, Polygon)
 
     const { data, isLoading, refetch } = useReadContract({
         address: chainConfig?.usdcContract as `0x${string}` | undefined,

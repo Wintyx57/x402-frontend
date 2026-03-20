@@ -136,7 +136,7 @@ export default function Paywall() {
     try {
       const chainId = chain?.id ?? 8453;
       const chainConfig = CHAIN_CONFIG[chainId] || CHAIN_CONFIG[8453];
-      const decimals = chainId === 1187947933 ? 18 : 6;
+      const decimals = 6; // All chains use 6-decimal USDC (Base, SKALE, Polygon)
 
       const hash = await writeContractAsync({
         address: chainConfig.usdcContract as `0x${string}`,
