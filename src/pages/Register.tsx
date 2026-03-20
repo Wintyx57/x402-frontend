@@ -525,6 +525,32 @@ export default function Register() {
         </button>
       </div>
 
+      {/* ---- OpenAPI Import Banner ---- */}
+      <div className="mb-8 animate-fade-in-up">
+        <Link
+          to="/import"
+          className="flex items-center gap-4 px-5 py-4 rounded-xl bg-white/3 border border-white/10 hover:border-[#FF9900]/30 hover:bg-[#FF9900]/3 transition-all duration-200 no-underline group"
+          aria-label="Import all endpoints from an OpenAPI spec"
+        >
+          <div className="w-9 h-9 rounded-lg bg-[#FF9900]/10 border border-[#FF9900]/20 flex items-center justify-center shrink-0 group-hover:bg-[#FF9900]/15 transition-colors">
+            <svg className="w-4.5 h-4.5 text-[#FF9900]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" style={{ width: '18px', height: '18px' }}>
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+            </svg>
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-white text-sm font-medium leading-tight">
+              Have an OpenAPI / Swagger spec?
+            </p>
+            <p className="text-gray-500 text-xs mt-0.5">
+              Import all your endpoints at once — list 100+ APIs in 2 minutes
+            </p>
+          </div>
+          <span className="text-[#FF9900] text-xs font-medium shrink-0 group-hover:translate-x-0.5 transition-transform">
+            Import Spec →
+          </span>
+        </Link>
+      </div>
+
       {/* ---- Quick Start Form ---- */}
       {mode === 'quick' && !quickResult && (
         <div className="max-w-lg mx-auto animate-fade-in-up">

@@ -19,27 +19,36 @@ const METHOD_COLORS: Record<string, string> = {
   HEAD: 'bg-gray-500/15 text-gray-400 border-gray-500/30',
 };
 
-// ---- Types ----
+// ---- Types (matching backend snake_case responses) ----
 interface EndpointPreview {
   path: string;
   method: string;
   name: string;
   description: string;
+  tags: string[];
   category: string;
-  alreadyRegistered: boolean;
-  operationId?: string;
+  parameters: { required: string[]; properties: Record<string, unknown> };
+  full_url: string;
+  already_registered: boolean;
 }
 
 interface PreviewResponse {
+  spec_title: string;
+  spec_version: string;
+  base_url: string;
   endpoints: EndpointPreview[];
-  title?: string;
-  version?: string;
-  description?: string;
+  total: number;
+  already_registered_count: number;
 }
 
-interface ImportResult {
-  imported: Array<{ id: string; name: string; path: string; method: string }>;
-  skipped: Array<{ name: string; reason: string }>;
+interface ImportResponse {
+  success: boolean;
+  spec_title: string;
+  total_found: number;
+  imported: number;
+  skipped: number;
+  skipped_details: Array<{ path: string; method: string; reason: string }>;
+  services: Array<{ id: string; name: string; url: string; price_usdc: number }>;
 }
 
 // ---- StepIndicator ----
@@ -116,6 +125,16 @@ function TagBadge({ tag, onRemove }: { tag: string; onRemove?: () => void }) {
   );
 }
 
+// ---- Spinner ----
+function Spinner() {
+  return (
+    <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+    </svg>
+  );
+}
+
 // ---- Main Component ----
 export default function ImportOpenAPI() {
   const { address, isConnected } = useAccount();
@@ -148,7 +167,6 @@ export default function ImportOpenAPI() {
 
   // ---- Step 3: Configure ----
   const [defaultPrice, setDefaultPrice] = useState(0.005);
-  const [walletAddr, setWalletAddr] = useState('');
   const [tagsInput, setTagsInput] = useState('');
   const [tags, setTags] = useState<string[]>([]);
 
@@ -158,7 +176,7 @@ export default function ImportOpenAPI() {
   const [importError, setImportError] = useState('');
 
   // ---- Step 5: Results ----
-  const [results, setResults] = useState<ImportResult | null>(null);
+  const [results, setResults] = useState<ImportResponse | null>(null);
 
   // ---- Handlers ----
 
@@ -189,6 +207,7 @@ export default function ImportOpenAPI() {
     }
   };
 
+  // BUG FIX 1 & 2: correct field names for preview endpoint
   const handleParseSpec = async () => {
     if (!file && !specUrl.trim()) return;
     setIsParsing(true);
@@ -197,7 +216,8 @@ export default function ImportOpenAPI() {
       let resp: Response;
       if (file) {
         const form = new FormData();
-        form.append('file', file);
+        // BUG FIX 2: field name must be 'specFile', not 'file'
+        form.append('specFile', file);
         resp = await fetch(`${API_URL}/api/import-openapi/preview`, {
           method: 'POST',
           body: form,
@@ -206,23 +226,23 @@ export default function ImportOpenAPI() {
         resp = await fetch(`${API_URL}/api/import-openapi/preview`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ url: specUrl.trim() }),
+          // BUG FIX 1: field must be 'specUrl', not 'url'
+          body: JSON.stringify({ specUrl: specUrl.trim() }),
         });
       }
       if (!resp.ok) {
         const err = await resp.json().catch(() => ({}));
         throw new Error((err as { error?: string }).error || p.parseError || 'Failed to parse spec');
       }
+      // BUG FIX 4: backend returns snake_case — PreviewResponse now matches backend shape
       const data: PreviewResponse = await resp.json();
       setPreview(data);
-      // Auto-select all non-registered endpoints
+      // Auto-select all non-registered endpoints using correct snake_case field
       const autoSelected = new Set<number>();
       data.endpoints.forEach((ep, i) => {
-        if (!ep.alreadyRegistered) autoSelected.add(i);
+        if (!ep.already_registered) autoSelected.add(i);
       });
       setSelected(autoSelected);
-      // Pre-fill wallet from wagmi
-      if (address) setWalletAddr(address);
       setStep(2);
     } catch (err) {
       setParseError(err instanceof Error ? err.message : p.parseError || 'Failed to parse spec');
@@ -233,7 +253,8 @@ export default function ImportOpenAPI() {
 
   const toggleSelect = (idx: number) => {
     const ep = preview?.endpoints[idx];
-    if (ep?.alreadyRegistered) return;
+    // BUG FIX 4: use snake_case field
+    if (ep?.already_registered) return;
     setSelected((prev) => {
       const next = new Set(prev);
       if (next.has(idx)) next.delete(idx);
@@ -246,7 +267,7 @@ export default function ImportOpenAPI() {
     if (!preview) return;
     const allSelectable = preview.endpoints
       .map((ep, i) => ({ ep, i }))
-      .filter(({ ep }) => !ep.alreadyRegistered)
+      .filter(({ ep }) => !ep.already_registered)
       .map(({ i }) => i);
     setSelected(new Set(allSelectable));
   };
@@ -282,6 +303,7 @@ export default function ImportOpenAPI() {
     ? preview.endpoints.filter((_, i) => selected.has(i))
     : [];
 
+  // BUG FIX 3 & 5: correct payload shape + timestamp in milliseconds
   const handleSignAndImport = async () => {
     if (!isConnected || !address) {
       openConnectModal?.();
@@ -292,32 +314,57 @@ export default function ImportOpenAPI() {
     setIsSigning(true);
     setImportError('');
     try {
-      const timestamp = Math.floor(Date.now() / 1000);
+      // BUG FIX 5: timestamp in MILLISECONDS (Date.now()), not seconds
+      const timestamp = Date.now();
       const message = `import-openapi:${address}:${timestamp}`;
       const signature = await signMessageAsync({ message });
       setIsSigning(false);
       setIsImporting(true);
 
-      const resp = await fetch(`${API_URL}/api/import-openapi`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          endpoints: selectedEndpoints,
-          defaultPrice,
-          walletAddress: walletAddr || address,
-          tags,
-          signature,
-          address,
-          timestamp,
-        }),
-      });
+      // Build excludePaths from deselected non-registered endpoints
+      const excludePaths = preview!.endpoints
+        .filter((ep, i) => !selected.has(i) && !ep.already_registered)
+        .map((ep) => ep.path);
+
+      let resp: Response;
+      if (file) {
+        // BUG FIX 3: re-upload the file and send correct fields for import endpoint
+        const form = new FormData();
+        form.append('specFile', file);
+        form.append('ownerAddress', address);
+        form.append('defaultPrice', String(defaultPrice));
+        form.append('signature', signature);
+        form.append('timestamp', String(timestamp));
+        if (excludePaths.length > 0) {
+          form.append('excludePaths', JSON.stringify(excludePaths));
+        }
+        if (tags.length > 0) {
+          form.append('defaultTags', JSON.stringify(tags));
+        }
+        resp = await fetch(`${API_URL}/api/import-openapi`, { method: 'POST', body: form });
+      } else {
+        // BUG FIX 3: backend re-parses the spec — send specUrl + correct field names
+        resp = await fetch(`${API_URL}/api/import-openapi`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            specUrl: specUrl.trim(),
+            ownerAddress: address,
+            defaultPrice,
+            signature,
+            timestamp,
+            excludePaths: excludePaths.length > 0 ? excludePaths : undefined,
+            defaultTags: tags.length > 0 ? tags : undefined,
+          }),
+        });
+      }
 
       if (!resp.ok) {
         const err = await resp.json().catch(() => ({}));
         throw new Error((err as { error?: string }).error || p.importError || 'Import failed');
       }
 
-      const data: ImportResult = await resp.json();
+      const data: ImportResponse = await resp.json();
       setResults(data);
       setStep(5);
     } catch (err) {
@@ -351,9 +398,7 @@ export default function ImportOpenAPI() {
     p.stepResults || 'Done',
   ];
 
-  const alreadyRegisteredCount = preview
-    ? preview.endpoints.filter((ep) => ep.alreadyRegistered).length
-    : 0;
+  const alreadyRegisteredCount = preview ? preview.already_registered_count : 0;
 
   return (
     <main className="min-h-screen pb-20" aria-label={p.title || 'Import OpenAPI'}>
@@ -374,6 +419,14 @@ export default function ImportOpenAPI() {
             {p.subtitle ||
               'Upload your OpenAPI/Swagger spec and list all endpoints as paid APIs in one click.'}
           </p>
+          <div className="mt-4">
+            <Link
+              to="/register"
+              className="text-xs text-gray-500 hover:text-gray-300 transition-colors no-underline"
+            >
+              ← Back to Register
+            </Link>
+          </div>
         </header>
 
         {/* Step indicators */}
@@ -406,7 +459,7 @@ export default function ImportOpenAPI() {
         {step === 1 && (
           <section className="glass-card rounded-xl p-6 sm:p-8 animate-fade-in-up" aria-labelledby="step1-title">
             <h2 id="step1-title" className="text-lg font-semibold text-white mb-6">
-              {p.stepUpload || 'Upload'}
+              {p.stepUpload || 'Upload Your Spec'}
             </h2>
 
             {/* Dropzone */}
@@ -443,9 +496,7 @@ export default function ImportOpenAPI() {
                     </svg>
                   </div>
                   <p className="text-[#34D399] font-medium text-sm">{file.name}</p>
-                  <p className="text-gray-500 text-xs">
-                    {(file.size / 1024).toFixed(1)} KB
-                  </p>
+                  <p className="text-gray-500 text-xs">{(file.size / 1024).toFixed(1)} KB</p>
                   <button
                     type="button"
                     onClick={(e) => { e.stopPropagation(); setFile(null); }}
@@ -469,9 +520,7 @@ export default function ImportOpenAPI() {
                   <p className="text-gray-500 text-xs">
                     {p.dropzoneSubtitle || 'JSON or YAML — OpenAPI 2.0, 3.0, or 3.1'}
                   </p>
-                  <p className="text-[#FF9900] text-xs font-medium">
-                    Click to browse
-                  </p>
+                  <p className="text-[#FF9900] text-xs font-medium">Click to browse</p>
                 </div>
               )}
             </div>
@@ -500,7 +549,7 @@ export default function ImportOpenAPI() {
 
             {/* Error */}
             {parseError && (
-              <p role="alert" className="mt-3 text-[#EF4444] text-xs flex items-center gap-2">
+              <p role="alert" className="mt-3 text-[#EF4444] text-xs flex items-center gap-2 p-3 bg-[#EF4444]/5 border border-[#EF4444]/20 rounded-lg">
                 <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
@@ -518,10 +567,7 @@ export default function ImportOpenAPI() {
               >
                 {isParsing ? (
                   <>
-                    <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24" aria-hidden="true">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                    </svg>
+                    <Spinner />
                     {p.parsing || 'Parsing...'}
                   </>
                 ) : (
@@ -540,11 +586,28 @@ export default function ImportOpenAPI() {
         {/* ---- STEP 2: Preview ---- */}
         {step === 2 && preview && (
           <section className="animate-fade-in-up" aria-labelledby="step2-title">
+            {/* Spec info bar */}
+            {(preview.spec_title || preview.base_url) && (
+              <div className="glass-card rounded-xl px-4 py-3 mb-4 flex flex-wrap items-center gap-3 text-xs">
+                {preview.spec_title && (
+                  <span className="text-white font-semibold">{preview.spec_title}</span>
+                )}
+                {preview.spec_version && (
+                  <span className="px-2 py-0.5 rounded-md bg-white/5 border border-white/10 text-gray-400 font-mono">
+                    v{preview.spec_version}
+                  </span>
+                )}
+                {preview.base_url && (
+                  <span className="text-gray-500 font-mono truncate max-w-xs">{preview.base_url}</span>
+                )}
+              </div>
+            )}
+
             {/* Stats bar */}
             <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
               <div className="flex items-center gap-3">
                 <h2 id="step2-title" className="text-sm font-semibold text-white">
-                  {preview.endpoints.length} {p.endpointsFound || 'endpoints found'}
+                  {preview.total} {p.endpointsFound || 'endpoints found'}
                   {alreadyRegisteredCount > 0 && (
                     <span className="ml-2 text-gray-500">
                       ({alreadyRegisteredCount} {p.alreadyRegistered || 'already registered'})
@@ -579,19 +642,20 @@ export default function ImportOpenAPI() {
                 <table className="w-full text-sm" role="table">
                   <thead>
                     <tr className="border-b border-white/5 bg-white/3">
-                      <th className="w-10 p-3" scope="col" aria-label="Select">
+                      <th className="w-10 p-3" scope="col">
                         <span className="sr-only">Select</span>
                       </th>
-                      <th className="text-left p-3 text-gray-400 font-medium text-xs" scope="col">Path</th>
                       <th className="text-left p-3 text-gray-400 font-medium text-xs" scope="col">Method</th>
+                      <th className="text-left p-3 text-gray-400 font-medium text-xs" scope="col">Path</th>
                       <th className="text-left p-3 text-gray-400 font-medium text-xs" scope="col">Name</th>
-                      <th className="text-left p-3 text-gray-400 font-medium text-xs" scope="col">Category</th>
+                      <th className="text-left p-3 text-gray-400 font-medium text-xs hidden md:table-cell" scope="col">Category</th>
                     </tr>
                   </thead>
                   <tbody>
                     {preview.endpoints.map((ep, i) => {
                       const isSelected = selected.has(i);
-                      const isDisabled = ep.alreadyRegistered;
+                      // BUG FIX 4: use snake_case field
+                      const isDisabled = ep.already_registered;
                       return (
                         <tr
                           key={i}
@@ -623,21 +687,25 @@ export default function ImportOpenAPI() {
                                 )}
                               </div>
                             ) : (
-                              <span className="text-gray-600 text-xs" title="Already registered">✓</span>
+                              <span className="text-[#34D399] text-xs" title="Already registered" aria-label="Already registered">
+                                <svg className="w-3.5 h-3.5 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                                </svg>
+                              </span>
                             )}
-                          </td>
-                          <td className="p-3 font-mono text-xs text-gray-300 max-w-[200px] truncate" role="cell" title={ep.path}>
-                            {ep.path}
                           </td>
                           <td className="p-3" role="cell">
                             <MethodBadge method={ep.method} />
                           </td>
-                          <td className="p-3 text-gray-300 text-xs max-w-[180px] truncate" role="cell" title={ep.name}>
-                            {ep.name || ep.operationId || '—'}
+                          <td className="p-3 font-mono text-xs text-gray-300 max-w-[200px] truncate" role="cell" title={ep.path}>
+                            {ep.path}
                           </td>
-                          <td className="p-3" role="cell">
+                          <td className="p-3 text-gray-300 text-xs max-w-[180px] truncate" role="cell" title={ep.name}>
+                            {ep.name || '—'}
+                          </td>
+                          <td className="p-3 hidden md:table-cell" role="cell">
                             <span className="px-2 py-0.5 rounded-md text-xs bg-white/5 text-gray-400 border border-white/10">
-                              {ep.category}
+                              {ep.category || 'other'}
                             </span>
                           </td>
                         </tr>
@@ -665,10 +733,7 @@ export default function ImportOpenAPI() {
               <button
                 type="button"
                 disabled={selected.size === 0}
-                onClick={() => {
-                  if (address) setWalletAddr(address);
-                  setStep(3);
-                }}
+                onClick={() => setStep(3)}
                 className="gradient-btn px-6 py-2.5 rounded-xl text-white text-sm font-semibold disabled:opacity-40 disabled:cursor-not-allowed transition-all"
               >
                 Continue ({selected.size} selected)
@@ -688,7 +753,7 @@ export default function ImportOpenAPI() {
               {/* Default price */}
               <fieldset>
                 <legend className="block text-xs font-medium text-gray-400 mb-2">
-                  {p.defaultPrice || 'Default Price (USDC)'}
+                  {p.defaultPrice || 'Default Price (USDC per call)'}
                 </legend>
                 <div className="flex items-center gap-3 flex-wrap">
                   {PRICE_PRESETS.map((preset) => (
@@ -724,29 +789,29 @@ export default function ImportOpenAPI() {
 
               {/* Wallet address */}
               <div>
-                <label htmlFor="wallet-addr" className="block text-xs font-medium text-gray-400 mb-2">
-                  {p.walletAddress || 'Wallet Address'}
-                </label>
+                <p className="block text-xs font-medium text-gray-400 mb-2">
+                  {p.walletAddress || 'Payment Wallet'}
+                </p>
                 {isConnected && address ? (
                   <div className="flex items-center gap-2 px-4 py-3 bg-white/5 border border-white/10 rounded-xl">
                     <div className="w-2 h-2 rounded-full bg-[#34D399] shrink-0" aria-hidden="true" />
                     <span className="text-gray-300 text-xs font-mono truncate">{address}</span>
+                    <span className="ml-auto text-[#34D399] text-xs">Connected</span>
                   </div>
                 ) : (
                   <div className="space-y-2">
-                    <input
-                      id="wallet-addr"
-                      type="text"
-                      value={walletAddr}
-                      onChange={(e) => setWalletAddr(e.target.value)}
-                      placeholder="0x..."
-                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-[#FF9900]/50 transition-colors font-mono"
-                    />
-                    <p className="text-yellow-500/80 text-xs flex items-center gap-1.5">
-                      <svg className="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    <button
+                      type="button"
+                      onClick={() => openConnectModal?.()}
+                      className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-[#FF9900]/5 border border-[#FF9900]/20 rounded-xl text-[#FF9900] text-sm font-medium hover:bg-[#FF9900]/10 transition-colors"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
                       </svg>
-                      {p.connectWalletFirst || 'Connect your wallet to import APIs'}
+                      {p.connectWalletFirst || 'Connect Wallet to Continue'}
+                    </button>
+                    <p className="text-yellow-500/70 text-xs text-center">
+                      A wallet signature is required to authenticate the import
                     </p>
                   </div>
                 )}
@@ -755,7 +820,8 @@ export default function ImportOpenAPI() {
               {/* Tags */}
               <div>
                 <label htmlFor="tags-input" className="block text-xs font-medium text-gray-400 mb-2">
-                  {p.defaultTags || 'Default Tags'}
+                  {p.defaultTags || 'Default Tags'}{' '}
+                  <span className="text-gray-600 font-normal">(optional, applied to all imported APIs)</span>
                 </label>
                 <input
                   id="tags-input"
@@ -764,7 +830,7 @@ export default function ImportOpenAPI() {
                   onChange={(e) => setTagsInput(e.target.value)}
                   onKeyDown={handleAddTag}
                   onBlur={handleTagsBlur}
-                  placeholder={p.tagsPlaceholder || 'weather, data, api'}
+                  placeholder={p.tagsPlaceholder || 'e.g. weather, data, api — press Enter to add'}
                   className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-[#FF9900]/50 transition-colors"
                 />
                 {tags.length > 0 && (
@@ -790,7 +856,8 @@ export default function ImportOpenAPI() {
               <button
                 type="button"
                 onClick={() => setStep(4)}
-                className="gradient-btn px-6 py-2.5 rounded-xl text-white text-sm font-semibold transition-all"
+                disabled={!isConnected}
+                className="gradient-btn px-6 py-2.5 rounded-xl text-white text-sm font-semibold disabled:opacity-40 disabled:cursor-not-allowed transition-all"
               >
                 Continue
               </button>
@@ -802,38 +869,38 @@ export default function ImportOpenAPI() {
         {step === 4 && (
           <section className="glass-card rounded-xl p-6 sm:p-8 animate-fade-in-up" aria-labelledby="step4-title">
             <h2 id="step4-title" className="text-lg font-semibold text-white mb-6">
-              {p.importSummary || 'Import Summary'}
+              {p.importSummary || 'Review & Sign'}
             </h2>
 
             {/* Summary card */}
             <div className="bg-white/3 border border-white/10 rounded-xl p-5 mb-6 space-y-3">
+              {preview?.spec_title && (
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-400 text-xs">Spec</span>
+                  <span className="text-white text-xs font-medium">{preview.spec_title}</span>
+                </div>
+              )}
               <div className="flex items-center justify-between">
                 <span className="text-gray-400 text-xs">
                   {p.endpointsToImport || 'Endpoints to import'}
                 </span>
-                <span className="text-white font-semibold text-sm">
-                  {selectedEndpoints.length}
-                </span>
+                <span className="text-white font-semibold text-sm">{selectedEndpoints.length}</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-gray-400 text-xs">
-                  {p.walletAddress || 'Wallet Address'}
-                </span>
+                <span className="text-gray-400 text-xs">{p.walletAddress || 'Owner wallet'}</span>
                 <span className="text-gray-300 text-xs font-mono truncate max-w-[200px]">
-                  {isConnected && address ? address : walletAddr || '—'}
+                  {address || '—'}
                 </span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-gray-400 text-xs">
-                  {p.priceRange || 'Price range'}
-                </span>
-                <span className="text-[#FF9900] font-mono text-xs">
+                <span className="text-gray-400 text-xs">{p.priceRange || 'Price per call'}</span>
+                <span className="text-[#FF9900] font-mono text-xs font-semibold">
                   ${defaultPrice} USDC
                 </span>
               </div>
               {tags.length > 0 && (
-                <div className="flex items-center justify-between gap-3">
-                  <span className="text-gray-400 text-xs shrink-0">Tags</span>
+                <div className="flex items-start justify-between gap-3">
+                  <span className="text-gray-400 text-xs shrink-0 pt-0.5">Tags</span>
                   <div className="flex flex-wrap justify-end gap-1">
                     {tags.map((tag) => (
                       <TagBadge key={tag} tag={tag} />
@@ -843,25 +910,41 @@ export default function ImportOpenAPI() {
               )}
             </div>
 
-            {/* Endpoint preview list (first 5) */}
+            {/* Endpoint preview list (first 10) */}
             {selectedEndpoints.length > 0 && (
               <div className="mb-6">
-                <p className="text-xs text-gray-500 mb-2">Endpoints to import:</p>
-                <div className="space-y-1.5 max-h-40 overflow-y-auto pr-1">
+                <p className="text-xs text-gray-500 mb-2">
+                  Endpoints to import
+                  {selectedEndpoints.length > 10 && ` (showing 10 of ${selectedEndpoints.length})`}:
+                </p>
+                <div className="space-y-1.5 max-h-44 overflow-y-auto pr-1 rounded-lg">
                   {selectedEndpoints.slice(0, 10).map((ep, i) => (
-                    <div key={i} className="flex items-center gap-2 text-xs">
+                    <div key={i} className="flex items-center gap-2 text-xs px-2 py-1 rounded-lg bg-white/3">
                       <MethodBadge method={ep.method} />
-                      <span className="text-gray-300 font-mono truncate">{ep.path}</span>
+                      <span className="text-gray-300 font-mono truncate flex-1">{ep.path}</span>
+                      {ep.name && (
+                        <span className="text-gray-500 truncate max-w-[120px] hidden sm:block">{ep.name}</span>
+                      )}
                     </div>
                   ))}
                   {selectedEndpoints.length > 10 && (
-                    <p className="text-gray-500 text-xs">
-                      +{selectedEndpoints.length - 10} more...
+                    <p className="text-gray-500 text-xs text-center py-1">
+                      +{selectedEndpoints.length - 10} more endpoints
                     </p>
                   )}
                 </div>
               </div>
             )}
+
+            {/* Signature info */}
+            <div className="mb-5 p-3 bg-[#FF9900]/5 border border-[#FF9900]/15 rounded-lg flex gap-2.5">
+              <svg className="w-4 h-4 text-[#FF9900] shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <p className="text-[#FF9900]/80 text-xs leading-relaxed">
+                Your wallet will sign a message to authenticate this import. No gas fees are required — this is a free off-chain signature.
+              </p>
+            </div>
 
             {/* Error */}
             {importError && (
@@ -871,18 +954,6 @@ export default function ImportOpenAPI() {
                 </svg>
                 {importError}
               </p>
-            )}
-
-            {/* Connect wallet hint */}
-            {!isConnected && (
-              <div className="mb-4 p-3 bg-yellow-500/5 border border-yellow-500/20 rounded-lg">
-                <p className="text-yellow-500/80 text-xs flex items-center gap-2">
-                  <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  {p.connectWalletFirst || 'Connect your wallet to import APIs'}
-                </p>
-              </div>
             )}
 
             <div className="flex justify-between gap-3">
@@ -895,50 +966,31 @@ export default function ImportOpenAPI() {
                 Back
               </button>
 
-              {isConnected ? (
-                <button
-                  type="button"
-                  disabled={isSigning || isImporting || selectedEndpoints.length === 0}
-                  onClick={handleSignAndImport}
-                  className="gradient-btn px-6 py-2.5 rounded-xl text-white text-sm font-semibold disabled:opacity-40 disabled:cursor-not-allowed transition-all flex items-center gap-2"
-                >
-                  {isSigning ? (
-                    <>
-                      <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24" aria-hidden="true">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                      </svg>
-                      {p.signing || 'Signing...'}
-                    </>
-                  ) : isImporting ? (
-                    <>
-                      <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24" aria-hidden="true">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                      </svg>
-                      {p.importing || 'Importing...'}
-                    </>
-                  ) : (
-                    <>
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13l-3 3m0 0l-3-3m3 3V8m0 13a9 9 0 110-18 9 9 0 010 18z" />
-                      </svg>
-                      {p.signAndImport || 'Sign & Import'}
-                    </>
-                  )}
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => openConnectModal?.()}
-                  className="gradient-btn px-6 py-2.5 rounded-xl text-white text-sm font-semibold transition-all flex items-center gap-2"
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
-                  </svg>
-                  Connect Wallet
-                </button>
-              )}
+              <button
+                type="button"
+                disabled={isSigning || isImporting || selectedEndpoints.length === 0 || !isConnected}
+                onClick={handleSignAndImport}
+                className="gradient-btn px-6 py-2.5 rounded-xl text-white text-sm font-semibold disabled:opacity-40 disabled:cursor-not-allowed transition-all flex items-center gap-2"
+              >
+                {isSigning ? (
+                  <>
+                    <Spinner />
+                    {p.signing || 'Signing...'}
+                  </>
+                ) : isImporting ? (
+                  <>
+                    <Spinner />
+                    {p.importing || 'Importing...'}
+                  </>
+                ) : (
+                  <>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13l-3 3m0 0l-3-3m3 3V8m0 13a9 9 0 110-18 9 9 0 010 18z" />
+                    </svg>
+                    {p.signAndImport || 'Sign & Import'}
+                  </>
+                )}
+              </button>
             </div>
           </section>
         )}
@@ -954,37 +1006,42 @@ export default function ImportOpenAPI() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
-                <h2 id="step5-title" className="text-xl font-bold text-white">
-                  {p.importSuccess || 'Import Successful!'}
-                </h2>
-                <div className="flex items-center gap-6">
+                <div>
+                  <h2 id="step5-title" className="text-xl font-bold text-white mb-1">
+                    {p.importSuccess || 'Import Successful!'}
+                  </h2>
+                  {results.spec_title && (
+                    <p className="text-gray-400 text-sm">{results.spec_title}</p>
+                  )}
+                </div>
+                <div className="flex items-center gap-8">
                   <div className="text-center">
-                    <p className="text-2xl font-bold text-[#34D399]">{results.imported.length}</p>
-                    <p className="text-gray-500 text-xs">{p.imported || 'imported'}</p>
+                    <p className="text-3xl font-bold text-[#34D399]">{results.imported}</p>
+                    <p className="text-gray-500 text-xs mt-0.5">{p.imported || 'imported'}</p>
                   </div>
-                  {results.skipped.length > 0 && (
+                  {results.skipped > 0 && (
                     <div className="text-center">
-                      <p className="text-2xl font-bold text-gray-400">{results.skipped.length}</p>
-                      <p className="text-gray-500 text-xs">{p.skipped || 'skipped'}</p>
+                      <p className="text-3xl font-bold text-gray-400">{results.skipped}</p>
+                      <p className="text-gray-500 text-xs mt-0.5">{p.skipped || 'skipped'}</p>
                     </div>
                   )}
                 </div>
               </div>
             </div>
 
-            {/* Imported services list */}
-            {results.imported.length > 0 && (
+            {/* Imported services list — BUG FIX 4: use snake_case from ImportResponse */}
+            {results.services && results.services.length > 0 && (
               <div className="glass-card rounded-xl overflow-hidden mb-6">
                 <div className="px-4 py-3 border-b border-white/5 bg-white/3">
                   <h3 className="text-xs font-semibold text-gray-300">
-                    {p.imported || 'Imported'} APIs
+                    {p.imported || 'Imported'} APIs ({results.services.length})
                   </h3>
                 </div>
                 <ul className="divide-y divide-white/5">
-                  {results.imported.map((svc) => (
+                  {results.services.map((svc) => (
                     <li key={svc.id} className="flex items-center gap-3 px-4 py-3 hover:bg-white/3 transition-colors">
-                      <MethodBadge method={svc.method} />
-                      <span className="text-gray-300 text-xs font-mono flex-1 truncate">{svc.name || svc.path}</span>
+                      <span className="text-gray-300 text-xs font-mono flex-1 truncate">{svc.name || svc.url}</span>
+                      <span className="text-[#FF9900] font-mono text-xs shrink-0">${svc.price_usdc}</span>
                       <Link
                         to={`/services/${svc.id}`}
                         className="text-[#FF9900] text-xs hover:text-[#FF9900]/80 transition-colors shrink-0 no-underline"
@@ -998,19 +1055,20 @@ export default function ImportOpenAPI() {
               </div>
             )}
 
-            {/* Skipped reasons */}
-            {results.skipped.length > 0 && (
+            {/* Skipped reasons — BUG FIX 4: skipped_details is array of {path, method, reason} */}
+            {results.skipped_details && results.skipped_details.length > 0 && (
               <div className="glass-card rounded-xl overflow-hidden mb-6">
                 <div className="px-4 py-3 border-b border-white/5 bg-white/3">
                   <h3 className="text-xs font-semibold text-gray-400">
-                    {p.skipped || 'Skipped'} ({results.skipped.length})
+                    {p.skipped || 'Skipped'} ({results.skipped_details.length})
                   </h3>
                 </div>
                 <ul className="divide-y divide-white/5">
-                  {results.skipped.map((sk, i) => (
+                  {results.skipped_details.map((sk, i) => (
                     <li key={i} className="flex items-center gap-3 px-4 py-3 opacity-60">
-                      <span className="text-gray-400 text-xs flex-1 truncate">{sk.name}</span>
-                      <span className="text-gray-600 text-xs shrink-0">{sk.reason}</span>
+                      <MethodBadge method={sk.method} />
+                      <span className="text-gray-400 text-xs font-mono flex-1 truncate">{sk.path}</span>
+                      <span className="text-gray-600 text-xs shrink-0 max-w-[150px] truncate" title={sk.reason}>{sk.reason}</span>
                     </li>
                   ))}
                 </ul>
