@@ -847,19 +847,19 @@ html.light .gradient-btn.text-white {
 
 .hero-side-provider {
   left: 0;
-  width: 50%;
+  width: 52%;
   padding: 80px 60px 80px 5%;
-  mask-image: linear-gradient(to right, black 70%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to right, black 70%, transparent 100%);
+  mask-image: linear-gradient(to right, black 80%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, black 80%, transparent 100%);
   animation: hero-slide-left 1.1s cubic-bezier(.16,1,.3,1) both;
 }
 
 .hero-side-agent {
   right: 0;
-  width: 50%;
+  width: 52%;
   padding: 80px 5% 80px 60px;
-  mask-image: linear-gradient(to left, black 70%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to left, black 70%, transparent 100%);
+  mask-image: linear-gradient(to left, black 80%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to left, black 80%, transparent 100%);
   animation: hero-slide-right 1.1s cubic-bezier(.16,1,.3,1) both;
 }
 
@@ -1362,7 +1362,7 @@ html.light .gradient-btn.text-white {
 /* === BOTTOM BAR === */
 .hero-bottom-bar {
   position: absolute;
-  bottom: 28px;
+  bottom: 10px;
   left: 0;
   right: 0;
   z-index: 20;
@@ -1397,10 +1397,10 @@ html.light .gradient-btn.text-white {
 /* === SCROLL HINT === */
 .hero-scroll-hint {
   position: absolute;
-  bottom: 80px;
+  bottom: 56px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 20;
+  z-index: 21;
   display: flex;
   flex-direction: column;
   align-items: center;

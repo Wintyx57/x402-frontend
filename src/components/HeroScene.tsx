@@ -97,26 +97,31 @@ export default function HeroScene({ hoverState }: HeroSceneProps) {
       scene.add(cL);
 
       // === PORTAL RING ===
-      const portalGeo = new THREE.TorusGeometry(1.3, 0.025, 16, 80);
+      // Portal — elegant double ring with gradient feel
+      const portalGeo = new THREE.TorusGeometry(1.2, 0.02, 24, 100);
       const portalMat = new THREE.MeshStandardMaterial({
-        color: 0x8b5cf6,
-        emissive: 0x8b5cf6,
-        emissiveIntensity: 0.6,
+        color: 0x7c6cc8,
+        emissive: 0x7c6cc8,
+        emissiveIntensity: 0.45,
+        metalness: 0.6,
+        roughness: 0.3,
         transparent: true,
-        opacity: 0.7,
+        opacity: 0.55,
       });
       const portal = new THREE.Mesh(portalGeo, portalMat);
       portal.position.set(0, 0, 1);
       scene.add(portal);
 
       const portalOuterMat = new THREE.MeshStandardMaterial({
-        color: 0x8b5cf6,
-        emissive: 0x8b5cf6,
-        emissiveIntensity: 0.3,
+        color: 0x7c6cc8,
+        emissive: 0x7c6cc8,
+        emissiveIntensity: 0.2,
+        metalness: 0.5,
+        roughness: 0.4,
         transparent: true,
-        opacity: 0.3,
+        opacity: 0.25,
       });
-      const portalOuter = new THREE.Mesh(new THREE.TorusGeometry(1.7, 0.015, 16, 80), portalOuterMat);
+      const portalOuter = new THREE.Mesh(new THREE.TorusGeometry(1.6, 0.01, 24, 100), portalOuterMat);
       portalOuter.position.set(0, 0, 1);
       scene.add(portalOuter);
 
@@ -126,8 +131,8 @@ export default function HeroScene({ hoverState }: HeroSceneProps) {
       pGlowC.height = 256;
       const pgx = pGlowC.getContext('2d')!;
       const pgrd = pgx.createRadialGradient(128, 128, 0, 128, 128, 128);
-      pgrd.addColorStop(0, 'rgba(139,92,246,0.2)');
-      pgrd.addColorStop(0.3, 'rgba(139,92,246,0.08)');
+      pgrd.addColorStop(0, 'rgba(139,92,246,0.15)');
+      pgrd.addColorStop(0.3, 'rgba(139,92,246,0.05)');
       pgrd.addColorStop(1, 'rgba(139,92,246,0)');
       pgx.fillStyle = pgrd;
       pgx.fillRect(0, 0, 256, 256);
@@ -572,10 +577,10 @@ export default function HeroScene({ hoverState }: HeroSceneProps) {
         // Portal animation
         portal.rotation.z = t * 0.3;
         portalOuter.rotation.z = -t * 0.15;
-        portalMat.emissiveIntensity = 0.5 + portalPulse * 1;
-        portalMat.opacity = 0.6 + portalPulse * 0.3;
-        portalOuterMat.emissiveIntensity = 0.2 + portalPulse * 0.5;
-        portalOuterMat.opacity = 0.25 + portalPulse * 0.2;
+        portalMat.emissiveIntensity = 0.4 + portalPulse * 0.6;
+        portalMat.opacity = 0.5 + portalPulse * 0.25;
+        portalOuterMat.emissiveIntensity = 0.15 + portalPulse * 0.3;
+        portalOuterMat.opacity = 0.2 + portalPulse * 0.15;
         pGlowMat.opacity = 0.35 + portalPulse * 0.5;
         pGlow.scale.setScalar(5 + portalPulse * 3);
         portalPulse *= 0.94;
