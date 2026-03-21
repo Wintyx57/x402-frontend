@@ -21,6 +21,8 @@ export default defineConfig({
       output: {
         manualChunks(id) {
           if (id.includes('node_modules')) {
+            if (id.includes('three'))
+              return 'vendor-three';  // Three.js isolated for hero 3D scene
             // Trails SDK — lazy-loaded only via /fund page
             if (
               id.includes('0xtrails') ||
