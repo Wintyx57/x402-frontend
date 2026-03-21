@@ -968,6 +968,7 @@ html.light .gradient-btn.text-white {
   line-height: .95;
   margin-bottom: 24px;
   letter-spacing: -.055em;
+  min-height: 3.85em; /* Reserve 4 lines to keep both sides aligned */
 }
 
 .hero-side-provider .hero-title span {
@@ -1017,6 +1018,7 @@ html.light .gradient-btn.text-white {
   color: rgba(255,255,255,.35);
   margin-bottom: 32px;
   max-width: 400px;
+  min-height: 3.4em; /* ~2 lines to keep both sides aligned */
   animation: hero-fade-up .8s .8s both;
 }
 
@@ -1503,6 +1505,9 @@ html.light .gradient-btn.text-white {
     filter: none !important;
     transform: none !important;
   }
+
+  .hero-title,
+  .hero-desc { min-height: auto; }
 
   .hero-side-provider .hero-stats,
   .hero-side-agent .hero-stats,
