@@ -153,7 +153,7 @@ export default function SplitHero() {
         </div>
       </div>
 
-      {/* ====== CENTER ZONE — logo + counter + bridge ====== */}
+      {/* ====== CENTER ZONE — logo + counter ====== */}
       <div className="hero-center-zone">
         <div className="hero-logo-ring-wrap">
           <div className="hero-logo-ring" aria-hidden="true" />
@@ -166,11 +166,13 @@ export default function SplitHero() {
           </div>
           <div className="hero-counter-label">{h.heroTxnsLabel}</div>
         </div>
-        <Link to="/fund" className="hero-bridge-btn">
-          <span className="hero-bridge-icon" aria-hidden="true">⇄</span>
-          Bridge USDC
-        </Link>
       </div>
+
+      {/* Bridge button — centered on portal */}
+      <Link to="/fund" className="hero-bridge-btn">
+        <span className="hero-bridge-icon" aria-hidden="true">⇄</span>
+        Bridge USDC
+      </Link>
 
       {/* ====== AGENT SIDE ====== */}
       <div

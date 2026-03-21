@@ -92,50 +92,51 @@ export default function HeroScene({ hoverState }: HeroSceneProps) {
       const aL = new THREE.PointLight(0x3b82f6, 2.5, 25);
       aL.position.set(7, 3, 6);
       scene.add(aL);
-      const cL = new THREE.PointLight(0x8b5cf6, 0.8, 18);
-      cL.position.set(0, 0, 8);
+      const cL = new THREE.PointLight(0x9b7cf8, 2.0, 20);
+      cL.position.set(0, 0, 4);
       scene.add(cL);
 
       // === PORTAL RING ===
       // Portal — large vertical ring as visual divider between sides
-      const portalGeo = new THREE.TorusGeometry(1.8, 0.03, 32, 120);
+      // === PORTAL — bright vertical divider ===
+      const portalGeo = new THREE.TorusGeometry(1.8, 0.04, 32, 120);
       const portalMat = new THREE.MeshStandardMaterial({
-        color: 0x8b6ce8,
-        emissive: 0x8b6ce8,
-        emissiveIntensity: 0.6,
-        metalness: 0.7,
-        roughness: 0.2,
+        color: 0x9b7cf8,
+        emissive: 0x9b7cf8,
+        emissiveIntensity: 0.9,
+        metalness: 0.8,
+        roughness: 0.15,
         transparent: true,
-        opacity: 0.65,
+        opacity: 0.8,
       });
       const portal = new THREE.Mesh(portalGeo, portalMat);
       portal.position.set(0, 0, 0);
       scene.add(portal);
 
       const portalOuterMat = new THREE.MeshStandardMaterial({
-        color: 0x8b6ce8,
-        emissive: 0x8b6ce8,
-        emissiveIntensity: 0.3,
-        metalness: 0.6,
-        roughness: 0.3,
+        color: 0x9b7cf8,
+        emissive: 0x9b7cf8,
+        emissiveIntensity: 0.5,
+        metalness: 0.7,
+        roughness: 0.2,
         transparent: true,
-        opacity: 0.35,
+        opacity: 0.5,
       });
-      const portalOuter = new THREE.Mesh(new THREE.TorusGeometry(2.3, 0.012, 32, 120), portalOuterMat);
+      const portalOuter = new THREE.Mesh(new THREE.TorusGeometry(2.3, 0.02, 32, 120), portalOuterMat);
       portalOuter.position.set(0, 0, 0);
       scene.add(portalOuter);
 
-      // Third subtle ring for depth
+      // Third inner ring
       const portalInnerMat = new THREE.MeshStandardMaterial({
-        color: 0xa78bfa,
-        emissive: 0xa78bfa,
-        emissiveIntensity: 0.45,
-        metalness: 0.5,
-        roughness: 0.3,
+        color: 0xb494ff,
+        emissive: 0xb494ff,
+        emissiveIntensity: 0.7,
+        metalness: 0.6,
+        roughness: 0.2,
         transparent: true,
-        opacity: 0.3,
+        opacity: 0.45,
       });
-      const portalInner = new THREE.Mesh(new THREE.TorusGeometry(1.3, 0.008, 24, 100), portalInnerMat);
+      const portalInner = new THREE.Mesh(new THREE.TorusGeometry(1.3, 0.015, 24, 100), portalInnerMat);
       portalInner.position.set(0, 0, 0);
       scene.add(portalInner);
 
@@ -145,9 +146,9 @@ export default function HeroScene({ hoverState }: HeroSceneProps) {
       pGlowC.height = 256;
       const pgx = pGlowC.getContext('2d')!;
       const pgrd = pgx.createRadialGradient(128, 128, 0, 128, 128, 128);
-      pgrd.addColorStop(0, 'rgba(139,92,246,0.25)');
-      pgrd.addColorStop(0.3, 'rgba(139,92,246,0.1)');
-      pgrd.addColorStop(0.6, 'rgba(96,165,250,0.04)');
+      pgrd.addColorStop(0, 'rgba(155,124,248,0.35)');
+      pgrd.addColorStop(0.25, 'rgba(139,92,246,0.15)');
+      pgrd.addColorStop(0.5, 'rgba(96,165,250,0.06)');
       pgrd.addColorStop(1, 'rgba(139,92,246,0)');
       pgx.fillStyle = pgrd;
       pgx.fillRect(0, 0, 256, 256);
@@ -593,14 +594,14 @@ export default function HeroScene({ hoverState }: HeroSceneProps) {
         portal.rotation.z = t * 0.25;
         portalOuter.rotation.z = -t * 0.12;
         portalInner.rotation.z = t * 0.4;
-        portalMat.emissiveIntensity = 0.55 + portalPulse * 0.6 + Math.sin(t * 1.5) * 0.05;
-        portalMat.opacity = 0.65 + portalPulse * 0.25;
-        portalOuterMat.emissiveIntensity = 0.3 + portalPulse * 0.3;
-        portalOuterMat.opacity = 0.35 + portalPulse * 0.15;
-        portalInnerMat.emissiveIntensity = 0.45 + portalPulse * 0.4;
-        portalInnerMat.opacity = 0.3 + portalPulse * 0.2;
-        pGlowMat.opacity = 0.45 + portalPulse * 0.5;
-        pGlow.scale.setScalar(7 + portalPulse * 3);
+        portalMat.emissiveIntensity = 0.8 + portalPulse * 0.6 + Math.sin(t * 1.5) * 0.08;
+        portalMat.opacity = 0.75 + portalPulse * 0.2;
+        portalOuterMat.emissiveIntensity = 0.45 + portalPulse * 0.4;
+        portalOuterMat.opacity = 0.45 + portalPulse * 0.2;
+        portalInnerMat.emissiveIntensity = 0.65 + portalPulse * 0.5;
+        portalInnerMat.opacity = 0.4 + portalPulse * 0.25;
+        pGlowMat.opacity = 0.5 + portalPulse * 0.5;
+        pGlow.scale.setScalar(8 + portalPulse * 3);
         portalPulse *= 0.94;
 
         // Dust animation
