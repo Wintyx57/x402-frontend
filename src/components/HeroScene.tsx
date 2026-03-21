@@ -82,7 +82,7 @@ export default function HeroScene({ hoverState }: HeroSceneProps) {
       composer.addPass(new ShaderPass(vignetteShader));
 
       // === LIGHTS ===
-      scene.add(new THREE.AmbientLight(0x223344, 0.8));
+      scene.add(new THREE.AmbientLight(0x334466, 1.2));
       const frontLight = new THREE.DirectionalLight(0xccddff, 0.6);
       frontLight.position.set(0, 2, 10);
       scene.add(frontLight);
@@ -97,42 +97,57 @@ export default function HeroScene({ hoverState }: HeroSceneProps) {
       scene.add(cL);
 
       // === PORTAL RING ===
-      // Portal — elegant double ring with gradient feel
-      const portalGeo = new THREE.TorusGeometry(1.2, 0.02, 24, 100);
+      // Portal — large vertical ring as visual divider between sides
+      const portalGeo = new THREE.TorusGeometry(1.8, 0.03, 32, 120);
       const portalMat = new THREE.MeshStandardMaterial({
-        color: 0x7c6cc8,
-        emissive: 0x7c6cc8,
-        emissiveIntensity: 0.45,
-        metalness: 0.6,
-        roughness: 0.3,
+        color: 0x8b6ce8,
+        emissive: 0x8b6ce8,
+        emissiveIntensity: 0.6,
+        metalness: 0.7,
+        roughness: 0.2,
         transparent: true,
-        opacity: 0.55,
+        opacity: 0.65,
       });
       const portal = new THREE.Mesh(portalGeo, portalMat);
-      portal.position.set(0, 0, 1);
+      portal.position.set(0, 0, 0);
       scene.add(portal);
 
       const portalOuterMat = new THREE.MeshStandardMaterial({
-        color: 0x7c6cc8,
-        emissive: 0x7c6cc8,
-        emissiveIntensity: 0.2,
-        metalness: 0.5,
-        roughness: 0.4,
+        color: 0x8b6ce8,
+        emissive: 0x8b6ce8,
+        emissiveIntensity: 0.3,
+        metalness: 0.6,
+        roughness: 0.3,
         transparent: true,
-        opacity: 0.25,
+        opacity: 0.35,
       });
-      const portalOuter = new THREE.Mesh(new THREE.TorusGeometry(1.6, 0.01, 24, 100), portalOuterMat);
-      portalOuter.position.set(0, 0, 1);
+      const portalOuter = new THREE.Mesh(new THREE.TorusGeometry(2.3, 0.012, 32, 120), portalOuterMat);
+      portalOuter.position.set(0, 0, 0);
       scene.add(portalOuter);
 
-      // Portal glow sprite
+      // Third subtle ring for depth
+      const portalInnerMat = new THREE.MeshStandardMaterial({
+        color: 0xa78bfa,
+        emissive: 0xa78bfa,
+        emissiveIntensity: 0.45,
+        metalness: 0.5,
+        roughness: 0.3,
+        transparent: true,
+        opacity: 0.3,
+      });
+      const portalInner = new THREE.Mesh(new THREE.TorusGeometry(1.3, 0.008, 24, 100), portalInnerMat);
+      portalInner.position.set(0, 0, 0);
+      scene.add(portalInner);
+
+      // Portal glow sprite — larger and more intense
       const pGlowC = document.createElement('canvas');
       pGlowC.width = 256;
       pGlowC.height = 256;
       const pgx = pGlowC.getContext('2d')!;
       const pgrd = pgx.createRadialGradient(128, 128, 0, 128, 128, 128);
-      pgrd.addColorStop(0, 'rgba(139,92,246,0.15)');
-      pgrd.addColorStop(0.3, 'rgba(139,92,246,0.05)');
+      pgrd.addColorStop(0, 'rgba(139,92,246,0.25)');
+      pgrd.addColorStop(0.3, 'rgba(139,92,246,0.1)');
+      pgrd.addColorStop(0.6, 'rgba(96,165,250,0.04)');
       pgrd.addColorStop(1, 'rgba(139,92,246,0)');
       pgx.fillStyle = pgrd;
       pgx.fillRect(0, 0, 256, 256);
@@ -144,8 +159,8 @@ export default function HeroScene({ hoverState }: HeroSceneProps) {
         depthWrite: false,
       });
       const pGlow = new THREE.Sprite(pGlowMat);
-      pGlow.scale.set(6, 6, 1);
-      pGlow.position.set(0, 0, 1);
+      pGlow.scale.set(8, 8, 1);
+      pGlow.position.set(0, 0, 0);
       scene.add(pGlow);
 
       let portalPulse = 0;
@@ -296,10 +311,10 @@ export default function HeroScene({ hoverState }: HeroSceneProps) {
 
           const coinMat = new THREE.MeshStandardMaterial({
             color: big ? 0x3388dd : 0x2a75c0,
-            metalness: 0.3,
-            roughness: 0.4,
+            metalness: 0.35,
+            roughness: 0.35,
             emissive: 0x2775ca,
-            emissiveIntensity: big ? 0.15 : 0.1,
+            emissiveIntensity: big ? 0.3 : 0.2,
             transparent: true,
             opacity: 0.95,
           });
@@ -310,12 +325,12 @@ export default function HeroScene({ hoverState }: HeroSceneProps) {
           const faceGeo = new THREE.CircleGeometry(s * 0.91, 48);
           const faceMat = new THREE.MeshStandardMaterial({
             map: usdcFaceTex,
-            metalness: 0.25,
-            roughness: 0.45,
+            metalness: 0.3,
+            roughness: 0.4,
             emissive: 0x1a5090,
-            emissiveIntensity: big ? 0.2 : 0.12,
+            emissiveIntensity: big ? 0.35 : 0.2,
             transparent: true,
-            opacity: big ? 1 : 0.9,
+            opacity: big ? 1 : 0.92,
           });
           this.face = new THREE.Mesh(faceGeo, faceMat);
           this.face.position.z = thick / 2 + 0.001;
@@ -323,12 +338,12 @@ export default function HeroScene({ hoverState }: HeroSceneProps) {
           // Back face
           const backMat = new THREE.MeshStandardMaterial({
             map: usdcFaceTex,
-            metalness: 0.25,
-            roughness: 0.45,
+            metalness: 0.3,
+            roughness: 0.4,
             emissive: 0x1a5090,
-            emissiveIntensity: big ? 0.15 : 0.08,
+            emissiveIntensity: big ? 0.25 : 0.15,
             transparent: true,
-            opacity: big ? 0.9 : 0.75,
+            opacity: big ? 0.92 : 0.8,
           });
           this.back = new THREE.Mesh(faceGeo.clone(), backMat);
           this.back.position.z = -(thick / 2 + 0.001);
@@ -410,7 +425,7 @@ export default function HeroScene({ hoverState }: HeroSceneProps) {
           if (distToCenter < funnelZone) {
             const funnelStrength = 1 - distToCenter / funnelZone;
             const pullY = -this.grp.position.y * funnelStrength * 0.02;
-            const pullZ = (1 - this.grp.position.z) * funnelStrength * 0.015;
+            const pullZ = (0 - this.grp.position.z) * funnelStrength * 0.015;
             this.grp.position.y += pullY;
             this.grp.position.z += pullZ;
           }
@@ -574,15 +589,18 @@ export default function HeroScene({ hoverState }: HeroSceneProps) {
 
         tokens.forEach((tk) => tk.update(spd));
 
-        // Portal animation
-        portal.rotation.z = t * 0.3;
-        portalOuter.rotation.z = -t * 0.15;
-        portalMat.emissiveIntensity = 0.4 + portalPulse * 0.6;
-        portalMat.opacity = 0.5 + portalPulse * 0.25;
-        portalOuterMat.emissiveIntensity = 0.15 + portalPulse * 0.3;
-        portalOuterMat.opacity = 0.2 + portalPulse * 0.15;
-        pGlowMat.opacity = 0.35 + portalPulse * 0.5;
-        pGlow.scale.setScalar(5 + portalPulse * 3);
+        // Portal animation — 3 rings rotating at different speeds
+        portal.rotation.z = t * 0.25;
+        portalOuter.rotation.z = -t * 0.12;
+        portalInner.rotation.z = t * 0.4;
+        portalMat.emissiveIntensity = 0.55 + portalPulse * 0.6 + Math.sin(t * 1.5) * 0.05;
+        portalMat.opacity = 0.65 + portalPulse * 0.25;
+        portalOuterMat.emissiveIntensity = 0.3 + portalPulse * 0.3;
+        portalOuterMat.opacity = 0.35 + portalPulse * 0.15;
+        portalInnerMat.emissiveIntensity = 0.45 + portalPulse * 0.4;
+        portalInnerMat.opacity = 0.3 + portalPulse * 0.2;
+        pGlowMat.opacity = 0.45 + portalPulse * 0.5;
+        pGlow.scale.setScalar(7 + portalPulse * 3);
         portalPulse *= 0.94;
 
         // Dust animation
@@ -611,6 +629,8 @@ export default function HeroScene({ hoverState }: HeroSceneProps) {
         portalMat.dispose();
         portalOuterMat.dispose();
         portalOuter.geometry.dispose();
+        portalInnerMat.dispose();
+        portalInner.geometry.dispose();
         pGlowTex.dispose();
         pGlowMat.dispose();
 
