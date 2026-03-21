@@ -183,9 +183,9 @@ export default function SplitHero() {
 
           {/* Title */}
           <h2 className="hero-title">
-            <span className="hero-word">Pay</span>{' '}
-            <span className="hero-word">and</span>{' '}
-            <span className="hero-word">go.</span>
+            <span className="hero-word">
+              <span>{h.heroAgentTitle1}</span>
+            </span>
             <br />
             <span className="hero-word">
               <span>{h.heroAgentTitle2}</span>
