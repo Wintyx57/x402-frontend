@@ -12,6 +12,7 @@ import GitHubIcon from '../components/icons/GitHubIcon';
 import { BaseLogo, SkaleLogo, PolygonLogo } from '../components/icons/ChainLogos';
 import { VALID_CATEGORIES } from '../data/categories';
 import { trackEvent } from '../lib/analytics';
+import SplitHero from '../components/SplitHero';
 
 // ---- CountUp ----
 function CountUp({ end, duration = 2000, suffix = '', prefix = '' }: {
@@ -293,150 +294,7 @@ export default function Home() {
   return (
     <div>
       {/* ===== HERO ===== */}
-      <section className="relative py-20 sm:py-28 px-4 overflow-hidden">
-        {/* Background glow */}
-        <div
-          aria-hidden="true"
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
-                     w-[700px] h-[500px] bg-[#FF9900]/20 rounded-full blur-[140px] animate-glow-pulse pointer-events-none"
-        />
-        {/* Animated grid */}
-        <FloatingGrid />
-
-        {/* Subtle background video */}
-        <div aria-hidden="true" className="absolute inset-0 pointer-events-none overflow-hidden">
-          <video
-            className="absolute inset-0 w-full h-full object-cover opacity-[0.06]"
-            autoPlay
-            muted
-            playsInline
-            loop
-            preload="none"
-            src="/hero-1.mp4"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#0a0a0a]" />
-        </div>
-
-        <div className="relative z-10 max-w-4xl mx-auto text-center">
-          {/* Badges */}
-          <div className="flex flex-wrap items-center justify-center gap-2 mb-8 animate-fade-in-up">
-            <span className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1 rounded-full
-                             bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
-              <SkaleLogo className="w-3.5 h-3.5 rounded-[4px]" />
-              {t.home.badgeSkale}
-            </span>
-            <span className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1 rounded-full
-                             bg-blue-500/10 border border-blue-500/20 text-blue-400">
-              <BaseLogo className="w-3.5 h-3.5" />
-              {t.home.badgeBase}
-            </span>
-            <span className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1 rounded-full
-                             bg-purple-500/10 border border-purple-500/20 text-purple-400">
-              <PolygonLogo className="w-3.5 h-3.5" />
-              {t.home.badgePolygon || 'Polygon'}
-            </span>
-            <span className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1 rounded-full
-                             bg-[#FF9900]/10 border border-[#FF9900]/20 text-[#FF9900]">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#FF9900] inline-block" />
-              {t.home.badgeX402}
-            </span>
-            <a
-              href="https://github.com/Wintyx57/x402-bazaar"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1 rounded-full
-                         bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:border-white/20 transition-colors no-underline"
-            >
-              <GitHubIcon />
-              {t.home.badgeOpenSource}
-            </a>
-          </div>
-
-          {/* Headline — concis et percutant */}
-          <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold text-white mb-6 animate-fade-in-up delay-100 leading-tight tracking-tight">
-            {t.home.heroTitleNew}
-            <br />
-            <span className="gradient-text">{t.home.heroTitleHighlightNew}</span>
-          </h1>
-
-          {/* Subline — bénéfice immédiat */}
-          <p className="text-gray-400 text-lg sm:text-xl max-w-2xl mx-auto mb-10 animate-fade-in-up delay-200 leading-relaxed">
-            {t.home.heroSubtitle}
-          </p>
-
-          {/* 3 CTAs */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12 animate-fade-in-up delay-200">
-            <Link
-              to="/services"
-              className="gradient-btn text-white text-base font-semibold px-10 py-4 rounded-xl no-underline
-                         transition-all duration-200 hover:brightness-110 hover:scale-[1.02] animate-pulse-glow
-                         shadow-[0_0_24px_rgba(255,153,0,0.25)] w-full sm:w-auto text-center"
-              onClick={() => trackEvent('cta_hero_click', { variant: 'explore' })}
-            >
-              {t.home.exploreCTA.replace('{count}', String(stats?.services || 100))}
-            </Link>
-            <Link
-              to="/register"
-              className="border border-[#FF9900]/40 text-[#FF9900] text-base font-semibold px-8 py-4 rounded-xl no-underline
-                         transition-all duration-200 hover:border-[#FF9900]/70 hover:bg-[#FF9900]/5 bg-transparent
-                         w-full sm:w-auto text-center"
-              onClick={() => trackEvent('cta_hero_click', { variant: 'list' })}
-            >
-              {t.home.listApiCTA}
-            </Link>
-            <Link
-              to="/fund"
-              className="border border-white/20 text-gray-300 text-base font-semibold px-8 py-4 rounded-xl no-underline
-                         transition-all duration-200 hover:border-white/40 hover:text-white hover:bg-white/5 bg-transparent
-                         w-full sm:w-auto text-center inline-flex items-center justify-center gap-2"
-              onClick={() => trackEvent('cta_hero_click', { variant: 'fund' })}
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-              </svg>
-              {t.home.fundCtaBtn}
-            </Link>
-          </div>
-
-          {/* Stats bar — sous les CTAs, pas dans le hero */}
-          <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 animate-fade-in-up delay-300">
-            {[
-              {
-                value: loading ? '70+' : `${services.length > 0 ? services.length : 74}+`,
-                label: 'APIs',
-                color: 'text-[#FF9900]',
-              },
-              { value: '3', label: t.home.heroStatBlockchains || 'Blockchains', color: 'text-blue-400' },
-              { value: '10', label: t.home.statIntegrations || 'Integrations', color: 'text-emerald-400' },
-              { value: '1863', label: t.home.heroStatTests || 'Tests', color: 'text-violet-400' },
-            ].map((stat, i) => (
-              <div key={i} className="flex items-center gap-2">
-                <span className={`text-xl font-bold ${stat.color}`}>{stat.value}</span>
-                <span className="text-gray-500 text-sm">{stat.label}</span>
-                {i < 3 && <span className="text-gray-700 text-lg font-light hidden sm:inline">•</span>}
-              </div>
-            ))}
-          </div>
-
-          {/* Powered by SKALE — visible above the fold */}
-          <div className="flex items-center justify-center gap-3 mt-8 animate-fade-in-up delay-300">
-            <a href="https://skale.space" target="_blank" rel="noopener noreferrer"
-               className="inline-flex items-center gap-3 px-5 py-2.5 rounded-xl
-                          bg-white/5 border border-white/10 hover:border-white/20
-                          transition-all duration-200 no-underline group">
-              <img src="/skale-logo.jpg" alt="SKALE Network" className="w-8 h-8 rounded-lg" />
-              <div className="flex flex-col">
-                <span className="text-xs text-gray-500 leading-none">Powered by</span>
-                <span className="text-sm font-semibold text-white leading-tight">SKALE Network</span>
-              </div>
-              <div className="flex gap-1.5 ml-2">
-                <span className="text-[10px] bg-white/5 text-gray-400 px-2 py-0.5 rounded-md">~$0.0007 gas</span>
-                <span className="text-[10px] bg-white/5 text-gray-400 px-2 py-0.5 rounded-md hidden sm:inline">Instant</span>
-              </div>
-            </a>
-          </div>
-        </div>
-      </section>
+      <SplitHero />
 
 
       {/* Error banner */}
