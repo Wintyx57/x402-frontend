@@ -1314,18 +1314,22 @@ html.light .gradient-btn.text-white {
   backdrop-filter: blur(20px);
   pointer-events: auto;
   cursor: pointer;
-  transition: all .4s cubic-bezier(.16,1,.3,1);
-  animation: hero-fade-up 1s 1s both;
+  transition: background .4s, border-color .4s, box-shadow .4s, color .4s;
+  animation: hero-bridge-enter 1s 1s both;
   letter-spacing: .5px;
   z-index: 15;
   white-space: nowrap;
+}
+
+@keyframes hero-bridge-enter {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 }
 
 .hero-bridge-btn:hover {
   background: rgba(139,92,246,.18);
   border-color: rgba(139,92,246,.4);
   box-shadow: 0 0 30px rgba(139,92,246,.15);
-  transform: translateY(-2px);
   color: #fff;
 }
 

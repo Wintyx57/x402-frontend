@@ -1,6 +1,7 @@
 import { useState, useEffect, lazy, Suspense } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '../i18n/LanguageContext';
+import { usePublicStats } from '../hooks/usePublicStats';
 
 const HeroScene = lazy(() => import('./HeroScene'));
 
@@ -28,15 +29,10 @@ export default function SplitHero() {
   const h = t.home;
 
   const [hoverState, setHoverState] = useState<HoverState>('none');
-  const [txCount, setTxCount] = useState(2847);
+  const { data: stats } = usePublicStats();
 
-  // Live counter — increments every few seconds to simulate real activity
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTxCount(prev => prev + Math.floor(Math.random() * 3));
-    }, 4000);
-    return () => clearInterval(interval);
-  }, []);
+  // Real payment count from API, fallback to 0
+  const txCount = stats?.totalPayments ?? 0;
 
   const heroClass = [
     'hero-split',
