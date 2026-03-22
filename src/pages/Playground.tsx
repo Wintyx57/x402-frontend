@@ -45,7 +45,7 @@ function generateCode(api: Record<string, any>, params: Record<string, string>, 
   const qs = api.params.length > 0
     ? '?' + api.params.map((p: Record<string, any>) => `${p.name}=${encodeURIComponent(params[p.name] || p.defaultValue)}`).join('&')
     : '';
-  const url = `https://x402-api.onrender.com${api.route}${qs}`;
+  const url = `${API_URL}${api.route}${qs}`;
 
   if (tab === 'curl') {
     return `# Step 1: Call the API (returns 402 with payment details)

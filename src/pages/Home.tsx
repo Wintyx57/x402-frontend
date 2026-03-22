@@ -167,7 +167,7 @@ export default function Home() {
 
   useSEO({
     title: 'x402 Bazaar — The API Marketplace for AI Agents',
-    description: 'Pay-per-call APIs with USDC. No API keys. No subscriptions. Built on HTTP 402 protocol. 69+ services on Base & SKALE.',
+    description: 'Pay-per-call APIs with USDC. No API keys. No subscriptions. Built on HTTP 402 protocol. 100+ services on Base & SKALE.',
     keywords: 'x402 protocol, AI agent payments, micropayments API, USDC marketplace, HTTP 402, Base blockchain, MCP server',
   });
 

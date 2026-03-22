@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import CopyButton from './CopyButton';
+import { API_URL } from '../config';
 
 type Lang = 'curl' | 'javascript' | 'python';
 
@@ -9,7 +10,7 @@ interface EmbedSnippetProps {
   chainKey?: string;
 }
 
-const PROXY_BASE = 'https://x402-api.onrender.com/api/call';
+const PROXY_BASE = `${API_URL}/api/call`;
 
 function getSnippet(serviceId: string, lang: Lang, chainKey: string): string {
   const url = `${PROXY_BASE}/${serviceId}`;

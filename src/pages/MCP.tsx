@@ -41,13 +41,19 @@ const CURSOR_CONFIG = `{
 const CLAUDE_CODE_CMD = `claude mcp add x402-bazaar -- node /path/to/x402-bazaar/mcp-server.mjs`;
 
 const tools = [
-  { name: 'discover_marketplace', cost: 'Free', desc_en: 'Discover the marketplace, available endpoints and total services', desc_fr: 'Découvrir la marketplace, endpoints et nombre de services' },
   { name: 'search_services', cost: '0.05 USDC', desc_en: 'Search APIs by keyword (weather, crypto, ai...)', desc_fr: 'Rechercher des APIs par mot-clé (météo, crypto, IA...)' },
   { name: 'list_services', cost: '0.05 USDC', desc_en: 'List the full catalog of available services', desc_fr: 'Lister le catalogue complet des services' },
   { name: 'find_tool_for_task', cost: '0.05 USDC', desc_en: 'Describe what you need in plain English, get the best API ready to call', desc_fr: 'Décrivez votre besoin en langage naturel, obtenez la meilleure API prête à appeler' },
-  { name: 'call_api', cost: 'Free', desc_en: 'Call any external API URL and return the response', desc_fr: 'Appeler une API externe et retourner la réponse' },
-  { name: 'get_wallet_balance', cost: 'Free', desc_en: 'Check agent USDC balance on Base', desc_fr: 'Vérifier le solde USDC de l\'agent sur Base' },
+  { name: 'call_service', cost: 'Variable', desc_en: 'Call a registered marketplace service with automatic payment', desc_fr: 'Appeler un service du marketplace avec paiement automatique' },
+  { name: 'call_api', cost: 'Variable', desc_en: 'Call any external API URL and return the response', desc_fr: 'Appeler une API externe et retourner la réponse' },
+  { name: 'get_wallet_balance', cost: 'Free', desc_en: 'Check agent USDC balance on Base, SKALE or Polygon', desc_fr: 'Vérifier le solde USDC de l\'agent sur Base, SKALE ou Polygon' },
+  { name: 'setup_wallet', cost: 'Free', desc_en: 'Generate or configure agent wallet for payments', desc_fr: 'Générer ou configurer le portefeuille agent pour les paiements' },
+  { name: 'export_private_key', cost: 'Free', desc_en: 'Export the agent wallet private key (use with caution)', desc_fr: 'Exporter la clé privée du portefeuille agent (à utiliser avec précaution)' },
   { name: 'get_budget_status', cost: 'Free', desc_en: 'Check session spending, remaining budget and payment history', desc_fr: 'Vérifier les dépenses de session, budget restant et historique' },
+  { name: 'discover_marketplace', cost: 'Free', desc_en: 'Discover the marketplace, available endpoints and total services', desc_fr: 'Découvrir la marketplace, endpoints et nombre de services' },
+  { name: 'import_openapi', cost: 'Free', desc_en: 'Import an OpenAPI spec to register multiple endpoints at once', desc_fr: 'Importer une spec OpenAPI pour enregistrer plusieurs endpoints d\'un coup' },
+  { name: 'create_payment_link', cost: 'Free', desc_en: 'Create a shareable payment link for any content or URL', desc_fr: 'Créer un lien de paiement partageable pour tout contenu ou URL' },
+  { name: 'access_payment_link', cost: 'Variable', desc_en: 'Pay and access a payment link to reveal its content', desc_fr: 'Payer et accéder à un lien de paiement pour révéler son contenu' },
 ];
 
 const ClaudeIcon = () => (
@@ -100,7 +106,7 @@ export default function MCP() {
 
   useSEO({
     title: 'MCP Server — Connect Claude & Cursor to 70+ Paid APIs',
-    description: 'Use x402 Bazaar as an MCP server. Connect Claude, Cursor or VS Code to 70+ paid APIs. AI agents pay autonomously with USDC on Base or SKALE. Auto-wallet generation, 9 MCP tools, plug-and-play setup.',
+    description: 'Use x402 Bazaar as an MCP server. Connect Claude, Cursor or VS Code to 70+ paid APIs. AI agents pay autonomously with USDC on Base or SKALE. Auto-wallet generation, 13 MCP tools, plug-and-play setup.',
     keywords: 'MCP server x402, Claude MCP marketplace, Cursor MCP integration, AI agent MCP tools, Model Context Protocol payments, MCP USDC, Claude tools marketplace',
   });
 

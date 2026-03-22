@@ -81,8 +81,7 @@ const Analytics = lazy(() => import('./pages/Analytics'));
 const Compare = lazy(() => import('./pages/Compare'));
 const ForProviders = lazy(() => import('./pages/ForProviders'));
 const Budget = lazy(() => import('./pages/Budget'));
-// CreatorDashboard redirected to /my-apis — kept for potential reuse
-// const CreatorDashboard = lazy(() => import('./pages/CreatorDashboard'));
+// CreatorDashboard removed — /creators/dashboard redirects to /my-apis
 const Quickstart = lazy(() => import('./pages/Quickstart'));
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 const FundWallet = lazy(() => import('./pages/FundWallet'));
@@ -91,6 +90,7 @@ const MyApis = lazy(() => import('./pages/MyApis'));
 const LiveAgent = lazy(() => import('./pages/LiveAgent'));
 const ImportOpenAPI = lazy(() => import('./pages/ImportOpenAPI'));
 const Paywall = lazy(() => import('./pages/Paywall'));
+const AdminCommunityAgent = lazy(() => import('./pages/AdminCommunityAgent'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
 export default function App() {
@@ -133,6 +133,7 @@ export default function App() {
             <Route path="/services/:id" element={<ServiceDetail />} />
             <Route path="/import" element={<ImportOpenAPI />} />
             <Route path="/pay/:id" element={<Paywall />} />
+            <Route path="/admin/community-agent" element={<Suspense fallback={<div>Loading...</div>}><AdminCommunityAgent /></Suspense>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
