@@ -438,12 +438,18 @@ export default function ImportOpenAPI() {
             {p.subtitle ||
               'Upload your OpenAPI/Swagger spec and list all endpoints as paid APIs in one click.'}
           </p>
-          <div className="mt-4">
+          <div className="mt-4 flex items-center justify-center gap-4">
             <Link
               to="/register"
               className="text-xs text-gray-500 hover:text-gray-300 transition-colors no-underline"
             >
-              ← Back to Register
+              &larr; Back to Register
+            </Link>
+            <Link
+              to="/import/rapidapi"
+              className="text-xs text-[#60A5FA] hover:text-[#60A5FA]/80 transition-colors no-underline"
+            >
+              Import from RapidAPI &rarr;
             </Link>
           </div>
         </header>

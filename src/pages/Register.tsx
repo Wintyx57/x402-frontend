@@ -651,6 +651,21 @@ export default function Register() {
             </div>
             <div role="listitem">
               <PathCard
+                accent="#60A5FA"
+                glowColor="#60A5FA"
+                icon={
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                }
+                title="Import from RapidAPI"
+                description="Already on RapidAPI? Import your API in seconds with auto-configured credentials. One-click migration."
+                cta="Import RapidAPI"
+                onClick={() => navigate('/import/rapidapi')}
+              />
+            </div>
+            <div role="listitem">
+              <PathCard
                 accent="#A78BFA"
                 glowColor="#A78BFA"
                 icon={
