@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useCallback } from 'react'
 import CarouselCard from './CarouselCard'
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -55,8 +55,9 @@ export default function Carousel3D({
   onIndexChange,
 }: Carousel3DProps) {
   const autoRotateRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const dragStartX = useRef<number | null>(null)
+  const isDragging = useRef(false)
 
-  // ── Auto-rotate via mouseenter / mouseleave ────────────────────────────────
   function startAutoRotate() {
     if (autoRotateRef.current) return
     autoRotateRef.current = setInterval(() => onNavigate(1), 3000)
@@ -69,8 +70,30 @@ export default function Carousel3D({
     }
   }
 
-  // Clean up on unmount
   useEffect(() => () => stopAutoRotate(), [])
+
+  const handlePointerDown = useCallback((e: React.PointerEvent) => {
+    dragStartX.current = e.clientX
+    isDragging.current = false
+    ;(e.currentTarget as HTMLElement).setPointerCapture(e.pointerId)
+    stopAutoRotate()
+  }, [])
+
+  const handlePointerMove = useCallback((e: React.PointerEvent) => {
+    if (dragStartX.current === null) return
+    const diff = e.clientX - dragStartX.current
+    if (Math.abs(diff) > 10) isDragging.current = true
+  }, [])
+
+  const handlePointerUp = useCallback((e: React.PointerEvent) => {
+    if (dragStartX.current === null) return
+    const diff = e.clientX - dragStartX.current
+    if (Math.abs(diff) > 50) {
+      onNavigate(diff < 0 ? 1 : -1)
+    }
+    dragStartX.current = null
+    isDragging.current = false
+  }, [onNavigate])
 
   // ── Container style — collapses when a card is selected ───────────────────
   const containerStyle: React.CSSProperties = {
@@ -81,10 +104,12 @@ export default function Carousel3D({
     height: isCompact ? 0 : 400,
     opacity: isCompact ? 0 : 1,
     pointerEvents: isCompact ? 'none' : 'auto',
-    overflow: 'hidden',
+    overflow: isCompact ? 'hidden' : 'visible',
     position: 'relative',
     marginBottom: isCompact ? 0 : 20,
     transition: 'height 0.5s ease, margin 0.5s ease, opacity 0.5s ease',
+    cursor: 'grab',
+    userSelect: 'none',
   }
 
   // ── Arrow button — glass style ────────────────────────────────────────────
@@ -114,6 +139,9 @@ export default function Carousel3D({
         style={containerStyle}
         onMouseEnter={() => { if (!isCompact) startAutoRotate() }}
         onMouseLeave={stopAutoRotate}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
       >
         {/* Left arrow */}
         <button
@@ -143,7 +171,7 @@ export default function Carousel3D({
             color={card.color}
             isActive={i === currentIndex}
             style={computeCardStyle(i, currentIndex, cards.length)}
-            onClick={() => onSelect(i)}
+            onClick={() => { if (!isDragging.current) onSelect(i) }}
           />
         ))}
 
