@@ -1,9 +1,5 @@
-import React, { useEffect, useRef, useCallback } from 'react'
+import React, { useEffect, useRef, useCallback, useState } from 'react'
 import CarouselCard from './CarouselCard'
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Types
-// ─────────────────────────────────────────────────────────────────────────────
 
 interface CardData {
   title: string
@@ -21,30 +17,20 @@ interface Carousel3DProps {
   onIndexChange: (index: number) => void
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Geometry — trigonometry matching the HTML prototype exactly
-// ─────────────────────────────────────────────────────────────────────────────
+const RADIUS = 320
+const DRAG_THRESHOLD = 50
 
-function computeCardStyle(
-  i: number,
-  currentIndex: number,
-  total: number,
-): React.CSSProperties {
-  const angle = ((i - currentIndex) * (360 / total))
+function computeCardStyle(i: number, current: number, total: number): React.CSSProperties {
+  const angle = ((i - current) * 360) / total
   const rad = (angle * Math.PI) / 180
-  const x = Math.sin(rad) * 310
-  const zPos = Math.cos(rad) * 310 - 310
-  const scale = 0.5 + ((Math.cos(rad) + 1) * 0.25)
-  const zIndex = Math.round(scale * 10)
+  const x = Math.sin(rad) * RADIUS
+  const z = Math.cos(rad) * RADIUS - RADIUS
+  const scale = 0.55 + (Math.cos(rad) + 1) * 0.225
   return {
-    transform: `translateX(${x}px) translateZ(${zPos}px) scale(${scale})`,
-    zIndex,
+    transform: `translateX(${x}px) translateZ(${z}px) scale(${scale})`,
+    zIndex: Math.round(scale * 10),
   }
 }
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Carousel3D
-// ─────────────────────────────────────────────────────────────────────────────
 
 export default function Carousel3D({
   cards,
@@ -56,11 +42,13 @@ export default function Carousel3D({
 }: Carousel3DProps) {
   const autoRotateRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const dragStartX = useRef<number | null>(null)
-  const isDragging = useRef(false)
+  const didDrag = useRef(false)
+  const [leftHover, setLeftHover] = useState(false)
+  const [rightHover, setRightHover] = useState(false)
 
   function startAutoRotate() {
     if (autoRotateRef.current) return
-    autoRotateRef.current = setInterval(() => onNavigate(1), 3000)
+    autoRotateRef.current = setInterval(() => onNavigate(1), 3500)
   }
 
   function stopAutoRotate() {
@@ -72,136 +60,115 @@ export default function Carousel3D({
 
   useEffect(() => () => stopAutoRotate(), [])
 
-  const handlePointerDown = useCallback((e: React.PointerEvent) => {
+  const onPointerDown = useCallback((e: React.PointerEvent) => {
+    if ((e.target as HTMLElement).closest('button[data-arrow]')) return
     dragStartX.current = e.clientX
-    isDragging.current = false
+    didDrag.current = false
     ;(e.currentTarget as HTMLElement).setPointerCapture(e.pointerId)
     stopAutoRotate()
   }, [])
 
-  const handlePointerMove = useCallback((e: React.PointerEvent) => {
+  const onPointerMove = useCallback((e: React.PointerEvent) => {
     if (dragStartX.current === null) return
-    const diff = e.clientX - dragStartX.current
-    if (Math.abs(diff) > 10) isDragging.current = true
+    if (Math.abs(e.clientX - dragStartX.current) > 10) didDrag.current = true
   }, [])
 
-  const handlePointerUp = useCallback((e: React.PointerEvent) => {
+  const onPointerUp = useCallback((e: React.PointerEvent) => {
     if (dragStartX.current === null) return
     const diff = e.clientX - dragStartX.current
-    if (Math.abs(diff) > 50) {
-      onNavigate(diff < 0 ? 1 : -1)
-    }
+    if (Math.abs(diff) > DRAG_THRESHOLD) onNavigate(diff < 0 ? 1 : -1)
     dragStartX.current = null
-    isDragging.current = false
+    setTimeout(() => { didDrag.current = false }, 0)
   }, [onNavigate])
 
-  // ── Container style — collapses when a card is selected ───────────────────
-  const containerStyle: React.CSSProperties = {
-    perspective: '1400px',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: isCompact ? 0 : 400,
-    opacity: isCompact ? 0 : 1,
-    pointerEvents: isCompact ? 'none' : 'auto',
-    overflow: isCompact ? 'hidden' : 'visible',
-    position: 'relative',
-    marginBottom: isCompact ? 0 : 20,
-    transition: 'height 0.5s ease, margin 0.5s ease, opacity 0.5s ease',
-    cursor: 'grab',
-    userSelect: 'none',
-  }
+  if (isCompact) return null
 
-  // ── Arrow button — glass style ────────────────────────────────────────────
-  const arrowBase: React.CSSProperties = {
-    position: 'absolute',
+  const arrowStyle = (side: 'left' | 'right', hovered: boolean): React.CSSProperties => ({
+    position: 'absolute' as const,
     top: '50%',
     transform: 'translateY(-50%)',
-    width: 42,
-    height: 42,
+    [side]: 16,
+    width: 48,
+    height: 48,
     borderRadius: '50%',
-    background: 'rgba(255,255,255,0.03)',
-    border: '1px solid rgba(255,255,255,0.06)',
-    color: '#8b8f96',
-    fontSize: 18,
+    background: hovered ? 'rgba(255,153,0,0.12)' : 'rgba(255,255,255,0.04)',
+    border: hovered ? '1px solid rgba(255,153,0,0.3)' : '1px solid rgba(255,255,255,0.08)',
+    color: hovered ? '#FF9900' : '#9ca3af',
+    fontSize: 22,
+    fontWeight: 300,
     cursor: 'pointer',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    zIndex: 10,
-    transition: 'background 0.3s, color 0.3s',
-  }
+    zIndex: 20,
+    transition: 'all 0.25s ease',
+    backdropFilter: 'blur(8px)',
+    boxShadow: hovered ? '0 0 20px rgba(255,153,0,0.1)' : 'none',
+  })
 
   return (
     <div>
-      {/* ── 3D carousel container ─────────────────────────────────────────── */}
       <div
-        style={containerStyle}
-        onMouseEnter={() => { if (!isCompact) startAutoRotate() }}
+        style={{
+          position: 'relative',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: 420,
+          marginBottom: 20,
+          cursor: 'grab',
+          userSelect: 'none',
+        }}
+        onMouseEnter={startAutoRotate}
         onMouseLeave={stopAutoRotate}
-        onPointerDown={handlePointerDown}
-        onPointerMove={handlePointerMove}
-        onPointerUp={handlePointerUp}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerUp}
       >
-        {/* Left arrow */}
+        {/* Left arrow — inside the container, not overflowing */}
         <button
+          data-arrow="left"
           aria-label="Previous"
-          style={{ ...arrowBase, left: -60 }}
-          onClick={() => onNavigate(-1)}
-          onMouseEnter={e => {
-            ;(e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.06)'
-            ;(e.currentTarget as HTMLButtonElement).style.color = '#e5e7eb'
-          }}
-          onMouseLeave={e => {
-            ;(e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.03)'
-            ;(e.currentTarget as HTMLButtonElement).style.color = '#8b8f96'
-          }}
+          style={arrowStyle('left', leftHover)}
+          onMouseEnter={() => setLeftHover(true)}
+          onMouseLeave={() => setLeftHover(false)}
+          onClick={(e) => { e.stopPropagation(); onNavigate(-1) }}
         >
-          &#8249;
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M15 18l-6-6 6-6" /></svg>
         </button>
 
-        {/* Cards — laid out on a circle via transform */}
-        {cards.map((card, i) => (
-          <CarouselCard
-            key={i}
-            index={i}
-            title={card.title}
-            description={card.description}
-            badge={card.badge}
-            color={card.color}
-            isActive={i === currentIndex}
-            style={computeCardStyle(i, currentIndex, cards.length)}
-            onClick={() => { if (!isDragging.current) onSelect(i) }}
-          />
-        ))}
+        {/* 3D scene */}
+        <div style={{ perspective: '1400px', position: 'relative', width: 320, height: 360, transformStyle: 'preserve-3d' }}>
+          {cards.map((card, i) => (
+            <CarouselCard
+              key={i}
+              index={i}
+              title={card.title}
+              description={card.description}
+              badge={card.badge}
+              color={card.color}
+              isActive={i === currentIndex}
+              style={computeCardStyle(i, currentIndex, cards.length)}
+              onClick={() => { if (!didDrag.current) onSelect(i) }}
+            />
+          ))}
+        </div>
 
         {/* Right arrow */}
         <button
+          data-arrow="right"
           aria-label="Next"
-          style={{ ...arrowBase, right: -60 }}
-          onClick={() => onNavigate(1)}
-          onMouseEnter={e => {
-            ;(e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.06)'
-            ;(e.currentTarget as HTMLButtonElement).style.color = '#e5e7eb'
-          }}
-          onMouseLeave={e => {
-            ;(e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.03)'
-            ;(e.currentTarget as HTMLButtonElement).style.color = '#8b8f96'
-          }}
+          style={arrowStyle('right', rightHover)}
+          onMouseEnter={() => setRightHover(true)}
+          onMouseLeave={() => setRightHover(false)}
+          onClick={(e) => { e.stopPropagation(); onNavigate(1) }}
         >
-          &#8250;
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M9 18l6-6-6-6" /></svg>
         </button>
       </div>
 
-      {/* ── Dot navigation ───────────────────────────────────────────────── */}
-      <div
-        style={{
-          display: isCompact ? 'none' : 'flex',
-          justifyContent: 'center',
-          gap: 10,
-          marginBottom: 32,
-        }}
-      >
+      {/* Dots */}
+      <div style={{ display: 'flex', justifyContent: 'center', gap: 10, marginBottom: 32 }}>
         {cards.map((_, i) => (
           <button
             key={i}
