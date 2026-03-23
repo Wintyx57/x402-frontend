@@ -64,21 +64,22 @@ export default function Carousel3D({
     if ((e.target as HTMLElement).closest('button[data-arrow]')) return
     dragStartX.current = e.clientX
     didDrag.current = false
-    ;(e.currentTarget as HTMLElement).setPointerCapture(e.pointerId)
     stopAutoRotate()
   }, [])
 
   const onPointerMove = useCallback((e: React.PointerEvent) => {
     if (dragStartX.current === null) return
-    if (Math.abs(e.clientX - dragStartX.current) > 10) didDrag.current = true
+    if (Math.abs(e.clientX - dragStartX.current) > 15) didDrag.current = true
   }, [])
 
   const onPointerUp = useCallback((e: React.PointerEvent) => {
     if (dragStartX.current === null) return
     const diff = e.clientX - dragStartX.current
-    if (Math.abs(diff) > DRAG_THRESHOLD) onNavigate(diff < 0 ? 1 : -1)
     dragStartX.current = null
-    setTimeout(() => { didDrag.current = false }, 0)
+    if (didDrag.current && Math.abs(diff) > DRAG_THRESHOLD) {
+      onNavigate(diff < 0 ? 1 : -1)
+    }
+    didDrag.current = false
   }, [onNavigate])
 
   if (isCompact) return null
