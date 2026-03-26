@@ -106,12 +106,12 @@ function ServiceCard({
   const { t } = useTranslation();
   const isFree = Number(service.price_usdc) === 0;
   const price = Number(service.price_usdc) || 0;
-  const isFreeTierEligible = !isFree && !service.owner_address && price <= 0.01;
+  const isNative = service.url?.startsWith("https://x402-api.onrender.com");
+  const isFreeTierEligible = !isFree && isNative && price > 0 && price <= 0.01;
   const initial = service.name?.charAt(0)?.toUpperCase() || "?";
   const domain = getDomain(service.url);
   const [imgError, setImgError] = useState(false);
   const [copied, setCopied] = useState(false);
-  const isNative = service.url?.startsWith("https://x402-api.onrender.com");
   const quality = getQualityTier(uptimePercent);
   const trustBadge = getTrustBadge(service.trust_score);
   const isNew = isNewService(service.created_at);
