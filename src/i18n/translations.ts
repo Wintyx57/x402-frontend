@@ -36,6 +36,10 @@ export const translations = {
       listYourApiCta: "List Your API — 95% Revenue",
       importOpenAPI: "Import OpenAPI",
       paymentLinks: "Payment Links",
+      freeBadge: "Free",
+      freeBannerHighlight: "95 APIs",
+      freeBannerText: "available without wallet — 5 calls/day",
+      freeBannerLink: "Explore",
     },
     importOpenAPI: {
       title: "Import OpenAPI Spec",
@@ -2245,6 +2249,10 @@ def my_function(query: str) -> dict:
       listYourApiCta: "Lister votre API — 95% Revenue",
       importOpenAPI: "Importer OpenAPI",
       paymentLinks: "Liens de paiement",
+      freeBadge: "Gratuit",
+      freeBannerHighlight: "95 APIs",
+      freeBannerText: "disponibles sans wallet — 5 appels/jour",
+      freeBannerLink: "Explorer",
     },
     importOpenAPI: {
       title: "Importer une spec OpenAPI",
