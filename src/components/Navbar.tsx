@@ -514,7 +514,7 @@ function Navbar() {
               "available without wallet \u2014 5 calls/day"}
           </span>
           <Link
-            to="/services?filter=cheap"
+            to="/services?filter=free-trial"
             className="text-[12px] text-[#34D399] no-underline font-medium hover:text-[#6EE7B7] transition-colors"
           >
             {(t.nav as Record<string, string>).freeBannerLink || "Explore"}
