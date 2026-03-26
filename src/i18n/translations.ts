@@ -39,7 +39,8 @@ export const translations = {
     },
     importOpenAPI: {
       title: "Import OpenAPI Spec",
-      subtitle: "Upload your OpenAPI/Swagger spec and list all endpoints as paid APIs in one click.",
+      subtitle:
+        "Upload your OpenAPI/Swagger spec and list all endpoints as paid APIs in one click.",
       stepUpload: "Upload",
       stepPreview: "Preview",
       stepConfigure: "Configure",
@@ -76,17 +77,20 @@ export const translations = {
       parseError: "Failed to parse spec",
       importError: "Import failed",
       importTitle: "Have an OpenAPI spec?",
-      importDesc: "Import all your endpoints at once. Upload your OpenAPI/Swagger spec and list 100+ APIs in 2 minutes.",
+      importDesc:
+        "Import all your endpoints at once. Upload your OpenAPI/Swagger spec and list 100+ APIs in 2 minutes.",
       importCta: "Import Spec",
     },
     importRapidapi: {
       title: "Import from RapidAPI",
-      subtitle: "Import any RapidAPI API in seconds. Credentials auto-configured.",
+      subtitle:
+        "Import any RapidAPI API in seconds. Credentials auto-configured.",
       step1: "Upload & Key",
       step2: "Preview",
       step3: "Import",
       uploadSpec: "Upload your OpenAPI spec",
-      uploadHint: "Download your API spec from RapidAPI: API Dashboard > Definitions > Download API Spec",
+      uploadHint:
+        "Download your API spec from RapidAPI: API Dashboard > Definitions > Download API Spec",
       rapidapiKey: "X-RapidAPI-Key",
       rapidapiKeyHint: "Find it at rapidapi.com/developer/apps",
       detected: "RapidAPI Detected",
@@ -149,6 +153,7 @@ export const translations = {
       verifiedOnChain: "Verified on-chain",
       verified: "Verified",
       free: "Free",
+      freeToTry: "Free to try",
       viewApi: "View API",
       useWithAI: "Use with AI",
       copied: "Copied!",
@@ -165,7 +170,8 @@ export const translations = {
     home: {
       heroTitle: "APIs that pay",
       heroTitleHighlight: "themselves.",
-      heroSubtitle: "No API keys. No subscriptions. AI agents discover, call and pay APIs in USDC — automatically.",
+      heroSubtitle:
+        "No API keys. No subscriptions. AI agents discover, call and pay APIs in USDC — automatically.",
       searchPlaceholder: "Search GPT, translation, weather, crypto...",
       searchBtn: "Search",
       apis: "APIs",
@@ -190,24 +196,30 @@ export const translations = {
       },
       howItWorks: "How it works",
       step1Title: "Call an API",
-      step1Desc: "Your agent calls any endpoint. If it's paid, the server responds HTTP 402 with the price.",
+      step1Desc:
+        "Your agent calls any endpoint. If it's paid, the server responds HTTP 402 with the price.",
       step2Title: "Pay USDC on SKALE",
-      step2Desc: "Transfer the exact amount. Ultra-low gas (~$0.0007) on SKALE.",
+      step2Desc:
+        "Transfer the exact amount. Ultra-low gas (~$0.0007) on SKALE.",
       step3Title: "Access Granted",
-      step3Desc: "Resend your request with the tx hash in the header. Verified on-chain, access granted.",
+      step3Desc:
+        "Resend your request with the tx hash in the header. Verified on-chain, access granted.",
       freeApisTitle: "Free APIs to get started",
       premiumApisTitle: "Premium AI & Data APIs",
       servicesListed: "Services Listed",
       paymentsVerified: "Payments Verified",
       totalVolume: "Total Volume",
       categoriesCount: "Categories",
-      cliHint: "One command to connect your AI agent. Works in any terminal, including IDE terminals.",
+      cliHint:
+        "One command to connect your AI agent. Works in any terminal, including IDE terminals.",
       ctaTitle: "List your API on x402 Bazaar",
-      ctaDesc: "Join the autonomous marketplace. Your API accessible to thousands of AI agents worldwide.",
+      ctaDesc:
+        "Join the autonomous marketplace. Your API accessible to thousands of AI agents worldwide.",
       listYourApi: "List Your API",
       integrateAgent: "Integrate Your Agent",
       providerTitle: "API Provider? Monetize in 5 minutes",
-      providerDesc: "Use our Python template to turn any function into a paid API. One decorator, USDC payments, on-chain verification.",
+      providerDesc:
+        "Use our Python template to turn any function into a paid API. One decorator, USDC payments, on-chain verification.",
       providerBtn: "Get the Template",
       trustBarLabel: "Built on",
       exploreCTA: "Browse {count}+ APIs",
@@ -218,18 +230,23 @@ export const translations = {
       readDocsCTA: "Read the docs",
       avgTransaction: "Avg. Transaction",
       onSkale: "on SKALE",
-      footerDesc: "The autonomous marketplace where AI agents discover, pay for, and consume API services using the HTTP 402 protocol on SKALE, Base & Polygon.",
+      footerDesc:
+        "The autonomous marketplace where AI agents discover, pay for, and consume API services using the HTTP 402 protocol on SKALE, Base & Polygon.",
       footerProduct: "Product",
       footerResources: "Resources",
       valueProTitle: "Why x402 Bazaar?",
       valuePro1Title: "No Accounts",
-      valuePro1Desc: "Agents don't need API keys or signups. Just HTTP requests and USDC.",
+      valuePro1Desc:
+        "Agents don't need API keys or signups. Just HTTP requests and USDC.",
       valuePro2Title: "Pay Per Request",
-      valuePro2Desc: "From $0.005 per call. No subscriptions, no minimums, no billing code.",
+      valuePro2Desc:
+        "From $0.005 per call. No subscriptions, no minimums, no billing code.",
       valuePro3Title: "On-Chain Verified",
-      valuePro3Desc: "Every payment cryptographically verified on SKALE, Base or Polygon. Zero trust required.",
+      valuePro3Desc:
+        "Every payment cryptographically verified on SKALE, Base or Polygon. Zero trust required.",
       valuePro4Title: "Ultra-low Gas Fees",
-      valuePro4Desc: "Use SKALE on Base for nearly gas-free (~$0.0007/tx) transactions.",
+      valuePro4Desc:
+        "Use SKALE on Base for nearly gas-free (~$0.0007/tx) transactions.",
       socialProofTitle: "Trusted Infrastructure",
       socialProof1: "Built on Coinbase's x402 Protocol",
       socialProof2: "100% Open Source",
@@ -248,7 +265,8 @@ export const translations = {
       // New hero keys
       heroTitleNew: "The API Marketplace for",
       heroTitleHighlightNew: "AI Agents",
-      heroSubtitleNew: "Pay-per-call with USDC. No API keys. No subscriptions. Just HTTP 402.",
+      heroSubtitleNew:
+        "Pay-per-call with USDC. No API keys. No subscriptions. Just HTTP 402.",
       badgeBase: "Built on SKALE",
       badgeX402: "Powered by x402",
       badgeSkale: "SKALE Ultra-low Gas",
@@ -271,13 +289,15 @@ export const translations = {
       whyLabel: "Why x402",
       integrationsLabel: "Integrations",
       integrationsTitle: "Works everywhere AI agents run",
-      integrationsSubtitle: "7 platforms, one marketplace. Your agent, your tools.",
+      integrationsSubtitle:
+        "7 platforms, one marketplace. Your agent, your tools.",
       tractionLabel: "Traction",
       tractionTitle: "Real usage, real payments, real providers",
       tractionPayments: "Payments processed on-chain",
       tractionProviders: "External providers earning revenue",
       tractionVolume: "On-chain USDC volume",
-      testimonialQuote: "Integrated our API in under 10 minutes. Instant USDC payments, 95% revenue share — exactly what we needed.",
+      testimonialQuote:
+        "Integrated our API in under 10 minutes. Instant USDC payments, 95% revenue share — exactly what we needed.",
       testimonialAuthor: "Interzoid, Data API Provider",
       // Code snippet
       codeSnippetLabel: "x402 payment flow example",
@@ -285,16 +305,20 @@ export const translations = {
       errorLoadServices: "Failed to load services. Please try again later.",
       // Final CTA
       finalCtaTitle: "Start building with x402 Bazaar",
-      finalCtaDesc: "Join the autonomous marketplace. Your AI agent deserves APIs that pay themselves.",
+      finalCtaDesc:
+        "Join the autonomous marketplace. Your AI agent deserves APIs that pay themselves.",
       integrateTitle: "Integrate your AI Agent",
-      integrateDesc: "Connect Claude, ChatGPT, or any LangChain agent in minutes via MCP, CLI, or REST.",
+      integrateDesc:
+        "Connect Claude, ChatGPT, or any LangChain agent in minutes via MCP, CLI, or REST.",
       fundCta: "Fund Your Wallet",
-      fundCtaDesc: "Bridge USDC from any chain to SKALE in 1 click — ultra-low gas fees (~$0.0007/tx)",
+      fundCtaDesc:
+        "Bridge USDC from any chain to SKALE in 1 click — ultra-low gas fees (~$0.0007/tx)",
       fundCtaBtn: "Fund Wallet",
       providerCtaInline: "API Provider? Monetize any URL in 10 seconds",
       partnerLabel: "Strategic Partner",
       partnerTitle: "Powered by SKALE Network",
-      partnerDesc: "x402 Bazaar runs on SKALE Network — delivering ultra-low gas fees (~$0.0007/tx) and instant finality for AI agent micropayments at scale.",
+      partnerDesc:
+        "x402 Bazaar runs on SKALE Network — delivering ultra-low gas fees (~$0.0007/tx) and instant finality for AI agent micropayments at scale.",
       partnerFeature1: "~$0.0007 gas",
       partnerFeature2: "Instant Finality",
       partnerFeature3: "Ethereum Native",
@@ -304,12 +328,14 @@ export const translations = {
       heroProviderTitle1: "Monetize",
       heroProviderTitle2: "any API",
       heroProviderTitle3: "in 2 min.",
-      heroProviderDesc: "No SDK. No code change. Wrap your endpoint and start earning USDC on every call.",
+      heroProviderDesc:
+        "No SDK. No code change. Wrap your endpoint and start earning USDC on every call.",
       heroProviderStat1: "103 APIs",
       heroProviderStat2: "95% revenue",
       heroProviderCta: "List your API",
       heroProviderRevealTitle: "AES-256 encrypted credentials",
-      heroProviderRevealDesc: "— list authenticated APIs securely. Keys decrypted only at request time.",
+      heroProviderRevealDesc:
+        "— list authenticated APIs securely. Keys decrypted only at request time.",
       heroProviderRevealHighlight: "95%",
       heroProviderRevealEnd: "revenue goes to you.",
       heroProviderRevenue: "Monthly revenue",
@@ -317,7 +343,8 @@ export const translations = {
       heroAgentTitle1: "Pay and go.",
       heroAgentTitle2: "No keys.",
       heroAgentTitle3: "No subscriptions.",
-      heroAgentDesc: "Discover APIs, pay in USDC per call, get instant results. One HTTP request.",
+      heroAgentDesc:
+        "Discover APIs, pay in USDC per call, get instant results. One HTTP request.",
       heroAgentStat1: "$0.00 gas",
       heroAgentStat2: "3 chains",
       heroAgentCta: "Browse APIs",
@@ -363,7 +390,8 @@ export const translations = {
     },
     faq: {
       title: "Frequently Asked Questions",
-      subtitle: "Everything you need to know about x402 Bazaar, payments, and integration.",
+      subtitle:
+        "Everything you need to know about x402 Bazaar, payments, and integration.",
       sectionGeneral: "General",
       sectionPayments: "Payments & Pricing",
       sectionTechnical: "Technical",
@@ -409,24 +437,30 @@ export const translations = {
     },
     demos: {
       title: "Demos & Use Cases",
-      subtitle: "See how AI agents use x402 Bazaar to chain multiple APIs autonomously.",
+      subtitle:
+        "See how AI agents use x402 Bazaar to chain multiple APIs autonomously.",
       featuredTitle: "Autonomous Agent Demo",
-      featuredDesc: "An AI agent that discovers services, pays USDC automatically, and chains multiple API calls to complete complex tasks — all without human intervention.",
+      featuredDesc:
+        "An AI agent that discovers services, pays USDC automatically, and chains multiple API calls to complete complex tasks — all without human intervention.",
       scenariosTitle: "Multi-API Scenarios",
       scenario1Title: "Research Agent",
-      scenario1Desc: "Searches the web, scrapes relevant pages, and compiles a summary report on any topic.",
+      scenario1Desc:
+        "Searches the web, scrapes relevant pages, and compiles a summary report on any topic.",
       scenario1Flow: "search → scrape → summarize",
       scenario1Cost: "$0.015 per query",
       scenario2Title: "Social Monitor",
-      scenario2Desc: "Tracks Twitter mentions, analyzes sentiment, and generates alerts for trending topics.",
+      scenario2Desc:
+        "Tracks Twitter mentions, analyzes sentiment, and generates alerts for trending topics.",
       scenario2Flow: "twitter search → scrape profiles → analyze",
       scenario2Cost: "$0.015 per scan",
       scenario3Title: "Content Creator",
-      scenario3Desc: "Generates images, writes content based on web research, and publishes to multiple platforms.",
+      scenario3Desc:
+        "Generates images, writes content based on web research, and publishes to multiple platforms.",
       scenario3Flow: "search → image gen → scrape → compose",
       scenario3Cost: "$0.065 per piece",
       scenario4Title: "Financial Analyst",
-      scenario4Desc: "Fetches real-time crypto prices, weather data for commodity analysis, and news for market context.",
+      scenario4Desc:
+        "Fetches real-time crypto prices, weather data for commodity analysis, and news for market context.",
       scenario4Flow: "crypto → weather → search → report",
       scenario4Cost: "$0.045 per analysis",
       ctaButton: "Build Your Own Agent",
@@ -438,14 +472,16 @@ export const translations = {
     },
     analytics: {
       title: "Marketplace Analytics",
-      subtitle: "Real-time insights into x402 Bazaar activity, payments, and service usage.",
+      subtitle:
+        "Real-time insights into x402 Bazaar activity, payments, and service usage.",
       totalRevenue: "Total Revenue",
       totalTransactions: "Total Transactions",
       totalServices: "Total Services",
       dailyVolumeTitle: "Daily Payment Volume",
       topServicesTitle: "Top Services by Calls",
       cumulativeRevenueTitle: "Cumulative Revenue",
-      noData: "No analytics data available yet. Analytics will populate as payments and API calls are made.",
+      noData:
+        "No analytics data available yet. Analytics will populate as payments and API calls are made.",
       live: "Live",
       treasuryBalance: "Treasury Balance",
       walletAddress: "Wallet Address",
@@ -489,7 +525,8 @@ export const translations = {
     compare: {
       badge: "Comparison",
       title: "x402 Bazaar vs RapidAPI",
-      subtitle: "Built for AI agents, not adapted for them. See the difference.",
+      subtitle:
+        "Built for AI agents, not adapted for them. See the difference.",
       featureCol: "Feature",
       feature_agentSupport: "Native AI Agent Support",
       feature_payPerCall: "True Pay-Per-Call",
@@ -504,49 +541,68 @@ export const translations = {
       feature_listingFee: "Listing Fee",
       feature_minSpend: "Minimum Spend",
       win1Title: "Agent-First",
-      win1Desc: "The only marketplace designed for autonomous AI agents. No credit card needed — agents pay with USDC wallets.",
+      win1Desc:
+        "The only marketplace designed for autonomous AI agents. No credit card needed — agents pay with USDC wallets.",
       win2Title: "Pay Per Call",
-      win2Desc: "No subscriptions, no minimums. Your agent pays exactly what it uses — $0.003 to $0.05 per call.",
+      win2Desc:
+        "No subscriptions, no minimums. Your agent pays exactly what it uses — $0.003 to $0.05 per call.",
       win3Title: "Transparent",
-      win3Desc: "Every payment is on-chain, verifiable, auditable. No hidden fees, no surprise bills.",
+      win3Desc:
+        "Every payment is on-chain, verifiable, auditable. No hidden fees, no surprise bills.",
       win4Title: "Fast Onboarding",
-      win4Desc: "2 minutes to start. One CLI command: npx x402-bazaar init. No account creation needed.",
+      win4Desc:
+        "2 minutes to start. One CLI command: npx x402-bazaar init. No account creation needed.",
       win5Title: "95% Revenue",
-      win5Desc: "API creators keep 95% of revenue vs 75% on RapidAPI. Better economics for everyone.",
+      win5Desc:
+        "API creators keep 95% of revenue vs 75% on RapidAPI. Better economics for everyone.",
       win6Title: "Multi-Chain",
-      win6Desc: "Base mainnet + SKALE (ultra-low gas) + Polygon. Choose the network that fits your needs.",
+      win6Desc:
+        "Base mainnet + SKALE (ultra-low gas) + Polygon. Choose the network that fits your needs.",
       ctaTitle: "Ready to switch?",
-      ctaDesc: "Join the marketplace built for the future of AI agent commerce.",
+      ctaDesc:
+        "Join the marketplace built for the future of AI agent commerce.",
       ctaExplore: "Explore APIs",
       ctaIntegrate: "Start Integrating",
     },
     forProviders: {
       badge: "For Providers",
       title: "Monetize Your API with x402",
-      subtitle: "List your API, reach AI agents worldwide, and earn 95% of revenue. No setup fees, no monthly charges.",
+      subtitle:
+        "List your API, reach AI agents worldwide, and earn 95% of revenue. No setup fees, no monthly charges.",
       howItWorks: "How It Works",
       step1Title: "Submit Your API Spec",
-      step1Desc: "Provide your API endpoint URL, parameters, and desired price in USDC. Use our JSON template below.",
+      step1Desc:
+        "Provide your API endpoint URL, parameters, and desired price in USDC. Use our JSON template below.",
       step2Title: "Verification",
-      step2Desc: "We test your API for latency, error rates, and reliability. You approve the listing before it goes live.",
+      step2Desc:
+        "We test your API for latency, error rates, and reliability. You approve the listing before it goes live.",
       step3Title: "Payment Setup",
-      step3Desc: "Provide your wallet address to receive USDC payments. We configure the 95/5 revenue split automatically.",
+      step3Desc:
+        "Provide your wallet address to receive USDC payments. We configure the 95/5 revenue split automatically.",
       step4Title: "Go Live",
-      step4Desc: "Your API appears on x402bazaar.org. AI agents can discover and pay for it immediately.",
+      step4Desc:
+        "Your API appears on x402bazaar.org. AI agents can discover and pay for it immediately.",
       step5Title: "Earn Revenue",
-      step5Desc: "Agents call your API, pay in USDC, and 95% goes directly to your wallet. Track earnings in real-time.",
+      step5Desc:
+        "Agents call your API, pay in USDC, and 95% goes directly to your wallet. Track earnings in real-time.",
       benefit1Title: "95% Revenue Share",
-      benefit1Desc: "Keep 95% of every payment. Only 5% platform fee — far less than RapidAPI's 25%.",
+      benefit1Desc:
+        "Keep 95% of every payment. Only 5% platform fee — far less than RapidAPI's 25%.",
       benefit2Title: "Global AI Audience",
-      benefit2Desc: "Reach thousands of AI agents using Claude, ChatGPT, LangChain, Auto-GPT and more.",
+      benefit2Desc:
+        "Reach thousands of AI agents using Claude, ChatGPT, LangChain, Auto-GPT and more.",
       benefit3Title: "Zero Infrastructure",
-      benefit3Desc: "We handle hosting, payment processing, monitoring, and documentation. You just keep your API running.",
+      benefit3Desc:
+        "We handle hosting, payment processing, monitoring, and documentation. You just keep your API running.",
       benefit4Title: "Instant Payments",
-      benefit4Desc: "Get paid in USDC on Base mainnet. No invoicing, no net-30. Payments are instant and on-chain.",
+      benefit4Desc:
+        "Get paid in USDC on Base mainnet. No invoicing, no net-30. Payments are instant and on-chain.",
       benefit5Title: "Analytics & Monitoring",
-      benefit5Desc: "Real-time monitoring (5-min checks), uptime tracking, and Telegram alerts for your API.",
+      benefit5Desc:
+        "Real-time monitoring (5-min checks), uptime tracking, and Telegram alerts for your API.",
       benefit6Title: "9 Platform Integrations",
-      benefit6Desc: "Your API is accessible from MCP (Claude), ChatGPT Actions, CLI, LangChain, Telegram, Auto-GPT, n8n, and more.",
+      benefit6Desc:
+        "Your API is accessible from MCP (Claude), ChatGPT Actions, CLI, LangChain, Telegram, Auto-GPT, n8n, and more.",
       specTitle: "API Specification Template",
       specDesc: "Send us this JSON with your API details. We handle the rest.",
       flowTitle: "Payment Flow",
@@ -555,7 +611,8 @@ export const translations = {
       flowCalls: "Calls Your API",
       flowEarns: "95% to You",
       ctaTitle: "Ready to monetize?",
-      ctaDesc: "Register your API in 2 minutes. Start earning from AI agent traffic today.",
+      ctaDesc:
+        "Register your API in 2 minutes. Start earning from AI agent traffic today.",
       ctaRegister: "Register Your API",
       ctaGithub: "View on GitHub",
     },
@@ -563,7 +620,8 @@ export const translations = {
       badge: "Creator Portal",
       title: "Monetize Your API,",
       titleHighlight: "Reach AI Agents",
-      subtitle: "Join the first autonomous API marketplace. List your API, set your price in USDC, and earn 95% revenue from AI agent traffic worldwide.",
+      subtitle:
+        "Join the first autonomous API marketplace. List your API, set your price in USDC, and earn 95% revenue from AI agent traffic worldwide.",
       ctaRegister: "Become a Provider",
       ctaDashboard: "View Dashboard",
       ctaOnboarding: "Read the Guide",
@@ -573,28 +631,38 @@ export const translations = {
       statGas: "Gas Cost",
       whyTitle: "Why List on x402 Bazaar?",
       vp1Title: "95% Revenue Share",
-      vp1Desc: "Keep 95% of every payment. Only 5% platform fee — far less than RapidAPI's 25%.",
+      vp1Desc:
+        "Keep 95% of every payment. Only 5% platform fee — far less than RapidAPI's 25%.",
       vp2Title: "2-Minute Onboarding",
-      vp2Desc: "Register your API in under 2 minutes. No paperwork, no approval process, no setup fees.",
+      vp2Desc:
+        "Register your API in under 2 minutes. No paperwork, no approval process, no setup fees.",
       vp3Title: "Blockchain Audit Trail",
-      vp3Desc: "Every payment is verifiable on-chain. Complete transparency, zero disputes.",
+      vp3Desc:
+        "Every payment is verifiable on-chain. Complete transparency, zero disputes.",
       vp4Title: "Global AI Reach",
-      vp4Desc: "Your API is discoverable by thousands of AI agents on Claude, ChatGPT, LangChain, and more.",
+      vp4Desc:
+        "Your API is discoverable by thousands of AI agents on Claude, ChatGPT, LangChain, and more.",
       vp5Title: "9 Platform Integrations",
-      vp5Desc: "Auto-distributed to MCP, ChatGPT, CLI, LangChain, Telegram, Auto-GPT, n8n, and more.",
+      vp5Desc:
+        "Auto-distributed to MCP, ChatGPT, CLI, LangChain, Telegram, Auto-GPT, n8n, and more.",
       vp6Title: "Zero Infrastructure",
-      vp6Desc: "We handle monitoring, documentation, payment processing. You just keep your API running.",
+      vp6Desc:
+        "We handle monitoring, documentation, payment processing. You just keep your API running.",
       howTitle: "How It Works",
       howStep1Title: "Register Your API",
-      howStep1Desc: "Fill in your API details, set your price, and sign with your wallet to verify ownership.",
+      howStep1Desc:
+        "Fill in your API details, set your price, and sign with your wallet to verify ownership.",
       howStep2Title: "Get Discovered",
-      howStep2Desc: "Your API appears on the marketplace and is auto-distributed to 9 platforms (MCP, ChatGPT, CLI, n8n...).",
+      howStep2Desc:
+        "Your API appears on the marketplace and is auto-distributed to 9 platforms (MCP, ChatGPT, CLI, n8n...).",
       howStep3Title: "Get Paid in USDC",
-      howStep3Desc: "AI agents call your API and pay USDC directly to your wallet. 95% goes to you, instantly on-chain.",
+      howStep3Desc:
+        "AI agents call your API and pay USDC directly to your wallet. 95% goes to you, instantly on-chain.",
       stepLabel: "Step",
       compareTitle: "Revenue Comparison",
       ctaBottomTitle: "Ready to monetize your API?",
-      ctaBottomDesc: "Join the first marketplace built for AI agents. Register in 2 minutes, start earning today.",
+      ctaBottomDesc:
+        "Join the first marketplace built for AI agents. Register in 2 minutes, start earning today.",
     },
     creatorDashboard: {
       title: "Creator Dashboard",
@@ -602,12 +670,14 @@ export const translations = {
       connectedAs: "Connected as",
       backToPortal: "Creator Portal",
       connectTitle: "Connect Your Wallet",
-      connectDesc: "Connect the wallet you used when registering your APIs to automatically view all your services, revenue, and statistics.",
+      connectDesc:
+        "Connect the wallet you used when registering your APIs to automatically view all your services, revenue, and statistics.",
       connectBtn: "Connect Wallet",
       fetchError: "Failed to load services. Please try again.",
       retry: "Retry",
       noApis: "No APIs found for this wallet.",
-      noApisHint: "Make sure you used the same wallet address during registration.",
+      noApisHint:
+        "Make sure you used the same wallet address during registration.",
       registerFirst: "Register Your First API",
       yourApis: "Your APIs",
       revenueShare: "Revenue Share",
@@ -623,13 +693,15 @@ export const translations = {
     },
     creatorOnboarding: {
       title: "Creator Onboarding Guide",
-      subtitle: "Everything you need to know to list your API and start earning from AI agent traffic.",
+      subtitle:
+        "Everything you need to know to list your API and start earning from AI agent traffic.",
       backToPortal: "Creator Portal",
       breadcrumb: "Onboarding Guide",
       badge: "Step-by-Step Guide",
       step1Label: "Step 1",
       step1Title: "Create Your API",
-      step1Desc: "Build an API endpoint that returns data over HTTP. Any language, any framework. Here are the requirements:",
+      step1Desc:
+        "Build an API endpoint that returns data over HTTP. Any language, any framework. Here are the requirements:",
       step1d1: "Must respond to HTTP GET or POST requests",
       step1d2: "Must return JSON data",
       step1d3: "Should have latency under 5 seconds",
@@ -647,7 +719,8 @@ export const translations = {
       step2Link: "Go to Registration",
       step3Label: "Step 3",
       step3Title: "Get Discovered by AI Agents",
-      step3Desc: "Once listed, your API is automatically distributed to 9 platforms:",
+      step3Desc:
+        "Once listed, your API is automatically distributed to 9 platforms:",
       step3d1: "MCP Server (Claude, Cursor, Windsurf)",
       step3d2: "ChatGPT Custom GPT Actions",
       step3d3: "CLI (npm x402-bazaar)",
@@ -666,21 +739,27 @@ export const translations = {
       step4d7: "All transactions visible on BaseScan",
       tipsTitle: "Best Practices",
       tip1Title: "Choose clear naming",
-      tip1Desc: "Use descriptive names like \"Weather Forecast\" rather than \"API v2\". Agents search by name.",
+      tip1Desc:
+        'Use descriptive names like "Weather Forecast" rather than "API v2". Agents search by name.',
       tip2Title: "Set competitive pricing",
-      tip2Desc: "Most APIs charge $0.005-$0.05 per call. Start lower to attract early users.",
+      tip2Desc:
+        "Most APIs charge $0.005-$0.05 per call. Start lower to attract early users.",
       tip3Title: "Use relevant tags",
-      tip3Desc: "Add category + specific tags (e.g., \"ai, sentiment-analysis\"). This improves discoverability.",
+      tip3Desc:
+        'Add category + specific tags (e.g., "ai, sentiment-analysis"). This improves discoverability.',
       tip4Title: "Keep latency low",
-      tip4Desc: "Agents time out after 10-15 seconds. Optimize your API for fast responses.",
+      tip4Desc:
+        "Agents time out after 10-15 seconds. Optimize your API for fast responses.",
       ctaTitle: "Ready to get started?",
-      ctaDesc: "Register your API in 2 minutes and start earning from AI agent traffic worldwide.",
+      ctaDesc:
+        "Register your API in 2 minutes and start earning from AI agent traffic worldwide.",
       ctaRegister: "Register Your API",
       ctaDashboard: "View Dashboard",
     },
     config: {
       title: "Config Generator",
-      subtitle: "Generate the MCP server configuration for your IDE. No more manual JSON editing.",
+      subtitle:
+        "Generate the MCP server configuration for your IDE. No more manual JSON editing.",
       envLabel: "Environment",
       serverUrlLabel: "Server URL",
       budgetLabel: "Max Budget (USDC)",
@@ -699,7 +778,8 @@ export const translations = {
       pathDesc: "Copy the JSON above and paste it into the following file:",
       detectedOs: "Detected OS",
       ctaTitle: "Prefer the CLI?",
-      ctaDesc: "One command does everything automatically — detects your IDE, installs the MCP server, and configures your wallet.",
+      ctaDesc:
+        "One command does everything automatically — detects your IDE, installs the MCP server, and configures your wallet.",
       installDirLabel: "Install Directory",
     },
     serviceDetail: {
@@ -707,7 +787,8 @@ export const translations = {
       breadcrumbServices: "Services",
       endpointLabel: "x402 Endpoint",
       noSdkBadge: "No SDK Required — Just HTTP",
-      proxyHint: "Your API stays untouched. We handle payments through our proxy.",
+      proxyHint:
+        "Your API stays untouched. We handle payments through our proxy.",
       nativeBadge: "Native",
       verifiedBadge: "Verified",
       autoTestedBadge: "Auto-tested",
@@ -752,7 +833,8 @@ export const translations = {
     },
     register: {
       title: "Register a Service",
-      subtitle: "List your API on x402 Bazaar. Free registration, instant listing.",
+      subtitle:
+        "List your API on x402 Bazaar. Free registration, instant listing.",
       serviceName: "Service Name",
       description: "Description",
       apiUrl: "API URL",
@@ -771,7 +853,8 @@ export const translations = {
       successTitle: "Service registered!",
       successDesc: "is now live on x402 Bazaar.",
       viewTx: "View transaction on BaseScan",
-      templateHint: "Prefer code over forms? Use our Python template to monetize any function with a single decorator.",
+      templateHint:
+        "Prefer code over forms? Use our Python template to monetize any function with a single decorator.",
       templateLink: "Get the Python Template",
       step1: "Preparing signature...",
       step2: "Waiting for wallet approval...",
@@ -817,7 +900,8 @@ export const translations = {
     },
     quickRegister: {
       title: "Monetize Any API in 10 Seconds",
-      subtitle: "Paste your URL, set a price, start earning. No payment required.",
+      subtitle:
+        "Paste your URL, set a price, start earning. No payment required.",
       urlLabel: "API URL",
       urlPlaceholder: "https://api.example.com/endpoint",
       priceLabel: "Price per call (USDC)",
@@ -827,7 +911,8 @@ export const translations = {
       submitting: "Registering...",
       noPayment: "No payment required · Rate limited to prevent spam",
       successTitle: "API Listed!",
-      successDesc: "Your API is live on x402 Bazaar. AI agents can now discover and pay for it.",
+      successDesc:
+        "Your API is live on x402 Bazaar. AI agents can now discover and pay for it.",
       proxyEndpoint: "x402 Proxy Endpoint",
       viewService: "View Service Page",
       registerAnother: "Register Another",
@@ -836,47 +921,68 @@ export const translations = {
     },
     integrate: {
       title: "Integrate Your Agent",
-      subtitle: "Give your AI agent the ability to discover, pay for, and consume any service on x402 Bazaar — fully autonomously.",
+      subtitle:
+        "Give your AI agent the ability to discover, pay for, and consume any service on x402 Bazaar — fully autonomously.",
       whyTitle: "Why Integrate?",
       why1Title: "Autonomous Payments",
-      why1Desc: "Your agent handles HTTP 402 responses and pays USDC automatically. No human in the loop.",
+      why1Desc:
+        "Your agent handles HTTP 402 responses and pays USDC automatically. No human in the loop.",
       why2Title: "Service Discovery",
-      why2Desc: "One API to search hundreds of services. Your agent finds what it needs at runtime.",
+      why2Desc:
+        "One API to search hundreds of services. Your agent finds what it needs at runtime.",
       why3Title: "On-Chain Verification",
-      why3Desc: "Every payment is verified on Base L2. Transparent, trustless, instant.",
+      why3Desc:
+        "Every payment is verified on Base L2. Transparent, trustless, instant.",
       flowTitle: "Agent Flow",
       flowStep1Title: "1. Discover",
-      flowStep1Desc: "Agent calls GET / to discover the marketplace and available endpoints.",
+      flowStep1Desc:
+        "Agent calls GET / to discover the marketplace and available endpoints.",
       flowStep1Code: "GET https://x402-api.onrender.com/",
       flowStep2Title: "2. Request (get 402)",
-      flowStep2Desc: "Agent requests a paid endpoint. Server responds HTTP 402 with payment details.",
-      flowStep2Code: "GET /search?q=weather → 402 { payment_details: { amount: 0.05, recipient: '0x...', ... } }",
+      flowStep2Desc:
+        "Agent requests a paid endpoint. Server responds HTTP 402 with payment details.",
+      flowStep2Code:
+        "GET /search?q=weather → 402 { payment_details: { amount: 0.05, recipient: '0x...', ... } }",
       flowStep3Title: "3. Pay USDC",
-      flowStep3Desc: "Agent sends USDC to the recipient address on Base via Coinbase SDK or any wallet.",
-      flowStep3Code: "wallet.createTransfer({ amount: 0.05, assetId: 'usdc', destination: recipient })",
+      flowStep3Desc:
+        "Agent sends USDC to the recipient address on Base via Coinbase SDK or any wallet.",
+      flowStep3Code:
+        "wallet.createTransfer({ amount: 0.05, assetId: 'usdc', destination: recipient })",
       flowStep4Title: "4. Retry with Proof",
-      flowStep4Desc: "Agent resends the same request with the transaction hash in the header.",
-      flowStep4Code: "GET /search?q=weather\nX-Payment-TxHash: 0xabc123...\n→ 200 { data: [...] }",
+      flowStep4Desc:
+        "Agent resends the same request with the transaction hash in the header.",
+      flowStep4Code:
+        "GET /search?q=weather\nX-Payment-TxHash: 0xabc123...\n→ 200 { data: [...] }",
       corePatternTitle: "Core Pattern: payAndRequest()",
-      corePatternDesc: "This is the only function your agent needs. It handles the full 402 flow automatically:",
+      corePatternDesc:
+        "This is the only function your agent needs. It handles the full 402 flow automatically:",
       agentExampleTitle: "Full Agent Example (OpenAI + Coinbase SDK)",
-      agentExampleDesc: "Here's a minimal autonomous agent that discovers services, pays for access, and fetches real data:",
-      agentExampleNote: "This is a simplified version of our demo agent. Full source on",
+      agentExampleDesc:
+        "Here's a minimal autonomous agent that discovers services, pays for access, and fetches real data:",
+      agentExampleNote:
+        "This is a simplified version of our demo agent. Full source on",
       pythonTitle: "Python Agent (requests + web3)",
-      pythonDesc: "Same pattern in Python for agents built with LangChain, CrewAI, or custom frameworks:",
+      pythonDesc:
+        "Same pattern in Python for agents built with LangChain, CrewAI, or custom frameworks:",
       useCasesTitle: "Use Cases",
       useCase1Title: "Multi-Tool AI Agent",
-      useCase1Desc: "An agent that discovers and calls weather, crypto, and translation APIs on-the-fly to answer complex questions.",
+      useCase1Desc:
+        "An agent that discovers and calls weather, crypto, and translation APIs on-the-fly to answer complex questions.",
       useCase2Title: "Autonomous Research",
-      useCase2Desc: "An agent that searches for data services, pays for access, and compiles reports without human intervention.",
+      useCase2Desc:
+        "An agent that searches for data services, pays for access, and compiles reports without human intervention.",
       useCase3Title: "Agent-to-Agent Economy",
-      useCase3Desc: "Agents that register their own services and consume others, creating a self-sustaining autonomous economy.",
+      useCase3Desc:
+        "Agents that register their own services and consume others, creating a self-sustaining autonomous economy.",
       getStartedTitle: "Get Started",
-      getStartedDesc: "Clone the demo agent repo and run it in under 5 minutes:",
+      getStartedDesc:
+        "Clone the demo agent repo and run it in under 5 minutes:",
       recommended: "Recommended",
       quickStartCliTitle: "Quick Start with CLI",
-      quickStartCliDesc: "The fastest way to get started. One command auto-detects your IDE, installs the MCP server, and configures everything. Works in any terminal.",
-      quickStartCliNote: "Works with Claude Desktop, Cursor, VS Code + Continue, and Claude Code. Customize with --env, --network, --budget flags.",
+      quickStartCliDesc:
+        "The fastest way to get started. One command auto-detects your IDE, installs the MCP server, and configures everything. Works in any terminal.",
+      quickStartCliNote:
+        "Works with Claude Desktop, Cursor, VS Code + Continue, and Claude Code. Customize with --env, --network, --budget flags.",
       manualTitle: "Manual Setup",
       manualDesc: "Prefer to do it yourself? Follow these steps:",
       browseServices: "Browse Services",
@@ -885,88 +991,119 @@ export const translations = {
       getStartedStep3: "Set up your environment variables",
       getStartedStep4: "Run the demo agent",
       providerTitle: "Provider Side: Monetize Your API",
-      providerDesc: "Want to sell your own API? Use our Python template to turn any function into a paid x402 endpoint in minutes.",
+      providerDesc:
+        "Want to sell your own API? Use our Python template to turn any function into a paid x402 endpoint in minutes.",
       providerBtn: "Get the Python Template",
       langchainTitle: "LangChain Integration",
-      langchainDesc: "Use x402 Bazaar as a native LangChain tool. Install the package and add it to your agent.",
+      langchainDesc:
+        "Use x402 Bazaar as a native LangChain tool. Install the package and add it to your agent.",
       langchainInstall: "Install the package",
-      langchainNote: "The x402-langchain package handles the full payment flow automatically.",
+      langchainNote:
+        "The x402-langchain package handles the full payment flow automatically.",
     },
     mcp: {
       title: "MCP Server — Plug & Play for AI",
-      subtitle: "Install the x402 Bazaar MCP server and let any AI agent discover, pay, and use APIs from your IDE. Zero code needed.",
+      subtitle:
+        "Install the x402 Bazaar MCP server and let any AI agent discover, pay, and use APIs from your IDE. Zero code needed.",
       whatTitle: "What is MCP?",
-      whatDesc: "Model Context Protocol (MCP) is an open standard that lets AI assistants (Claude, GPT, etc.) use external tools. Instead of writing custom integration code, you install an MCP server and your AI can instantly interact with x402 Bazaar — searching services, paying USDC, and calling APIs autonomously.",
+      whatDesc:
+        "Model Context Protocol (MCP) is an open standard that lets AI assistants (Claude, GPT, etc.) use external tools. Instead of writing custom integration code, you install an MCP server and your AI can instantly interact with x402 Bazaar — searching services, paying USDC, and calling APIs autonomously.",
       benefit1: "Plug & Play",
       benefit2: "Auto-payments",
       benefit3: "Any AI agent",
       toolsTitle: "Available Tools",
       flowTitle: "How it Works",
-      flow1: "You ask your AI: \"Find me a weather API and get the forecast for Paris\"",
-      flow2: "The AI calls search_services(\"weather\") via the MCP server",
-      flow3: "The MCP server hits HTTP 402, pays 0.05 USDC on Base automatically, and returns the results",
-      flow4: "The AI calls the API URL, gets real data, and gives you the answer",
+      flow1:
+        'You ask your AI: "Find me a weather API and get the forecast for Paris"',
+      flow2: 'The AI calls search_services("weather") via the MCP server',
+      flow3:
+        "The MCP server hits HTTP 402, pays 0.05 USDC on Base automatically, and returns the results",
+      flow4:
+        "The AI calls the API URL, gets real data, and gives you the answer",
       walletTitle: "Wallet Setup",
-      walletDesc: "Before installing the MCP server, you need a Coinbase Developer Platform (CDP) wallet. This is the wallet your AI agent will use to pay for API access.",
-      walletStep1: "Create a free account on Coinbase Developer Platform (portal.cdp.coinbase.com)",
-      walletStep2: "Go to API Keys and generate a new key pair. Save your API Key and API Secret securely.",
-      walletStep3: "Run 'node create-wallet.js' from the x402-backend repo to generate your agent wallet seed file (agent-seed.json).",
-      walletStep4: "Fund your agent wallet with USDC on Base. You can transfer from Coinbase, a DEX, or bridge from another chain.",
-      walletTestnetTip: "Tip: Set NETWORK=testnet to use Base Sepolia for free testing. No real funds needed — get test USDC from faucets.",
+      walletDesc:
+        "Before installing the MCP server, you need a Coinbase Developer Platform (CDP) wallet. This is the wallet your AI agent will use to pay for API access.",
+      walletStep1:
+        "Create a free account on Coinbase Developer Platform (portal.cdp.coinbase.com)",
+      walletStep2:
+        "Go to API Keys and generate a new key pair. Save your API Key and API Secret securely.",
+      walletStep3:
+        "Run 'node create-wallet.js' from the x402-backend repo to generate your agent wallet seed file (agent-seed.json).",
+      walletStep4:
+        "Fund your agent wallet with USDC on Base. You can transfer from Coinbase, a DEX, or bridge from another chain.",
+      walletTestnetTip:
+        "Tip: Set NETWORK=testnet to use Base Sepolia for free testing. No real funds needed — get test USDC from faucets.",
       securityTitle: "Security & Budget Control",
-      securityDesc: "The MCP server includes built-in safeguards so your AI agent can't overspend. Every paid request is tracked and capped.",
+      securityDesc:
+        "The MCP server includes built-in safeguards so your AI agent can't overspend. Every paid request is tracked and capped.",
       securityFeature1: "Session Budget Limit",
-      securityFeature1Desc: "Set MAX_BUDGET_USDC to cap total spending per session. The agent is blocked when the limit is reached.",
+      securityFeature1Desc:
+        "Set MAX_BUDGET_USDC to cap total spending per session. The agent is blocked when the limit is reached.",
       securityFeature2: "Real-time Tracking",
-      securityFeature2Desc: "The get_budget_status tool lets the agent (or you) check spending, remaining budget, and full payment history at any time.",
+      securityFeature2Desc:
+        "The get_budget_status tool lets the agent (or you) check spending, remaining budget, and full payment history at any time.",
       securityFeature3: "On-chain Verification",
-      securityFeature3Desc: "Every payment is a real USDC transfer on Base, verified on-chain. No hidden fees, no escrow — fully transparent.",
+      securityFeature3Desc:
+        "Every payment is a real USDC transfer on Base, verified on-chain. No hidden fees, no escrow — fully transparent.",
       securityFeature4: "Full Transparency",
-      securityFeature4Desc: "Each response includes a _payment object with amount, tx hash, and BaseScan explorer link. You see exactly where every cent goes.",
+      securityFeature4Desc:
+        "Each response includes a _payment object with amount, tx hash, and BaseScan explorer link. You see exactly where every cent goes.",
       securityConfigLabel: "Environment variable:",
-      securityConfigDesc: "Default: 1.00 USDC per session. Adjust based on your use case. Set to 0.10 for testing, or 10.00 for heavy usage.",
+      securityConfigDesc:
+        "Default: 1.00 USDC per session. Adjust based on your use case. Set to 0.10 for testing, or 10.00 for heavy usage.",
       installTitle: "Installation",
       quickInstallTitle: "Quick Install",
       quickInstallBadge: "Recommended",
-      quickInstallDesc: "One command does everything: detects your IDE, installs the MCP server, configures your wallet, and verifies the connection. Works in any terminal, including VS Code, Cursor, and other IDE terminals.",
+      quickInstallDesc:
+        "One command does everything: detects your IDE, installs the MCP server, configures your wallet, and verifies the connection. Works in any terminal, including VS Code, Cursor, and other IDE terminals.",
       quickFeature1: "Auto-detects IDE",
       quickFeature2: "Configures wallet",
       quickFeature3: "Works everywhere",
       supportedEnvTitle: "Supported Environments",
-      supportedEnvDesc: "The CLI auto-detects your environment and generates the correct configuration.",
+      supportedEnvDesc:
+        "The CLI auto-detects your environment and generates the correct configuration.",
       manualTitle: "Manual Configuration",
-      manualDesc: "If you prefer to configure manually, expand below and follow the instructions for your IDE.",
+      manualDesc:
+        "If you prefer to configure manually, expand below and follow the instructions for your IDE.",
       ctaTitle2: "Start in 30 seconds",
-      ctaDesc2: "Install the MCP server with one command and give your AI agent access to the entire marketplace.",
+      ctaDesc2:
+        "Install the MCP server with one command and give your AI agent access to the entire marketplace.",
       prereqTitle: "Prerequisites",
       prereq1: "Clone the x402-backend repository",
       prereq2: "Configure your Coinbase CDP API keys (portal.cdp.coinbase.com)",
       prereq3: "Create an agent wallet with funds (USDC on Base)",
       claudeDesktopDesc: "Add this to your Claude Desktop configuration file:",
-      claudeDesktopPath: "Windows: %APPDATA%\\Claude\\claude_desktop_config.json | Mac: ~/Library/Application Support/Claude/claude_desktop_config.json",
+      claudeDesktopPath:
+        "Windows: %APPDATA%\\Claude\\claude_desktop_config.json | Mac: ~/Library/Application Support/Claude/claude_desktop_config.json",
       cursorDesc: "Add this to your Cursor MCP settings:",
       cursorPath: "Settings > Features > MCP Servers > Add new server",
-      vscodeDesc: "Add this to your VS Code MCP config (Cline or Continue extension):",
+      vscodeDesc:
+        "Add this to your VS Code MCP config (Cline or Continue extension):",
       vscodePath: ".vscode/mcp.json or extension settings",
       claudeCodeDesc: "Run this command in your terminal:",
-      claudeCodeNote: "Then set the required environment variables (COINBASE_API_KEY, COINBASE_API_SECRET) in your Claude Code settings.",
+      claudeCodeNote:
+        "Then set the required environment variables (COINBASE_API_KEY, COINBASE_API_SECRET) in your Claude Code settings.",
       tryTitle: "Try It",
       tryDesc: "Once installed, open your AI assistant and try this prompt:",
       tryPromptLabel: "Example prompt:",
-      tryPrompt: "Search the x402 Bazaar for weather APIs, pick the best one, and get me the current weather in Paris.",
+      tryPrompt:
+        "Search the x402 Bazaar for weather APIs, pick the best one, and get me the current weather in Paris.",
       tryResultLabel: "What happens behind the scenes:",
       tryStep1: "AI calls discover_marketplace() — free",
-      tryStep2: "AI calls search_services(\"weather\") — 0.05 USDC paid automatically",
+      tryStep2:
+        'AI calls search_services("weather") — 0.05 USDC paid automatically',
       tryStep3: "AI calls call_api(url) on the found service — free",
       tryStep4: "AI synthesizes the data and answers you",
       ctaTitle: "Get the source code",
-      ctaDesc: "The MCP server is included in the x402-backend repository. Clone it, configure your keys, and you're ready to go.",
+      ctaDesc:
+        "The MCP server is included in the x402-backend repository. Clone it, configure your keys, and you're ready to go.",
     },
     developers: {
       title: "Developer Documentation",
       subtitle: "Integrate x402 Bazaar into your AI agent in minutes.",
       cliQuickStart: "Quick Start:",
-      cliQuickStartDesc: "Auto-detects your IDE and sets up everything. Works in any terminal.",
+      cliQuickStartDesc:
+        "Auto-detects your IDE and sets up everything. Works in any terminal.",
       protocolTitle: "The x402 Protocol",
       step1: "Call any paid endpoint without payment headers.",
       step2pre: "Server responds",
@@ -989,7 +1126,8 @@ export const translations = {
       registerBodyTitle: "POST /register Body",
       responseTitle: "402 Response Format",
       templateTitle: "Monetize Your API",
-      templateDesc: "Turn any Python function into a paid API with one decorator. USDC payments on Base, verified on-chain.",
+      templateDesc:
+        "Turn any Python function into a paid API with one decorator. USDC payments on Base, verified on-chain.",
       templateCode: `from x402 import x402_paywall
 
 @x402_paywall(price=0.05, description="My paid endpoint")
@@ -1001,61 +1139,90 @@ def my_function(query: str) -> dict:
     blog: {
       title: "Blog",
       backHome: "Back to Home",
-      articleTitle: "Your AI Agent Just Got a Credit Card: Introducing x402 Bazaar",
-      articleSubtitle: "The first marketplace where AI agents discover, pay for, and consume APIs autonomously — using the HTTP status code the internet forgot.",
-      intro1: "In 1997, the authors of the HTTP/1.1 specification reserved status code 402: \"Payment Required.\" It was meant for a future where web browsers could make micropayments — a few cents for an article, a fraction of a penny for an API call, instant and frictionless.",
-      intro2: "That future never arrived. There was no digital wallet in every browser. No universal payment protocol. No programmable money.",
-      intro3: "So 402 sat unused for 29 years. Every developer learned it existed, and moved on.",
+      articleTitle:
+        "Your AI Agent Just Got a Credit Card: Introducing x402 Bazaar",
+      articleSubtitle:
+        "The first marketplace where AI agents discover, pay for, and consume APIs autonomously — using the HTTP status code the internet forgot.",
+      intro1:
+        'In 1997, the authors of the HTTP/1.1 specification reserved status code 402: "Payment Required." It was meant for a future where web browsers could make micropayments — a few cents for an article, a fraction of a penny for an API call, instant and frictionless.',
+      intro2:
+        "That future never arrived. There was no digital wallet in every browser. No universal payment protocol. No programmable money.",
+      intro3:
+        "So 402 sat unused for 29 years. Every developer learned it existed, and moved on.",
       intro4Launch: "Today, we are launching",
       intro4Product: "x402 Bazaar",
-      intro4Desc: "— the first autonomous AI-to-AI API marketplace — and HTTP 402 finally does what it was designed to do.",
+      intro4Desc:
+        "— the first autonomous AI-to-AI API marketplace — and HTTP 402 finally does what it was designed to do.",
       problemTitle: "The Problem: AI Agents Hit a Wall at the API Signup Page",
-      problem1: "AI agents are getting remarkably capable. They can reason, plan, write code, analyze data, and coordinate with other agents. But the moment they need external data — a web search, a weather forecast, a crypto price, a scraped webpage — they hit a wall.",
+      problem1:
+        "AI agents are getting remarkably capable. They can reason, plan, write code, analyze data, and coordinate with other agents. But the moment they need external data — a web search, a weather forecast, a crypto price, a scraped webpage — they hit a wall.",
       problem2: "That wall is the API signup page.",
-      problem3: "Every API an agent uses today was configured by a human. Someone created an account. Someone generated an API key. Someone set up billing. Someone wrote the integration code. Someone manages the rate limits and renewals.",
-      problem4: "For one or two APIs, this is fine. But the trajectory of AI agents is clear: they need dynamic, on-demand access to many services. An agent working on a research task might need search, scraping, translation, summarization, and multiple data feeds — all in a single workflow. The specific services it needs depend on the task, and change from run to run.",
-      problem5: "The human-configured model doesn't scale. Agents need the ability to discover, evaluate, pay for, and consume APIs on their own.",
+      problem3:
+        "Every API an agent uses today was configured by a human. Someone created an account. Someone generated an API key. Someone set up billing. Someone wrote the integration code. Someone manages the rate limits and renewals.",
+      problem4:
+        "For one or two APIs, this is fine. But the trajectory of AI agents is clear: they need dynamic, on-demand access to many services. An agent working on a research task might need search, scraping, translation, summarization, and multiple data feeds — all in a single workflow. The specific services it needs depend on the task, and change from run to run.",
+      problem5:
+        "The human-configured model doesn't scale. Agents need the ability to discover, evaluate, pay for, and consume APIs on their own.",
       solutionTitle: "The Solution: A Marketplace That Speaks HTTP 402",
-      solution1: "x402 Bazaar is an API marketplace built from the ground up for AI agents. Here is what makes it different from every API marketplace you have used before:",
+      solution1:
+        "x402 Bazaar is an API marketplace built from the ground up for AI agents. Here is what makes it different from every API marketplace you have used before:",
       solutionAgents: "Agents are the customers, not humans.",
-      solution2: "There are no signup forms, no API key dashboards, no billing portals. An agent interacts with x402 Bazaar entirely through HTTP. It discovers available services, checks prices, makes payments, and consumes data — all programmatically, all autonomously.",
+      solution2:
+        "There are no signup forms, no API key dashboards, no billing portals. An agent interacts with x402 Bazaar entirely through HTTP. It discovers available services, checks prices, makes payments, and consumes data — all programmatically, all autonomously.",
       solutionPayments: "Payments happen through the HTTP 402 protocol.",
-      solution3: "When an agent requests a paid endpoint, the server responds with",
+      solution3:
+        "When an agent requests a paid endpoint, the server responds with",
       solution3Code: "402 Payment Required",
-      solution3End: "and a JSON payload containing the price, the recipient wallet address, and the accepted payment chains. The agent transfers USDC (a stablecoin pegged to the US dollar) on-chain, then retries the original request with the transaction hash as proof of payment. The server verifies the transaction, marks the hash as used, and returns the requested data.",
-      solution4: "This is exactly the flow HTTP 402 was designed for — just 29 years late.",
+      solution3End:
+        "and a JSON payload containing the price, the recipient wallet address, and the accepted payment chains. The agent transfers USDC (a stablecoin pegged to the US dollar) on-chain, then retries the original request with the transaction hash as proof of payment. The server verifies the transaction, marks the hash as used, and returns the requested data.",
+      solution4:
+        "This is exactly the flow HTTP 402 was designed for — just 29 years late.",
       solutionMicro: "Micropayments that actually work.",
-      solution5: "x402 Bazaar supports payments on three chains: Base (Coinbase's L2, with sub-cent gas fees and ~2 second finality), SKALE on Base (with ultra-low gas fees (~$0.0007/tx)), and Polygon (Chain ID 137, ~$0.001/tx, native USDC). This means an API call can cost $0.005 and the agent pays nearly $0.005 — minimal gas overhead. Near-true micropayments, for the first time.",
+      solution5:
+        "x402 Bazaar supports payments on three chains: Base (Coinbase's L2, with sub-cent gas fees and ~2 second finality), SKALE on Base (with ultra-low gas fees (~$0.0007/tx)), and Polygon (Chain ID 137, ~$0.001/tx, native USDC). This means an API call can cost $0.005 and the agent pays nearly $0.005 — minimal gas overhead. Near-true micropayments, for the first time.",
       technicalTitle: "How It Works: The Technical Flow",
-      technicalIntro: "Let's walk through a real request. An AI agent wants to search the web for \"latest AI research papers.\"",
+      technicalIntro:
+        'Let\'s walk through a real request. An AI agent wants to search the web for "latest AI research papers."',
       step1Title: "Step 1: Discovery",
       step1Desc: "The agent queries the x402 Bazaar catalog endpoint:",
-      step1Result: "It receives a list of available services with descriptions, pricing, and endpoint details. It identifies a web search service priced at $0.01 per query.",
+      step1Result:
+        "It receives a list of available services with descriptions, pricing, and endpoint details. It identifies a web search service priced at $0.01 per query.",
       step2Title: "Step 2: Request",
       step2Desc: "The agent calls the search endpoint:",
       step3Title: "Step 3: Payment Required",
       step3Desc: "The server responds:",
       step4Title: "Step 4: On-Chain Payment",
-      step4Desc: "The agent transfers 0.01 USDC to the specified address on SKALE on Base, Base, or Polygon. It receives a transaction hash:",
+      step4Desc:
+        "The agent transfers 0.01 USDC to the specified address on SKALE on Base, Base, or Polygon. It receives a transaction hash:",
       step5Title: "Step 5: Retry with Proof",
-      step5Desc: "The agent retries the original request with proof of payment:",
+      step5Desc:
+        "The agent retries the original request with proof of payment:",
       step6Title: "Step 6: Data Delivered",
-      step6Desc: "The server verifies the transaction on-chain, confirms the amount and recipient match, checks that the tx hash hasn't been used before (anti-replay), and returns the search results.",
-      step6End: "The entire flow takes a few seconds. No human touched anything.",
+      step6Desc:
+        "The server verifies the transaction on-chain, confirms the amount and recipient match, checks that the tx hash hasn't been used before (anti-replay), and returns the search results.",
+      step6End:
+        "The entire flow takes a few seconds. No human touched anything.",
       securityTitle: "Security: Built for a Trustless Environment",
-      securityIntro: "When autonomous agents are making payments, security is not optional. Here is what we built:",
+      securityIntro:
+        "When autonomous agents are making payments, security is not optional. Here is what we built:",
       securityReplay: "Anti-replay protection.",
-      securityReplayDesc: "Every transaction hash is stored in Supabase after first use. If an agent (or attacker) tries to reuse a payment, the request is rejected. One payment, one service call. No exceptions.",
+      securityReplayDesc:
+        "Every transaction hash is stored in Supabase after first use. If an agent (or attacker) tries to reuse a payment, the request is rejected. One payment, one service call. No exceptions.",
       securityUsdc: "USDC contract validation.",
-      securityUsdcDesc: "The server verifies that the payment was made using the actual USDC contract on the expected chain — not a fake token with the same name. This prevents token substitution attacks where an attacker deploys a worthless ERC-20 named \"USDC\" and tries to pass it off as payment.",
+      securityUsdcDesc:
+        'The server verifies that the payment was made using the actual USDC contract on the expected chain — not a fake token with the same name. This prevents token substitution attacks where an attacker deploys a worthless ERC-20 named "USDC" and tries to pass it off as payment.',
       securitySsrf: "SSRF protection.",
-      securitySsrfDesc: "The web scraping service validates and sanitizes URLs to prevent Server-Side Request Forgery attacks. Agents cannot use the scraper to probe internal networks or access restricted resources.",
+      securitySsrfDesc:
+        "The web scraping service validates and sanitizes URLs to prevent Server-Side Request Forgery attacks. Agents cannot use the scraper to probe internal networks or access restricted resources.",
       securitySpam: "Economic spam prevention.",
-      securitySpamDesc: "Every API call costs real money. This is the simplest and most effective spam deterrent — if every request costs USDC, the cost of abuse scales linearly. No CAPTCHAs needed.",
+      securitySpamDesc:
+        "Every API call costs real money. This is the simplest and most effective spam deterrent — if every request costs USDC, the cost of abuse scales linearly. No CAPTCHAs needed.",
       marketplaceTitle: "What's in the Marketplace",
-      marketplaceIntro: "x402 Bazaar launches with 70+ API services across multiple categories:",
+      marketplaceIntro:
+        "x402 Bazaar launches with 70+ API services across multiple categories:",
       marketplaceNative: "6 Native Wrapper Services",
-      marketplaceNativeDesc: "(built and maintained by x402 Bazaar, with standardized interfaces):",
+      marketplaceNativeDesc:
+        "(built and maintained by x402 Bazaar, with standardized interfaces):",
       tableService: "Service",
       tableDescription: "Description",
       tablePrice: "Example Price",
@@ -1078,11 +1245,13 @@ def my_function(query: str) -> dict:
       serviceJokeDesc: "Random jokes (for fun)",
       serviceJokePrice: "$0.001/joke",
       marketplaceThirdParty: "60+ Third-Party Services",
-      marketplaceThirdPartyDesc: "aggregated from external providers, all accessible through the same HTTP 402 payment flow.",
+      marketplaceThirdPartyDesc:
+        "aggregated from external providers, all accessible through the same HTTP 402 payment flow.",
       mcpTitle: "MCP Integration: Plug Into Your AI Assistant",
       mcpDesc1: "x402 Bazaar ships with a",
       mcpDescHighlight: "Model Context Protocol (MCP) server",
-      mcpDesc2: "that integrates directly with Claude Desktop, Cursor, and VS Code.",
+      mcpDesc2:
+        "that integrates directly with Claude Desktop, Cursor, and VS Code.",
       mcpOnceConnected: "Once connected, your AI assistant can:",
       mcpFeature1: "Browse the full marketplace catalog",
       mcpFeature2: "Compare prices across similar services",
@@ -1090,38 +1259,53 @@ def my_function(query: str) -> dict:
       mcpFeature4: "Return API results within the conversation",
       mcpConversation: "This means you can have a conversation like:",
       mcpYou: "You:",
-      mcpYouPrompt: "Find me Bitcoin's current price from three different data sources and compare them.",
+      mcpYouPrompt:
+        "Find me Bitcoin's current price from three different data sources and compare them.",
       mcpClaude: "Claude (via x402 Bazaar MCP):",
-      mcpClaudeResponse: "I found three crypto price services in the marketplace. Let me query each one...",
+      mcpClaudeResponse:
+        "I found three crypto price services in the marketplace. Let me query each one...",
       mcpResult1: "CoinGecko via x402: BTC = $98,432 (cost: $0.005)",
       mcpResult2: "CryptoCompare via x402: BTC = $98,445 (cost: $0.005)",
       mcpResult3: "Native crypto service: BTC = $98,438 (cost: $0.005)",
-      mcpResultSummary: "All three sources agree within a $13 range. Total cost: $0.015.",
-      mcpConclusion: "The agent discovered the services, evaluated pricing, made three separate micropayments, and synthesized the results — all within a single conversational turn.",
+      mcpResultSummary:
+        "All three sources agree within a $13 range. Total cost: $0.015.",
+      mcpConclusion:
+        "The agent discovered the services, evaluated pricing, made three separate micropayments, and synthesized the results — all within a single conversational turn.",
       getStartedTitle: "Get Started in One Command",
       getStartedCommand: "npx x402-bazaar init",
       getStartedDesc: "This single command:",
       getStartedStep1: "Creates a local x402 Bazaar client configuration",
       getStartedStep2: "Generates or imports a wallet for USDC payments",
       getStartedStep3: "Connects to the marketplace catalog",
-      getStartedStep4: "Gives you (or your agent) immediate access to 70+ paid APIs",
-      getStartedConclusion: "From zero to your first paid API call in under a minute.",
+      getStartedStep4:
+        "Gives you (or your agent) immediate access to 70+ paid APIs",
+      getStartedConclusion:
+        "From zero to your first paid API call in under a minute.",
       coinbaseTitle: "Built on Coinbase's x402 Standard",
       coinbase1: "x402 Bazaar is built on the",
       coinbase1Highlight: "x402 protocol",
-      coinbase1End: "— an open payment standard created by Coinbase that brings HTTP 402 to life. The protocol defines how servers advertise prices, how clients make payments, and how proof of payment is verified.",
-      coinbase2: "We chose to build on x402 because it represents the right abstraction: payments as a native HTTP concern, not a bolt-on integration. When every API speaks the same payment protocol, agents can interact with any service without custom integration code.",
-      coinbase3: "x402 Bazaar extends the protocol with a marketplace layer — service discovery, catalog management, wrapper services with standardized interfaces, and MCP integration for AI assistants.",
+      coinbase1End:
+        "— an open payment standard created by Coinbase that brings HTTP 402 to life. The protocol defines how servers advertise prices, how clients make payments, and how proof of payment is verified.",
+      coinbase2:
+        "We chose to build on x402 because it represents the right abstraction: payments as a native HTTP concern, not a bolt-on integration. When every API speaks the same payment protocol, agents can interact with any service without custom integration code.",
+      coinbase3:
+        "x402 Bazaar extends the protocol with a marketplace layer — service discovery, catalog management, wrapper services with standardized interfaces, and MCP integration for AI assistants.",
       bigPictureTitle: "The Bigger Picture: Agent Commerce",
-      bigPicture1: "We believe we are at the beginning of a fundamental shift in how software consumes services. Today, humans configure every API integration. Tomorrow, agents will handle it themselves — discovering what they need, evaluating options, paying for access, and moving on.",
-      bigPicture2: "This requires three things that did not exist together until now:",
+      bigPicture1:
+        "We believe we are at the beginning of a fundamental shift in how software consumes services. Today, humans configure every API integration. Tomorrow, agents will handle it themselves — discovering what they need, evaluating options, paying for access, and moving on.",
+      bigPicture2:
+        "This requires three things that did not exist together until now:",
       bigPicture3a: "A payment protocol native to HTTP",
-      bigPicture3aDesc: "— x402 makes payments a standard HTTP interaction, not a separate system",
+      bigPicture3aDesc:
+        "— x402 makes payments a standard HTTP interaction, not a separate system",
       bigPicture3b: "Programmable money with near-zero fees",
-      bigPicture3bDesc: "— USDC on L2s (SKALE, Base, Polygon) makes micropayments viable for the first time",
+      bigPicture3bDesc:
+        "— USDC on L2s (SKALE, Base, Polygon) makes micropayments viable for the first time",
       bigPicture3c: "AI agents capable of autonomous decision-making",
-      bigPicture3cDesc: "— modern LLM-based agents can evaluate, select, and use services without human guidance",
-      bigPicture4: "x402 Bazaar sits at the intersection of all three. It is the infrastructure layer for agent commerce — where agents discover services, pay with stablecoins, and get work done.",
+      bigPicture3cDesc:
+        "— modern LLM-based agents can evaluate, select, and use services without human guidance",
+      bigPicture4:
+        "x402 Bazaar sits at the intersection of all three. It is the infrastructure layer for agent commerce — where agents discover services, pay with stablecoins, and get work done.",
       linksTitle: "Links",
       linkWebsite: "Website:",
       linkGithubFrontend: "GitHub (Frontend):",
@@ -1131,8 +1315,10 @@ def my_function(query: str) -> dict:
       linkHackathon: "Origin:",
       linkHackathonDesc: "SF Agentic Commerce x402 — launched Feb 2026",
       tryItTitle: "Try It Now",
-      tryItConclusion: "HTTP 402 waited 29 years for this. Your agent doesn't have to wait another minute.",
-      disclaimer: "x402 Bazaar is an independent project built on the open x402 protocol standard. It is not affiliated with or endorsed by Coinbase.",
+      tryItConclusion:
+        "HTTP 402 waited 29 years for this. Your agent doesn't have to wait another minute.",
+      disclaimer:
+        "x402 Bazaar is an independent project built on the open x402 protocol standard. It is not affiliated with or endorsed by Coinbase.",
       ctaTitle: "Ready to start?",
       ctaDesc: "One command to connect your AI agent:",
       ctaExplore: "Explore Services",
@@ -1142,35 +1328,46 @@ def my_function(query: str) -> dict:
       title: "About x402 Bazaar",
       subtitle: "The autonomous marketplace for AI agents and API services",
       whatIsTitle: "What is x402 Bazaar?",
-      whatIsPara1: "x402 Bazaar is the first truly autonomous API marketplace designed for AI agents. Instead of traditional API keys, monthly subscriptions, or complex billing systems, we use the HTTP 402 protocol to enable pay-per-request access with cryptocurrency.",
-      whatIsPara2: "AI agents can discover services, negotiate payment automatically, and access APIs without any human intervention. Every transaction is verified on-chain using USDC on SKALE, Base, and Polygon networks, ensuring transparency, trustlessness, and instant settlement.",
-      whatIsPara3: "Whether you're building autonomous agents, integrating APIs into your workflow, or monetizing your own services, x402 Bazaar removes the friction between discovery, payment, and access.",
+      whatIsPara1:
+        "x402 Bazaar is the first truly autonomous API marketplace designed for AI agents. Instead of traditional API keys, monthly subscriptions, or complex billing systems, we use the HTTP 402 protocol to enable pay-per-request access with cryptocurrency.",
+      whatIsPara2:
+        "AI agents can discover services, negotiate payment automatically, and access APIs without any human intervention. Every transaction is verified on-chain using USDC on SKALE, Base, and Polygon networks, ensuring transparency, trustlessness, and instant settlement.",
+      whatIsPara3:
+        "Whether you're building autonomous agents, integrating APIs into your workflow, or monetizing your own services, x402 Bazaar removes the friction between discovery, payment, and access.",
       howItWorksTitle: "How It Works",
       step1Title: "Discover",
-      step1Desc: "Browse {count} APIs across {catCount} categories or let your AI agent search programmatically.",
+      step1Desc:
+        "Browse {count} APIs across {catCount} categories or let your AI agent search programmatically.",
       step2Title: "Pay",
-      step2Desc: "Pay per request with USDC on SKALE, Base, or Polygon. No subscriptions, no accounts needed.",
+      step2Desc:
+        "Pay per request with USDC on SKALE, Base, or Polygon. No subscriptions, no accounts needed.",
       step3Title: "Use",
-      step3Desc: "Access granted instantly after on-chain payment verification. Start building.",
+      step3Desc:
+        "Access granted instantly after on-chain payment verification. Start building.",
       step4Title: "Earn",
-      step4Desc: "API providers earn USDC directly for every request. No middlemen, no delays.",
+      step4Desc:
+        "API providers earn USDC directly for every request. No middlemen, no delays.",
       protocolTitle: "The x402 Protocol",
-      protocolDesc: "x402 Bazaar is built on the HTTP 402 Payment Required standard, a rarely-used HTTP status code that was designed for micropayments on the web. When your agent requests a paid API, the server responds with 402 and payment details. Your agent pays via USDC transfer on SKALE, Base, or Polygon, then retries with proof of payment. Simple, trustless, autonomous.",
+      protocolDesc:
+        "x402 Bazaar is built on the HTTP 402 Payment Required standard, a rarely-used HTTP status code that was designed for micropayments on the web. When your agent requests a paid API, the server responds with 402 and payment details. Your agent pays via USDC transfer on SKALE, Base, or Polygon, then retries with proof of payment. Simple, trustless, autonomous.",
       protocolLearnMore: "Learn more about the protocol:",
       protocolVisit: "Visit x402.org",
       builtOnTitle: "Built On",
       baseChainId: "Chain ID: 8453",
-      baseDesc: "Base is Coinbase's Layer 2 built on Ethereum. Fast, cheap, and EVM-compatible, it's the perfect network for micropayments. USDC transfers take seconds and cost fractions of a cent.",
+      baseDesc:
+        "Base is Coinbase's Layer 2 built on Ethereum. Fast, cheap, and EVM-compatible, it's the perfect network for micropayments. USDC transfers take seconds and cost fractions of a cent.",
       baseFeature1: "~$0.001 gas per tx",
       baseFeature2: "2-second finality",
       baseFeature3: "EVM-compatible",
       skaleChainId: "Chain ID: 1187947933",
-      skaleDesc: "SKALE on Base is an ultra-low-gas blockchain optimized for Web3 applications. Transactions cost ~$0.0007, making it ideal for high-frequency AI agent interactions. SKALE runs parallel to Base for ultra-low-cost operations.",
+      skaleDesc:
+        "SKALE on Base is an ultra-low-gas blockchain optimized for Web3 applications. Transactions cost ~$0.0007, making it ideal for high-frequency AI agent interactions. SKALE runs parallel to Base for ultra-low-cost operations.",
       skaleFeature1: "~$0.0007 gas fees",
       skaleFeature2: "Instant finality",
       skaleFeature3: "Ethereum-native",
       openSourceTitle: "Open Source",
-      openSourceDesc: "x402 Bazaar is 100% open source and MIT-licensed. Both the frontend and backend are available on GitHub. We believe in transparent, community-driven infrastructure for the autonomous economy.",
+      openSourceDesc:
+        "x402 Bazaar is 100% open source and MIT-licensed. Both the frontend and backend are available on GitHub. We believe in transparent, community-driven infrastructure for the autonomous economy.",
       frontendRepo: "x402-frontend",
       frontendRepoDesc: "React + Vite + Tailwind + Wagmi",
       backendRepo: "x402-backend",
@@ -1180,47 +1377,64 @@ def my_function(query: str) -> dict:
       contributionsLabel: "Contributions:",
       contributionsDesc: "Pull requests welcome. Issues and ideas encouraged.",
       teamTitle: "The Team",
-      teamDesc: "x402 Bazaar was launched in 2025 as a proof-of-concept for autonomous agent economies. What started as an open-source experiment has grown into a live, functional marketplace with real payments, real APIs, and real adoption.",
+      teamDesc:
+        "x402 Bazaar was launched in 2025 as a proof-of-concept for autonomous agent economies. What started as an open-source experiment has grown into a live, functional marketplace with real payments, real APIs, and real adoption.",
       founderName: "Robin",
       founderRole: "Founder & Lead Developer",
-      founderBio: "Full-stack developer passionate about decentralized infrastructure and AI agents. Built x402 Bazaar from scratch — 69+ API wrappers, 9 platform integrations, 505+ tests, and counting. Believer in open protocols and permissionless innovation.",
+      founderBio:
+        "Full-stack developer passionate about decentralized infrastructure and AI agents. Built x402 Bazaar from scratch — 69+ API wrappers, 9 platform integrations, 505+ tests, and counting. Believer in open protocols and permissionless innovation.",
       teamHackathon: "Launched at SF x402 — Open Source",
       teamHackathonDesc: "From concept to production platform",
       contactTitle: "Contact",
       ctaTitle: "Get Started",
-      ctaDesc: "Install the CLI and give your AI agent access to the entire marketplace in 30 seconds.",
+      ctaDesc:
+        "Install the CLI and give your AI agent access to the entire marketplace in 30 seconds.",
       ctaBrowse: "Browse APIs",
       ctaDocs: "Read the Docs",
       securityTitle: "Security",
-      securityDesc: "Built for a trustless environment where autonomous agents make payments.",
+      securityDesc:
+        "Built for a trustless environment where autonomous agents make payments.",
       security1Title: "Anti-Replay Protection",
-      security1Desc: "Every transaction hash is stored after first use. Reusing a payment is impossible.",
+      security1Desc:
+        "Every transaction hash is stored after first use. Reusing a payment is impossible.",
       security2Title: "On-Chain Verification",
-      security2Desc: "Payments verified against the real USDC contract. Fake token attacks are blocked.",
+      security2Desc:
+        "Payments verified against the real USDC contract. Fake token attacks are blocked.",
       security3Title: "SSRF Protection",
-      security3Desc: "URL validation prevents internal network probing via the scraper.",
+      security3Desc:
+        "URL validation prevents internal network probing via the scraper.",
       security4Title: "Rate Limiting",
-      security4Desc: "30 req/min for paid endpoints, 500/15min for free. Abuse is stopped early.",
+      security4Desc:
+        "30 req/min for paid endpoints, 500/15min for free. Abuse is stopped early.",
       security5Title: "Budget Control",
       security5Desc: "Configurable MAX_BUDGET_USDC prevents runaway spending.",
       security6Title: "Economic Spam Prevention",
-      security6Desc: "Every API call costs real USDC. Abuse scales linearly in cost.",
+      security6Desc:
+        "Every API call costs real USDC. Abuse scales linearly in cost.",
       slaTitle: "Service Level Agreement",
       slaDesc: "Our commitments for native x402 Bazaar endpoints.",
       sla1Title: "Uptime Target: 99.5%",
-      sla1Desc: "We aim for 99.5% availability on all native endpoints, monitored 24/7 with automated alerts.",
+      sla1Desc:
+        "We aim for 99.5% availability on all native endpoints, monitored 24/7 with automated alerts.",
       sla2Title: "Monitoring: Every 5 min",
-      sla2Desc: "All 69+ endpoints are checked every 5 minutes. Status is publicly visible on the /status page.",
+      sla2Desc:
+        "All 69+ endpoints are checked every 5 minutes. Status is publicly visible on the /status page.",
       sla3Title: "Response Time: < 2s",
-      sla3Desc: "Native endpoints target sub-2-second response times including payment verification.",
+      sla3Desc:
+        "Native endpoints target sub-2-second response times including payment verification.",
       sla4Title: "Incident Response: 24/7",
-      sla4Desc: "Automated Telegram alerts on downtime. Issues are investigated and resolved as fast as possible.",
+      sla4Desc:
+        "Automated Telegram alerts on downtime. Issues are investigated and resolved as fast as possible.",
       slaNote: "Note:",
-      slaNoteDesc: "This SLA applies to native x402 Bazaar endpoints only. Third-party APIs registered on the marketplace are under the responsibility of their respective providers.",
+      slaNoteDesc:
+        "This SLA applies to native x402 Bazaar endpoints only. Third-party APIs registered on the marketplace are under the responsibility of their respective providers.",
       onChainIdentityTitle: "On-Chain Identity",
-      onChainIdentityDesc: "x402 Bazaar has a verifiable on-chain identity via ERC-8004 on Base mainnet.",
-      erc8004What: "ERC-8004 is a standard for Trustless Agent Identity on Ethereum. It allows autonomous agents to register a verifiable on-chain identity, including metadata such as name, capabilities, and a registration URL. This enables other agents and users to verify who they are interacting with, without relying on centralized identity providers.",
-      erc8004Bazaar: "x402 Bazaar is registered as a verified agent in the ERC-8004 Identity Registry on Base. This means any user or agent can independently verify our identity on-chain, ensuring trustless interactions.",
+      onChainIdentityDesc:
+        "x402 Bazaar has a verifiable on-chain identity via ERC-8004 on Base mainnet.",
+      erc8004What:
+        "ERC-8004 is a standard for Trustless Agent Identity on Ethereum. It allows autonomous agents to register a verifiable on-chain identity, including metadata such as name, capabilities, and a registration URL. This enables other agents and users to verify who they are interacting with, without relying on centralized identity providers.",
+      erc8004Bazaar:
+        "x402 Bazaar is registered as a verified agent in the ERC-8004 Identity Registry on Base. This means any user or agent can independently verify our identity on-chain, ensuring trustless interactions.",
       erc8004Registry: "Identity Registry on BaseScan",
       erc8004Registration: "Agent Registration JSON",
     },
@@ -1230,62 +1444,86 @@ def my_function(query: str) -> dict:
       lastUpdated: "Last updated",
       acceptTitle: "Acceptance & Eligibility",
       acceptUse: "Use equals acceptance",
-      acceptUseDesc: "By using x402 Bazaar (API, website, CLI, or MCP server), you agree to these terms. If you do not agree, do not use the service.",
+      acceptUseDesc:
+        "By using x402 Bazaar (API, website, CLI, or MCP server), you agree to these terms. If you do not agree, do not use the service.",
       acceptAge: "Age requirement",
-      acceptAgeDesc: "You must be at least 18 years old or the age of majority in your jurisdiction to use x402 Bazaar.",
+      acceptAgeDesc:
+        "You must be at least 18 years old or the age of majority in your jurisdiction to use x402 Bazaar.",
       acceptAgents: "AI agents",
-      acceptAgentsDesc: "AI agents acting on your behalf are considered extensions of your account. You are responsible for all actions and payments made by your agents.",
+      acceptAgentsDesc:
+        "AI agents acting on your behalf are considered extensions of your account. You are responsible for all actions and payments made by your agents.",
       paymentsTitle: "Payments & Transactions",
       paymentsFinal: "Payments are final",
-      paymentsFinalDesc: "All payments are settled on-chain and are irreversible. Once a USDC transfer is confirmed on SKALE, Base, or Polygon, it cannot be refunded.",
+      paymentsFinalDesc:
+        "All payments are settled on-chain and are irreversible. Once a USDC transfer is confirmed on SKALE, Base, or Polygon, it cannot be refunded.",
       paymentsUsdc: "USDC only",
-      paymentsUsdcDesc: "x402 Bazaar exclusively accepts USDC (USD Coin) on SKALE, Base, and Polygon networks. No other tokens or currencies are accepted.",
+      paymentsUsdcDesc:
+        "x402 Bazaar exclusively accepts USDC (USD Coin) on SKALE, Base, and Polygon networks. No other tokens or currencies are accepted.",
       paymentsGas: "Gas fees are separate",
-      paymentsGasDesc: "Network gas fees (if any) are paid by the caller and are separate from API prices. SKALE has ultra-low gas fees (~$0.0007/tx); Base charges ~$0.001 per transaction.",
+      paymentsGasDesc:
+        "Network gas fees (if any) are paid by the caller and are separate from API prices. SKALE has ultra-low gas fees (~$0.0007/tx); Base charges ~$0.001 per transaction.",
       paymentsReplay: "Anti-replay protection",
-      paymentsReplayDesc: "Each transaction hash can only be used once. Attempting to reuse a payment will be rejected.",
+      paymentsReplayDesc:
+        "Each transaction hash can only be used once. Attempting to reuse a payment will be rejected.",
       servicesTitle: "Services & Availability",
       servicesAsIs: "As-is service",
-      servicesAsIsDesc: "x402 Bazaar is provided as-is, without warranties of any kind. We do not guarantee uninterrupted access or error-free operation.",
+      servicesAsIsDesc:
+        "x402 Bazaar is provided as-is, without warranties of any kind. We do not guarantee uninterrupted access or error-free operation.",
       servicesUptime: "Uptime objective",
-      servicesUptimeDesc: "We target 99.5% uptime for native endpoints, monitored every 5 minutes. This is a best-effort target, not a contractual guarantee.",
+      servicesUptimeDesc:
+        "We target 99.5% uptime for native endpoints, monitored every 5 minutes. This is a best-effort target, not a contractual guarantee.",
       servicesThirdParty: "Third-party APIs",
-      servicesThirdPartyDesc: "Third-party services registered on x402 Bazaar are operated by independent providers. We are not responsible for their availability, accuracy, or content.",
+      servicesThirdPartyDesc:
+        "Third-party services registered on x402 Bazaar are operated by independent providers. We are not responsible for their availability, accuracy, or content.",
       providersTitle: "For API Providers",
       providersRevenue: "95% revenue share",
-      providersRevenueDesc: "API providers receive 95% of each payment. The 5% platform fee covers infrastructure, monitoring, and marketplace operations.",
+      providersRevenueDesc:
+        "API providers receive 95% of each payment. The 5% platform fee covers infrastructure, monitoring, and marketplace operations.",
       providersContent: "Legal content only",
-      providersContentDesc: "APIs registered on x402 Bazaar must comply with applicable laws. Illegal, harmful, or fraudulent services will be removed without notice.",
+      providersContentDesc:
+        "APIs registered on x402 Bazaar must comply with applicable laws. Illegal, harmful, or fraudulent services will be removed without notice.",
       providersRemoval: "Right to remove",
-      providersRemovalDesc: "x402 Bazaar reserves the right to remove any service that violates these terms, is reported as abusive, or is non-functional.",
+      providersRemovalDesc:
+        "x402 Bazaar reserves the right to remove any service that violates these terms, is reported as abusive, or is non-functional.",
       liabilityTitle: "Liability & Disclaimers",
       liabilityLimited: "Limited liability",
-      liabilityLimitedDesc: "x402 Bazaar's total liability is limited to the amount you paid in the last 30 days. We are not liable for indirect, incidental, or consequential damages.",
+      liabilityLimitedDesc:
+        "x402 Bazaar's total liability is limited to the amount you paid in the last 30 days. We are not liable for indirect, incidental, or consequential damages.",
       liabilityBlockchain: "Blockchain irreversibility",
-      liabilityBlockchainDesc: "Blockchain transactions are permanent and cannot be reversed. We cannot recover funds sent to wrong addresses or lost due to wallet errors.",
+      liabilityBlockchainDesc:
+        "Blockchain transactions are permanent and cannot be reversed. We cannot recover funds sent to wrong addresses or lost due to wallet errors.",
       liabilityChanges: "Terms updates",
-      liabilityChangesDesc: "We may update these terms at any time. Continued use of the service after changes constitutes acceptance of the new terms.",
+      liabilityChangesDesc:
+        "We may update these terms at any time. Continued use of the service after changes constitutes acceptance of the new terms.",
       legalTitle: "Applicable Law & Jurisdiction",
       legalLaw: "French law applies",
-      legalLawDesc: "These Terms are governed by and construed in accordance with French law (Code Civil, Code de commerce). EU regulations (GDPR, DSA) apply where applicable.",
+      legalLawDesc:
+        "These Terms are governed by and construed in accordance with French law (Code Civil, Code de commerce). EU regulations (GDPR, DSA) apply where applicable.",
       legalJurisdiction: "Competent courts",
-      legalJurisdictionDesc: "In case of dispute, the competent courts are those of Paris, France, unless mandatory consumer protection laws designate otherwise.",
+      legalJurisdictionDesc:
+        "In case of dispute, the competent courts are those of Paris, France, unless mandatory consumer protection laws designate otherwise.",
       legalMediation: "Dispute resolution",
-      legalMediationDesc: "We encourage amicable resolution. Before initiating legal proceedings, please contact us via GitHub Issues. Mediation may be proposed as an alternative to court proceedings.",
+      legalMediationDesc:
+        "We encourage amicable resolution. Before initiating legal proceedings, please contact us via GitHub Issues. Mediation may be proposed as an alternative to court proceedings.",
       cryptoTitle: "Crypto Risks",
       cryptoDepeg: "Stablecoin risk",
-      cryptoDepegDesc: "USDC may temporarily depeg from $1 USD. x402 Bazaar is not responsible for USDC value fluctuations. You bear this risk entirely.",
+      cryptoDepegDesc:
+        "USDC may temporarily depeg from $1 USD. x402 Bazaar is not responsible for USDC value fluctuations. You bear this risk entirely.",
       cryptoSmartContract: "Smart contract risk",
-      cryptoSmartContractDesc: "Smart contracts may contain undiscovered bugs or vulnerabilities. Always test with small amounts first. We recommend never spending more than you can afford to lose.",
+      cryptoSmartContractDesc:
+        "Smart contracts may contain undiscovered bugs or vulnerabilities. Always test with small amounts first. We recommend never spending more than you can afford to lose.",
       cryptoAdvice: "Not financial advice",
-      cryptoAdviceDesc: "Nothing on x402 Bazaar constitutes financial, investment, or legal advice. Crypto markets are highly volatile and unregulated in many jurisdictions.",
+      cryptoAdviceDesc:
+        "Nothing on x402 Bazaar constitutes financial, investment, or legal advice. Crypto markets are highly volatile and unregulated in many jurisdictions.",
       contactTitle: "Contact",
-      contactDesc: "For questions about these terms, please open an issue on our GitHub repository.",
+      contactDesc:
+        "For questions about these terms, please open an issue on our GitHub repository.",
       tldr: "TL;DR — Use x402 Bazaar = accept these terms. Payments are final on-chain. We target 99.5% uptime. Providers get 95% revenue. AI agents = your responsibility.",
     },
     docs: {
       title: "Documentation",
-      subtitle: "Everything you need to build with x402 Bazaar — from first call to production.",
+      subtitle:
+        "Everything you need to build with x402 Bazaar — from first call to production.",
       sidebarQuickstart: "Quickstart",
       sidebarProtocol: "Protocol",
       sidebarApiRef: "API Reference",
@@ -1296,19 +1534,26 @@ def my_function(query: str) -> dict:
       quickstartTitle: "Quickstart",
       quickstartBadge: "5 min",
       quickstartStep1Title: "Step 1 — Install the CLI",
-      quickstartStep1Desc: "One command sets up everything — detects your IDE, installs the MCP server, and configures your wallet.",
+      quickstartStep1Desc:
+        "One command sets up everything — detects your IDE, installs the MCP server, and configures your wallet.",
       quickstartStep2Title: "Step 2 — Make your first call",
-      quickstartStep2Desc: "Try the cheapest endpoint — a random joke for just 0.01 USDC:",
+      quickstartStep2Desc:
+        "Try the cheapest endpoint — a random joke for just 0.01 USDC:",
       quickstartStep3Title: "Step 3 — Handle the 402 response",
-      quickstartStep3Desc: "The server responds with HTTP 402 and payment details:",
+      quickstartStep3Desc:
+        "The server responds with HTTP 402 and payment details:",
       quickstartStep4Title: "Step 4 — Pay & retry",
-      quickstartStep4Desc: "Send USDC to the recipient address, then retry with the transaction hash:",
-      quickstartSuccess: "Congratulations! You just made your first x402 payment. Your agent can now access any paid API on the marketplace.",
+      quickstartStep4Desc:
+        "Send USDC to the recipient address, then retry with the transaction hash:",
+      quickstartSuccess:
+        "Congratulations! You just made your first x402 payment. Your agent can now access any paid API on the marketplace.",
       protocolTitle: "The x402 Protocol",
       protocolStep1: "Call any paid endpoint without payment headers.",
-      protocolStep2: "Server responds HTTP 402 with payment details (amount, recipient, network).",
+      protocolStep2:
+        "Server responds HTTP 402 with payment details (amount, recipient, network).",
       protocolStep3: "Your agent sends USDC to the recipient address on Base.",
-      protocolStep4: "Resend the same request with header X-Payment-TxHash: 0x...",
+      protocolStep4:
+        "Resend the same request with header X-Payment-TxHash: 0x...",
       protocolStep5: "Server verifies the tx on-chain and grants access.",
       protocolResponseTitle: "402 Response Format",
       apiRefTitle: "API Reference",
@@ -1322,7 +1567,8 @@ def my_function(query: str) -> dict:
       thDescription: "Description",
       free: "Free",
       nativeTitle: "Native Wrappers",
-      nativeSubtitle: "{count} production-ready API endpoints built into x402 Bazaar. Real data, real payments, zero configuration.",
+      nativeSubtitle:
+        "{count} production-ready API endpoints built into x402 Bazaar. Real data, real payments, zero configuration.",
       nativeParams: "Parameters",
       nativeParamName: "Name",
       nativeParamType: "Type",
@@ -1333,13 +1579,16 @@ def my_function(query: str) -> dict:
       nativeYes: "Yes",
       nativeNo: "No",
       searchTitle: "Web Search",
-      searchDesc: "Clean search results optimized for LLMs. Powered by DuckDuckGo.",
+      searchDesc:
+        "Clean search results optimized for LLMs. Powered by DuckDuckGo.",
       searchParamQ: "Search query",
       scrapeTitle: "Web Scraper",
-      scrapeDesc: "Convert any URL to clean Markdown. Removes ads, navigation, and clutter.",
+      scrapeDesc:
+        "Convert any URL to clean Markdown. Removes ads, navigation, and clutter.",
       scrapeParamUrl: "URL to scrape",
       twitterTitle: "Twitter/X Data",
-      twitterDesc: "Fetch Twitter profiles, individual tweets, and search tweets by keyword.",
+      twitterDesc:
+        "Fetch Twitter profiles, individual tweets, and search tweets by keyword.",
       twitterParamUser: "Twitter username (without @)",
       twitterParamTweet: "Full tweet URL",
       twitterParamSearch: "Search keyword",
@@ -1351,9 +1600,11 @@ def my_function(query: str) -> dict:
       cryptoDesc: "Real-time cryptocurrency prices from CoinGecko.",
       cryptoParamCoin: "Coin ID (e.g. bitcoin, ethereum)",
       jokeTitle: "Joke API",
-      jokeDesc: "Random jokes — the cheapest endpoint, perfect for testing the payment flow.",
+      jokeDesc:
+        "Random jokes — the cheapest endpoint, perfect for testing the payment flow.",
       imageTitle: "Image Generation",
-      imageDesc: "AI image generation powered by DALL-E 3. Returns a URL to the generated image.",
+      imageDesc:
+        "AI image generation powered by DALL-E 3. Returns a URL to the generated image.",
       imageParamPrompt: "Image description (max 1000 chars)",
       imageParamSize: "Image size: 1024x1024, 1024x1792, or 1792x1024",
       imageParamQuality: "Quality: standard or hd",
@@ -1396,7 +1647,8 @@ def my_function(query: str) -> dict:
 
       // Sentiment
       sentimentTitle: "Sentiment Analysis",
-      sentimentDesc: "Analyze the sentiment of text (positive, negative, neutral).",
+      sentimentDesc:
+        "Analyze the sentiment of text (positive, negative, neutral).",
       sentimentParamText: "Text to analyze (5-10000 chars)",
 
       // Validate Email
@@ -1480,7 +1732,8 @@ def my_function(query: str) -> dict:
 
       // Dictionary
       dictionaryTitle: "Dictionary Lookup",
-      dictionaryDesc: "Look up word definitions, phonetics, and usage examples.",
+      dictionaryDesc:
+        "Look up word definitions, phonetics, and usage examples.",
       dictionaryParamWord: "Word to look up",
 
       // Countries
@@ -1546,104 +1799,136 @@ def my_function(query: str) -> dict:
 
       // --- BATCH 3: Data & Social ---
       newsTitle: "News Feed",
-      newsDesc: "Search real-time news from Google News. Returns top articles with title, source, link and date.",
+      newsDesc:
+        "Search real-time news from Google News. Returns top articles with title, source, link and date.",
       newsParamTopic: "Search topic (e.g. artificial intelligence)",
       newsParamLang: "Language code (en, fr, de...)",
       stocksTitle: "Stock Price",
-      stocksDesc: "Real-time stock prices from Yahoo Finance. Returns price, change, market state.",
+      stocksDesc:
+        "Real-time stock prices from Yahoo Finance. Returns price, change, market state.",
       stocksParamSymbol: "Stock ticker symbol (e.g. AAPL, MSFT)",
       redditTitle: "Reddit Data",
-      redditDesc: "Fetch posts from any subreddit. Supports hot, new, top, rising sort.",
+      redditDesc:
+        "Fetch posts from any subreddit. Supports hot, new, top, rising sort.",
       redditParamSubreddit: "Subreddit name (without r/)",
       redditParamSort: "Sort order: hot, new, top, rising",
       redditParamLimit: "Number of posts (1-30, default 10)",
       hnTitle: "Hacker News",
-      hnDesc: "Access Hacker News stories. Supports top, new, best, ask, show, job types.",
+      hnDesc:
+        "Access Hacker News stories. Supports top, new, best, ask, show, job types.",
       hnParamType: "Story type: top, new, best, ask, show, job",
       hnParamLimit: "Number of stories (1-30, default 10)",
       youtubeTitle: "YouTube Info",
-      youtubeDesc: "Get YouTube video metadata from URL or video ID. Returns title, author, thumbnail.",
+      youtubeDesc:
+        "Get YouTube video metadata from URL or video ID. Returns title, author, thumbnail.",
       youtubeParamUrl: "YouTube video URL or video ID",
       whoisTitle: "WHOIS Lookup",
-      whoisDesc: "Domain WHOIS via RDAP. Returns registration/expiration dates, nameservers, registrar.",
+      whoisDesc:
+        "Domain WHOIS via RDAP. Returns registration/expiration dates, nameservers, registrar.",
       whoisParamDomain: "Domain name (e.g. google.com)",
       sslCheckTitle: "SSL Certificate Check",
-      sslCheckDesc: "Check SSL certificate details for any domain. Returns issuer, validity, days remaining.",
+      sslCheckDesc:
+        "Check SSL certificate details for any domain. Returns issuer, validity, days remaining.",
       sslCheckParamDomain: "Domain to check (e.g. google.com)",
       regexTitle: "Regex Tester",
-      regexDesc: "Test regex patterns against text. Returns all matches with index and captured groups.",
+      regexDesc:
+        "Test regex patterns against text. Returns all matches with index and captured groups.",
       regexParamPattern: "Regex pattern to test",
       regexParamText: "Text to match against",
       regexParamFlags: "Regex flags (g, i, m, s)",
       diffTitle: "Text Diff",
-      diffDesc: "Compare two texts line by line. Shows added, removed, and equal lines.",
+      diffDesc:
+        "Compare two texts line by line. Shows added, removed, and equal lines.",
       diffParamText1: "First text to compare",
       diffParamText2: "Second text to compare",
       mathTitle: "Math Expression",
-      mathDesc: "Evaluate math expressions safely. Supports +,-,*,/,^,pi,e,sqrt,sin,cos,tan,log.",
+      mathDesc:
+        "Evaluate math expressions safely. Supports +,-,*,/,^,pi,e,sqrt,sin,cos,tan,log.",
       mathParamExpr: "Math expression (e.g. 2*pi+sqrt(16))",
 
       // --- BATCH 4: Utility ---
       unitConvertTitle: "Unit Converter",
-      unitConvertDesc: "Convert between units: length, weight, temperature, volume, speed, data.",
+      unitConvertDesc:
+        "Convert between units: length, weight, temperature, volume, speed, data.",
       unitConvertParamValue: "Numeric value to convert",
       unitConvertParamFrom: "Source unit (e.g. km, kg, celsius)",
       unitConvertParamTo: "Target unit (e.g. miles, lb, fahrenheit)",
       csvToJsonTitle: "CSV to JSON",
-      csvToJsonDesc: "Convert CSV data to JSON array. Supports custom delimiters and headers.",
+      csvToJsonDesc:
+        "Convert CSV data to JSON array. Supports custom delimiters and headers.",
       csvToJsonParamCsv: "CSV data string with headers",
       jwtDecodeTitle: "JWT Decoder",
-      jwtDecodeDesc: "Decode JWT tokens without verification. Returns header, payload, expiry status.",
+      jwtDecodeDesc:
+        "Decode JWT tokens without verification. Returns header, payload, expiry status.",
       jwtDecodeParamToken: "JWT token string",
       cronParseTitle: "Cron Parser",
-      cronParseDesc: "Parse cron expressions into human-readable descriptions with field breakdown.",
+      cronParseDesc:
+        "Parse cron expressions into human-readable descriptions with field breakdown.",
       cronParseParamExpr: "Cron expression (e.g. 0 9 * * 1-5)",
       passwordStrengthTitle: "Password Strength",
-      passwordStrengthDesc: "Analyze password strength with score (0-100), entropy, checks and suggestions.",
+      passwordStrengthDesc:
+        "Analyze password strength with score (0-100), entropy, checks and suggestions.",
       passwordStrengthParamPassword: "Password to analyze",
       phoneValidateTitle: "Phone Validator",
-      phoneValidateDesc: "Validate phone numbers. Detects country code, formats number, identifies type.",
-      phoneValidateParamPhone: "Phone number with country code (e.g. +33612345678)",
+      phoneValidateDesc:
+        "Validate phone numbers. Detects country code, formats number, identifies type.",
+      phoneValidateParamPhone:
+        "Phone number with country code (e.g. +33612345678)",
       urlParseTitle: "URL Parser",
-      urlParseDesc: "Parse and analyze URLs. Returns protocol, hostname, port, path, query params.",
+      urlParseDesc:
+        "Parse and analyze URLs. Returns protocol, hostname, port, path, query params.",
       urlParseParamUrl: "URL to parse",
       urlShortenTitle: "URL Shortener",
-      urlShortenDesc: "Shorten any URL using is.gd service. Returns permanent short URL.",
+      urlShortenDesc:
+        "Shorten any URL using is.gd service. Returns permanent short URL.",
       urlShortenParamUrl: "URL to shorten",
       htmlToTextTitle: "HTML to Text",
-      htmlToTextDesc: "Extract clean text from HTML. Removes scripts, styles. Extracts links and images.",
+      htmlToTextDesc:
+        "Extract clean text from HTML. Removes scripts, styles. Extracts links and images.",
       htmlToTextParamHtml: "HTML string to convert",
       httpStatusTitle: "HTTP Status Codes",
-      httpStatusDesc: "Look up HTTP status codes. Returns name, description, and category.",
+      httpStatusDesc:
+        "Look up HTTP status codes. Returns name, description, and category.",
       httpStatusParamCode: "HTTP status code (100-599)",
 
       mcpTitle: "MCP Server",
-      mcpDesc: "The Model Context Protocol (MCP) server lets any AI assistant interact with x402 Bazaar — searching, paying, and calling APIs autonomously.",
+      mcpDesc:
+        "The Model Context Protocol (MCP) server lets any AI assistant interact with x402 Bazaar — searching, paying, and calling APIs autonomously.",
       mcpToolsTitle: "Available Tools",
       mcpInstall: "Install with one command:",
       mcpFullDoc: "Full MCP documentation",
       integrationTitle: "Integration",
-      integrationDesc: "Implement the x402 payment flow in your agent with a single function.",
+      integrationDesc:
+        "Implement the x402 payment flow in your agent with a single function.",
       integrationJs: "JavaScript (Node.js)",
       integrationPy: "Python (requests + web3)",
       integrationFullDoc: "Full integration guide",
       securityTitle: "Security",
       securityBudgetTitle: "Budget Control",
-      securityBudgetDesc: "Set MAX_BUDGET_USDC to cap total spending per session. Agent is blocked when the limit is reached.",
+      securityBudgetDesc:
+        "Set MAX_BUDGET_USDC to cap total spending per session. Agent is blocked when the limit is reached.",
       securityReplayTitle: "Anti-Replay Protection",
-      securityReplayDesc: "Every transaction hash is stored in Supabase. Reused hashes are rejected instantly.",
+      securityReplayDesc:
+        "Every transaction hash is stored in Supabase. Reused hashes are rejected instantly.",
       securityOnchainTitle: "On-Chain Verification",
-      securityOnchainDesc: "Every payment is verified on-chain via Base RPC. Fully trustless — no trust assumptions.",
+      securityOnchainDesc:
+        "Every payment is verified on-chain via Base RPC. Fully trustless — no trust assumptions.",
       securityRateTitle: "Rate Limiting",
-      securityRateDesc: "30 req/min for paid endpoints, 500/15min general. Prevents abuse and DDoS.",
+      securityRateDesc:
+        "30 req/min for paid endpoints, 500/15min general. Prevents abuse and DDoS.",
       securitySsrfTitle: "SSRF Protection",
-      securitySsrfDesc: "The scraper blocks requests to private IPs, localhost, and internal networks.",
+      securitySsrfDesc:
+        "The scraper blocks requests to private IPs, localhost, and internal networks.",
       securityBestTitle: "Best Practices",
-      securityBest1: "Use testnet (Base Sepolia) for development — no real funds needed.",
-      securityBest2: "Set a conservative budget (0.10 USDC for testing, 1.00 for production).",
-      securityBest3: "Always check your budget with get_budget_status before heavy operations.",
+      securityBest1:
+        "Use testnet (Base Sepolia) for development — no real funds needed.",
+      securityBest2:
+        "Set a conservative budget (0.10 USDC for testing, 1.00 for production).",
+      securityBest3:
+        "Always check your budget with get_budget_status before heavy operations.",
       erc8004Title: "ERC-8004 Agent Identity",
-      erc8004Desc: "x402 Bazaar is registered as a verified agent via ERC-8004 on Base mainnet. The free endpoint GET /api/agent/:agentId lets anyone verify an agent's on-chain identity without payment.",
+      erc8004Desc:
+        "x402 Bazaar is registered as a verified agent via ERC-8004 on Base mainnet. The free endpoint GET /api/agent/:agentId lets anyone verify an agent's on-chain identity without payment.",
       erc8004Endpoint: "Verify any agent identity for free:",
     },
     status: {
@@ -1661,8 +1946,10 @@ def my_function(query: str) -> dict:
       uptime: "Uptime",
       lastUpdate: "Last update",
       autoRefresh: "auto-refresh 60s",
-      noData: "No monitoring data yet. First check runs 30 seconds after server start.",
-      footer: "Endpoints are checked every 5 minutes. Status 402 (Payment Required) or 400 (Missing Params) = Online.",
+      noData:
+        "No monitoring data yet. First check runs 30 seconds after server start.",
+      footer:
+        "Endpoints are checked every 5 minutes. Status 402 (Payment Required) or 400 (Missing Params) = Online.",
     },
     privacy: {
       title: "Privacy Policy",
@@ -1670,46 +1957,62 @@ def my_function(query: str) -> dict:
       lastUpdated: "Last updated",
       collectTitle: "What We Collect",
       collectApi: "API call logs",
-      collectApiDesc: "Request type, endpoint, timestamp, and response status for monitoring and analytics.",
+      collectApiDesc:
+        "Request type, endpoint, timestamp, and response status for monitoring and analytics.",
       collectTx: "Transaction hashes",
-      collectTxDesc: "On-chain USDC transaction hashes on Base for payment verification. These are public blockchain data.",
+      collectTxDesc:
+        "On-chain USDC transaction hashes on Base for payment verification. These are public blockchain data.",
       collectMonitor: "Monitoring data",
-      collectMonitorDesc: "Endpoint status checks (online/offline, latency, HTTP status) every 5 minutes for uptime tracking.",
+      collectMonitorDesc:
+        "Endpoint status checks (online/offline, latency, HTTP status) every 5 minutes for uptime tracking.",
       noCollectTitle: "What We Don't Collect",
       noPersonal: "No personal data",
-      noPersonalDesc: "We never collect names, emails, phone numbers, or any personally identifiable information.",
+      noPersonalDesc:
+        "We never collect names, emails, phone numbers, or any personally identifiable information.",
       noCookies: "No cookies",
-      noCookiesDesc: "We do not use cookies. Language preference is stored in your browser's localStorage only.",
+      noCookiesDesc:
+        "We do not use cookies. Language preference is stored in your browser's localStorage only.",
       noTracking: "No IP tracking",
       noTrackingDesc: "We do not log, store, or track IP addresses.",
       noThirdParty: "No third-party analytics",
-      noThirdPartyDesc: "No Google Analytics, no Facebook Pixel, no tracking scripts of any kind.",
+      noThirdPartyDesc:
+        "No Google Analytics, no Facebook Pixel, no tracking scripts of any kind.",
       retentionTitle: "Data Retention",
       retentionLogs: "API logs",
-      retentionLogsDesc: "Retained for 30 days for monitoring purposes, then automatically deleted.",
+      retentionLogsDesc:
+        "Retained for 30 days for monitoring purposes, then automatically deleted.",
       retentionTx: "Transaction records",
-      retentionTxDesc: "Stored permanently for anti-replay protection and audit trail. Only contains tx hashes (public data).",
+      retentionTxDesc:
+        "Stored permanently for anti-replay protection and audit trail. Only contains tx hashes (public data).",
       retentionMonitor: "Monitoring checks",
-      retentionMonitorDesc: "Retained for 30 days for uptime statistics, then automatically cleaned up.",
+      retentionMonitorDesc:
+        "Retained for 30 days for uptime statistics, then automatically cleaned up.",
       blockchainTitle: "Blockchain Data",
       blockchainPublic: "Public by nature",
-      blockchainPublicDesc: "All USDC payments are on-chain transactions on Base. They are publicly visible on block explorers.",
+      blockchainPublicDesc:
+        "All USDC payments are on-chain transactions on Base. They are publicly visible on block explorers.",
       blockchainImmutable: "Immutable",
-      blockchainImmutableDesc: "Blockchain transactions cannot be deleted or modified. This is by design for transparency.",
+      blockchainImmutableDesc:
+        "Blockchain transactions cannot be deleted or modified. This is by design for transparency.",
       sentryTitle: "Third-Party Processors",
       sentryTracker: "Sentry (error tracking)",
-      sentryTrackerDesc: "We use Sentry for error monitoring only. Session replay and performance tracing are DISABLED. Sentry may process: error messages, stack traces, browser user-agent, and anonymous session context.",
+      sentryTrackerDesc:
+        "We use Sentry for error monitoring only. Session replay and performance tracing are DISABLED. Sentry may process: error messages, stack traces, browser user-agent, and anonymous session context.",
       sentrySubprocessors: "Sub-processors",
-      sentrySubprocessorsDesc: "Services we use to operate x402 Bazaar: Supabase (database), Render (backend hosting), Vercel (frontend hosting), Sentry (error monitoring), WalletConnect (wallet connectivity), OpenAI (AI inference). Each bound by GDPR-compliant DPAs.",
+      sentrySubprocessorsDesc:
+        "Services we use to operate x402 Bazaar: Supabase (database), Render (backend hosting), Vercel (frontend hosting), Sentry (error monitoring), WalletConnect (wallet connectivity), OpenAI (AI inference). Each bound by GDPR-compliant DPAs.",
       sentryLegalBasis: "Legal basis (GDPR)",
-      sentryLegalBasisDesc: "Processing basis: Art. 6(1)(f) GDPR — legitimate interest in site reliability and error diagnosis. You may object to this processing at any time via GitHub Issues.",
+      sentryLegalBasisDesc:
+        "Processing basis: Art. 6(1)(f) GDPR — legitimate interest in site reliability and error diagnosis. You may object to this processing at any time via GitHub Issues.",
       contactTitle: "Contact",
-      contactDesc: "For privacy-related questions or concerns, please open an issue on our GitHub repository.",
+      contactDesc:
+        "For privacy-related questions or concerns, please open an issue on our GitHub repository.",
       tldr: "TL;DR — We don't collect personal data. We only log API calls for monitoring and store public blockchain transaction hashes.",
     },
     playground: {
       title: "Test APIs Live",
-      subtitle: "Select an API, tweak the parameters, and see the x402 payment protocol in action.",
+      subtitle:
+        "Select an API, tweak the parameters, and see the x402 payment protocol in action.",
       selectApi: "Select an API",
       parameters: "Parameters",
       sendRequest: "Send Request",
@@ -1725,7 +2028,8 @@ def my_function(query: str) -> dict:
       tabPython: "Python",
       required: "required",
       optional: "optional",
-      protocolBanner: "Paid APIs return HTTP 402 — this is the x402 protocol in action!",
+      protocolBanner:
+        "Paid APIs return HTTP 402 — this is the x402 protocol in action!",
       networkError: "Network error",
       viewDocs: "View Documentation",
       copy: "Copy",
@@ -1734,7 +2038,8 @@ def my_function(query: str) -> dict:
     },
     budget: {
       title: "Agent Budget Dashboard",
-      subtitle: "Monitor and control AI agent spending. Set USDC limits, track usage in real-time, and get alerts before budgets run out.",
+      subtitle:
+        "Monitor and control AI agent spending. Set USDC limits, track usage in real-time, and get alerts before budgets run out.",
       walletSection: "Agent Wallet",
       walletLabel: "Wallet Address",
       invalidWallet: "Invalid wallet address (must be 0x + 40 hex chars)",
@@ -1747,7 +2052,8 @@ def my_function(query: str) -> dict:
       period_monthly: "Monthly",
       setBudgetBtn: "Set Budget",
       preflightTitle: "Pre-flight Check",
-      preflightDesc: "Check if a specific amount is within the budget before making a call.",
+      preflightDesc:
+        "Check if a specific amount is within the budget before making a call.",
       amountLabel: "Amount (USDC)",
       checkBtn: "Check",
       allowed: "Allowed — within budget",
@@ -1761,16 +2067,19 @@ def my_function(query: str) -> dict:
       alertThresholds: "Alert Thresholds",
       periodStart: "Period started",
       emptyTitle: "No budget loaded",
-      emptyDesc: "Enter an agent wallet address and click Check Budget to view spending controls.",
+      emptyDesc:
+        "Enter an agent wallet address and click Check Budget to view spending controls.",
       noBudgetSet: "No budget set for this wallet.",
       budgetSetSuccess: "Budget set successfully!",
       budgetRemoved: "Budget removed.",
       timeout: "Request timed out",
       loading: "Loading...",
       howItWorks: "How Budget Guardian Works",
-      step1: "Set a USDC spending limit for any agent wallet (daily, weekly, or monthly).",
+      step1:
+        "Set a USDC spending limit for any agent wallet (daily, weekly, or monthly).",
       step2: "Every x402 payment is tracked against the budget in real-time.",
-      step3: "Alerts trigger at 50%, 75%, and 90% usage. Payments are blocked at 100%.",
+      step3:
+        "Alerts trigger at 50%, 75%, and 90% usage. Payments are blocked at 100%.",
       tipsTitle: "Quick Tips",
       tip1: "Start with $0.10/day for testing, scale to $1.00+ for production.",
       tip2: "Use the pre-flight check before heavy operations to avoid rejections.",
@@ -1792,9 +2101,11 @@ def my_function(query: str) -> dict:
     },
     fund: {
       pageTitle: "Fund Your Wallet \u2014 Bridge USDC Cross-Chain",
-      pageDescription: "Bridge USDC from any chain to SKALE, Base, or Polygon in 1 click.",
+      pageDescription:
+        "Bridge USDC from any chain to SKALE, Base, or Polygon in 1 click.",
       heroTitle: "Fund Your Wallet",
-      heroSubtitle: "Bridge USDC to SKALE, Base, or Polygon in 1 click. Pay for APIs with ultra-low gas.",
+      heroSubtitle:
+        "Bridge USDC to SKALE, Base, or Polygon in 1 click. Pay for APIs with ultra-low gas.",
       fromLabel: "Your Chain",
       toLabel: "Bridge To",
       switchChain: "Switch Chain",
@@ -1818,20 +2129,26 @@ def my_function(query: str) -> dict:
       startUsing: "Start using APIs",
       howTitle: "How It Works",
       step1Title: "Choose Any Token",
-      step1Desc: "Use any token from any chain. Trails finds the best route to USDC automatically.",
+      step1Desc:
+        "Use any token from any chain. Trails finds the best route to USDC automatically.",
       step2Title: "One-Click Bridge",
-      step2Desc: "Routes and bridges to your chosen destination \u2014 one transaction.",
+      step2Desc:
+        "Routes and bridges to your chosen destination \u2014 one transaction.",
       step3Title: "USDC on Destination",
       step3Desc: "USDC arrives on your chain. Ready for API payments.",
       faqTitle: "Frequently Asked Questions",
       faqQ1: "How long does the bridge take?",
-      faqA1: "Depends on destination: Base ~1-2 min, SKALE 5-15 min (IMA bridge), Polygon ~2-5 min.",
+      faqA1:
+        "Depends on destination: Base ~1-2 min, SKALE 5-15 min (IMA bridge), Polygon ~2-5 min.",
       faqQ2: "What tokens can I use?",
-      faqA2: "Any token on Ethereum, Polygon, Optimism, Arbitrum, or Base. Trails finds the best route automatically.",
+      faqA2:
+        "Any token on Ethereum, Polygon, Optimism, Arbitrum, or Base. Trails finds the best route automatically.",
       faqQ3: "Is there a minimum amount?",
-      faqA3: "No minimum. Very small amounts may not be cost-effective due to gas fees.",
+      faqA3:
+        "No minimum. Very small amounts may not be cost-effective due to gas fees.",
       faqQ4: "What if the bridge fails?",
-      faqA4: "Trails provides automatic refunds if the transaction fails on the source chain.",
+      faqA4:
+        "Trails provides automatic refunds if the transaction fails on the source chain.",
       customRecipient: "Custom recipient address",
       useMyWallet: "Use my wallet",
       progressStep0: "Signing transaction...",
@@ -1842,7 +2159,8 @@ def my_function(query: str) -> dict:
     },
     liveAgent: {
       title: "Live AI Agent",
-      subtitle: "This autonomous agent calls 3 space APIs and pays real USDC — twice a day, fully automated.",
+      subtitle:
+        "This autonomous agent calls 3 space APIs and pays real USDC — twice a day, fully automated.",
       badge: "LIVE",
       nasaTitle: "NASA Astronomy Picture of the Day",
       issTitle: "ISS Position",
@@ -1856,7 +2174,8 @@ def my_function(query: str) -> dict:
       generatedAgo: "Generated {time} ago",
       viewExplorer: "View on Explorer",
       paymentFlow: "Payment Flow",
-      paymentFlowDesc: "Real USDC payments on SKALE — $0.0007 gas per transaction",
+      paymentFlowDesc:
+        "Real USDC payments on SKALE — $0.0007 gas per transaction",
       pastRuns: "Past Reports",
       explanation: "Full Explanation",
       ctaTitle: "Build your own x402 agent",
@@ -1866,7 +2185,8 @@ def my_function(query: str) -> dict:
     },
     paymentLinks: {
       title: "Create a Payment Link",
-      description: "Paywall any URL. Share a link, get paid in USDC. Recipients pay once to unlock the content.",
+      description:
+        "Paywall any URL. Share a link, get paid in USDC. Recipients pay once to unlock the content.",
       titleLabel: "Link Title",
       contentUrl: "Content URL",
       price: "Price (USDC)",
@@ -1928,7 +2248,8 @@ def my_function(query: str) -> dict:
     },
     importOpenAPI: {
       title: "Importer une spec OpenAPI",
-      subtitle: "Uploadez votre spec OpenAPI/Swagger et listez tous vos endpoints comme APIs payantes en un clic.",
+      subtitle:
+        "Uploadez votre spec OpenAPI/Swagger et listez tous vos endpoints comme APIs payantes en un clic.",
       stepUpload: "Upload",
       stepPreview: "Aperçu",
       stepConfigure: "Configurer",
@@ -1965,17 +2286,20 @@ def my_function(query: str) -> dict:
       parseError: "Échec de l'analyse de la spec",
       importError: "L'import a échoué",
       importTitle: "Vous avez une spec OpenAPI ?",
-      importDesc: "Importez tous vos endpoints en une fois. Uploadez votre spec OpenAPI/Swagger et listez 100+ APIs en 2 minutes.",
+      importDesc:
+        "Importez tous vos endpoints en une fois. Uploadez votre spec OpenAPI/Swagger et listez 100+ APIs en 2 minutes.",
       importCta: "Importer la spec",
     },
     importRapidapi: {
       title: "Importer depuis RapidAPI",
-      subtitle: "Importez n'importe quelle API RapidAPI en quelques secondes. Credentials auto-configurees.",
+      subtitle:
+        "Importez n'importe quelle API RapidAPI en quelques secondes. Credentials auto-configurees.",
       step1: "Upload & Cle",
       step2: "Apercu",
       step3: "Importer",
       uploadSpec: "Uploadez votre spec OpenAPI",
-      uploadHint: "Telechargez votre spec depuis RapidAPI : Dashboard API > Definitions > Download API Spec",
+      uploadHint:
+        "Telechargez votre spec depuis RapidAPI : Dashboard API > Definitions > Download API Spec",
       rapidapiKey: "X-RapidAPI-Key",
       rapidapiKeyHint: "Trouvez-la sur rapidapi.com/developer/apps",
       detected: "RapidAPI Detecte",
@@ -2038,6 +2362,7 @@ def my_function(query: str) -> dict:
       verifiedOnChain: "Vérifié on-chain",
       verified: "Vérifié",
       free: "Gratuit",
+      freeToTry: "Essai gratuit",
       viewApi: "Voir API",
       useWithAI: "Utiliser avec IA",
       copied: "Copie !",
@@ -2054,7 +2379,8 @@ def my_function(query: str) -> dict:
     home: {
       heroTitle: "Des APIs qui se paient",
       heroTitleHighlight: "toutes seules.",
-      heroSubtitle: "Pas de cles API. Pas d'abonnements. Les agents IA decouvrent, appellent et paient les APIs en USDC — automatiquement.",
+      heroSubtitle:
+        "Pas de cles API. Pas d'abonnements. Les agents IA decouvrent, appellent et paient les APIs en USDC — automatiquement.",
       searchPlaceholder: "Rechercher GPT, traduction, météo, crypto...",
       searchBtn: "Rechercher",
       apis: "APIs",
@@ -2079,24 +2405,30 @@ def my_function(query: str) -> dict:
       },
       howItWorks: "Comment ca marche",
       step1Title: "Appelez une API",
-      step1Desc: "Votre agent appelle un endpoint. S'il est payant, le serveur repond HTTP 402 avec le prix.",
+      step1Desc:
+        "Votre agent appelle un endpoint. S'il est payant, le serveur repond HTTP 402 avec le prix.",
       step2Title: "Payez en USDC sur SKALE",
-      step2Desc: "Transférez le montant exact. Gas ultra-bas (~$0,0007) sur SKALE.",
+      step2Desc:
+        "Transférez le montant exact. Gas ultra-bas (~$0,0007) sur SKALE.",
       step3Title: "Acces accorde",
-      step3Desc: "Renvoyez votre requete avec le hash de la tx dans le header. Vérifié on-chain, acces accorde.",
+      step3Desc:
+        "Renvoyez votre requete avec le hash de la tx dans le header. Vérifié on-chain, acces accorde.",
       freeApisTitle: "APIs gratuites pour commencer",
       premiumApisTitle: "APIs Premium IA & Donnees",
       servicesListed: "Services listes",
       paymentsVerified: "Paiements verifies",
       totalVolume: "Volume total",
       categoriesCount: "Categories",
-      cliHint: "Une commande pour connecter votre agent IA. Fonctionne dans tous les terminaux, y compris ceux des IDE.",
+      cliHint:
+        "Une commande pour connecter votre agent IA. Fonctionne dans tous les terminaux, y compris ceux des IDE.",
       ctaTitle: "Listez votre API sur x402 Bazaar",
-      ctaDesc: "Rejoignez la marketplace autonome. Votre API accessible a des milliers d'agents IA dans le monde.",
+      ctaDesc:
+        "Rejoignez la marketplace autonome. Votre API accessible a des milliers d'agents IA dans le monde.",
       listYourApi: "Lister votre API",
       integrateAgent: "Intégrer votre Agent",
       providerTitle: "Fournisseur d'API ? Monetisez en 5 min",
-      providerDesc: "Utilisez notre template Python pour transformer n'importe quelle fonction en API payante. Un decorator, paiements USDC, verification on-chain.",
+      providerDesc:
+        "Utilisez notre template Python pour transformer n'importe quelle fonction en API payante. Un decorator, paiements USDC, verification on-chain.",
       providerBtn: "Obtenir le Template",
       trustBarLabel: "Propulsé par",
       exploreCTA: "Parcourir {count}+ APIs",
@@ -2107,18 +2439,23 @@ def my_function(query: str) -> dict:
       readDocsCTA: "Lire la documentation",
       avgTransaction: "Transaction moy.",
       onSkale: "sur SKALE",
-      footerDesc: "La marketplace autonome ou les agents IA découvrent, paient et consomment des services API via le protocole HTTP 402 sur SKALE, Base & Polygon.",
+      footerDesc:
+        "La marketplace autonome ou les agents IA découvrent, paient et consomment des services API via le protocole HTTP 402 sur SKALE, Base & Polygon.",
       footerProduct: "Produit",
       footerResources: "Ressources",
       valueProTitle: "Pourquoi x402 Bazaar ?",
       valuePro1Title: "Sans Compte",
-      valuePro1Desc: "Les agents n'ont besoin ni de cles API ni d'inscription. Juste du HTTP et du USDC.",
+      valuePro1Desc:
+        "Les agents n'ont besoin ni de cles API ni d'inscription. Juste du HTTP et du USDC.",
       valuePro2Title: "Paiement a l'Appel",
-      valuePro2Desc: "A partir de 0,005$ par appel. Sans abonnement, sans minimum, sans code de facturation.",
+      valuePro2Desc:
+        "A partir de 0,005$ par appel. Sans abonnement, sans minimum, sans code de facturation.",
       valuePro3Title: "Verifie On-Chain",
-      valuePro3Desc: "Chaque paiement verifie cryptographiquement sur SKALE, Base ou Polygon. Aucune confiance requise.",
+      valuePro3Desc:
+        "Chaque paiement verifie cryptographiquement sur SKALE, Base ou Polygon. Aucune confiance requise.",
       valuePro4Title: "Frais de Gas Ultra-bas",
-      valuePro4Desc: "Utilisez SKALE on Base pour des transactions avec des frais de gas ultra-bas (~$0,0007/tx).",
+      valuePro4Desc:
+        "Utilisez SKALE on Base pour des transactions avec des frais de gas ultra-bas (~$0,0007/tx).",
       socialProofTitle: "Infrastructure de Confiance",
       socialProof1: "Construit sur le protocole x402 de Coinbase",
       socialProof2: "100% Open Source",
@@ -2137,7 +2474,8 @@ def my_function(query: str) -> dict:
       // Nouvelles cles hero
       heroTitleNew: "La Marketplace d'APIs pour les",
       heroTitleHighlightNew: "Agents IA",
-      heroSubtitleNew: "Paiement par appel en USDC. Pas de cles API. Pas d'abonnements. Juste HTTP 402.",
+      heroSubtitleNew:
+        "Paiement par appel en USDC. Pas de cles API. Pas d'abonnements. Juste HTTP 402.",
       badgeBase: "Construit sur SKALE",
       badgeX402: "Propulse par x402",
       badgeSkale: "SKALE Ultra-low Gas",
@@ -2160,30 +2498,38 @@ def my_function(query: str) -> dict:
       whyLabel: "Pourquoi x402",
       integrationsLabel: "Integrations",
       integrationsTitle: "Fonctionne partout ou tournent les agents IA",
-      integrationsSubtitle: "7 plateformes, une marketplace. Votre agent, vos outils.",
+      integrationsSubtitle:
+        "7 plateformes, une marketplace. Votre agent, vos outils.",
       tractionLabel: "Traction",
       tractionTitle: "Utilisation reelle, paiements reels, providers reels",
       tractionPayments: "Paiements traites on-chain",
       tractionProviders: "Providers externes generant des revenus",
       tractionVolume: "Volume USDC on-chain",
-      testimonialQuote: "Integration de notre API en moins de 10 minutes. Paiements USDC instantanes, 95% de part de revenus — exactement ce dont nous avions besoin.",
+      testimonialQuote:
+        "Integration de notre API en moins de 10 minutes. Paiements USDC instantanes, 95% de part de revenus — exactement ce dont nous avions besoin.",
       testimonialAuthor: "Interzoid, Fournisseur API Data",
       // Code snippet
       codeSnippetLabel: "Exemple de flux de paiement x402",
       // Erreur
-      errorLoadServices: "Impossible de charger les services. Veuillez reessayer.",
+      errorLoadServices:
+        "Impossible de charger les services. Veuillez reessayer.",
       // CTA final
       finalCtaTitle: "Commencez a construire avec x402 Bazaar",
-      finalCtaDesc: "Rejoignez la marketplace autonome. Votre agent IA merite des APIs qui se paient seules.",
+      finalCtaDesc:
+        "Rejoignez la marketplace autonome. Votre agent IA merite des APIs qui se paient seules.",
       integrateTitle: "Integrez votre Agent IA",
-      integrateDesc: "Connectez Claude, ChatGPT ou tout agent LangChain en quelques minutes via MCP, CLI ou REST.",
+      integrateDesc:
+        "Connectez Claude, ChatGPT ou tout agent LangChain en quelques minutes via MCP, CLI ou REST.",
       fundCta: "Alimentez votre Wallet",
-      fundCtaDesc: "Bridgez vos USDC depuis n'importe quelle chain vers SKALE en 1 clic — frais ultra-bas (~0,0007$/tx)",
+      fundCtaDesc:
+        "Bridgez vos USDC depuis n'importe quelle chain vers SKALE en 1 clic — frais ultra-bas (~0,0007$/tx)",
       fundCtaBtn: "Alimenter le Wallet",
-      providerCtaInline: "Fournisseur d'API ? Monetisez n'importe quelle URL en 10 secondes",
+      providerCtaInline:
+        "Fournisseur d'API ? Monetisez n'importe quelle URL en 10 secondes",
       partnerLabel: "Partenaire Strategique",
       partnerTitle: "Propulse par SKALE Network",
-      partnerDesc: "x402 Bazaar tourne sur SKALE Network — des frais de gas ultra-bas (~0,0007$/tx) et une finalite instantanee pour les micropaiements d'agents IA a grande echelle.",
+      partnerDesc:
+        "x402 Bazaar tourne sur SKALE Network — des frais de gas ultra-bas (~0,0007$/tx) et une finalite instantanee pour les micropaiements d'agents IA a grande echelle.",
       partnerFeature1: "~0,0007$ gas",
       partnerFeature2: "Finalite instantanee",
       partnerFeature3: "Natif Ethereum",
@@ -2193,12 +2539,14 @@ def my_function(query: str) -> dict:
       heroProviderTitle1: "Monetisez",
       heroProviderTitle2: "toute API",
       heroProviderTitle3: "en 2 min.",
-      heroProviderDesc: "Pas de SDK. Pas de code. Wrappez votre endpoint et gagnez des USDC a chaque appel.",
+      heroProviderDesc:
+        "Pas de SDK. Pas de code. Wrappez votre endpoint et gagnez des USDC a chaque appel.",
       heroProviderStat1: "103 APIs",
       heroProviderStat2: "95% revenus",
       heroProviderCta: "Lister votre API",
       heroProviderRevealTitle: "Chiffrement AES-256",
-      heroProviderRevealDesc: "— listez des APIs authentifiees en toute securite. Cles dechiffrees uniquement au moment de l'appel.",
+      heroProviderRevealDesc:
+        "— listez des APIs authentifiees en toute securite. Cles dechiffrees uniquement au moment de l'appel.",
       heroProviderRevealHighlight: "95%",
       heroProviderRevealEnd: "des revenus pour vous.",
       heroProviderRevenue: "Revenus mensuels",
@@ -2206,7 +2554,8 @@ def my_function(query: str) -> dict:
       heroAgentTitle1: "Payez et go.",
       heroAgentTitle2: "Sans cles.",
       heroAgentTitle3: "Sans abo.",
-      heroAgentDesc: "Decouvrez des APIs, payez en USDC par appel, resultats instantanes. Une requete HTTP.",
+      heroAgentDesc:
+        "Decouvrez des APIs, payez en USDC par appel, resultats instantanes. Une requete HTTP.",
       heroAgentStat1: "$0.00 gas",
       heroAgentStat2: "3 chaines",
       heroAgentCta: "Parcourir les APIs",
@@ -2252,7 +2601,8 @@ def my_function(query: str) -> dict:
     },
     faq: {
       title: "Questions frequentes",
-      subtitle: "Tout ce que vous devez savoir sur x402 Bazaar, les paiements et l'integration.",
+      subtitle:
+        "Tout ce que vous devez savoir sur x402 Bazaar, les paiements et l'integration.",
       sectionGeneral: "General",
       sectionPayments: "Paiements & Tarifs",
       sectionTechnical: "Technique",
@@ -2298,24 +2648,30 @@ def my_function(query: str) -> dict:
     },
     demos: {
       title: "Demos & Cas d'usage",
-      subtitle: "Decouvrez comment les agents IA utilisent x402 Bazaar pour chainer plusieurs APIs de maniere autonome.",
+      subtitle:
+        "Decouvrez comment les agents IA utilisent x402 Bazaar pour chainer plusieurs APIs de maniere autonome.",
       featuredTitle: "Demo Agent Autonome",
-      featuredDesc: "Un agent IA qui decouvre des services, paie en USDC automatiquement et chaine plusieurs appels API pour completer des taches complexes — sans intervention humaine.",
+      featuredDesc:
+        "Un agent IA qui decouvre des services, paie en USDC automatiquement et chaine plusieurs appels API pour completer des taches complexes — sans intervention humaine.",
       scenariosTitle: "Scenarios Multi-API",
       scenario1Title: "Agent de Recherche",
-      scenario1Desc: "Recherche sur le web, scrape les pages pertinentes et compile un rapport de synthese sur n'importe quel sujet.",
+      scenario1Desc:
+        "Recherche sur le web, scrape les pages pertinentes et compile un rapport de synthese sur n'importe quel sujet.",
       scenario1Flow: "search → scrape → resume",
       scenario1Cost: "$0.015 par requete",
       scenario2Title: "Moniteur Social",
-      scenario2Desc: "Suit les mentions Twitter, analyse le sentiment et genere des alertes pour les sujets tendance.",
+      scenario2Desc:
+        "Suit les mentions Twitter, analyse le sentiment et genere des alertes pour les sujets tendance.",
       scenario2Flow: "twitter search → scrape profils → analyser",
       scenario2Cost: "$0.015 par scan",
       scenario3Title: "Createur de Contenu",
-      scenario3Desc: "Genere des images, ecrit du contenu base sur la recherche web et publie sur plusieurs plateformes.",
+      scenario3Desc:
+        "Genere des images, ecrit du contenu base sur la recherche web et publie sur plusieurs plateformes.",
       scenario3Flow: "search → image gen → scrape → composer",
       scenario3Cost: "$0.065 par piece",
       scenario4Title: "Analyste Financier",
-      scenario4Desc: "Recupere les prix crypto en temps reel, les donnees meteo pour l'analyse des matieres premieres et les actualites.",
+      scenario4Desc:
+        "Recupere les prix crypto en temps reel, les donnees meteo pour l'analyse des matieres premieres et les actualites.",
       scenario4Flow: "crypto → meteo → search → rapport",
       scenario4Cost: "$0.045 par analyse",
       ctaButton: "Creez votre propre Agent",
@@ -2327,14 +2683,16 @@ def my_function(query: str) -> dict:
     },
     analytics: {
       title: "Analytiques du Marketplace",
-      subtitle: "Statistiques en temps reel sur l'activite, les paiements et l'utilisation des services x402 Bazaar.",
+      subtitle:
+        "Statistiques en temps reel sur l'activite, les paiements et l'utilisation des services x402 Bazaar.",
       totalRevenue: "Revenu total",
       totalTransactions: "Transactions totales",
       totalServices: "Services totaux",
       dailyVolumeTitle: "Volume quotidien des paiements",
       topServicesTitle: "Top services par appels",
       cumulativeRevenueTitle: "Revenu cumule",
-      noData: "Aucune donnee analytique disponible pour le moment. Les analytiques se rempliront au fur et a mesure des paiements et appels API.",
+      noData:
+        "Aucune donnee analytique disponible pour le moment. Les analytiques se rempliront au fur et a mesure des paiements et appels API.",
       live: "En direct",
       treasuryBalance: "Solde du Tresor",
       walletAddress: "Adresse du Wallet",
@@ -2378,7 +2736,8 @@ def my_function(query: str) -> dict:
     compare: {
       badge: "Comparaison",
       title: "x402 Bazaar vs RapidAPI",
-      subtitle: "Concu pour les agents IA, pas adapte apres coup. Voyez la difference.",
+      subtitle:
+        "Concu pour les agents IA, pas adapte apres coup. Voyez la difference.",
       featureCol: "Fonctionnalite",
       feature_agentSupport: "Support natif agents IA",
       feature_payPerCall: "Vrai paiement a l'appel",
@@ -2393,58 +2752,79 @@ def my_function(query: str) -> dict:
       feature_listingFee: "Frais de listing",
       feature_minSpend: "Depense minimum",
       win1Title: "Agent-First",
-      win1Desc: "La seule marketplace concue pour les agents IA autonomes. Pas besoin de carte bancaire — les agents paient avec des wallets USDC.",
+      win1Desc:
+        "La seule marketplace concue pour les agents IA autonomes. Pas besoin de carte bancaire — les agents paient avec des wallets USDC.",
       win2Title: "Paiement a l'appel",
-      win2Desc: "Pas d'abonnement, pas de minimum. Votre agent paie exactement ce qu'il utilise — de $0.003 a $0.05 par appel.",
+      win2Desc:
+        "Pas d'abonnement, pas de minimum. Votre agent paie exactement ce qu'il utilise — de $0.003 a $0.05 par appel.",
       win3Title: "Transparent",
-      win3Desc: "Chaque paiement est on-chain, verifiable, auditable. Pas de frais caches, pas de factures surprise.",
+      win3Desc:
+        "Chaque paiement est on-chain, verifiable, auditable. Pas de frais caches, pas de factures surprise.",
       win4Title: "Integration rapide",
-      win4Desc: "2 minutes pour commencer. Une commande CLI : npx x402-bazaar init. Pas de creation de compte.",
+      win4Desc:
+        "2 minutes pour commencer. Une commande CLI : npx x402-bazaar init. Pas de creation de compte.",
       win5Title: "95% de revenu",
-      win5Desc: "Les createurs d'API gardent 95% du revenu contre 75% sur RapidAPI. Une meilleure economie pour tous.",
+      win5Desc:
+        "Les createurs d'API gardent 95% du revenu contre 75% sur RapidAPI. Une meilleure economie pour tous.",
       win6Title: "Multi-Chain",
-      win6Desc: "Base mainnet + SKALE (gas ultra-bas) + Polygon. Choisissez le reseau qui vous convient.",
+      win6Desc:
+        "Base mainnet + SKALE (gas ultra-bas) + Polygon. Choisissez le reseau qui vous convient.",
       ctaTitle: "Pret a changer ?",
-      ctaDesc: "Rejoignez la marketplace construite pour le futur du commerce API par agents IA.",
+      ctaDesc:
+        "Rejoignez la marketplace construite pour le futur du commerce API par agents IA.",
       ctaExplore: "Explorer les APIs",
       ctaIntegrate: "Commencer l'integration",
     },
     forProviders: {
       badge: "Pour Fournisseurs",
       title: "Monetisez votre API avec x402",
-      subtitle: "Listez votre API, atteignez des agents IA dans le monde entier et gagnez 95% des revenus. Pas de frais d'installation, pas de charges mensuelles.",
+      subtitle:
+        "Listez votre API, atteignez des agents IA dans le monde entier et gagnez 95% des revenus. Pas de frais d'installation, pas de charges mensuelles.",
       howItWorks: "Comment ca marche",
       step1Title: "Soumettez votre spec API",
-      step1Desc: "Fournissez l'URL de votre endpoint, les parametres et le prix souhaite en USDC. Utilisez notre template JSON ci-dessous.",
+      step1Desc:
+        "Fournissez l'URL de votre endpoint, les parametres et le prix souhaite en USDC. Utilisez notre template JSON ci-dessous.",
       step2Title: "Verification",
-      step2Desc: "Nous testons votre API pour la latence, les taux d'erreur et la fiabilite. Vous approuvez le listing avant sa mise en ligne.",
+      step2Desc:
+        "Nous testons votre API pour la latence, les taux d'erreur et la fiabilite. Vous approuvez le listing avant sa mise en ligne.",
       step3Title: "Configuration du paiement",
-      step3Desc: "Fournissez votre adresse wallet pour recevoir les paiements USDC. Nous configurons automatiquement la repartition 95/5.",
+      step3Desc:
+        "Fournissez votre adresse wallet pour recevoir les paiements USDC. Nous configurons automatiquement la repartition 95/5.",
       step4Title: "Mise en ligne",
-      step4Desc: "Votre API apparait sur x402bazaar.org. Les agents IA peuvent la decouvrir et la payer immediatement.",
+      step4Desc:
+        "Votre API apparait sur x402bazaar.org. Les agents IA peuvent la decouvrir et la payer immediatement.",
       step5Title: "Gagnez des revenus",
-      step5Desc: "Les agents appellent votre API, paient en USDC, et 95% va directement dans votre wallet. Suivez vos gains en temps reel.",
+      step5Desc:
+        "Les agents appellent votre API, paient en USDC, et 95% va directement dans votre wallet. Suivez vos gains en temps reel.",
       benefit1Title: "95% de revenu",
-      benefit1Desc: "Gardez 95% de chaque paiement. Seulement 5% de commission — bien moins que les 25% de RapidAPI.",
+      benefit1Desc:
+        "Gardez 95% de chaque paiement. Seulement 5% de commission — bien moins que les 25% de RapidAPI.",
       benefit2Title: "Audience IA mondiale",
-      benefit2Desc: "Atteignez des milliers d'agents IA utilisant Claude, ChatGPT, LangChain, Auto-GPT et plus encore.",
+      benefit2Desc:
+        "Atteignez des milliers d'agents IA utilisant Claude, ChatGPT, LangChain, Auto-GPT et plus encore.",
       benefit3Title: "Zero infrastructure",
-      benefit3Desc: "Nous gerons l'hebergement, le traitement des paiements, le monitoring et la documentation. Gardez juste votre API en ligne.",
+      benefit3Desc:
+        "Nous gerons l'hebergement, le traitement des paiements, le monitoring et la documentation. Gardez juste votre API en ligne.",
       benefit4Title: "Paiements instantanes",
-      benefit4Desc: "Recevez en USDC sur Base mainnet. Pas de facturation, pas de delai 30 jours. Les paiements sont instantanes et on-chain.",
+      benefit4Desc:
+        "Recevez en USDC sur Base mainnet. Pas de facturation, pas de delai 30 jours. Les paiements sont instantanes et on-chain.",
       benefit5Title: "Analytics & Monitoring",
-      benefit5Desc: "Monitoring en temps reel (checks toutes les 5 min), suivi de l'uptime et alertes Telegram pour votre API.",
+      benefit5Desc:
+        "Monitoring en temps reel (checks toutes les 5 min), suivi de l'uptime et alertes Telegram pour votre API.",
       benefit6Title: "9 integrations plateforme",
-      benefit6Desc: "Votre API est accessible depuis MCP (Claude), ChatGPT Actions, CLI, LangChain, Telegram, Auto-GPT, n8n et plus.",
+      benefit6Desc:
+        "Votre API est accessible depuis MCP (Claude), ChatGPT Actions, CLI, LangChain, Telegram, Auto-GPT, n8n et plus.",
       specTitle: "Template de specification API",
-      specDesc: "Envoyez-nous ce JSON avec les details de votre API. Nous gerons le reste.",
+      specDesc:
+        "Envoyez-nous ce JSON avec les details de votre API. Nous gerons le reste.",
       flowTitle: "Flux de paiement",
       flowAgent: "Agent IA",
       flowPays: "Paie en USDC",
       flowCalls: "Appelle votre API",
       flowEarns: "95% pour vous",
       ctaTitle: "Pret a monetiser ?",
-      ctaDesc: "Enregistrez votre API en 2 minutes. Commencez a gagner du trafic d'agents IA des aujourd'hui.",
+      ctaDesc:
+        "Enregistrez votre API en 2 minutes. Commencez a gagner du trafic d'agents IA des aujourd'hui.",
       ctaRegister: "Enregistrer votre API",
       ctaGithub: "Voir sur GitHub",
     },
@@ -2452,7 +2832,8 @@ def my_function(query: str) -> dict:
       badge: "Portail Createur",
       title: "Monetisez votre API,",
       titleHighlight: "Atteignez les Agents IA",
-      subtitle: "Rejoignez le premier marche API autonome. Listez votre API, fixez votre prix en USDC et gagnez 95% des revenus du trafic d'agents IA mondial.",
+      subtitle:
+        "Rejoignez le premier marche API autonome. Listez votre API, fixez votre prix en USDC et gagnez 95% des revenus du trafic d'agents IA mondial.",
       ctaRegister: "Devenir Fournisseur",
       ctaDashboard: "Voir le Dashboard",
       ctaOnboarding: "Lire le Guide",
@@ -2462,41 +2843,54 @@ def my_function(query: str) -> dict:
       statGas: "Cout du Gas",
       whyTitle: "Pourquoi lister sur x402 Bazaar ?",
       vp1Title: "95% de revenus",
-      vp1Desc: "Gardez 95% de chaque paiement. Seulement 5% de commission — bien moins que les 25% de RapidAPI.",
+      vp1Desc:
+        "Gardez 95% de chaque paiement. Seulement 5% de commission — bien moins que les 25% de RapidAPI.",
       vp2Title: "Inscription en 2 minutes",
-      vp2Desc: "Enregistrez votre API en moins de 2 minutes. Pas de paperasse, pas de validation, pas de frais.",
+      vp2Desc:
+        "Enregistrez votre API en moins de 2 minutes. Pas de paperasse, pas de validation, pas de frais.",
       vp3Title: "Audit blockchain",
-      vp3Desc: "Chaque paiement est verifiable on-chain. Transparence totale, zero litige.",
+      vp3Desc:
+        "Chaque paiement est verifiable on-chain. Transparence totale, zero litige.",
       vp4Title: "Portee IA mondiale",
-      vp4Desc: "Votre API est decouvrable par des milliers d'agents IA sur Claude, ChatGPT, LangChain et plus.",
+      vp4Desc:
+        "Votre API est decouvrable par des milliers d'agents IA sur Claude, ChatGPT, LangChain et plus.",
       vp5Title: "9 integrations plateforme",
-      vp5Desc: "Distribution automatique sur MCP, ChatGPT, CLI, LangChain, Telegram, Auto-GPT, n8n et plus.",
+      vp5Desc:
+        "Distribution automatique sur MCP, ChatGPT, CLI, LangChain, Telegram, Auto-GPT, n8n et plus.",
       vp6Title: "Zero infrastructure",
-      vp6Desc: "Nous gerons le monitoring, la documentation, le traitement des paiements. Gardez juste votre API en ligne.",
+      vp6Desc:
+        "Nous gerons le monitoring, la documentation, le traitement des paiements. Gardez juste votre API en ligne.",
       howTitle: "Comment ca marche",
       howStep1Title: "Enregistrez votre API",
-      howStep1Desc: "Remplissez les details de votre API, fixez votre prix et signez avec votre wallet pour verifier la propriete.",
+      howStep1Desc:
+        "Remplissez les details de votre API, fixez votre prix et signez avec votre wallet pour verifier la propriete.",
       howStep2Title: "Soyez decouvert",
-      howStep2Desc: "Votre API apparait sur le marche et est distribuee automatiquement sur 9 plateformes (MCP, ChatGPT, CLI, n8n...).",
+      howStep2Desc:
+        "Votre API apparait sur le marche et est distribuee automatiquement sur 9 plateformes (MCP, ChatGPT, CLI, n8n...).",
       howStep3Title: "Recevez en USDC",
-      howStep3Desc: "Les agents IA appellent votre API et paient en USDC directement dans votre wallet. 95% pour vous, instantanement on-chain.",
+      howStep3Desc:
+        "Les agents IA appellent votre API et paient en USDC directement dans votre wallet. 95% pour vous, instantanement on-chain.",
       stepLabel: "Etape",
       compareTitle: "Comparaison des revenus",
       ctaBottomTitle: "Pret a monetiser votre API ?",
-      ctaBottomDesc: "Rejoignez le premier marche concu pour les agents IA. Inscrivez-vous en 2 minutes, commencez a gagner des aujourd'hui.",
+      ctaBottomDesc:
+        "Rejoignez le premier marche concu pour les agents IA. Inscrivez-vous en 2 minutes, commencez a gagner des aujourd'hui.",
     },
     creatorDashboard: {
       title: "Dashboard Createur",
-      subtitle: "Connectez votre wallet pour voir vos APIs enregistrees et vos revenus.",
+      subtitle:
+        "Connectez votre wallet pour voir vos APIs enregistrees et vos revenus.",
       connectedAs: "Connecte en tant que",
       backToPortal: "Portail Createur",
       connectTitle: "Connectez votre Wallet",
-      connectDesc: "Connectez le wallet que vous avez utilise lors de l'enregistrement de vos APIs pour voir automatiquement tous vos services, revenus et statistiques.",
+      connectDesc:
+        "Connectez le wallet que vous avez utilise lors de l'enregistrement de vos APIs pour voir automatiquement tous vos services, revenus et statistiques.",
       connectBtn: "Connecter le Wallet",
       fetchError: "Impossible de charger les services. Reessayez.",
       retry: "Reessayer",
       noApis: "Aucune API trouvee pour ce wallet.",
-      noApisHint: "Verifiez que vous avez utilise la meme adresse wallet lors de l'enregistrement.",
+      noApisHint:
+        "Verifiez que vous avez utilise la meme adresse wallet lors de l'enregistrement.",
       registerFirst: "Enregistrez votre premiere API",
       yourApis: "Vos APIs",
       revenueShare: "Part des revenus",
@@ -2512,21 +2906,25 @@ def my_function(query: str) -> dict:
     },
     creatorOnboarding: {
       title: "Guide d'integration Createur",
-      subtitle: "Tout ce que vous devez savoir pour lister votre API et commencer a gagner du trafic d'agents IA.",
+      subtitle:
+        "Tout ce que vous devez savoir pour lister votre API et commencer a gagner du trafic d'agents IA.",
       backToPortal: "Portail Createur",
       breadcrumb: "Guide d'integration",
       badge: "Guide etape par etape",
       step1Label: "Etape 1",
       step1Title: "Creez votre API",
-      step1Desc: "Construisez un endpoint API qui retourne des donnees via HTTP. N'importe quel langage, n'importe quel framework. Voici les exigences :",
+      step1Desc:
+        "Construisez un endpoint API qui retourne des donnees via HTTP. N'importe quel langage, n'importe quel framework. Voici les exigences :",
       step1d1: "Doit repondre aux requetes HTTP GET ou POST",
       step1d2: "Doit retourner des donnees JSON",
       step1d3: "La latence doit etre inferieure a 5 secondes",
-      step1d4: "Doit etre accessible publiquement (pas d'authentification requise)",
+      step1d4:
+        "Doit etre accessible publiquement (pas d'authentification requise)",
       step1d5: "HTTPS fortement recommande pour la production",
       step2Label: "Etape 2",
       step2Title: "Inscrivez-vous sur x402 Bazaar",
-      step2Desc: "Utilisez le formulaire d'inscription pour lister votre API. Vous aurez besoin de :",
+      step2Desc:
+        "Utilisez le formulaire d'inscription pour lister votre API. Vous aurez besoin de :",
       step2d1: "Nom et description de l'API",
       step2d2: "URL de l'endpoint (doit etre accessible publiquement)",
       step2d3: "Prix par appel en USDC (ex: $0.01)",
@@ -2536,7 +2934,8 @@ def my_function(query: str) -> dict:
       step2Link: "Aller a l'inscription",
       step3Label: "Etape 3",
       step3Title: "Soyez decouvert par les agents IA",
-      step3Desc: "Une fois liste, votre API est automatiquement distribuee sur 9 plateformes :",
+      step3Desc:
+        "Une fois liste, votre API est automatiquement distribuee sur 9 plateformes :",
       step3d1: "Serveur MCP (Claude, Cursor, Windsurf)",
       step3d2: "Actions GPT personnalisees ChatGPT",
       step3d3: "CLI (npm x402-bazaar)",
@@ -2548,28 +2947,36 @@ def my_function(query: str) -> dict:
       step4Desc: "Le flux de paiement x402 fonctionne ainsi :",
       step4d1: "L'agent appelle votre endpoint API",
       step4d2: "x402 repond HTTP 402 avec le prix en USDC",
-      step4d3: "L'agent paie en USDC sur Base (ou SKALE pour un gas ultra-bas ~$0,0007)",
-      step4d4: "L'agent renvoie la requete avec le hash de transaction dans le header",
+      step4d3:
+        "L'agent paie en USDC sur Base (ou SKALE pour un gas ultra-bas ~$0,0007)",
+      step4d4:
+        "L'agent renvoie la requete avec le hash de transaction dans le header",
       step4d5: "x402 verifie le paiement on-chain",
       step4d6: "95% du paiement va directement dans votre wallet",
       step4d7: "Toutes les transactions visibles sur BaseScan",
       tipsTitle: "Bonnes pratiques",
       tip1Title: "Choisissez un nom clair",
-      tip1Desc: "Utilisez des noms descriptifs comme \"Previsions Meteo\" plutot que \"API v2\". Les agents cherchent par nom.",
+      tip1Desc:
+        'Utilisez des noms descriptifs comme "Previsions Meteo" plutot que "API v2". Les agents cherchent par nom.',
       tip2Title: "Fixez un prix competitif",
-      tip2Desc: "La plupart des APIs coutent $0.005-$0.05 par appel. Commencez bas pour attirer les premiers utilisateurs.",
+      tip2Desc:
+        "La plupart des APIs coutent $0.005-$0.05 par appel. Commencez bas pour attirer les premiers utilisateurs.",
       tip3Title: "Utilisez des tags pertinents",
-      tip3Desc: "Ajoutez categorie + tags specifiques (ex: \"ia, analyse-sentiment\"). Cela ameliore la visibilite.",
+      tip3Desc:
+        'Ajoutez categorie + tags specifiques (ex: "ia, analyse-sentiment"). Cela ameliore la visibilite.',
       tip4Title: "Gardez une latence basse",
-      tip4Desc: "Les agents expirent apres 10-15 secondes. Optimisez votre API pour des reponses rapides.",
+      tip4Desc:
+        "Les agents expirent apres 10-15 secondes. Optimisez votre API pour des reponses rapides.",
       ctaTitle: "Pret a commencer ?",
-      ctaDesc: "Enregistrez votre API en 2 minutes et commencez a gagner du trafic d'agents IA mondial.",
+      ctaDesc:
+        "Enregistrez votre API en 2 minutes et commencez a gagner du trafic d'agents IA mondial.",
       ctaRegister: "Enregistrer votre API",
       ctaDashboard: "Voir le Dashboard",
     },
     config: {
       title: "Generateur de Config",
-      subtitle: "Generez la configuration du serveur MCP pour votre IDE. Plus besoin d'editer du JSON a la main.",
+      subtitle:
+        "Generez la configuration du serveur MCP pour votre IDE. Plus besoin d'editer du JSON a la main.",
       envLabel: "Environnement",
       serverUrlLabel: "URL du serveur",
       budgetLabel: "Budget max (USDC)",
@@ -2585,10 +2992,12 @@ def my_function(query: str) -> dict:
       copied: "Copie !",
       copyBtn: "Copier",
       pathTitle: "Ou coller cette config",
-      pathDesc: "Copiez le JSON ci-dessus et collez-le dans le fichier suivant :",
+      pathDesc:
+        "Copiez le JSON ci-dessus et collez-le dans le fichier suivant :",
       detectedOs: "OS detecte",
       ctaTitle: "Vous preferez le CLI ?",
-      ctaDesc: "Une commande fait tout automatiquement — detecte votre IDE, installe le serveur MCP et configure votre wallet.",
+      ctaDesc:
+        "Une commande fait tout automatiquement — detecte votre IDE, installe le serveur MCP et configure votre wallet.",
       installDirLabel: "Repertoire d'installation",
     },
     serviceDetail: {
@@ -2596,7 +3005,8 @@ def my_function(query: str) -> dict:
       breadcrumbServices: "Services",
       endpointLabel: "Endpoint x402",
       noSdkBadge: "Aucun SDK requis — Juste HTTP",
-      proxyHint: "Votre API reste intacte. Nous gérons les paiements via notre proxy.",
+      proxyHint:
+        "Votre API reste intacte. Nous gérons les paiements via notre proxy.",
       nativeBadge: "Natif",
       verifiedBadge: "Vérifié",
       autoTestedBadge: "Auto-testé",
@@ -2627,7 +3037,8 @@ def my_function(query: str) -> dict:
       key: "Clé / Nom du header",
       value: "Valeur / Secret",
       addMore: "Ajouter un identifiant",
-      encrypted: "Chiffré avec AES-256-GCM. Jamais exposé dans les réponses API.",
+      encrypted:
+        "Chiffré avec AES-256-GCM. Jamais exposé dans les réponses API.",
       showValue: "Afficher la valeur",
       hideValue: "Masquer la valeur",
       keyPlaceholderBearer: "Authorization",
@@ -2641,7 +3052,8 @@ def my_function(query: str) -> dict:
     },
     register: {
       title: "Enregistrer un service",
-      subtitle: "Listez votre API sur x402 Bazaar. Enregistrement gratuit, listing instantane.",
+      subtitle:
+        "Listez votre API sur x402 Bazaar. Enregistrement gratuit, listing instantane.",
       serviceName: "Nom du service",
       description: "Description",
       apiUrl: "URL de l'API",
@@ -2660,7 +3072,8 @@ def my_function(query: str) -> dict:
       successTitle: "Service enregistre !",
       successDesc: "est maintenant en ligne sur x402 Bazaar.",
       viewTx: "Voir la transaction sur BaseScan",
-      templateHint: "Vous préférez le code aux formulaires ? Utilisez notre template Python pour monetiser n'importe quelle fonction avec un seul decorator.",
+      templateHint:
+        "Vous préférez le code aux formulaires ? Utilisez notre template Python pour monetiser n'importe quelle fonction avec un seul decorator.",
       templateLink: "Obtenir le Template Python",
       step1: "Préparation de la signature...",
       step2: "En attente de validation...",
@@ -2706,7 +3119,8 @@ def my_function(query: str) -> dict:
     },
     quickRegister: {
       title: "Monetisez n'importe quelle API en 10 secondes",
-      subtitle: "Collez votre URL, fixez un prix, commencez a gagner. Aucun paiement requis.",
+      subtitle:
+        "Collez votre URL, fixez un prix, commencez a gagner. Aucun paiement requis.",
       urlLabel: "URL de l'API",
       urlPlaceholder: "https://api.example.com/endpoint",
       priceLabel: "Prix par appel (USDC)",
@@ -2716,7 +3130,8 @@ def my_function(query: str) -> dict:
       submitting: "Enregistrement...",
       noPayment: "Aucun paiement requis · Limite de debit anti-spam",
       successTitle: "API Listee !",
-      successDesc: "Votre API est en ligne sur x402 Bazaar. Les agents IA peuvent desormais la decouvrir et la payer.",
+      successDesc:
+        "Votre API est en ligne sur x402 Bazaar. Les agents IA peuvent desormais la decouvrir et la payer.",
       proxyEndpoint: "Endpoint Proxy x402",
       viewService: "Voir la page du service",
       registerAnother: "Enregistrer une autre",
@@ -2725,47 +3140,68 @@ def my_function(query: str) -> dict:
     },
     integrate: {
       title: "Intégrez votre Agent",
-      subtitle: "Donnez a votre agent IA la capacite de découvrir, payer et consommer n'importe quel service sur x402 Bazaar — de maniere totalement autonome.",
+      subtitle:
+        "Donnez a votre agent IA la capacite de découvrir, payer et consommer n'importe quel service sur x402 Bazaar — de maniere totalement autonome.",
       whyTitle: "Pourquoi intégrer ?",
       why1Title: "Paiements autonomes",
-      why1Desc: "Votre agent gere les reponses HTTP 402 et paie en USDC automatiquement. Aucun humain dans la boucle.",
+      why1Desc:
+        "Votre agent gere les reponses HTTP 402 et paie en USDC automatiquement. Aucun humain dans la boucle.",
       why2Title: "Decouverte de services",
-      why2Desc: "Une seule API pour chercher des centaines de services. Votre agent trouve ce dont il a besoin au runtime.",
+      why2Desc:
+        "Une seule API pour chercher des centaines de services. Votre agent trouve ce dont il a besoin au runtime.",
       why3Title: "Vérification on-chain",
-      why3Desc: "Chaque paiement est vérifié sur Base L2. Transparent, trustless, instantane.",
+      why3Desc:
+        "Chaque paiement est vérifié sur Base L2. Transparent, trustless, instantane.",
       flowTitle: "Flux de l'Agent",
       flowStep1Title: "1. Découvrir",
-      flowStep1Desc: "L'agent appelle GET / pour découvrir la marketplace et les endpoints disponibles.",
+      flowStep1Desc:
+        "L'agent appelle GET / pour découvrir la marketplace et les endpoints disponibles.",
       flowStep1Code: "GET https://x402-api.onrender.com/",
       flowStep2Title: "2. Requete (recoit 402)",
-      flowStep2Desc: "L'agent requete un endpoint payant. Le serveur repond HTTP 402 avec les details de paiement.",
-      flowStep2Code: "GET /search?q=weather → 402 { payment_details: { amount: 0.05, recipient: '0x...', ... } }",
+      flowStep2Desc:
+        "L'agent requete un endpoint payant. Le serveur repond HTTP 402 avec les details de paiement.",
+      flowStep2Code:
+        "GET /search?q=weather → 402 { payment_details: { amount: 0.05, recipient: '0x...', ... } }",
       flowStep3Title: "3. Payer en USDC",
-      flowStep3Desc: "L'agent envoie des USDC a l'adresse destinataire sur Base via Coinbase SDK ou tout wallet.",
-      flowStep3Code: "wallet.createTransfer({ amount: 0.05, assetId: 'usdc', destination: recipient })",
+      flowStep3Desc:
+        "L'agent envoie des USDC a l'adresse destinataire sur Base via Coinbase SDK ou tout wallet.",
+      flowStep3Code:
+        "wallet.createTransfer({ amount: 0.05, assetId: 'usdc', destination: recipient })",
       flowStep4Title: "4. Retenter avec preuve",
-      flowStep4Desc: "L'agent renvoie la meme requete avec le hash de transaction dans le header.",
-      flowStep4Code: "GET /search?q=weather\nX-Payment-TxHash: 0xabc123...\n→ 200 { data: [...] }",
+      flowStep4Desc:
+        "L'agent renvoie la meme requete avec le hash de transaction dans le header.",
+      flowStep4Code:
+        "GET /search?q=weather\nX-Payment-TxHash: 0xabc123...\n→ 200 { data: [...] }",
       corePatternTitle: "Pattern principal : payAndRequest()",
-      corePatternDesc: "C'est la seule fonction dont votre agent a besoin. Elle gere tout le flux 402 automatiquement :",
+      corePatternDesc:
+        "C'est la seule fonction dont votre agent a besoin. Elle gere tout le flux 402 automatiquement :",
       agentExampleTitle: "Exemple complet (OpenAI + Coinbase SDK)",
-      agentExampleDesc: "Voici un agent autonome minimal qui découvre les services, paie l'acces et recupere des donnees reelles :",
-      agentExampleNote: "Ceci est une version simplifiee de notre agent demo. Code complet sur",
+      agentExampleDesc:
+        "Voici un agent autonome minimal qui découvre les services, paie l'acces et recupere des donnees reelles :",
+      agentExampleNote:
+        "Ceci est une version simplifiee de notre agent demo. Code complet sur",
       pythonTitle: "Agent Python (requests + web3)",
-      pythonDesc: "Meme pattern en Python pour les agents LangChain, CrewAI, ou frameworks custom :",
+      pythonDesc:
+        "Meme pattern en Python pour les agents LangChain, CrewAI, ou frameworks custom :",
       useCasesTitle: "Cas d'usage",
       useCase1Title: "Agent IA multi-outils",
-      useCase1Desc: "Un agent qui découvre et appelle des APIs météo, crypto et traduction a la volee pour repondre a des questions complexes.",
+      useCase1Desc:
+        "Un agent qui découvre et appelle des APIs météo, crypto et traduction a la volee pour repondre a des questions complexes.",
       useCase2Title: "Recherche autonome",
-      useCase2Desc: "Un agent qui cherche des services de donnees, paie l'acces et compile des rapports sans intervention humaine.",
+      useCase2Desc:
+        "Un agent qui cherche des services de donnees, paie l'acces et compile des rapports sans intervention humaine.",
       useCase3Title: "Economie Agent-a-Agent",
-      useCase3Desc: "Des agents qui enregistrent leurs propres services et consomment ceux des autres, creant une economie autonome auto-suffisante.",
+      useCase3Desc:
+        "Des agents qui enregistrent leurs propres services et consomment ceux des autres, creant une economie autonome auto-suffisante.",
       getStartedTitle: "Demarrer",
-      getStartedDesc: "Clonez le repo de l'agent demo et lancez-le en moins de 5 minutes :",
+      getStartedDesc:
+        "Clonez le repo de l'agent demo et lancez-le en moins de 5 minutes :",
       recommended: "Recommande",
       quickStartCliTitle: "Demarrage rapide avec le CLI",
-      quickStartCliDesc: "Le moyen le plus rapide. Une commande détecte votre IDE, installe le serveur MCP et configure tout. Fonctionne dans tous les terminaux.",
-      quickStartCliNote: "Compatible avec Claude Desktop, Cursor, VS Code + Continue et Claude Code. Personnalisez avec les flags --env, --network, --budget.",
+      quickStartCliDesc:
+        "Le moyen le plus rapide. Une commande détecte votre IDE, installe le serveur MCP et configure tout. Fonctionne dans tous les terminaux.",
+      quickStartCliNote:
+        "Compatible avec Claude Desktop, Cursor, VS Code + Continue et Claude Code. Personnalisez avec les flags --env, --network, --budget.",
       manualTitle: "Installation manuelle",
       manualDesc: "Vous preferez faire vous-meme ? Suivez ces etapes :",
       browseServices: "Parcourir les services",
@@ -2774,93 +3210,127 @@ def my_function(query: str) -> dict:
       getStartedStep3: "Configurer vos variables d'environnement",
       getStartedStep4: "Lancer l'agent demo",
       providerTitle: "Cote Fournisseur : Monetisez votre API",
-      providerDesc: "Vous voulez vendre votre propre API ? Utilisez notre template Python pour transformer n'importe quelle fonction en endpoint x402 payant en quelques minutes.",
+      providerDesc:
+        "Vous voulez vendre votre propre API ? Utilisez notre template Python pour transformer n'importe quelle fonction en endpoint x402 payant en quelques minutes.",
       providerBtn: "Obtenir le Template Python",
       langchainTitle: "Integration LangChain",
-      langchainDesc: "Utilisez x402 Bazaar comme outil LangChain natif. Installez le package et ajoutez-le a votre agent.",
+      langchainDesc:
+        "Utilisez x402 Bazaar comme outil LangChain natif. Installez le package et ajoutez-le a votre agent.",
       langchainInstall: "Installer le package",
-      langchainNote: "Le package x402-langchain gere automatiquement tout le flux de paiement.",
+      langchainNote:
+        "Le package x402-langchain gere automatiquement tout le flux de paiement.",
     },
     mcp: {
       title: "Serveur MCP — Plug & Play pour l'IA",
-      subtitle: "Installez le serveur MCP x402 Bazaar et laissez n'importe quel agent IA découvrir, payer et utiliser des APIs depuis votre IDE. Zero code.",
+      subtitle:
+        "Installez le serveur MCP x402 Bazaar et laissez n'importe quel agent IA découvrir, payer et utiliser des APIs depuis votre IDE. Zero code.",
       whatTitle: "Qu'est-ce que MCP ?",
-      whatDesc: "Le Model Context Protocol (MCP) est un standard ouvert qui permet aux assistants IA (Claude, GPT, etc.) d'utiliser des outils externes. Au lieu d'écrire du code d'intégration, vous installez un serveur MCP et votre IA peut interagir instantanément avec x402 Bazaar — rechercher des services, payer en USDC et appeler des APIs de manière autonome.",
+      whatDesc:
+        "Le Model Context Protocol (MCP) est un standard ouvert qui permet aux assistants IA (Claude, GPT, etc.) d'utiliser des outils externes. Au lieu d'écrire du code d'intégration, vous installez un serveur MCP et votre IA peut interagir instantanément avec x402 Bazaar — rechercher des services, payer en USDC et appeler des APIs de manière autonome.",
       benefit1: "Plug & Play",
       benefit2: "Paiements auto",
       benefit3: "Tout agent IA",
       toolsTitle: "Outils disponibles",
       flowTitle: "Comment ca marche",
-      flow1: "Vous demandez a votre IA : \"Trouve-moi une API météo et donne-moi la météo a Paris\"",
-      flow2: "L'IA appelle search_services(\"weather\") via le serveur MCP",
-      flow3: "Le serveur MCP recoit HTTP 402, paie 0.05 USDC sur Base automatiquement, et retourne les resultats",
-      flow4: "L'IA appelle l'URL de l'API, obtient les donnees, et vous donne la reponse",
+      flow1:
+        'Vous demandez a votre IA : "Trouve-moi une API météo et donne-moi la météo a Paris"',
+      flow2: 'L\'IA appelle search_services("weather") via le serveur MCP',
+      flow3:
+        "Le serveur MCP recoit HTTP 402, paie 0.05 USDC sur Base automatiquement, et retourne les resultats",
+      flow4:
+        "L'IA appelle l'URL de l'API, obtient les donnees, et vous donne la reponse",
       walletTitle: "Configuration du Wallet",
-      walletDesc: "Avant d'installer le serveur MCP, vous avez besoin d'un wallet Coinbase Developer Platform (CDP). C'est le wallet que votre agent IA utilisera pour payer l'acces aux APIs.",
-      walletStep1: "Creez un compte gratuit sur Coinbase Developer Platform (portal.cdp.coinbase.com)",
-      walletStep2: "Allez dans API Keys et generez une nouvelle paire de cles. Sauvegardez votre API Key et API Secret en securite.",
-      walletStep3: "Lancez 'node create-wallet.js' depuis le repo x402-backend pour générer le fichier seed de votre wallet agent (agent-seed.json).",
-      walletStep4: "Alimentez votre wallet agent en USDC sur Base. Vous pouvez transferer depuis Coinbase, un DEX, ou bridge depuis une autre chaine.",
-      walletTestnetTip: "Astuce : Definissez NETWORK=testnet pour utiliser Base Sepolia gratuitement. Pas de vrais fonds nécessaires — obtenez des USDC de test via les faucets.",
+      walletDesc:
+        "Avant d'installer le serveur MCP, vous avez besoin d'un wallet Coinbase Developer Platform (CDP). C'est le wallet que votre agent IA utilisera pour payer l'acces aux APIs.",
+      walletStep1:
+        "Creez un compte gratuit sur Coinbase Developer Platform (portal.cdp.coinbase.com)",
+      walletStep2:
+        "Allez dans API Keys et generez une nouvelle paire de cles. Sauvegardez votre API Key et API Secret en securite.",
+      walletStep3:
+        "Lancez 'node create-wallet.js' depuis le repo x402-backend pour générer le fichier seed de votre wallet agent (agent-seed.json).",
+      walletStep4:
+        "Alimentez votre wallet agent en USDC sur Base. Vous pouvez transferer depuis Coinbase, un DEX, ou bridge depuis une autre chaine.",
+      walletTestnetTip:
+        "Astuce : Definissez NETWORK=testnet pour utiliser Base Sepolia gratuitement. Pas de vrais fonds nécessaires — obtenez des USDC de test via les faucets.",
       securityTitle: "Sécurité & Controle du Budget",
-      securityDesc: "Le serveur MCP inclut des protections integrees pour que votre agent IA ne depense pas trop. Chaque requete payante est suivie et plafonnee.",
+      securityDesc:
+        "Le serveur MCP inclut des protections integrees pour que votre agent IA ne depense pas trop. Chaque requete payante est suivie et plafonnee.",
       securityFeature1: "Budget par session",
-      securityFeature1Desc: "Definissez MAX_BUDGET_USDC pour plafonner les depenses par session. L'agent est bloque quand la limite est atteinte.",
+      securityFeature1Desc:
+        "Definissez MAX_BUDGET_USDC pour plafonner les depenses par session. L'agent est bloque quand la limite est atteinte.",
       securityFeature2: "Suivi en temps reel",
-      securityFeature2Desc: "L'outil get_budget_status permet a l'agent (ou a vous) de verifier les depenses, le budget restant et l'historique complet a tout moment.",
+      securityFeature2Desc:
+        "L'outil get_budget_status permet a l'agent (ou a vous) de verifier les depenses, le budget restant et l'historique complet a tout moment.",
       securityFeature3: "Vérification on-chain",
-      securityFeature3Desc: "Chaque paiement est un vrai transfert USDC sur Base, vérifié on-chain. Pas de frais caches, pas d'escrow — totalement transparent.",
+      securityFeature3Desc:
+        "Chaque paiement est un vrai transfert USDC sur Base, vérifié on-chain. Pas de frais caches, pas d'escrow — totalement transparent.",
       securityFeature4: "Transparence totale",
-      securityFeature4Desc: "Chaque reponse inclut un objet _payment avec le montant, le hash de tx et le lien BaseScan. Vous voyez exactement ou va chaque centime.",
+      securityFeature4Desc:
+        "Chaque reponse inclut un objet _payment avec le montant, le hash de tx et le lien BaseScan. Vous voyez exactement ou va chaque centime.",
       securityConfigLabel: "Variable d'environnement :",
-      securityConfigDesc: "Defaut : 1.00 USDC par session. Ajustez selon votre usage. 0.10 pour les tests, 10.00 pour un usage intensif.",
+      securityConfigDesc:
+        "Defaut : 1.00 USDC par session. Ajustez selon votre usage. 0.10 pour les tests, 10.00 pour un usage intensif.",
       installTitle: "Installation",
       quickInstallTitle: "Installation rapide",
       quickInstallBadge: "Recommandé",
-      quickInstallDesc: "Une commande fait tout : détecte votre IDE, installe le serveur MCP, configure votre wallet et vérifie la connexion. Fonctionne dans tous les terminaux, y compris VS Code, Cursor et autres IDE.",
+      quickInstallDesc:
+        "Une commande fait tout : détecte votre IDE, installe le serveur MCP, configure votre wallet et vérifie la connexion. Fonctionne dans tous les terminaux, y compris VS Code, Cursor et autres IDE.",
       quickFeature1: "Detection auto IDE",
       quickFeature2: "Configure le wallet",
       quickFeature3: "Fonctionne partout",
       supportedEnvTitle: "Environnements supportes",
-      supportedEnvDesc: "Le CLI détecte automatiquement votre environnement et génère la bonne configuration.",
+      supportedEnvDesc:
+        "Le CLI détecte automatiquement votre environnement et génère la bonne configuration.",
       manualTitle: "Configuration manuelle",
-      manualDesc: "Si vous preferez configurer manuellement, depliez ci-dessous et suivez les instructions pour votre IDE.",
+      manualDesc:
+        "Si vous preferez configurer manuellement, depliez ci-dessous et suivez les instructions pour votre IDE.",
       ctaTitle2: "Demarrez en 30 secondes",
-      ctaDesc2: "Installez le serveur MCP en une commande et donnez a votre agent IA acces a toute la marketplace.",
+      ctaDesc2:
+        "Installez le serveur MCP en une commande et donnez a votre agent IA acces a toute la marketplace.",
       prereqTitle: "Prerequis",
       prereq1: "Cloner le repository x402-backend",
       prereq2: "Configurer vos cles API Coinbase CDP (portal.cdp.coinbase.com)",
       prereq3: "Creer un wallet agent avec des fonds (USDC sur Base)",
-      claudeDesktopDesc: "Ajoutez ceci a votre fichier de configuration Claude Desktop :",
-      claudeDesktopPath: "Windows: %APPDATA%\\Claude\\claude_desktop_config.json | Mac: ~/Library/Application Support/Claude/claude_desktop_config.json",
+      claudeDesktopDesc:
+        "Ajoutez ceci a votre fichier de configuration Claude Desktop :",
+      claudeDesktopPath:
+        "Windows: %APPDATA%\\Claude\\claude_desktop_config.json | Mac: ~/Library/Application Support/Claude/claude_desktop_config.json",
       cursorDesc: "Ajoutez ceci dans les parametres MCP de Cursor :",
       cursorPath: "Settings > Features > MCP Servers > Add new server",
-      vscodeDesc: "Ajoutez ceci a votre config MCP VS Code (extension Cline ou Continue) :",
+      vscodeDesc:
+        "Ajoutez ceci a votre config MCP VS Code (extension Cline ou Continue) :",
       vscodePath: ".vscode/mcp.json ou parametres de l'extension",
       claudeCodeDesc: "Executez cette commande dans votre terminal :",
-      claudeCodeNote: "Puis configurez les variables d'environnement requises (COINBASE_API_KEY, COINBASE_API_SECRET) dans vos parametres Claude Code.",
+      claudeCodeNote:
+        "Puis configurez les variables d'environnement requises (COINBASE_API_KEY, COINBASE_API_SECRET) dans vos parametres Claude Code.",
       tryTitle: "Essayez",
-      tryDesc: "Une fois installe, ouvrez votre assistant IA et essayez ce prompt :",
+      tryDesc:
+        "Une fois installe, ouvrez votre assistant IA et essayez ce prompt :",
       tryPromptLabel: "Exemple de prompt :",
-      tryPrompt: "Cherche sur le x402 Bazaar des APIs météo, choisis la meilleure, et donne-moi la météo actuelle a Paris.",
+      tryPrompt:
+        "Cherche sur le x402 Bazaar des APIs météo, choisis la meilleure, et donne-moi la météo actuelle a Paris.",
       tryResultLabel: "Ce qui se passe en coulisses :",
       tryStep1: "L'IA appelle discover_marketplace() — gratuit",
-      tryStep2: "L'IA appelle search_services(\"weather\") — 0.05 USDC paye automatiquement",
+      tryStep2:
+        'L\'IA appelle search_services("weather") — 0.05 USDC paye automatiquement',
       tryStep3: "L'IA appelle call_api(url) sur le service trouve — gratuit",
       tryStep4: "L'IA synthetise les donnees et vous repond",
       ctaTitle: "Obtenir le code source",
-      ctaDesc: "Le serveur MCP est inclus dans le repository x402-backend. Clonez-le, configurez vos cles, et c'est pret.",
+      ctaDesc:
+        "Le serveur MCP est inclus dans le repository x402-backend. Clonez-le, configurez vos cles, et c'est pret.",
     },
     developers: {
       title: "Documentation developpeurs",
       subtitle: "Integrez x402 Bazaar dans votre agent IA en quelques minutes.",
       cliQuickStart: "Demarrage rapide :",
-      cliQuickStartDesc: "Detecte votre IDE et configure tout automatiquement. Fonctionne dans tous les terminaux.",
+      cliQuickStartDesc:
+        "Detecte votre IDE et configure tout automatiquement. Fonctionne dans tous les terminaux.",
       protocolTitle: "Le protocole x402",
       step1: "Appelez un endpoint payant sans header de paiement.",
       step2pre: "Le serveur repond",
       step2code: "HTTP 402",
-      step2post: "avec les details de paiement (montant, destinataire, réseau).",
+      step2post:
+        "avec les details de paiement (montant, destinataire, réseau).",
       step3: "Votre agent envoie des USDC au destinataire sur Base.",
       step4pre: "Renvoyez la meme requete avec le header",
       step5: "Le serveur verifie la tx on-chain et autorise l'acces.",
@@ -2878,7 +3348,8 @@ def my_function(query: str) -> dict:
       registerBodyTitle: "Body POST /register",
       responseTitle: "Format de reponse 402",
       templateTitle: "Monetisez votre API",
-      templateDesc: "Transformez n'importe quelle fonction Python en API payante avec un seul decorator. Paiements USDC sur Base, vérifiés on-chain.",
+      templateDesc:
+        "Transformez n'importe quelle fonction Python en API payante avec un seul decorator. Paiements USDC sur Base, vérifiés on-chain.",
       templateCode: `from x402 import x402_paywall
 
 @x402_paywall(price=0.05, description="Mon endpoint payant")
@@ -2890,61 +3361,91 @@ def my_function(query: str) -> dict:
     blog: {
       title: "Blog",
       backHome: "Retour a l'accueil",
-      articleTitle: "Votre agent IA vient d'obtenir une carte de credit : decouvrez x402 Bazaar",
-      articleSubtitle: "La premiere marketplace ou les agents IA decouvrent, paient et consomment des APIs de maniere autonome — grace au code de statut HTTP que l'Internet avait oublie.",
-      intro1: "En 1997, les auteurs de la specification HTTP/1.1 ont reserve le code de statut 402 : \"Payment Required.\" Il etait destine a un futur ou les navigateurs web pourraient effectuer des micropaiements — quelques centimes pour un article, une fraction de centime pour un appel API, instantane et sans friction.",
-      intro2: "Ce futur n'est jamais arrive. Il n'y avait pas de portefeuille numerique dans chaque navigateur. Pas de protocole de paiement universel. Pas d'argent programmable.",
-      intro3: "Alors le 402 est reste inutilise pendant 29 ans. Chaque developpeur a appris son existence, puis est passe a autre chose.",
+      articleTitle:
+        "Votre agent IA vient d'obtenir une carte de credit : decouvrez x402 Bazaar",
+      articleSubtitle:
+        "La premiere marketplace ou les agents IA decouvrent, paient et consomment des APIs de maniere autonome — grace au code de statut HTTP que l'Internet avait oublie.",
+      intro1:
+        'En 1997, les auteurs de la specification HTTP/1.1 ont reserve le code de statut 402 : "Payment Required." Il etait destine a un futur ou les navigateurs web pourraient effectuer des micropaiements — quelques centimes pour un article, une fraction de centime pour un appel API, instantane et sans friction.',
+      intro2:
+        "Ce futur n'est jamais arrive. Il n'y avait pas de portefeuille numerique dans chaque navigateur. Pas de protocole de paiement universel. Pas d'argent programmable.",
+      intro3:
+        "Alors le 402 est reste inutilise pendant 29 ans. Chaque developpeur a appris son existence, puis est passe a autre chose.",
       intro4Launch: "Aujourd'hui, nous lancons",
       intro4Product: "x402 Bazaar",
-      intro4Desc: "— la premiere marketplace API autonome d'IA a IA — et le HTTP 402 fait enfin ce pour quoi il a ete concu.",
-      problemTitle: "Le probleme : les agents IA se heurtent a la page d'inscription API",
-      problem1: "Les agents IA deviennent remarquablement performants. Ils peuvent raisonner, planifier, ecrire du code, analyser des donnees et se coordonner avec d'autres agents. Mais des qu'ils ont besoin de donnees externes — une recherche web, une prevision meteo, un prix crypto, une page web scrapee — ils se heurtent a un mur.",
+      intro4Desc:
+        "— la premiere marketplace API autonome d'IA a IA — et le HTTP 402 fait enfin ce pour quoi il a ete concu.",
+      problemTitle:
+        "Le probleme : les agents IA se heurtent a la page d'inscription API",
+      problem1:
+        "Les agents IA deviennent remarquablement performants. Ils peuvent raisonner, planifier, ecrire du code, analyser des donnees et se coordonner avec d'autres agents. Mais des qu'ils ont besoin de donnees externes — une recherche web, une prevision meteo, un prix crypto, une page web scrapee — ils se heurtent a un mur.",
       problem2: "Ce mur, c'est la page d'inscription de l'API.",
-      problem3: "Chaque API qu'un agent utilise aujourd'hui a ete configuree par un humain. Quelqu'un a cree un compte. Quelqu'un a genere une cle API. Quelqu'un a configure la facturation. Quelqu'un a ecrit le code d'integration. Quelqu'un gere les limites de debit et les renouvellements.",
-      problem4: "Pour une ou deux APIs, ca va. Mais la trajectoire des agents IA est claire : ils ont besoin d'un acces dynamique et a la demande a de nombreux services. Un agent travaillant sur une tache de recherche pourrait avoir besoin de recherche, scraping, traduction, resume et de multiples flux de donnees — le tout dans un seul workflow. Les services specifiques dont il a besoin dependent de la tache et changent d'une execution a l'autre.",
-      problem5: "Le modele configure par l'humain ne passe pas a l'echelle. Les agents ont besoin de pouvoir decouvrir, evaluer, payer et consommer des APIs par eux-memes.",
+      problem3:
+        "Chaque API qu'un agent utilise aujourd'hui a ete configuree par un humain. Quelqu'un a cree un compte. Quelqu'un a genere une cle API. Quelqu'un a configure la facturation. Quelqu'un a ecrit le code d'integration. Quelqu'un gere les limites de debit et les renouvellements.",
+      problem4:
+        "Pour une ou deux APIs, ca va. Mais la trajectoire des agents IA est claire : ils ont besoin d'un acces dynamique et a la demande a de nombreux services. Un agent travaillant sur une tache de recherche pourrait avoir besoin de recherche, scraping, traduction, resume et de multiples flux de donnees — le tout dans un seul workflow. Les services specifiques dont il a besoin dependent de la tache et changent d'une execution a l'autre.",
+      problem5:
+        "Le modele configure par l'humain ne passe pas a l'echelle. Les agents ont besoin de pouvoir decouvrir, evaluer, payer et consommer des APIs par eux-memes.",
       solutionTitle: "La solution : une marketplace qui parle HTTP 402",
-      solution1: "x402 Bazaar est une marketplace API construite de A a Z pour les agents IA. Voici ce qui la differencie de toutes les marketplaces API que vous avez utilisees :",
+      solution1:
+        "x402 Bazaar est une marketplace API construite de A a Z pour les agents IA. Voici ce qui la differencie de toutes les marketplaces API que vous avez utilisees :",
       solutionAgents: "Les agents sont les clients, pas les humains.",
-      solution2: "Il n'y a pas de formulaires d'inscription, pas de tableaux de bord de cles API, pas de portails de facturation. Un agent interagit avec x402 Bazaar entierement via HTTP. Il decouvre les services disponibles, verifie les prix, effectue les paiements et consomme les donnees — le tout de maniere programmatique et autonome.",
+      solution2:
+        "Il n'y a pas de formulaires d'inscription, pas de tableaux de bord de cles API, pas de portails de facturation. Un agent interagit avec x402 Bazaar entierement via HTTP. Il decouvre les services disponibles, verifie les prix, effectue les paiements et consomme les donnees — le tout de maniere programmatique et autonome.",
       solutionPayments: "Les paiements passent par le protocole HTTP 402.",
-      solution3: "Quand un agent requete un endpoint payant, le serveur repond avec",
+      solution3:
+        "Quand un agent requete un endpoint payant, le serveur repond avec",
       solution3Code: "402 Payment Required",
-      solution3End: "et un payload JSON contenant le prix, l'adresse du wallet destinataire et les chaines de paiement acceptees. L'agent transfere de l'USDC (un stablecoin indexe sur le dollar americain) on-chain, puis renvoie la requete originale avec le hash de transaction comme preuve de paiement. Le serveur verifie la transaction, marque le hash comme utilise et retourne les donnees demandees.",
-      solution4: "C'est exactement le flux pour lequel HTTP 402 a ete concu — avec juste 29 ans de retard.",
+      solution3End:
+        "et un payload JSON contenant le prix, l'adresse du wallet destinataire et les chaines de paiement acceptees. L'agent transfere de l'USDC (un stablecoin indexe sur le dollar americain) on-chain, puis renvoie la requete originale avec le hash de transaction comme preuve de paiement. Le serveur verifie la transaction, marque le hash comme utilise et retourne les donnees demandees.",
+      solution4:
+        "C'est exactement le flux pour lequel HTTP 402 a ete concu — avec juste 29 ans de retard.",
       solutionMicro: "Des micropaiements qui fonctionnent vraiment.",
-      solution5: "x402 Bazaar supporte les paiements sur trois chaines : Base (le L2 de Coinbase, avec des frais de gas sub-centimes et une finalite en ~2 secondes), SKALE on Base (avec des frais de gas ultra-bas (~$0,0007/tx)), et Polygon (Chain ID 137, ~$0,001/tx, USDC natif). Cela signifie qu'un appel API peut couter $0.005 et l'agent paie quasi exactement $0.005 — frais de gas minimes. Des micropaiements quasi reels, pour la premiere fois.",
+      solution5:
+        "x402 Bazaar supporte les paiements sur trois chaines : Base (le L2 de Coinbase, avec des frais de gas sub-centimes et une finalite en ~2 secondes), SKALE on Base (avec des frais de gas ultra-bas (~$0,0007/tx)), et Polygon (Chain ID 137, ~$0,001/tx, USDC natif). Cela signifie qu'un appel API peut couter $0.005 et l'agent paie quasi exactement $0.005 — frais de gas minimes. Des micropaiements quasi reels, pour la premiere fois.",
       technicalTitle: "Comment ca marche : le flux technique",
-      technicalIntro: "Suivons une vraie requete. Un agent IA veut rechercher sur le web \"derniers articles de recherche en IA\".",
+      technicalIntro:
+        'Suivons une vraie requete. Un agent IA veut rechercher sur le web "derniers articles de recherche en IA".',
       step1Title: "Etape 1 : Decouverte",
       step1Desc: "L'agent interroge l'endpoint du catalogue x402 Bazaar :",
-      step1Result: "Il recoit une liste de services disponibles avec descriptions, tarifs et details des endpoints. Il identifie un service de recherche web a $0.01 par requete.",
+      step1Result:
+        "Il recoit une liste de services disponibles avec descriptions, tarifs et details des endpoints. Il identifie un service de recherche web a $0.01 par requete.",
       step2Title: "Etape 2 : Requete",
       step2Desc: "L'agent appelle l'endpoint de recherche :",
       step3Title: "Etape 3 : Paiement requis",
       step3Desc: "Le serveur repond :",
       step4Title: "Etape 4 : Paiement on-chain",
-      step4Desc: "L'agent transfere 0.01 USDC a l'adresse specifiee sur SKALE on Base, Base ou Polygon. Il recoit un hash de transaction :",
+      step4Desc:
+        "L'agent transfere 0.01 USDC a l'adresse specifiee sur SKALE on Base, Base ou Polygon. Il recoit un hash de transaction :",
       step5Title: "Etape 5 : Nouvel essai avec preuve",
-      step5Desc: "L'agent renvoie la requete originale avec la preuve de paiement :",
+      step5Desc:
+        "L'agent renvoie la requete originale avec la preuve de paiement :",
       step6Title: "Etape 6 : Donnees livrees",
-      step6Desc: "Le serveur verifie la transaction on-chain, confirme que le montant et le destinataire correspondent, verifie que le hash de tx n'a pas deja ete utilise (anti-replay) et retourne les resultats de recherche.",
-      step6End: "Le flux complet prend quelques secondes. Aucun humain n'a touche a quoi que ce soit.",
+      step6Desc:
+        "Le serveur verifie la transaction on-chain, confirme que le montant et le destinataire correspondent, verifie que le hash de tx n'a pas deja ete utilise (anti-replay) et retourne les resultats de recherche.",
+      step6End:
+        "Le flux complet prend quelques secondes. Aucun humain n'a touche a quoi que ce soit.",
       securityTitle: "Securite : concu pour un environnement trustless",
-      securityIntro: "Quand des agents autonomes effectuent des paiements, la securite n'est pas optionnelle. Voici ce que nous avons construit :",
+      securityIntro:
+        "Quand des agents autonomes effectuent des paiements, la securite n'est pas optionnelle. Voici ce que nous avons construit :",
       securityReplay: "Protection anti-replay.",
-      securityReplayDesc: "Chaque hash de transaction est stocke dans Supabase apres la premiere utilisation. Si un agent (ou un attaquant) essaie de reutiliser un paiement, la requete est rejetee. Un paiement, un appel de service. Pas d'exceptions.",
+      securityReplayDesc:
+        "Chaque hash de transaction est stocke dans Supabase apres la premiere utilisation. Si un agent (ou un attaquant) essaie de reutiliser un paiement, la requete est rejetee. Un paiement, un appel de service. Pas d'exceptions.",
       securityUsdc: "Validation du contrat USDC.",
-      securityUsdcDesc: "Le serveur verifie que le paiement a ete effectue avec le vrai contrat USDC sur la chaine attendue — pas un faux token avec le meme nom. Cela empeche les attaques par substitution de tokens ou un attaquant deploie un ERC-20 sans valeur nomme \"USDC\" et tente de le faire passer pour un paiement.",
+      securityUsdcDesc:
+        'Le serveur verifie que le paiement a ete effectue avec le vrai contrat USDC sur la chaine attendue — pas un faux token avec le meme nom. Cela empeche les attaques par substitution de tokens ou un attaquant deploie un ERC-20 sans valeur nomme "USDC" et tente de le faire passer pour un paiement.',
       securitySsrf: "Protection SSRF.",
-      securitySsrfDesc: "Le service de web scraping valide et assainit les URLs pour empecher les attaques SSRF (Server-Side Request Forgery). Les agents ne peuvent pas utiliser le scraper pour sonder les reseaux internes ou acceder aux ressources restreintes.",
+      securitySsrfDesc:
+        "Le service de web scraping valide et assainit les URLs pour empecher les attaques SSRF (Server-Side Request Forgery). Les agents ne peuvent pas utiliser le scraper pour sonder les reseaux internes ou acceder aux ressources restreintes.",
       securitySpam: "Prevention economique du spam.",
-      securitySpamDesc: "Chaque appel API coute de l'argent reel. C'est le moyen de dissuasion le plus simple et le plus efficace contre le spam — si chaque requete coute du USDC, le cout de l'abus augmente lineairement. Pas besoin de CAPTCHAs.",
+      securitySpamDesc:
+        "Chaque appel API coute de l'argent reel. C'est le moyen de dissuasion le plus simple et le plus efficace contre le spam — si chaque requete coute du USDC, le cout de l'abus augmente lineairement. Pas besoin de CAPTCHAs.",
       marketplaceTitle: "Ce qu'il y a dans la marketplace",
-      marketplaceIntro: "x402 Bazaar lance avec plus de 70 services API dans plusieurs categories :",
+      marketplaceIntro:
+        "x402 Bazaar lance avec plus de 70 services API dans plusieurs categories :",
       marketplaceNative: "6 services wrapper natifs",
-      marketplaceNativeDesc: "(construits et maintenus par x402 Bazaar, avec des interfaces standardisees) :",
+      marketplaceNativeDesc:
+        "(construits et maintenus par x402 Bazaar, avec des interfaces standardisees) :",
       tableService: "Service",
       tableDescription: "Description",
       tablePrice: "Prix indicatif",
@@ -2967,50 +3468,68 @@ def my_function(query: str) -> dict:
       serviceJokeDesc: "Blagues aleatoires (pour le fun)",
       serviceJokePrice: "$0.001/blague",
       marketplaceThirdParty: "Plus de 60 services tiers",
-      marketplaceThirdPartyDesc: "agreges depuis des fournisseurs externes, tous accessibles via le meme flux de paiement HTTP 402.",
+      marketplaceThirdPartyDesc:
+        "agreges depuis des fournisseurs externes, tous accessibles via le meme flux de paiement HTTP 402.",
       mcpTitle: "Integration MCP : branchez-le a votre assistant IA",
       mcpDesc1: "x402 Bazaar est livre avec un",
       mcpDescHighlight: "serveur Model Context Protocol (MCP)",
-      mcpDesc2: "qui s'integre directement avec Claude Desktop, Cursor et VS Code.",
+      mcpDesc2:
+        "qui s'integre directement avec Claude Desktop, Cursor et VS Code.",
       mcpOnceConnected: "Une fois connecte, votre assistant IA peut :",
       mcpFeature1: "Parcourir le catalogue complet de la marketplace",
       mcpFeature2: "Comparer les prix entre services similaires",
       mcpFeature3: "Effectuer des paiements USDC de maniere autonome",
       mcpFeature4: "Retourner les resultats API dans la conversation",
-      mcpConversation: "Cela signifie que vous pouvez avoir une conversation comme :",
+      mcpConversation:
+        "Cela signifie que vous pouvez avoir une conversation comme :",
       mcpYou: "Vous :",
-      mcpYouPrompt: "Trouve-moi le prix actuel du Bitcoin depuis trois sources differentes et compare-les.",
+      mcpYouPrompt:
+        "Trouve-moi le prix actuel du Bitcoin depuis trois sources differentes et compare-les.",
       mcpClaude: "Claude (via x402 Bazaar MCP) :",
-      mcpClaudeResponse: "J'ai trouve trois services de prix crypto dans la marketplace. Laissez-moi interroger chacun d'eux...",
+      mcpClaudeResponse:
+        "J'ai trouve trois services de prix crypto dans la marketplace. Laissez-moi interroger chacun d'eux...",
       mcpResult1: "CoinGecko via x402 : BTC = $98,432 (cout : $0.005)",
       mcpResult2: "CryptoCompare via x402 : BTC = $98,445 (cout : $0.005)",
       mcpResult3: "Service crypto natif : BTC = $98,438 (cout : $0.005)",
-      mcpResultSummary: "Les trois sources s'accordent dans une fourchette de $13. Cout total : $0.015.",
-      mcpConclusion: "L'agent a decouvert les services, evalue les tarifs, effectue trois micropaiements distincts et synthetise les resultats — le tout en un seul tour de conversation.",
+      mcpResultSummary:
+        "Les trois sources s'accordent dans une fourchette de $13. Cout total : $0.015.",
+      mcpConclusion:
+        "L'agent a decouvert les services, evalue les tarifs, effectue trois micropaiements distincts et synthetise les resultats — le tout en un seul tour de conversation.",
       getStartedTitle: "Demarrez en une seule commande",
       getStartedCommand: "npx x402-bazaar init",
       getStartedDesc: "Cette seule commande :",
       getStartedStep1: "Cree une configuration client x402 Bazaar locale",
       getStartedStep2: "Genere ou importe un wallet pour les paiements USDC",
       getStartedStep3: "Se connecte au catalogue de la marketplace",
-      getStartedStep4: "Vous donne (ou a votre agent) un acces immediat a plus de 70 APIs payantes",
-      getStartedConclusion: "De zero a votre premier appel API payant en moins d'une minute.",
+      getStartedStep4:
+        "Vous donne (ou a votre agent) un acces immediat a plus de 70 APIs payantes",
+      getStartedConclusion:
+        "De zero a votre premier appel API payant en moins d'une minute.",
       coinbaseTitle: "Construit sur le standard x402 de Coinbase",
       coinbase1: "x402 Bazaar est construit sur le",
       coinbase1Highlight: "protocole x402",
-      coinbase1End: "— un standard de paiement ouvert cree par Coinbase qui donne vie au HTTP 402. Le protocole definit comment les serveurs annoncent les prix, comment les clients effectuent les paiements et comment la preuve de paiement est verifiee.",
-      coinbase2: "Nous avons choisi de construire sur x402 parce qu'il represente la bonne abstraction : les paiements comme une preoccupation HTTP native, pas une integration boulonnee. Quand chaque API parle le meme protocole de paiement, les agents peuvent interagir avec n'importe quel service sans code d'integration personnalise.",
-      coinbase3: "x402 Bazaar etend le protocole avec une couche marketplace — decouverte de services, gestion de catalogue, services wrapper avec interfaces standardisees et integration MCP pour les assistants IA.",
+      coinbase1End:
+        "— un standard de paiement ouvert cree par Coinbase qui donne vie au HTTP 402. Le protocole definit comment les serveurs annoncent les prix, comment les clients effectuent les paiements et comment la preuve de paiement est verifiee.",
+      coinbase2:
+        "Nous avons choisi de construire sur x402 parce qu'il represente la bonne abstraction : les paiements comme une preoccupation HTTP native, pas une integration boulonnee. Quand chaque API parle le meme protocole de paiement, les agents peuvent interagir avec n'importe quel service sans code d'integration personnalise.",
+      coinbase3:
+        "x402 Bazaar etend le protocole avec une couche marketplace — decouverte de services, gestion de catalogue, services wrapper avec interfaces standardisees et integration MCP pour les assistants IA.",
       bigPictureTitle: "La vision d'ensemble : le commerce entre agents",
-      bigPicture1: "Nous croyons que nous sommes au debut d'un changement fondamental dans la facon dont les logiciels consomment des services. Aujourd'hui, les humains configurent chaque integration API. Demain, les agents gereront cela eux-memes — decouvrant ce dont ils ont besoin, evaluant les options, payant l'acces et passant a la suite.",
-      bigPicture2: "Cela necessite trois choses qui n'existaient pas ensemble jusqu'a present :",
+      bigPicture1:
+        "Nous croyons que nous sommes au debut d'un changement fondamental dans la facon dont les logiciels consomment des services. Aujourd'hui, les humains configurent chaque integration API. Demain, les agents gereront cela eux-memes — decouvrant ce dont ils ont besoin, evaluant les options, payant l'acces et passant a la suite.",
+      bigPicture2:
+        "Cela necessite trois choses qui n'existaient pas ensemble jusqu'a present :",
       bigPicture3a: "Un protocole de paiement natif HTTP",
-      bigPicture3aDesc: "— x402 fait des paiements une interaction HTTP standard, pas un systeme separe",
+      bigPicture3aDesc:
+        "— x402 fait des paiements une interaction HTTP standard, pas un systeme separe",
       bigPicture3b: "De l'argent programmable avec des frais quasi nuls",
-      bigPicture3bDesc: "— l'USDC sur les L2 (SKALE, Base, Polygon) rend les micropaiements viables pour la premiere fois",
+      bigPicture3bDesc:
+        "— l'USDC sur les L2 (SKALE, Base, Polygon) rend les micropaiements viables pour la premiere fois",
       bigPicture3c: "Des agents IA capables de decisions autonomes",
-      bigPicture3cDesc: "— les agents modernes bases sur des LLM peuvent evaluer, selectionner et utiliser des services sans guidage humain",
-      bigPicture4: "x402 Bazaar se situe a l'intersection de ces trois elements. C'est la couche d'infrastructure pour le commerce entre agents — ou les agents decouvrent des services, paient avec des stablecoins et accomplissent le travail.",
+      bigPicture3cDesc:
+        "— les agents modernes bases sur des LLM peuvent evaluer, selectionner et utiliser des services sans guidage humain",
+      bigPicture4:
+        "x402 Bazaar se situe a l'intersection de ces trois elements. C'est la couche d'infrastructure pour le commerce entre agents — ou les agents decouvrent des services, paient avec des stablecoins et accomplissent le travail.",
       linksTitle: "Liens",
       linkWebsite: "Site web :",
       linkGithubFrontend: "GitHub (Frontend) :",
@@ -3020,8 +3539,10 @@ def my_function(query: str) -> dict:
       linkHackathon: "Origine :",
       linkHackathonDesc: "SF Agentic Commerce x402 — lance en fev. 2026",
       tryItTitle: "Essayez maintenant",
-      tryItConclusion: "HTTP 402 a attendu 29 ans pour cela. Votre agent n'a pas a attendre une minute de plus.",
-      disclaimer: "x402 Bazaar est un projet independant construit sur le standard ouvert du protocole x402. Il n'est ni affilie a ni approuve par Coinbase.",
+      tryItConclusion:
+        "HTTP 402 a attendu 29 ans pour cela. Votre agent n'a pas a attendre une minute de plus.",
+      disclaimer:
+        "x402 Bazaar est un projet independant construit sur le standard ouvert du protocole x402. Il n'est ni affilie a ni approuve par Coinbase.",
       ctaTitle: "Pret a commencer ?",
       ctaDesc: "Une commande pour connecter votre agent IA :",
       ctaExplore: "Explorer les services",
@@ -3031,35 +3552,46 @@ def my_function(query: str) -> dict:
       title: "A propos de x402 Bazaar",
       subtitle: "La marketplace autonome pour agents IA et services API",
       whatIsTitle: "Qu'est-ce que x402 Bazaar ?",
-      whatIsPara1: "x402 Bazaar est la première marketplace API vraiment autonome conçue pour les agents IA. Au lieu des clés API traditionnelles, des abonnements mensuels ou des systèmes de facturation complexes, nous utilisons le protocole HTTP 402 pour permettre un accès pay-per-request avec cryptomonnaie.",
-      whatIsPara2: "Les agents IA peuvent découvrir des services, négocier le paiement automatiquement et accéder aux APIs sans aucune intervention humaine. Chaque transaction est vérifiée on-chain en utilisant l'USDC sur les réseaux SKALE, Base et Polygon, garantissant transparence, confiance zéro et règlement instantané.",
-      whatIsPara3: "Que vous construisiez des agents autonomes, intégriez des APIs dans votre workflow ou monétisiez vos propres services, x402 Bazaar élimine les frictions entre découverte, paiement et accès.",
+      whatIsPara1:
+        "x402 Bazaar est la première marketplace API vraiment autonome conçue pour les agents IA. Au lieu des clés API traditionnelles, des abonnements mensuels ou des systèmes de facturation complexes, nous utilisons le protocole HTTP 402 pour permettre un accès pay-per-request avec cryptomonnaie.",
+      whatIsPara2:
+        "Les agents IA peuvent découvrir des services, négocier le paiement automatiquement et accéder aux APIs sans aucune intervention humaine. Chaque transaction est vérifiée on-chain en utilisant l'USDC sur les réseaux SKALE, Base et Polygon, garantissant transparence, confiance zéro et règlement instantané.",
+      whatIsPara3:
+        "Que vous construisiez des agents autonomes, intégriez des APIs dans votre workflow ou monétisiez vos propres services, x402 Bazaar élimine les frictions entre découverte, paiement et accès.",
       howItWorksTitle: "Comment ça marche",
       step1Title: "Découvrez",
-      step1Desc: "Parcourez {count} APIs dans {catCount} catégories ou laissez votre agent IA chercher par programmation.",
+      step1Desc:
+        "Parcourez {count} APIs dans {catCount} catégories ou laissez votre agent IA chercher par programmation.",
       step2Title: "Payez",
-      step2Desc: "Payez par requête en USDC sur SKALE, Base ou Polygon. Pas d'abonnements, pas de comptes nécessaires.",
+      step2Desc:
+        "Payez par requête en USDC sur SKALE, Base ou Polygon. Pas d'abonnements, pas de comptes nécessaires.",
       step3Title: "Utilisez",
-      step3Desc: "Accès accordé instantanément après vérification du paiement on-chain. Commencez à construire.",
+      step3Desc:
+        "Accès accordé instantanément après vérification du paiement on-chain. Commencez à construire.",
       step4Title: "Gagnez",
-      step4Desc: "Les fournisseurs d'API gagnent de l'USDC directement pour chaque requête. Pas d'intermédiaires, pas de délais.",
+      step4Desc:
+        "Les fournisseurs d'API gagnent de l'USDC directement pour chaque requête. Pas d'intermédiaires, pas de délais.",
       protocolTitle: "Le protocole x402",
-      protocolDesc: "x402 Bazaar est construit sur le standard HTTP 402 Payment Required, un code de statut HTTP rarement utilisé qui a été conçu pour les micropaiements sur le web. Quand votre agent demande une API payante, le serveur répond avec 402 et les détails de paiement. Votre agent paie via transfert USDC sur SKALE, Base ou Polygon, puis réessaie avec preuve de paiement. Simple, sans confiance, autonome.",
+      protocolDesc:
+        "x402 Bazaar est construit sur le standard HTTP 402 Payment Required, un code de statut HTTP rarement utilisé qui a été conçu pour les micropaiements sur le web. Quand votre agent demande une API payante, le serveur répond avec 402 et les détails de paiement. Votre agent paie via transfert USDC sur SKALE, Base ou Polygon, puis réessaie avec preuve de paiement. Simple, sans confiance, autonome.",
       protocolLearnMore: "En savoir plus sur le protocole :",
       protocolVisit: "Visiter x402.org",
       builtOnTitle: "Propulsé par",
       baseChainId: "Chain ID : 8453",
-      baseDesc: "Base est le Layer 2 de Coinbase construit sur Ethereum. Rapide, économique et compatible EVM, c'est le réseau parfait pour les micropaiements. Les transferts USDC prennent quelques secondes et coûtent des fractions de centime.",
+      baseDesc:
+        "Base est le Layer 2 de Coinbase construit sur Ethereum. Rapide, économique et compatible EVM, c'est le réseau parfait pour les micropaiements. Les transferts USDC prennent quelques secondes et coûtent des fractions de centime.",
       baseFeature1: "~$0.001 gas par tx",
       baseFeature2: "Finalité en 2 secondes",
       baseFeature3: "Compatible EVM",
       skaleChainId: "Chain ID : 1187947933",
-      skaleDesc: "SKALE on Base est une blockchain a gas ultra-bas optimisée pour les applications Web3. Les transactions coutent ~$0,0007, ce qui la rend idéale pour les interactions fréquentes des agents IA. SKALE fonctionne en parallèle avec Base pour des opérations a cout ultra-bas.",
+      skaleDesc:
+        "SKALE on Base est une blockchain a gas ultra-bas optimisée pour les applications Web3. Les transactions coutent ~$0,0007, ce qui la rend idéale pour les interactions fréquentes des agents IA. SKALE fonctionne en parallèle avec Base pour des opérations a cout ultra-bas.",
       skaleFeature1: "~$0,0007 frais de gas",
       skaleFeature2: "Finalité instantanée",
       skaleFeature3: "Natif Ethereum",
       openSourceTitle: "Open Source",
-      openSourceDesc: "x402 Bazaar est 100% open source et sous licence MIT. Le frontend et le backend sont disponibles sur GitHub. Nous croyons en une infrastructure transparente et communautaire pour l'économie autonome.",
+      openSourceDesc:
+        "x402 Bazaar est 100% open source et sous licence MIT. Le frontend et le backend sont disponibles sur GitHub. Nous croyons en une infrastructure transparente et communautaire pour l'économie autonome.",
       frontendRepo: "x402-frontend",
       frontendRepoDesc: "React + Vite + Tailwind + Wagmi",
       backendRepo: "x402-backend",
@@ -3067,114 +3599,158 @@ def my_function(query: str) -> dict:
       licenseLabel: "Licence :",
       licenseDesc: "MIT — utilisez-la, forkez-la, monétisez-la.",
       contributionsLabel: "Contributions :",
-      contributionsDesc: "Pull requests bienvenues. Issues et idées encouragées.",
+      contributionsDesc:
+        "Pull requests bienvenues. Issues et idées encouragées.",
       teamTitle: "L'équipe",
-      teamDesc: "x402 Bazaar a été lancé en 2025 comme preuve de concept pour les économies d'agents autonomes. Ce qui a commencé comme un projet open-source est devenu une marketplace fonctionnelle et en production avec de vrais paiements, de vraies APIs et une vraie adoption.",
+      teamDesc:
+        "x402 Bazaar a été lancé en 2025 comme preuve de concept pour les économies d'agents autonomes. Ce qui a commencé comme un projet open-source est devenu une marketplace fonctionnelle et en production avec de vrais paiements, de vraies APIs et une vraie adoption.",
       founderName: "Robin",
       founderRole: "Fondateur & Développeur Principal",
-      founderBio: "Développeur full-stack passionné par l'infrastructure décentralisée et les agents IA. A construit x402 Bazaar de zéro — 69+ wrappers API, 9 intégrations, 505+ tests, et ce n'est que le début. Convaincu par les protocoles ouverts et l'innovation sans permission.",
+      founderBio:
+        "Développeur full-stack passionné par l'infrastructure décentralisée et les agents IA. A construit x402 Bazaar de zéro — 69+ wrappers API, 9 intégrations, 505+ tests, et ce n'est que le début. Convaincu par les protocoles ouverts et l'innovation sans permission.",
       teamHackathon: "Lance au SF x402 — Open Source",
       teamHackathonDesc: "Du concept à la plateforme de production",
       contactTitle: "Contact",
       ctaTitle: "Commencer",
-      ctaDesc: "Installez le CLI et donnez à votre agent IA accès à toute la marketplace en 30 secondes.",
+      ctaDesc:
+        "Installez le CLI et donnez à votre agent IA accès à toute la marketplace en 30 secondes.",
       ctaBrowse: "Parcourir les APIs",
       ctaDocs: "Lire la documentation",
       securityTitle: "Securite",
-      securityDesc: "Concu pour un environnement trustless ou des agents autonomes effectuent des paiements.",
+      securityDesc:
+        "Concu pour un environnement trustless ou des agents autonomes effectuent des paiements.",
       security1Title: "Protection Anti-Replay",
-      security1Desc: "Chaque hash de transaction est stocke apres premiere utilisation. Reutiliser un paiement est impossible.",
+      security1Desc:
+        "Chaque hash de transaction est stocke apres premiere utilisation. Reutiliser un paiement est impossible.",
       security2Title: "Verification On-Chain",
-      security2Desc: "Paiements verifies contre le vrai contrat USDC. Les attaques par faux tokens sont bloquees.",
+      security2Desc:
+        "Paiements verifies contre le vrai contrat USDC. Les attaques par faux tokens sont bloquees.",
       security3Title: "Protection SSRF",
-      security3Desc: "La validation d'URL empeche le sondage de reseaux internes via le scraper.",
+      security3Desc:
+        "La validation d'URL empeche le sondage de reseaux internes via le scraper.",
       security4Title: "Limitation de Debit",
-      security4Desc: "30 req/min pour les endpoints payants, 500/15min pour les gratuits.",
+      security4Desc:
+        "30 req/min pour les endpoints payants, 500/15min pour les gratuits.",
       security5Title: "Controle de Budget",
-      security5Desc: "MAX_BUDGET_USDC configurable empeche les depenses incontrolees.",
+      security5Desc:
+        "MAX_BUDGET_USDC configurable empeche les depenses incontrolees.",
       security6Title: "Prevention Economique du Spam",
-      security6Desc: "Chaque appel API coute du vrai USDC. L'abus coute proportionnellement.",
+      security6Desc:
+        "Chaque appel API coute du vrai USDC. L'abus coute proportionnellement.",
       slaTitle: "Accord de Niveau de Service",
       slaDesc: "Nos engagements pour les endpoints natifs x402 Bazaar.",
       sla1Title: "Disponibilite cible : 99.5%",
-      sla1Desc: "Nous visons 99.5% de disponibilite sur tous les endpoints natifs, surveilles 24/7 avec alertes automatisees.",
+      sla1Desc:
+        "Nous visons 99.5% de disponibilite sur tous les endpoints natifs, surveilles 24/7 avec alertes automatisees.",
       sla2Title: "Monitoring : toutes les 5 min",
-      sla2Desc: "Les 69+ endpoints sont verifies toutes les 5 minutes. Le statut est visible publiquement sur la page /status.",
+      sla2Desc:
+        "Les 69+ endpoints sont verifies toutes les 5 minutes. Le statut est visible publiquement sur la page /status.",
       sla3Title: "Temps de reponse : < 2s",
-      sla3Desc: "Les endpoints natifs visent un temps de reponse inferieur a 2 secondes, verification de paiement incluse.",
+      sla3Desc:
+        "Les endpoints natifs visent un temps de reponse inferieur a 2 secondes, verification de paiement incluse.",
       sla4Title: "Reponse incidents : 24/7",
-      sla4Desc: "Alertes Telegram automatisees en cas d'indisponibilite. Les incidents sont investigues et resolus aussi vite que possible.",
+      sla4Desc:
+        "Alertes Telegram automatisees en cas d'indisponibilite. Les incidents sont investigues et resolus aussi vite que possible.",
       slaNote: "Note :",
-      slaNoteDesc: "Ce SLA s'applique aux endpoints natifs x402 Bazaar uniquement. Les APIs tierces enregistrees sur la marketplace sont sous la responsabilite de leurs fournisseurs respectifs.",
+      slaNoteDesc:
+        "Ce SLA s'applique aux endpoints natifs x402 Bazaar uniquement. Les APIs tierces enregistrees sur la marketplace sont sous la responsabilite de leurs fournisseurs respectifs.",
       onChainIdentityTitle: "Identite On-Chain",
-      onChainIdentityDesc: "x402 Bazaar possede une identite on-chain verifiable via ERC-8004 sur Base mainnet.",
-      erc8004What: "ERC-8004 est un standard pour l'identite d'agents autonomes sur Ethereum. Il permet aux agents de s'enregistrer avec une identite on-chain verifiable, incluant des metadonnees comme le nom, les capacites et une URL d'enregistrement. Cela permet aux autres agents et utilisateurs de verifier avec qui ils interagissent, sans dependre de fournisseurs d'identite centralises.",
-      erc8004Bazaar: "x402 Bazaar est enregistre en tant qu'agent verifie dans le registre d'identite ERC-8004 sur Base. Cela signifie que tout utilisateur ou agent peut verifier notre identite on-chain de maniere independante, garantissant des interactions trustless.",
+      onChainIdentityDesc:
+        "x402 Bazaar possede une identite on-chain verifiable via ERC-8004 sur Base mainnet.",
+      erc8004What:
+        "ERC-8004 est un standard pour l'identite d'agents autonomes sur Ethereum. Il permet aux agents de s'enregistrer avec une identite on-chain verifiable, incluant des metadonnees comme le nom, les capacites et une URL d'enregistrement. Cela permet aux autres agents et utilisateurs de verifier avec qui ils interagissent, sans dependre de fournisseurs d'identite centralises.",
+      erc8004Bazaar:
+        "x402 Bazaar est enregistre en tant qu'agent verifie dans le registre d'identite ERC-8004 sur Base. Cela signifie que tout utilisateur ou agent peut verifier notre identite on-chain de maniere independante, garantissant des interactions trustless.",
       erc8004Registry: "Registre d'identite sur BaseScan",
       erc8004Registration: "JSON d'enregistrement de l'agent",
     },
     terms: {
       title: "Conditions d'Utilisation",
-      subtitle: "Conditions regissant l'utilisation de la marketplace x402 Bazaar.",
+      subtitle:
+        "Conditions regissant l'utilisation de la marketplace x402 Bazaar.",
       lastUpdated: "Derniere mise a jour",
       acceptTitle: "Acceptation & Eligibilite",
       acceptUse: "Utilisation = acceptation",
-      acceptUseDesc: "En utilisant x402 Bazaar (API, site web, CLI ou serveur MCP), vous acceptez ces conditions. Si vous n'etes pas d'accord, n'utilisez pas le service.",
+      acceptUseDesc:
+        "En utilisant x402 Bazaar (API, site web, CLI ou serveur MCP), vous acceptez ces conditions. Si vous n'etes pas d'accord, n'utilisez pas le service.",
       acceptAge: "Condition d'age",
-      acceptAgeDesc: "Vous devez avoir au moins 18 ans ou l'age de la majorite dans votre juridiction pour utiliser x402 Bazaar.",
+      acceptAgeDesc:
+        "Vous devez avoir au moins 18 ans ou l'age de la majorite dans votre juridiction pour utiliser x402 Bazaar.",
       acceptAgents: "Agents IA",
-      acceptAgentsDesc: "Les agents IA agissant en votre nom sont consideres comme des extensions de votre compte. Vous etes responsable de toutes les actions et paiements effectues par vos agents.",
+      acceptAgentsDesc:
+        "Les agents IA agissant en votre nom sont consideres comme des extensions de votre compte. Vous etes responsable de toutes les actions et paiements effectues par vos agents.",
       paymentsTitle: "Paiements & Transactions",
       paymentsFinal: "Paiements definitifs",
-      paymentsFinalDesc: "Tous les paiements sont regles on-chain et sont irreversibles. Une fois un transfert USDC confirme sur SKALE, Base ou Polygon, il ne peut pas etre rembourse.",
+      paymentsFinalDesc:
+        "Tous les paiements sont regles on-chain et sont irreversibles. Une fois un transfert USDC confirme sur SKALE, Base ou Polygon, il ne peut pas etre rembourse.",
       paymentsUsdc: "USDC uniquement",
-      paymentsUsdcDesc: "x402 Bazaar accepte exclusivement l'USDC (USD Coin) sur les reseaux SKALE, Base et Polygon. Aucun autre token ou devise n'est accepte.",
+      paymentsUsdcDesc:
+        "x402 Bazaar accepte exclusivement l'USDC (USD Coin) sur les reseaux SKALE, Base et Polygon. Aucun autre token ou devise n'est accepte.",
       paymentsGas: "Frais de gas separes",
-      paymentsGasDesc: "Les frais de gas du reseau (le cas echeant) sont payes par l'appelant et sont separes des prix API. SKALE n'a aucun frais de gas ; Base facture ~$0.001 par transaction.",
+      paymentsGasDesc:
+        "Les frais de gas du reseau (le cas echeant) sont payes par l'appelant et sont separes des prix API. SKALE n'a aucun frais de gas ; Base facture ~$0.001 par transaction.",
       paymentsReplay: "Protection anti-replay",
-      paymentsReplayDesc: "Chaque hash de transaction ne peut etre utilise qu'une seule fois. Toute tentative de reutilisation d'un paiement sera rejetee.",
+      paymentsReplayDesc:
+        "Chaque hash de transaction ne peut etre utilise qu'une seule fois. Toute tentative de reutilisation d'un paiement sera rejetee.",
       servicesTitle: "Services & Disponibilite",
       servicesAsIs: "Service tel quel",
-      servicesAsIsDesc: "x402 Bazaar est fourni tel quel, sans garantie d'aucune sorte. Nous ne garantissons pas un acces ininterrompu ou un fonctionnement sans erreur.",
+      servicesAsIsDesc:
+        "x402 Bazaar est fourni tel quel, sans garantie d'aucune sorte. Nous ne garantissons pas un acces ininterrompu ou un fonctionnement sans erreur.",
       servicesUptime: "Objectif de disponibilite",
-      servicesUptimeDesc: "Nous visons 99.5% de disponibilite pour les endpoints natifs, surveilles toutes les 5 minutes. C'est un objectif au mieux, pas une garantie contractuelle.",
+      servicesUptimeDesc:
+        "Nous visons 99.5% de disponibilite pour les endpoints natifs, surveilles toutes les 5 minutes. C'est un objectif au mieux, pas une garantie contractuelle.",
       servicesThirdParty: "APIs tierces",
-      servicesThirdPartyDesc: "Les services tiers enregistres sur x402 Bazaar sont operes par des fournisseurs independants. Nous ne sommes pas responsables de leur disponibilite, exactitude ou contenu.",
+      servicesThirdPartyDesc:
+        "Les services tiers enregistres sur x402 Bazaar sont operes par des fournisseurs independants. Nous ne sommes pas responsables de leur disponibilite, exactitude ou contenu.",
       providersTitle: "Pour les Fournisseurs d'API",
       providersRevenue: "95% de partage de revenus",
-      providersRevenueDesc: "Les fournisseurs d'API recoivent 95% de chaque paiement. Les 5% de frais de plateforme couvrent l'infrastructure, le monitoring et les operations de la marketplace.",
+      providersRevenueDesc:
+        "Les fournisseurs d'API recoivent 95% de chaque paiement. Les 5% de frais de plateforme couvrent l'infrastructure, le monitoring et les operations de la marketplace.",
       providersContent: "Contenu legal uniquement",
-      providersContentDesc: "Les APIs enregistrees sur x402 Bazaar doivent respecter les lois applicables. Les services illegaux, nuisibles ou frauduleux seront supprimes sans preavis.",
+      providersContentDesc:
+        "Les APIs enregistrees sur x402 Bazaar doivent respecter les lois applicables. Les services illegaux, nuisibles ou frauduleux seront supprimes sans preavis.",
       providersRemoval: "Droit de retrait",
-      providersRemovalDesc: "x402 Bazaar se reserve le droit de supprimer tout service qui enfreint ces conditions, qui est signale comme abusif ou qui est non fonctionnel.",
+      providersRemovalDesc:
+        "x402 Bazaar se reserve le droit de supprimer tout service qui enfreint ces conditions, qui est signale comme abusif ou qui est non fonctionnel.",
       liabilityTitle: "Responsabilite & Avertissements",
       liabilityLimited: "Responsabilite limitee",
-      liabilityLimitedDesc: "La responsabilite totale de x402 Bazaar est limitee au montant paye au cours des 30 derniers jours. Nous ne sommes pas responsables des dommages indirects, accessoires ou consecutifs.",
+      liabilityLimitedDesc:
+        "La responsabilite totale de x402 Bazaar est limitee au montant paye au cours des 30 derniers jours. Nous ne sommes pas responsables des dommages indirects, accessoires ou consecutifs.",
       liabilityBlockchain: "Irreversibilite blockchain",
-      liabilityBlockchainDesc: "Les transactions blockchain sont permanentes et ne peuvent pas etre inversees. Nous ne pouvons pas recuperer les fonds envoyes a de mauvaises adresses ou perdus suite a des erreurs de wallet.",
+      liabilityBlockchainDesc:
+        "Les transactions blockchain sont permanentes et ne peuvent pas etre inversees. Nous ne pouvons pas recuperer les fonds envoyes a de mauvaises adresses ou perdus suite a des erreurs de wallet.",
       liabilityChanges: "Mises a jour des conditions",
-      liabilityChangesDesc: "Nous pouvons mettre a jour ces conditions a tout moment. L'utilisation continue du service apres les modifications constitue l'acceptation des nouvelles conditions.",
+      liabilityChangesDesc:
+        "Nous pouvons mettre a jour ces conditions a tout moment. L'utilisation continue du service apres les modifications constitue l'acceptation des nouvelles conditions.",
       legalTitle: "Droit Applicable & Juridiction",
       legalLaw: "Droit francais applicable",
-      legalLawDesc: "Ces CGU sont regies et interpretees conformement au droit francais (Code Civil, Code de commerce). Les reglements europeens (RGPD, DSA) s'appliquent le cas echeant.",
+      legalLawDesc:
+        "Ces CGU sont regies et interpretees conformement au droit francais (Code Civil, Code de commerce). Les reglements europeens (RGPD, DSA) s'appliquent le cas echeant.",
       legalJurisdiction: "Tribunaux competents",
-      legalJurisdictionDesc: "En cas de litige, les tribunaux competents sont ceux de Paris, France, sauf si des lois obligatoires de protection des consommateurs designent autrement.",
+      legalJurisdictionDesc:
+        "En cas de litige, les tribunaux competents sont ceux de Paris, France, sauf si des lois obligatoires de protection des consommateurs designent autrement.",
       legalMediation: "Resolution des litiges",
-      legalMediationDesc: "Nous encourageons la resolution amiable. Avant toute action judiciaire, contactez-nous via GitHub Issues. La mediation peut etre proposee comme alternative.",
+      legalMediationDesc:
+        "Nous encourageons la resolution amiable. Avant toute action judiciaire, contactez-nous via GitHub Issues. La mediation peut etre proposee comme alternative.",
       cryptoTitle: "Risques Crypto",
       cryptoDepeg: "Risque stablecoin",
-      cryptoDepegDesc: "L'USDC peut temporairement se depegged de 1 USD. x402 Bazaar n'est pas responsable des fluctuations de valeur de l'USDC. Vous assumez entierement ce risque.",
+      cryptoDepegDesc:
+        "L'USDC peut temporairement se depegged de 1 USD. x402 Bazaar n'est pas responsable des fluctuations de valeur de l'USDC. Vous assumez entierement ce risque.",
       cryptoSmartContract: "Risque smart contract",
-      cryptoSmartContractDesc: "Les smart contracts peuvent contenir des bugs ou vulnerabilites non decouverts. Testez toujours avec de petits montants d'abord. Ne depensez jamais plus que ce que vous pouvez vous permettre de perdre.",
+      cryptoSmartContractDesc:
+        "Les smart contracts peuvent contenir des bugs ou vulnerabilites non decouverts. Testez toujours avec de petits montants d'abord. Ne depensez jamais plus que ce que vous pouvez vous permettre de perdre.",
       cryptoAdvice: "Pas de conseil financier",
-      cryptoAdviceDesc: "Rien sur x402 Bazaar ne constitue un conseil financier, d'investissement ou juridique. Les marches crypto sont tres volatils et non reglementes dans de nombreuses juridictions.",
+      cryptoAdviceDesc:
+        "Rien sur x402 Bazaar ne constitue un conseil financier, d'investissement ou juridique. Les marches crypto sont tres volatils et non reglementes dans de nombreuses juridictions.",
       contactTitle: "Contact",
-      contactDesc: "Pour toute question sur ces conditions, veuillez ouvrir une issue sur notre depot GitHub.",
+      contactDesc:
+        "Pour toute question sur ces conditions, veuillez ouvrir une issue sur notre depot GitHub.",
       tldr: "TL;DR — Utiliser x402 Bazaar = accepter ces conditions. Paiements definitifs on-chain. Objectif 99.5% dispo. Fournisseurs recoivent 95%. Agents IA = votre responsabilite.",
     },
     docs: {
       title: "Documentation",
-      subtitle: "Tout ce dont vous avez besoin pour construire avec x402 Bazaar — du premier appel a la production.",
+      subtitle:
+        "Tout ce dont vous avez besoin pour construire avec x402 Bazaar — du premier appel a la production.",
       sidebarQuickstart: "Demarrage",
       sidebarProtocol: "Protocole",
       sidebarApiRef: "Reference API",
@@ -3185,24 +3761,33 @@ def my_function(query: str) -> dict:
       quickstartTitle: "Demarrage rapide",
       quickstartBadge: "5 min",
       quickstartStep1Title: "Etape 1 — Installer le CLI",
-      quickstartStep1Desc: "Une commande fait tout — detecte votre IDE, installe le serveur MCP et configure votre wallet.",
+      quickstartStep1Desc:
+        "Une commande fait tout — detecte votre IDE, installe le serveur MCP et configure votre wallet.",
       quickstartStep2Title: "Etape 2 — Premier appel",
-      quickstartStep2Desc: "Essayez l'endpoint le moins cher — une blague aleatoire pour seulement 0.01 USDC :",
+      quickstartStep2Desc:
+        "Essayez l'endpoint le moins cher — une blague aleatoire pour seulement 0.01 USDC :",
       quickstartStep3Title: "Etape 3 — Gerer la reponse 402",
-      quickstartStep3Desc: "Le serveur repond avec HTTP 402 et les details de paiement :",
+      quickstartStep3Desc:
+        "Le serveur repond avec HTTP 402 et les details de paiement :",
       quickstartStep4Title: "Etape 4 — Payer & retenter",
-      quickstartStep4Desc: "Envoyez des USDC a l'adresse destinataire, puis retentez avec le hash de transaction :",
-      quickstartSuccess: "Felicitations ! Vous venez de faire votre premier paiement x402. Votre agent peut maintenant acceder a toutes les APIs payantes de la marketplace.",
+      quickstartStep4Desc:
+        "Envoyez des USDC a l'adresse destinataire, puis retentez avec le hash de transaction :",
+      quickstartSuccess:
+        "Felicitations ! Vous venez de faire votre premier paiement x402. Votre agent peut maintenant acceder a toutes les APIs payantes de la marketplace.",
       protocolTitle: "Le protocole x402",
       protocolStep1: "Appelez un endpoint payant sans header de paiement.",
-      protocolStep2: "Le serveur repond HTTP 402 avec les details de paiement (montant, destinataire, reseau).",
-      protocolStep3: "Votre agent envoie des USDC a l'adresse destinataire sur Base.",
-      protocolStep4: "Renvoyez la meme requete avec le header X-Payment-TxHash: 0x...",
+      protocolStep2:
+        "Le serveur repond HTTP 402 avec les details de paiement (montant, destinataire, reseau).",
+      protocolStep3:
+        "Votre agent envoie des USDC a l'adresse destinataire sur Base.",
+      protocolStep4:
+        "Renvoyez la meme requete avec le header X-Payment-TxHash: 0x...",
       protocolStep5: "Le serveur verifie la tx on-chain et autorise l'acces.",
       protocolResponseTitle: "Format de reponse 402",
       apiRefTitle: "Reference API",
       apiRefLoading: "Chargement des endpoints depuis le serveur...",
-      apiRefError: "Impossible de charger les endpoints. Affichage des donnees statiques.",
+      apiRefError:
+        "Impossible de charger les endpoints. Affichage des donnees statiques.",
       apiRefMarketplace: "Marketplace",
       apiRefNative: "Wrappers Natifs",
       thMethod: "Methode",
@@ -3211,7 +3796,8 @@ def my_function(query: str) -> dict:
       thDescription: "Description",
       free: "Gratuit",
       nativeTitle: "Wrappers Natifs",
-      nativeSubtitle: "{count} endpoints API production, integres et maintenus par x402 Bazaar. Donnees reelles, paiements reels, zero configuration.",
+      nativeSubtitle:
+        "{count} endpoints API production, integres et maintenus par x402 Bazaar. Donnees reelles, paiements reels, zero configuration.",
       nativeParams: "Parametres",
       nativeParamName: "Nom",
       nativeParamType: "Type",
@@ -3222,13 +3808,16 @@ def my_function(query: str) -> dict:
       nativeYes: "Oui",
       nativeNo: "Non",
       searchTitle: "Recherche Web",
-      searchDesc: "Resultats de recherche optimises pour les LLMs. Propulse par DuckDuckGo.",
+      searchDesc:
+        "Resultats de recherche optimises pour les LLMs. Propulse par DuckDuckGo.",
       searchParamQ: "Requete de recherche",
       scrapeTitle: "Web Scraper",
-      scrapeDesc: "Convertir n'importe quelle URL en Markdown propre. Supprime pubs, navigation et contenu superflu.",
+      scrapeDesc:
+        "Convertir n'importe quelle URL en Markdown propre. Supprime pubs, navigation et contenu superflu.",
       scrapeParamUrl: "URL a scraper",
       twitterTitle: "Donnees Twitter/X",
-      twitterDesc: "Recuperer des profils Twitter, des tweets individuels et rechercher des tweets par mot-cle.",
+      twitterDesc:
+        "Recuperer des profils Twitter, des tweets individuels et rechercher des tweets par mot-cle.",
       twitterParamUser: "Nom d'utilisateur Twitter (sans @)",
       twitterParamTweet: "URL complete du tweet",
       twitterParamSearch: "Mot-cle de recherche",
@@ -3240,9 +3829,11 @@ def my_function(query: str) -> dict:
       cryptoDesc: "Prix des cryptomonnaies en temps reel depuis CoinGecko.",
       cryptoParamCoin: "ID de la cryptomonnaie (ex : bitcoin, ethereum)",
       jokeTitle: "API Blagues",
-      jokeDesc: "Blagues aleatoires — l'endpoint le moins cher, parfait pour tester le flux de paiement.",
+      jokeDesc:
+        "Blagues aleatoires — l'endpoint le moins cher, parfait pour tester le flux de paiement.",
       imageTitle: "Generation d'images",
-      imageDesc: "Generation d'images IA via DALL-E 3. Retourne une URL vers l'image generee.",
+      imageDesc:
+        "Generation d'images IA via DALL-E 3. Retourne une URL vers l'image generee.",
       imageParamPrompt: "Description de l'image (max 1000 caracteres)",
       imageParamSize: "Taille : 1024x1024, 1024x1792 ou 1792x1024",
       imageParamQuality: "Qualite : standard ou hd",
@@ -3270,7 +3861,8 @@ def my_function(query: str) -> dict:
       dnsTitle: "Requete DNS",
       dnsDesc: "Interroger les enregistrements DNS d'un domaine.",
       dnsParamDomain: "Domaine a consulter",
-      dnsParamType: "Type d'enregistrement : A, AAAA, MX, TXT, CNAME, NS (defaut : A)",
+      dnsParamType:
+        "Type d'enregistrement : A, AAAA, MX, TXT, CNAME, NS (defaut : A)",
 
       // QR Code Gen
       qrcodeGenTitle: "Generateur de QR Code",
@@ -3285,17 +3877,20 @@ def my_function(query: str) -> dict:
 
       // Sentiment
       sentimentTitle: "Analyse de sentiment",
-      sentimentDesc: "Analyser le sentiment d'un texte (positif, negatif, neutre).",
+      sentimentDesc:
+        "Analyser le sentiment d'un texte (positif, negatif, neutre).",
       sentimentParamText: "Texte a analyser (5-10000 caracteres)",
 
       // Validate Email
       validateEmailTitle: "Validation d'email",
-      validateEmailDesc: "Valider le format d'un email et verifier les enregistrements MX.",
+      validateEmailDesc:
+        "Valider le format d'un email et verifier les enregistrements MX.",
       validateEmailParamEmail: "Adresse email a valider",
 
       // Hash
       hashTitle: "Generateur de hash",
-      hashDesc: "Generer des hashes cryptographiques (MD5, SHA-1, SHA-256, SHA-512).",
+      hashDesc:
+        "Generer des hashes cryptographiques (MD5, SHA-1, SHA-256, SHA-512).",
       hashParamText: "Texte a hasher",
       hashParamAlgo: "Algorithme : md5, sha1, sha256, sha512 (defaut : sha256)",
 
@@ -3313,7 +3908,8 @@ def my_function(query: str) -> dict:
       // Password
       passwordTitle: "Generateur de mots de passe",
       passwordDesc: "Generer des mots de passe securises aleatoires.",
-      passwordParamLength: "Longueur du mot de passe (defaut : 16, plage : 8-128)",
+      passwordParamLength:
+        "Longueur du mot de passe (defaut : 16, plage : 8-128)",
       passwordParamSymbols: "Inclure les symboles (defaut : true)",
       passwordParamNumbers: "Inclure les chiffres (defaut : true)",
       passwordParamUppercase: "Inclure les majuscules (defaut : true)",
@@ -3360,16 +3956,19 @@ def my_function(query: str) -> dict:
       // User Agent
       useragentTitle: "Analyseur de User Agent",
       useragentDesc: "Parser et analyser les chaines User-Agent.",
-      useragentParamUa: "Chaine User-Agent a parser (defaut : UA de la requete)",
+      useragentParamUa:
+        "Chaine User-Agent a parser (defaut : UA de la requete)",
 
       // Wikipedia
       wikipediaTitle: "Recherche Wikipedia",
-      wikipediaDesc: "Rechercher sur Wikipedia et obtenir des resumes d'articles.",
+      wikipediaDesc:
+        "Rechercher sur Wikipedia et obtenir des resumes d'articles.",
       wikipediaParamQ: "Requete de recherche",
 
       // Dictionary
       dictionaryTitle: "Recherche dictionnaire",
-      dictionaryDesc: "Chercher des definitions, phonetique et exemples d'utilisation.",
+      dictionaryDesc:
+        "Chercher des definitions, phonetique et exemples d'utilisation.",
       dictionaryParamWord: "Mot a rechercher",
 
       // Countries
@@ -3401,7 +4000,8 @@ def my_function(query: str) -> dict:
       // Time
       timeTitle: "Heure mondiale",
       timeDesc: "Obtenir l'heure actuelle pour un fuseau horaire.",
-      timeParamTimezone: "Fuseau horaire IANA (ex : Europe/Paris, America/New_York)",
+      timeParamTimezone:
+        "Fuseau horaire IANA (ex : Europe/Paris, America/New_York)",
 
       // Holidays
       holidaysTitle: "Jours feries",
@@ -3411,12 +4011,14 @@ def my_function(query: str) -> dict:
 
       // Geocoding
       geocodingTitle: "Geocodage",
-      geocodingDesc: "Convertir des noms de villes en coordonnees geographiques.",
+      geocodingDesc:
+        "Convertir des noms de villes en coordonnees geographiques.",
       geocodingParamCity: "Nom de la ville a geocoder",
 
       // Air Quality
       airqualityTitle: "Qualite de l'air",
-      airqualityDesc: "Obtenir l'indice de qualite de l'air pour des coordonnees.",
+      airqualityDesc:
+        "Obtenir l'indice de qualite de l'air pour des coordonnees.",
       airqualityParamLat: "Latitude",
       airqualityParamLon: "Longitude",
 
@@ -3435,111 +4037,143 @@ def my_function(query: str) -> dict:
 
       // --- BATCH 3: Data & Social ---
       newsTitle: "Fil d'actualites",
-      newsDesc: "Recherche d'actualites en temps reel via Google News. Retourne les articles avec titre, source, lien et date.",
+      newsDesc:
+        "Recherche d'actualites en temps reel via Google News. Retourne les articles avec titre, source, lien et date.",
       newsParamTopic: "Sujet de recherche (ex: intelligence artificielle)",
       newsParamLang: "Code langue (en, fr, de...)",
       stocksTitle: "Cours boursier",
-      stocksDesc: "Cours d'actions en temps reel via Yahoo Finance. Retourne prix, variation, etat du marche.",
+      stocksDesc:
+        "Cours d'actions en temps reel via Yahoo Finance. Retourne prix, variation, etat du marche.",
       stocksParamSymbol: "Symbole boursier (ex: AAPL, MSFT)",
       redditTitle: "Donnees Reddit",
-      redditDesc: "Recuperer les posts d'un subreddit. Supporte les tris hot, new, top, rising.",
+      redditDesc:
+        "Recuperer les posts d'un subreddit. Supporte les tris hot, new, top, rising.",
       redditParamSubreddit: "Nom du subreddit (sans r/)",
       redditParamSort: "Ordre de tri : hot, new, top, rising",
       redditParamLimit: "Nombre de posts (1-30, defaut 10)",
       hnTitle: "Hacker News",
-      hnDesc: "Acceder aux stories Hacker News. Types : top, new, best, ask, show, job.",
+      hnDesc:
+        "Acceder aux stories Hacker News. Types : top, new, best, ask, show, job.",
       hnParamType: "Type de story : top, new, best, ask, show, job",
       hnParamLimit: "Nombre de stories (1-30, defaut 10)",
       youtubeTitle: "Info YouTube",
-      youtubeDesc: "Metadonnees d'une video YouTube via URL ou ID. Retourne titre, auteur, miniature.",
+      youtubeDesc:
+        "Metadonnees d'une video YouTube via URL ou ID. Retourne titre, auteur, miniature.",
       youtubeParamUrl: "URL de la video YouTube ou ID video",
       whoisTitle: "WHOIS Lookup",
-      whoisDesc: "WHOIS de domaine via RDAP. Retourne dates d'enregistrement/expiration, nameservers, registrar.",
+      whoisDesc:
+        "WHOIS de domaine via RDAP. Retourne dates d'enregistrement/expiration, nameservers, registrar.",
       whoisParamDomain: "Nom de domaine (ex: google.com)",
       sslCheckTitle: "Verification SSL",
-      sslCheckDesc: "Verifier le certificat SSL d'un domaine. Retourne emetteur, validite, jours restants.",
+      sslCheckDesc:
+        "Verifier le certificat SSL d'un domaine. Retourne emetteur, validite, jours restants.",
       sslCheckParamDomain: "Domaine a verifier (ex: google.com)",
       regexTitle: "Testeur Regex",
-      regexDesc: "Tester des expressions regulieres. Retourne les correspondances avec index et groupes.",
+      regexDesc:
+        "Tester des expressions regulieres. Retourne les correspondances avec index et groupes.",
       regexParamPattern: "Pattern regex a tester",
       regexParamText: "Texte a analyser",
       regexParamFlags: "Flags regex (g, i, m, s)",
       diffTitle: "Diff Texte",
-      diffDesc: "Comparer deux textes ligne par ligne. Montre les ajouts, suppressions et egalites.",
+      diffDesc:
+        "Comparer deux textes ligne par ligne. Montre les ajouts, suppressions et egalites.",
       diffParamText1: "Premier texte a comparer",
       diffParamText2: "Second texte a comparer",
       mathTitle: "Expression Math",
-      mathDesc: "Evaluer des expressions mathematiques. Supporte +,-,*,/,^,pi,e,sqrt,sin,cos,tan,log.",
+      mathDesc:
+        "Evaluer des expressions mathematiques. Supporte +,-,*,/,^,pi,e,sqrt,sin,cos,tan,log.",
       mathParamExpr: "Expression math (ex: 2*pi+sqrt(16))",
 
       // --- BATCH 4: Utility ---
       unitConvertTitle: "Convertisseur d'unites",
-      unitConvertDesc: "Convertir entre unites : longueur, poids, temperature, volume, vitesse, donnees.",
+      unitConvertDesc:
+        "Convertir entre unites : longueur, poids, temperature, volume, vitesse, donnees.",
       unitConvertParamValue: "Valeur numerique a convertir",
       unitConvertParamFrom: "Unite source (ex: km, kg, celsius)",
       unitConvertParamTo: "Unite cible (ex: miles, lb, fahrenheit)",
       csvToJsonTitle: "CSV vers JSON",
-      csvToJsonDesc: "Convertir des donnees CSV en tableau JSON. Supporte les delimiteurs et en-tetes.",
+      csvToJsonDesc:
+        "Convertir des donnees CSV en tableau JSON. Supporte les delimiteurs et en-tetes.",
       csvToJsonParamCsv: "Donnees CSV avec en-tetes",
       jwtDecodeTitle: "Decodeur JWT",
-      jwtDecodeDesc: "Decoder des tokens JWT sans verification. Retourne header, payload, statut d'expiration.",
+      jwtDecodeDesc:
+        "Decoder des tokens JWT sans verification. Retourne header, payload, statut d'expiration.",
       jwtDecodeParamToken: "Token JWT a decoder",
       cronParseTitle: "Analyseur Cron",
-      cronParseDesc: "Analyser les expressions cron en descriptions lisibles avec detail des champs.",
+      cronParseDesc:
+        "Analyser les expressions cron en descriptions lisibles avec detail des champs.",
       cronParseParamExpr: "Expression cron (ex: 0 9 * * 1-5)",
       passwordStrengthTitle: "Force du mot de passe",
-      passwordStrengthDesc: "Analyser la force d'un mot de passe : score (0-100), entropie, verifications et suggestions.",
+      passwordStrengthDesc:
+        "Analyser la force d'un mot de passe : score (0-100), entropie, verifications et suggestions.",
       passwordStrengthParamPassword: "Mot de passe a analyser",
       phoneValidateTitle: "Validateur de telephone",
-      phoneValidateDesc: "Valider un numero de telephone. Detecte le code pays, formate le numero, identifie le type.",
+      phoneValidateDesc:
+        "Valider un numero de telephone. Detecte le code pays, formate le numero, identifie le type.",
       phoneValidateParamPhone: "Numero avec indicatif (ex: +33612345678)",
       urlParseTitle: "Analyseur d'URL",
-      urlParseDesc: "Analyser une URL. Retourne protocole, hostname, port, chemin, parametres.",
+      urlParseDesc:
+        "Analyser une URL. Retourne protocole, hostname, port, chemin, parametres.",
       urlParseParamUrl: "URL a analyser",
       urlShortenTitle: "Raccourcisseur d'URL",
-      urlShortenDesc: "Raccourcir une URL via is.gd. Retourne une URL courte permanente.",
+      urlShortenDesc:
+        "Raccourcir une URL via is.gd. Retourne une URL courte permanente.",
       urlShortenParamUrl: "URL a raccourcir",
       htmlToTextTitle: "HTML vers Texte",
-      htmlToTextDesc: "Extraire du texte propre d'un HTML. Supprime scripts, styles. Extrait liens et images.",
+      htmlToTextDesc:
+        "Extraire du texte propre d'un HTML. Supprime scripts, styles. Extrait liens et images.",
       htmlToTextParamHtml: "Chaine HTML a convertir",
       httpStatusTitle: "Codes HTTP",
-      httpStatusDesc: "Consulter les codes de statut HTTP. Retourne nom, description et categorie.",
+      httpStatusDesc:
+        "Consulter les codes de statut HTTP. Retourne nom, description et categorie.",
       httpStatusParamCode: "Code HTTP (100-599)",
 
       mcpTitle: "Serveur MCP",
-      mcpDesc: "Le serveur MCP permet a tout assistant IA d'interagir avec x402 Bazaar — rechercher, payer et appeler des APIs de maniere autonome.",
+      mcpDesc:
+        "Le serveur MCP permet a tout assistant IA d'interagir avec x402 Bazaar — rechercher, payer et appeler des APIs de maniere autonome.",
       mcpToolsTitle: "Outils disponibles",
       mcpInstall: "Installer en une commande :",
       mcpFullDoc: "Documentation MCP complete",
       integrationTitle: "Integration",
-      integrationDesc: "Implementez le flux de paiement x402 dans votre agent avec une seule fonction.",
+      integrationDesc:
+        "Implementez le flux de paiement x402 dans votre agent avec une seule fonction.",
       integrationJs: "JavaScript (Node.js)",
       integrationPy: "Python (requests + web3)",
       integrationFullDoc: "Guide d'integration complet",
       securityTitle: "Securite",
       securityBudgetTitle: "Controle du budget",
-      securityBudgetDesc: "Definissez MAX_BUDGET_USDC pour plafonner les depenses par session. L'agent est bloque a la limite.",
+      securityBudgetDesc:
+        "Definissez MAX_BUDGET_USDC pour plafonner les depenses par session. L'agent est bloque a la limite.",
       securityReplayTitle: "Protection anti-replay",
-      securityReplayDesc: "Chaque hash de transaction est stocke dans Supabase. Les hash reutilises sont rejetes instantanement.",
+      securityReplayDesc:
+        "Chaque hash de transaction est stocke dans Supabase. Les hash reutilises sont rejetes instantanement.",
       securityOnchainTitle: "Verification on-chain",
-      securityOnchainDesc: "Chaque paiement est verifie on-chain via Base RPC. Totalement trustless — aucune hypothese de confiance.",
+      securityOnchainDesc:
+        "Chaque paiement est verifie on-chain via Base RPC. Totalement trustless — aucune hypothese de confiance.",
       securityRateTitle: "Rate Limiting",
-      securityRateDesc: "30 req/min pour les endpoints payants, 500/15min general. Empeche les abus et le DDoS.",
+      securityRateDesc:
+        "30 req/min pour les endpoints payants, 500/15min general. Empeche les abus et le DDoS.",
       securitySsrfTitle: "Protection SSRF",
-      securitySsrfDesc: "Le scraper bloque les requetes vers les IPs privees, localhost et les reseaux internes.",
+      securitySsrfDesc:
+        "Le scraper bloque les requetes vers les IPs privees, localhost et les reseaux internes.",
       securityBestTitle: "Bonnes pratiques",
-      securityBest1: "Utilisez le testnet (Base Sepolia) pour le developpement — pas de vrais fonds necessaires.",
-      securityBest2: "Definissez un budget conservateur (0.10 USDC pour les tests, 1.00 pour la production).",
-      securityBest3: "Verifiez toujours votre budget avec get_budget_status avant les operations lourdes.",
+      securityBest1:
+        "Utilisez le testnet (Base Sepolia) pour le developpement — pas de vrais fonds necessaires.",
+      securityBest2:
+        "Definissez un budget conservateur (0.10 USDC pour les tests, 1.00 pour la production).",
+      securityBest3:
+        "Verifiez toujours votre budget avec get_budget_status avant les operations lourdes.",
       erc8004Title: "Identite Agent ERC-8004",
-      erc8004Desc: "x402 Bazaar est enregistre comme agent verifie via ERC-8004 sur Base mainnet. L'endpoint gratuit GET /api/agent/:agentId permet a quiconque de verifier l'identite on-chain d'un agent sans paiement.",
+      erc8004Desc:
+        "x402 Bazaar est enregistre comme agent verifie via ERC-8004 sur Base mainnet. L'endpoint gratuit GET /api/agent/:agentId permet a quiconque de verifier l'identite on-chain d'un agent sans paiement.",
       erc8004Endpoint: "Verifier l'identite d'un agent gratuitement :",
     },
     status: {
       pageTitle: "Etat du Systeme - x402 Bazaar",
       pageDesc: "Etat en temps reel des 69+ endpoints API de x402 Bazaar.",
       title: "Etat du Systeme",
-      subtitle: "Monitoring en temps reel de tous les endpoints API x402 Bazaar",
+      subtitle:
+        "Monitoring en temps reel de tous les endpoints API x402 Bazaar",
       operational: "Tous les Systemes Operationnels",
       degraded: "Performances Degradees",
       majorOutage: "Panne Majeure",
@@ -3550,8 +4184,10 @@ def my_function(query: str) -> dict:
       uptime: "Disponibilite",
       lastUpdate: "Derniere mise a jour",
       autoRefresh: "rafraichissement auto 60s",
-      noData: "Pas encore de donnees de monitoring. Le premier check demarre 30 secondes apres le serveur.",
-      footer: "Les endpoints sont verifies toutes les 5 minutes. Status 402 (Paiement Requis) ou 400 (Params Manquants) = En ligne.",
+      noData:
+        "Pas encore de donnees de monitoring. Le premier check demarre 30 secondes apres le serveur.",
+      footer:
+        "Les endpoints sont verifies toutes les 5 minutes. Status 402 (Paiement Requis) ou 400 (Params Manquants) = En ligne.",
     },
     privacy: {
       title: "Politique de Confidentialite",
@@ -3559,53 +4195,72 @@ def my_function(query: str) -> dict:
       lastUpdated: "Derniere mise a jour",
       collectTitle: "Ce Que Nous Collectons",
       collectApi: "Logs d'appels API",
-      collectApiDesc: "Type de requete, endpoint, horodatage et statut de reponse pour le monitoring et les statistiques.",
+      collectApiDesc:
+        "Type de requete, endpoint, horodatage et statut de reponse pour le monitoring et les statistiques.",
       collectTx: "Hashs de transactions",
-      collectTxDesc: "Hashs de transactions USDC on-chain sur Base pour la verification des paiements. Ce sont des donnees publiques de la blockchain.",
+      collectTxDesc:
+        "Hashs de transactions USDC on-chain sur Base pour la verification des paiements. Ce sont des donnees publiques de la blockchain.",
       collectMonitor: "Donnees de monitoring",
-      collectMonitorDesc: "Verification du statut des endpoints (en ligne/hors ligne, latence, statut HTTP) toutes les 5 minutes.",
+      collectMonitorDesc:
+        "Verification du statut des endpoints (en ligne/hors ligne, latence, statut HTTP) toutes les 5 minutes.",
       noCollectTitle: "Ce Que Nous Ne Collectons Pas",
       noPersonal: "Aucune donnee personnelle",
-      noPersonalDesc: "Nous ne collectons jamais de noms, emails, numeros de telephone ou toute information personnellement identifiable.",
+      noPersonalDesc:
+        "Nous ne collectons jamais de noms, emails, numeros de telephone ou toute information personnellement identifiable.",
       noCookies: "Aucun cookie",
-      noCookiesDesc: "Nous n'utilisons pas de cookies. La preference de langue est stockee dans le localStorage de votre navigateur uniquement.",
+      noCookiesDesc:
+        "Nous n'utilisons pas de cookies. La preference de langue est stockee dans le localStorage de votre navigateur uniquement.",
       noTracking: "Aucun suivi d'IP",
-      noTrackingDesc: "Nous ne stockons, ne journalisons, ni ne suivons les adresses IP.",
+      noTrackingDesc:
+        "Nous ne stockons, ne journalisons, ni ne suivons les adresses IP.",
       noThirdParty: "Aucun analytique tiers",
-      noThirdPartyDesc: "Pas de Google Analytics, pas de Facebook Pixel, aucun script de suivi d'aucune sorte.",
+      noThirdPartyDesc:
+        "Pas de Google Analytics, pas de Facebook Pixel, aucun script de suivi d'aucune sorte.",
       retentionTitle: "Conservation des Donnees",
       retentionLogs: "Logs API",
-      retentionLogsDesc: "Conserves 30 jours pour le monitoring, puis automatiquement supprimes.",
+      retentionLogsDesc:
+        "Conserves 30 jours pour le monitoring, puis automatiquement supprimes.",
       retentionTx: "Enregistrements de transactions",
-      retentionTxDesc: "Stockes de maniere permanente pour la protection anti-replay et l'audit. Ne contiennent que les hashs de tx (donnees publiques).",
+      retentionTxDesc:
+        "Stockes de maniere permanente pour la protection anti-replay et l'audit. Ne contiennent que les hashs de tx (donnees publiques).",
       retentionMonitor: "Checks de monitoring",
-      retentionMonitorDesc: "Conserves 30 jours pour les statistiques de disponibilite, puis automatiquement nettoyes.",
+      retentionMonitorDesc:
+        "Conserves 30 jours pour les statistiques de disponibilite, puis automatiquement nettoyes.",
       blockchainTitle: "Donnees Blockchain",
       blockchainPublic: "Publiques par nature",
-      blockchainPublicDesc: "Tous les paiements USDC sont des transactions on-chain sur Base. Elles sont visibles publiquement sur les explorateurs de blocs.",
+      blockchainPublicDesc:
+        "Tous les paiements USDC sont des transactions on-chain sur Base. Elles sont visibles publiquement sur les explorateurs de blocs.",
       blockchainImmutable: "Immuables",
-      blockchainImmutableDesc: "Les transactions blockchain ne peuvent pas etre supprimees ou modifiees. C'est par conception pour la transparence.",
+      blockchainImmutableDesc:
+        "Les transactions blockchain ne peuvent pas etre supprimees ou modifiees. C'est par conception pour la transparence.",
       sentryTitle: "Sous-traitants & Processeurs",
       sentryTracker: "Sentry (suivi d'erreurs)",
-      sentryTrackerDesc: "Nous utilisons Sentry uniquement pour le monitoring des erreurs. L'enregistrement de sessions et le tracing de performance sont DESACTIVES. Sentry peut traiter : messages d'erreur, stack traces, user-agent navigateur, contexte de session anonyme.",
+      sentryTrackerDesc:
+        "Nous utilisons Sentry uniquement pour le monitoring des erreurs. L'enregistrement de sessions et le tracing de performance sont DESACTIVES. Sentry peut traiter : messages d'erreur, stack traces, user-agent navigateur, contexte de session anonyme.",
       sentrySubprocessors: "Sous-traitants",
-      sentrySubprocessorsDesc: "Services utilises pour operer x402 Bazaar : Supabase (base de donnees), Render (hebergement backend), Vercel (hebergement frontend), Sentry (monitoring erreurs), WalletConnect (connectivite wallet), OpenAI (inference IA). Chacun lie par des DPA conformes RGPD.",
+      sentrySubprocessorsDesc:
+        "Services utilises pour operer x402 Bazaar : Supabase (base de donnees), Render (hebergement backend), Vercel (hebergement frontend), Sentry (monitoring erreurs), WalletConnect (connectivite wallet), OpenAI (inference IA). Chacun lie par des DPA conformes RGPD.",
       sentryLegalBasis: "Base legale (RGPD)",
-      sentryLegalBasisDesc: "Base de traitement : Art. 6(1)(f) RGPD - interet legitime en fiabilite du site et diagnostic des erreurs. Vous pouvez vous opposer a ce traitement a tout moment via GitHub Issues.",
+      sentryLegalBasisDesc:
+        "Base de traitement : Art. 6(1)(f) RGPD - interet legitime en fiabilite du site et diagnostic des erreurs. Vous pouvez vous opposer a ce traitement a tout moment via GitHub Issues.",
       contactTitle: "Contact",
-      contactDesc: "Pour toute question relative a la confidentialite, veuillez ouvrir une issue sur notre depot GitHub.",
+      contactDesc:
+        "Pour toute question relative a la confidentialite, veuillez ouvrir une issue sur notre depot GitHub.",
       tldr: "TL;DR — Nous ne collectons aucune donnee personnelle. Nous ne journalisons que les appels API pour le monitoring et stockons les hashs de transactions blockchain publics.",
     },
     playground: {
       title: "Tester les APIs en direct",
-      subtitle: "Selectionnez une API, ajustez les parametres, et voyez le protocole de paiement x402 en action.",
+      subtitle:
+        "Selectionnez une API, ajustez les parametres, et voyez le protocole de paiement x402 en action.",
       selectApi: "Choisir une API",
       parameters: "Parametres",
       sendRequest: "Envoyer",
       sending: "Envoi...",
-      paymentNote: "Aucun paiement reel ne sera effectue — vous verrez la reponse 402",
+      paymentNote:
+        "Aucun paiement reel ne sera effectue — vous verrez la reponse 402",
       responseTitle: "Reponse",
-      emptyState: "Selectionnez une API et cliquez Envoyer pour voir la reponse",
+      emptyState:
+        "Selectionnez une API et cliquez Envoyer pour voir la reponse",
       statusCode: "Statut",
       duration: "Duree",
       codeExamples: "Exemples de code",
@@ -3614,7 +4269,8 @@ def my_function(query: str) -> dict:
       tabPython: "Python",
       required: "requis",
       optional: "optionnel",
-      protocolBanner: "Les APIs payantes retournent HTTP 402 — le protocole x402 en action !",
+      protocolBanner:
+        "Les APIs payantes retournent HTTP 402 — le protocole x402 en action !",
       networkError: "Erreur reseau",
       viewDocs: "Voir la documentation",
       copy: "Copier",
@@ -3623,7 +4279,8 @@ def my_function(query: str) -> dict:
     },
     budget: {
       title: "Dashboard Budget Agent",
-      subtitle: "Surveillez et controlez les depenses des agents IA. Definissez des limites USDC, suivez l'utilisation en temps reel et recevez des alertes avant epuisement.",
+      subtitle:
+        "Surveillez et controlez les depenses des agents IA. Definissez des limites USDC, suivez l'utilisation en temps reel et recevez des alertes avant epuisement.",
       walletSection: "Wallet de l'Agent",
       walletLabel: "Adresse Wallet",
       invalidWallet: "Adresse invalide (doit etre 0x + 40 caracteres hex)",
@@ -3636,7 +4293,8 @@ def my_function(query: str) -> dict:
       period_monthly: "Mensuel",
       setBudgetBtn: "Definir le Budget",
       preflightTitle: "Verification Pre-vol",
-      preflightDesc: "Verifiez si un montant est dans le budget avant de lancer un appel.",
+      preflightDesc:
+        "Verifiez si un montant est dans le budget avant de lancer un appel.",
       amountLabel: "Montant (USDC)",
       checkBtn: "Verifier",
       allowed: "Autorise — dans le budget",
@@ -3650,16 +4308,20 @@ def my_function(query: str) -> dict:
       alertThresholds: "Seuils d'Alerte",
       periodStart: "Debut de la periode",
       emptyTitle: "Aucun budget charge",
-      emptyDesc: "Entrez une adresse de wallet agent et cliquez Verifier le Budget pour voir les controles de depenses.",
+      emptyDesc:
+        "Entrez une adresse de wallet agent et cliquez Verifier le Budget pour voir les controles de depenses.",
       noBudgetSet: "Aucun budget defini pour ce wallet.",
       budgetSetSuccess: "Budget defini avec succes !",
       budgetRemoved: "Budget supprime.",
       timeout: "Delai d'attente depasse",
       loading: "Chargement...",
       howItWorks: "Comment fonctionne Budget Guardian",
-      step1: "Definissez une limite de depenses USDC pour n'importe quel wallet agent (journalier, hebdomadaire ou mensuel).",
-      step2: "Chaque paiement x402 est suivi en temps reel par rapport au budget.",
-      step3: "Les alertes se declenchent a 50%, 75% et 90%. Les paiements sont bloques a 100%.",
+      step1:
+        "Definissez une limite de depenses USDC pour n'importe quel wallet agent (journalier, hebdomadaire ou mensuel).",
+      step2:
+        "Chaque paiement x402 est suivi en temps reel par rapport au budget.",
+      step3:
+        "Les alertes se declenchent a 50%, 75% et 90%. Les paiements sont bloques a 100%.",
       tipsTitle: "Conseils Rapides",
       tip1: "Commencez avec $0.10/jour pour les tests, montez a $1.00+ pour la production.",
       tip2: "Utilisez la verification pre-vol avant les operations lourdes pour eviter les rejets.",
@@ -3667,7 +4329,8 @@ def my_function(query: str) -> dict:
     },
     reviews: {
       title: "Avis",
-      noReviews: "Aucun avis pour l'instant. Soyez le premier a noter ce service !",
+      noReviews:
+        "Aucun avis pour l'instant. Soyez le premier a noter ce service !",
       writeReview: "Ecrire un Avis",
       submit: "Soumettre l'Avis",
       submitting: "Envoi en cours...",
@@ -3676,21 +4339,24 @@ def my_function(query: str) -> dict:
       commentPlaceholder: "Partagez votre experience avec ce service...",
       success: "Avis soumis ! Merci pour votre retour.",
       error: "Impossible de soumettre l'avis. Veuillez reessayer.",
-      mustUseService: "Vous devez avoir utilise ce service pour laisser un avis.",
+      mustUseService:
+        "Vous devez avoir utilise ce service pour laisser un avis.",
       connectWallet: "Connectez votre wallet pour ecrire un avis.",
     },
     fund: {
       pageTitle: "Alimenter votre Wallet \u2014 Bridge USDC Cross-Chain",
       pageDescription: "Bridgez USDC vers SKALE, Base ou Polygon en 1 clic.",
       heroTitle: "Alimenter votre Wallet",
-      heroSubtitle: "Bridgez USDC vers SKALE, Base ou Polygon en 1 clic. Payez les APIs avec un gas ultra-bas.",
+      heroSubtitle:
+        "Bridgez USDC vers SKALE, Base ou Polygon en 1 clic. Payez les APIs avec un gas ultra-bas.",
       fromLabel: "Votre chaine",
       toLabel: "Bridger vers",
       switchChain: "Changer de chaine",
       routeLabel: "Itineraire",
       estimatedTime: "Temps estime",
       recipientLabel: "Adresse destinataire",
-      recipientHint: "Laisser vide pour utiliser l'adresse de votre wallet connecte",
+      recipientHint:
+        "Laisser vide pour utiliser l'adresse de votre wallet connecte",
       bridgeButtonBase: "Bridger USDC vers Base",
       bridgeButtonSkale: "Bridger USDC vers SKALE",
       bridgeButtonPolygon: "Bridger USDC vers Polygon",
@@ -3707,20 +4373,26 @@ def my_function(query: str) -> dict:
       startUsing: "Commencer a utiliser les APIs",
       howTitle: "Comment ca marche",
       step1Title: "Choisissez n'importe quel token",
-      step1Desc: "Utilisez n'importe quel token depuis n'importe quelle chain. Trails trouve le meilleur itineraire vers USDC.",
+      step1Desc:
+        "Utilisez n'importe quel token depuis n'importe quelle chain. Trails trouve le meilleur itineraire vers USDC.",
       step2Title: "Bridge en 1 clic",
-      step2Desc: "Route et bridge vers la destination choisie \u2014 une transaction.",
+      step2Desc:
+        "Route et bridge vers la destination choisie \u2014 une transaction.",
       step3Title: "USDC a destination",
       step3Desc: "USDC arrive sur votre chaine. Pret pour les paiements API.",
       faqTitle: "Questions frequentes",
       faqQ1: "Combien de temps prend le bridge ?",
-      faqA1: "Selon la destination : Base ~1-2 min, SKALE 5-15 min (bridge IMA), Polygon ~2-5 min.",
+      faqA1:
+        "Selon la destination : Base ~1-2 min, SKALE 5-15 min (bridge IMA), Polygon ~2-5 min.",
       faqQ2: "Quels tokens puis-je utiliser ?",
-      faqA2: "N'importe quel token sur Ethereum, Polygon, Optimism, Arbitrum ou Base. Trails trouve le meilleur itineraire automatiquement.",
+      faqA2:
+        "N'importe quel token sur Ethereum, Polygon, Optimism, Arbitrum ou Base. Trails trouve le meilleur itineraire automatiquement.",
       faqQ3: "Y a-t-il un montant minimum ?",
-      faqA3: "Pas de minimum. Les tres petits montants peuvent ne pas etre rentables en raison des frais de gas.",
+      faqA3:
+        "Pas de minimum. Les tres petits montants peuvent ne pas etre rentables en raison des frais de gas.",
       faqQ4: "Que se passe-t-il si le bridge echoue ?",
-      faqA4: "Trails fournit des remboursements automatiques si la transaction echoue sur la chaine source.",
+      faqA4:
+        "Trails fournit des remboursements automatiques si la transaction echoue sur la chaine source.",
       useMyWallet: "Utiliser mon wallet",
       customRecipient: "Adresse destinataire personnalisee",
       progressStep0: "Signature de la transaction...",
@@ -3731,7 +4403,8 @@ def my_function(query: str) -> dict:
     },
     liveAgent: {
       title: "Agent IA Live",
-      subtitle: "Cet agent autonome appelle 3 APIs spatiales et paie en vrais USDC — deux fois par jour, entierement automatise.",
+      subtitle:
+        "Cet agent autonome appelle 3 APIs spatiales et paie en vrais USDC — deux fois par jour, entierement automatise.",
       badge: "LIVE",
       nasaTitle: "Image astronomique du jour (NASA)",
       issTitle: "Position de l'ISS",
@@ -3745,17 +4418,20 @@ def my_function(query: str) -> dict:
       generatedAgo: "Genere il y a {time}",
       viewExplorer: "Voir sur l'Explorer",
       paymentFlow: "Flux de paiement",
-      paymentFlowDesc: "Vrais paiements USDC sur SKALE — $0.0007 de gas par transaction",
+      paymentFlowDesc:
+        "Vrais paiements USDC sur SKALE — $0.0007 de gas par transaction",
       pastRuns: "Rapports precedents",
       explanation: "Explication complete",
       ctaTitle: "Construisez votre propre agent x402",
-      ctaSubtitle: "5 minutes pour deployer un agent autonome consommateur d'APIs",
+      ctaSubtitle:
+        "5 minutes pour deployer un agent autonome consommateur d'APIs",
       ctaButton: "Commencer",
       noData: "L'agent n'a pas encore tourne. Premier rapport bientot...",
     },
     paymentLinks: {
       title: "Créer un lien de paiement",
-      description: "Monétisez n'importe quelle URL. Partagez un lien, soyez payé en USDC. Les destinataires paient une fois pour déverrouiller le contenu.",
+      description:
+        "Monétisez n'importe quelle URL. Partagez un lien, soyez payé en USDC. Les destinataires paient une fois pour déverrouiller le contenu.",
       titleLabel: "Titre du lien",
       contentUrl: "URL du contenu",
       price: "Prix (USDC)",
