@@ -9,7 +9,10 @@ export const thirdwebClient = createThirdwebClient({
 
 export const wallets = [
   inAppWallet({
-    auth: { options: ["email", "google", "github", "passkey"] },
+    auth: {
+      options: ["email", "google", "github", "passkey"],
+      mode: "redirect",
+    },
   }),
   createWallet("io.metamask"),
   createWallet("com.coinbase.wallet"),
