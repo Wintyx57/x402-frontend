@@ -1,67 +1,77 @@
-import { useState, useEffect } from 'react'
-import { useAccount, useSignMessage } from 'wagmi'
-import { useConnectModal } from '@rainbow-me/rainbowkit'
-import { Link } from 'react-router-dom'
-import { useTranslation } from '../../i18n/LanguageContext'
-import { API_URL } from '../../config'
+import { useState, useEffect } from "react";
+import { useAccount, useSignMessage } from "wagmi";
+import { useConnectModal } from "thirdweb/react";
+import { thirdwebClient, wallets } from "../../lib/thirdweb";
+import { Link } from "react-router-dom";
+import { useTranslation } from "../../i18n/LanguageContext";
+import { API_URL } from "../../config";
 import CredentialsSection, {
   buildCredentialsPayload,
   type CredentialType,
   type CredentialItem,
-} from '../CredentialsSection'
-import EmbedSnippet from '../EmbedSnippet'
-import { trackEvent } from '../../lib/analytics'
+} from "../CredentialsSection";
+import EmbedSnippet from "../EmbedSnippet";
+import { trackEvent } from "../../lib/analytics";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Types
 // ─────────────────────────────────────────────────────────────────────────────
 
 interface ListApiFormProps {
-  onBack: () => void
+  onBack: () => void;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Constants
 // ─────────────────────────────────────────────────────────────────────────────
 
-const PRICE_PRESETS = [0.001, 0.005, 0.01, 0.05, 0.10]
+const PRICE_PRESETS = [0.001, 0.005, 0.01, 0.05, 0.1];
 
 const CATEGORIES = [
-  { value: 'ai',       label: 'AI & ML' },
-  { value: 'data',     label: 'Data' },
-  { value: 'finance',  label: 'Finance' },
-  { value: 'media',    label: 'Media' },
-  { value: 'security', label: 'Security' },
-  { value: 'devtools', label: 'Developer Tools' },
-  { value: 'other',    label: 'Other' },
-]
+  { value: "ai", label: "AI & ML" },
+  { value: "data", label: "Data" },
+  { value: "finance", label: "Finance" },
+  { value: "media", label: "Media" },
+  { value: "security", label: "Security" },
+  { value: "devtools", label: "Developer Tools" },
+  { value: "other", label: "Other" },
+];
 
-const METHODS = ['GET', 'POST'] as const
+const METHODS = ["GET", "POST"] as const;
 
 // Estimate used in revenue projection
-const DAILY_CALLS_ESTIMATE = 100
+const DAILY_CALLS_ESTIMATE = 100;
 
 // Allowlist of error message substrings safe to surface directly to users
 const SAFE_ERROR_MESSAGES = [
-  'User rejected',
-  'Unexpected response',
-  'Invalid',
-  'required',
-  'Price',
-  'URL',
-  'wallet',
-]
+  "User rejected",
+  "Unexpected response",
+  "Invalid",
+  "required",
+  "Price",
+  "URL",
+  "wallet",
+];
 
 // Split a comma-separated string into a trimmed, non-empty array
 function splitCommaList(value: string): string[] {
-  return value.split(',').map(s => s.trim()).filter(Boolean)
+  return value
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Sub-components
 // ─────────────────────────────────────────────────────────────────────────────
 
-function FieldLabel({ htmlFor, children }: { htmlFor: string; children: React.ReactNode }) {
+function FieldLabel({
+  htmlFor,
+  children,
+}: {
+  htmlFor: string;
+  children: React.ReactNode;
+}) {
   return (
     <label
       htmlFor={htmlFor}
@@ -69,7 +79,7 @@ function FieldLabel({ htmlFor, children }: { htmlFor: string; children: React.Re
     >
       {children}
     </label>
-  )
+  );
 }
 
 function FieldInput(props: React.InputHTMLAttributes<HTMLInputElement>) {
@@ -77,31 +87,33 @@ function FieldInput(props: React.InputHTMLAttributes<HTMLInputElement>) {
     <input
       {...props}
       className={[
-        'w-full px-4 py-3 rounded-xl',
-        'bg-[#12141a]/80 border border-white/[0.07] text-white',
-        'outline-none placeholder-gray-600',
-        'focus:border-[#FF9900] focus:shadow-[0_0_0_3px_rgba(255,153,0,0.1)]',
-        'transition duration-200',
-        props.className ?? '',
-      ].join(' ')}
+        "w-full px-4 py-3 rounded-xl",
+        "bg-[#12141a]/80 border border-white/[0.07] text-white",
+        "outline-none placeholder-gray-600",
+        "focus:border-[#FF9900] focus:shadow-[0_0_0_3px_rgba(255,153,0,0.1)]",
+        "transition duration-200",
+        props.className ?? "",
+      ].join(" ")}
     />
-  )
+  );
 }
 
-function FieldTextarea(props: React.TextareaHTMLAttributes<HTMLTextAreaElement>) {
+function FieldTextarea(
+  props: React.TextareaHTMLAttributes<HTMLTextAreaElement>,
+) {
   return (
     <textarea
       {...props}
       className={[
-        'w-full px-4 py-3 rounded-xl',
-        'bg-[#12141a]/80 border border-white/[0.07] text-white',
-        'outline-none placeholder-gray-600 resize-none',
-        'focus:border-[#FF9900] focus:shadow-[0_0_0_3px_rgba(255,153,0,0.1)]',
-        'transition duration-200',
-        props.className ?? '',
-      ].join(' ')}
+        "w-full px-4 py-3 rounded-xl",
+        "bg-[#12141a]/80 border border-white/[0.07] text-white",
+        "outline-none placeholder-gray-600 resize-none",
+        "focus:border-[#FF9900] focus:shadow-[0_0_0_3px_rgba(255,153,0,0.1)]",
+        "transition duration-200",
+        props.className ?? "",
+      ].join(" ")}
     />
-  )
+  );
 }
 
 function FieldSelect(props: React.SelectHTMLAttributes<HTMLSelectElement>) {
@@ -109,23 +121,23 @@ function FieldSelect(props: React.SelectHTMLAttributes<HTMLSelectElement>) {
     <select
       {...props}
       className={[
-        'w-full px-4 py-3 rounded-xl appearance-none',
-        'bg-[#12141a]/80 border border-white/[0.07] text-white',
-        'outline-none',
-        'focus:border-[#FF9900] focus:shadow-[0_0_0_3px_rgba(255,153,0,0.1)]',
-        'transition duration-200',
-        props.className ?? '',
-      ].join(' ')}
+        "w-full px-4 py-3 rounded-xl appearance-none",
+        "bg-[#12141a]/80 border border-white/[0.07] text-white",
+        "outline-none",
+        "focus:border-[#FF9900] focus:shadow-[0_0_0_3px_rgba(255,153,0,0.1)]",
+        "transition duration-200",
+        props.className ?? "",
+      ].join(" ")}
     />
-  )
+  );
 }
 
 // Revenue hint at the bottom of the form
 function RevenueHint({ price }: { price: string }) {
-  const priceNum = parseFloat(price)
-  if (!price || isNaN(priceNum) || priceNum <= 0) return null
+  const priceNum = parseFloat(price);
+  if (!price || isNaN(priceNum) || priceNum <= 0) return null;
 
-  const monthly = priceNum * DAILY_CALLS_ESTIMATE * 30 * 0.95
+  const monthly = priceNum * DAILY_CALLS_ESTIMATE * 30 * 0.95;
 
   return (
     <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-[#34D399]/[0.05] border border-[#34D399]/20">
@@ -145,40 +157,48 @@ function RevenueHint({ price }: { price: string }) {
         />
       </svg>
       <p className="text-sm text-[#34D399]">
-        At {DAILY_CALLS_ESTIMATE} calls/day you earn{' '}
+        At {DAILY_CALLS_ESTIMATE} calls/day you earn{" "}
         <span className="font-bold font-mono">
           ${monthly.toFixed(2)} USDC/month
-        </span>{' '}
+        </span>{" "}
         (95% share)
       </p>
     </div>
-  )
+  );
 }
 
 // Credential validation badge
-function CredentialBadge({ status, message }: { status?: string; message?: string }) {
-  if (!status || status === 'skipped') return null
+function CredentialBadge({
+  status,
+  message,
+}: {
+  status?: string;
+  message?: string;
+}) {
+  if (!status || status === "skipped") return null;
 
-  const isWarning = status === 'warning'
-  const isValid   = status === 'valid'
+  const isWarning = status === "warning";
+  const isValid = status === "valid";
 
-  if (!isWarning && !isValid) return null
+  if (!isWarning && !isValid) return null;
 
   return (
     <div
       className={[
-        'px-4 py-3 rounded-xl border text-xs text-left',
+        "px-4 py-3 rounded-xl border text-xs text-left",
         isWarning
-          ? 'bg-yellow-500/10 border-yellow-500/30 text-yellow-300'
-          : 'bg-green-500/10 border-green-500/30 text-green-300',
-      ].join(' ')}
+          ? "bg-yellow-500/10 border-yellow-500/30 text-yellow-300"
+          : "bg-green-500/10 border-green-500/30 text-green-300",
+      ].join(" ")}
     >
       <span className="font-semibold">
-        {isWarning ? 'Credential warning: ' : 'Credentials verified. '}
+        {isWarning ? "Credential warning: " : "Credentials verified. "}
       </span>
-      {isWarning ? message : 'Your upstream credentials were validated successfully.'}
+      {isWarning
+        ? message
+        : "Your upstream credentials were validated successfully."}
     </div>
-  )
+  );
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -186,168 +206,185 @@ function CredentialBadge({ status, message }: { status?: string; message?: strin
 // ─────────────────────────────────────────────────────────────────────────────
 
 export default function ListApiForm({ onBack }: ListApiFormProps) {
-  const { address, isConnected } = useAccount()
-  const { signMessageAsync } = useSignMessage()
-  const { openConnectModal } = useConnectModal()
-  const { t } = useTranslation()
+  const { address, isConnected } = useAccount();
+  const { signMessageAsync } = useSignMessage();
+  const { connect } = useConnectModal();
+  const { t } = useTranslation();
 
   // ── Core required fields ──────────────────────────────────────────────────
-  const [url,    setUrl]    = useState('')
-  const [price,  setPrice]  = useState('')
-  const [wallet, setWallet] = useState('')
+  const [url, setUrl] = useState("");
+  const [price, setPrice] = useState("");
+  const [wallet, setWallet] = useState("");
 
   // ── Advanced (expandable) fields ──────────────────────────────────────────
-  const [expanded,         setExpanded]         = useState(false)
-  const [name,             setName]             = useState('')
-  const [description,      setDescription]      = useState('')
-  const [category,         setCategory]         = useState('utility')
-  const [method,           setMethod]           = useState<'GET' | 'POST'>('GET')
-  const [tags,             setTags]             = useState('')
-  const [requiredParams,   setRequiredParams]   = useState('')
-  const [freeCallsPerMonth,setFreeCallsPerMonth]= useState('')
+  const [expanded, setExpanded] = useState(false);
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [category, setCategory] = useState("utility");
+  const [method, setMethod] = useState<"GET" | "POST">("GET");
+  const [tags, setTags] = useState("");
+  const [requiredParams, setRequiredParams] = useState("");
+  const [freeCallsPerMonth, setFreeCallsPerMonth] = useState("");
 
   // ── Credentials ───────────────────────────────────────────────────────────
-  const [showCredentials,  setShowCredentials]  = useState(false)
-  const [credentialType,   setCredentialType]   = useState<CredentialType>('bearer')
-  const [credentialItems,  setCredentialItems]  = useState<CredentialItem[]>([{ key: '', value: '' }])
+  const [showCredentials, setShowCredentials] = useState(false);
+  const [credentialType, setCredentialType] =
+    useState<CredentialType>("bearer");
+  const [credentialItems, setCredentialItems] = useState<CredentialItem[]>([
+    { key: "", value: "" },
+  ]);
 
   // ── Async state ───────────────────────────────────────────────────────────
-  const [loading, setLoading] = useState(false)
-  const [result,  setResult]  = useState<any>(null)
-  const [error,   setError]   = useState<string | null>(null)
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
 
   // Auto-fill wallet when wallet connects
   useEffect(() => {
     if (isConnected && address && !wallet) {
-      setWallet(address)
+      setWallet(address);
     }
-  }, [isConnected, address]) // intentionally omit `wallet` to avoid overwriting manual edits
+  }, [isConnected, address]); // intentionally omit `wallet` to avoid overwriting manual edits
 
   // ─────────────────────────────────────────────────────────────────────────
   // Submit handler
   // ─────────────────────────────────────────────────────────────────────────
 
   async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    setError(null)
+    e.preventDefault();
+    setError(null);
 
     // Require wallet connection for signing
     if (!isConnected) {
-      openConnectModal?.()
-      return setError('Please connect your wallet first to sign the registration')
+      connect({ client: thirdwebClient, wallets });
+      return setError(
+        "Please connect your wallet first to sign the registration",
+      );
     }
 
     // Validate required fields
     if (!url.trim() || !price.trim() || !wallet.trim()) {
-      return setError('URL, price and wallet address are all required')
+      return setError("URL, price and wallet address are all required");
     }
-    if (!url.startsWith('http')) {
-      return setError('URL must start with http:// or https://')
+    if (!url.startsWith("http")) {
+      return setError("URL must start with http:// or https://");
     }
-    try { new URL(url) } catch { return setError('Invalid URL format') }
+    try {
+      new URL(url);
+    } catch {
+      return setError("Invalid URL format");
+    }
 
-    const priceNum = parseFloat(price)
+    const priceNum = parseFloat(price);
     if (isNaN(priceNum) || priceNum < 0.001 || priceNum > 1000) {
-      return setError('Price must be between 0.001 and 1000 USDC')
+      return setError("Price must be between 0.001 and 1000 USDC");
     }
     if (!/^0x[a-fA-F0-9]{40}$/.test(wallet)) {
-      return setError('Invalid wallet address (must be a 0x… Ethereum address)')
+      return setError(
+        "Invalid wallet address (must be a 0x… Ethereum address)",
+      );
     }
 
-    setLoading(true)
+    setLoading(true);
 
     try {
-      const timestamp = Date.now()
-      const hasAdvanced = !!(name.trim() || description.trim() || tags.trim())
-      const credentials = buildCredentialsPayload(credentialType, credentialItems)
+      const timestamp = Date.now();
+      const hasAdvanced = !!(name.trim() || description.trim() || tags.trim());
+      const credentials = buildCredentialsPayload(
+        credentialType,
+        credentialItems,
+      );
 
       if (hasAdvanced) {
         // ── Full batch-register path ─────────────────────────────────────
-        const message = `batch-register:${address}:1:${timestamp}`
-        const signature = await signMessageAsync({ message })
+        const message = `batch-register:${address}:1:${timestamp}`;
+        const signature = await signMessageAsync({ message });
 
-        const userTags = splitCommaList(tags)
-        if (category && !userTags.includes(category)) userTags.unshift(category)
+        const userTags = splitCommaList(tags);
+        if (category && !userTags.includes(category))
+          userTags.unshift(category);
 
         const service: Record<string, unknown> = {
-          name:        name.trim() || url.split('/').pop() || 'API',
+          name: name.trim() || url.split("/").pop() || "API",
           description: description.trim() || undefined,
           url,
-          price:       priceNum,
-          tags:        userTags.length ? userTags : ['utility'],
+          price: priceNum,
+          tags: userTags.length ? userTags : ["utility"],
           method,
-        }
-        const params = splitCommaList(requiredParams)
-        if (params.length) service.required_parameters = { required: params }
-        const freeCalls = parseInt(freeCallsPerMonth, 10)
+        };
+        const params = splitCommaList(requiredParams);
+        if (params.length) service.required_parameters = { required: params };
+        const freeCalls = parseInt(freeCallsPerMonth, 10);
         if (!isNaN(freeCalls) && freeCalls > 0) {
-          service.free_calls_per_month = Math.min(freeCalls, 1000)
+          service.free_calls_per_month = Math.min(freeCalls, 1000);
         }
-        if (credentials) service.credentials = credentials
+        if (credentials) service.credentials = credentials;
 
         const res = await fetch(`${API_URL}/batch-register`, {
-          method:  'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body:    JSON.stringify({
-            services:      [service],
-            ownerAddress:  wallet,
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            services: [service],
+            ownerAddress: wallet,
             signature,
             timestamp,
           }),
-        })
-        const data = await res.json()
-        if (!res.ok) throw new Error(data.error || data.message || 'Registration failed')
-        setResult(data)
-        trackEvent('register_api', { method: 'full' })
+        });
+        const data = await res.json();
+        if (!res.ok)
+          throw new Error(data.error || data.message || "Registration failed");
+        setResult(data);
+        trackEvent("register_api", { method: "full" });
       } else {
         // ── Quick-register path ───────────────────────────────────────────
-        const message = `quick-register:${url}:${wallet}:${timestamp}`
-        const signature = await signMessageAsync({ message })
+        const message = `quick-register:${url}:${wallet}:${timestamp}`;
+        const signature = await signMessageAsync({ message });
 
         const payload: Record<string, unknown> = {
           url,
-          price:        priceNum,
+          price: priceNum,
           ownerAddress: wallet,
           signature,
           timestamp,
-        }
-        if (credentials) payload.credentials = credentials
+        };
+        if (credentials) payload.credentials = credentials;
 
         const res = await fetch(`${API_URL}/quick-register`, {
-          method:  'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body:    JSON.stringify(payload),
-        })
-        const data = await res.json()
-        if (!res.ok) throw new Error(data.error || data.message || 'Registration failed')
-        setResult(data)
-        trackEvent('register_api', { method: 'quick' })
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        const data = await res.json();
+        if (!res.ok)
+          throw new Error(data.error || data.message || "Registration failed");
+        setResult(data);
+        trackEvent("register_api", { method: "quick" });
       }
     } catch (err: unknown) {
-      const e = err as Error
-      const isSafe = SAFE_ERROR_MESSAGES.some(m => e.message?.includes(m))
-      setError(isSafe ? e.message : 'Registration failed. Please try again.')
+      const e = err as Error;
+      const isSafe = SAFE_ERROR_MESSAGES.some((m) => e.message?.includes(m));
+      setError(isSafe ? e.message : "Registration failed. Please try again.");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
   function resetForm() {
-    setUrl('')
-    setPrice('')
-    setWallet(isConnected && address ? address : '')
-    setName('')
-    setDescription('')
-    setCategory('utility')
-    setMethod('GET')
-    setTags('')
-    setRequiredParams('')
-    setFreeCallsPerMonth('')
-    setShowCredentials(false)
-    setCredentialItems([{ key: '', value: '' }])
-    setResult(null)
-    setError(null)
-    setExpanded(false)
+    setUrl("");
+    setPrice("");
+    setWallet(isConnected && address ? address : "");
+    setName("");
+    setDescription("");
+    setCategory("utility");
+    setMethod("GET");
+    setTags("");
+    setRequiredParams("");
+    setFreeCallsPerMonth("");
+    setShowCredentials(false);
+    setCredentialItems([{ key: "", value: "" }]);
+    setResult(null);
+    setError(null);
+    setExpanded(false);
   }
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -356,12 +393,14 @@ export default function ListApiForm({ onBack }: ListApiFormProps) {
 
   if (result) {
     const proxyEndpoint: string | undefined =
-      result?.data?.proxy_url ?? result?.services?.[0]?.proxy_url
+      result?.data?.proxy_url ?? result?.services?.[0]?.proxy_url;
     const serviceId: string =
-      result?.data?.id ?? result?.services?.[0]?.id ?? ''
+      result?.data?.id ?? result?.services?.[0]?.id ?? "";
     const serviceName: string =
-      (result?.data?.name ?? result?.services?.[0]?.name ?? name) || 'Your API'
-    const credValidation = result?.credential_validation ?? result?.services?.[0]?.credential_validation
+      (result?.data?.name ?? result?.services?.[0]?.name ?? name) || "Your API";
+    const credValidation =
+      result?.credential_validation ??
+      result?.services?.[0]?.credential_validation;
 
     return (
       <div className="max-w-lg mx-auto animate-fade-in-up">
@@ -378,7 +417,7 @@ export default function ListApiForm({ onBack }: ListApiFormProps) {
             className="pointer-events-none absolute inset-0"
             style={{
               backgroundImage:
-                'radial-gradient(ellipse 60% 40% at 50% 0%, rgba(52,211,153,0.12) 0%, transparent 70%)',
+                "radial-gradient(ellipse 60% 40% at 50% 0%, rgba(52,211,153,0.12) 0%, transparent 70%)",
             }}
           />
 
@@ -392,11 +431,18 @@ export default function ListApiForm({ onBack }: ListApiFormProps) {
                 viewBox="0 0 24 24"
                 aria-hidden="true"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 13l4 4L19 7"
+                />
               </svg>
             </div>
 
-            <h2 className="text-2xl font-bold text-white mb-1">Your API is live!</h2>
+            <h2 className="text-2xl font-bold text-white mb-1">
+              Your API is live!
+            </h2>
             <p className="text-gray-400 text-sm mb-6">{serviceName}</p>
 
             {/* Credential validation badge */}
@@ -412,10 +458,10 @@ export default function ListApiForm({ onBack }: ListApiFormProps) {
             {/* 3 info items */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6 text-left">
               {[
-                { num: '01', text: 'Live on marketplace' },
-                { num: '02', text: 'Discoverable by AI agents' },
-                { num: '03', text: 'You earn 95% in USDC' },
-              ].map(item => (
+                { num: "01", text: "Live on marketplace" },
+                { num: "02", text: "Discoverable by AI agents" },
+                { num: "03", text: "You earn 95% in USDC" },
+              ].map((item) => (
                 <div
                   key={item.num}
                   className="rounded-xl bg-[#12141a]/60 border border-white/[0.06] px-4 py-3"
@@ -423,7 +469,9 @@ export default function ListApiForm({ onBack }: ListApiFormProps) {
                   <span className="block text-[10px] font-mono font-bold text-[#34D399]/60 mb-1">
                     {item.num}
                   </span>
-                  <p className="text-gray-300 text-xs leading-relaxed">{item.text}</p>
+                  <p className="text-gray-300 text-xs leading-relaxed">
+                    {item.text}
+                  </p>
                 </div>
               ))}
             </div>
@@ -456,8 +504,19 @@ export default function ListApiForm({ onBack }: ListApiFormProps) {
                            no-underline transition-colors"
               >
                 View all services
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
                 </svg>
               </Link>
 
@@ -475,7 +534,7 @@ export default function ListApiForm({ onBack }: ListApiFormProps) {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -491,8 +550,19 @@ export default function ListApiForm({ onBack }: ListApiFormProps) {
         className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors text-sm mb-8 bg-transparent border-none cursor-pointer"
         aria-label="Back to monetization options"
       >
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+        <svg
+          className="w-4 h-4"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M15 19l-7-7 7-7"
+          />
         </svg>
         Back to options
       </button>
@@ -512,7 +582,9 @@ export default function ListApiForm({ onBack }: ListApiFormProps) {
               className="w-2 h-2 rounded-full bg-[#34D399] shadow-[0_0_8px_rgba(52,211,153,0.8)]"
               aria-hidden="true"
             />
-            <h2 className="text-2xl font-bold text-white tracking-tight">List Your API</h2>
+            <h2 className="text-2xl font-bold text-white tracking-tight">
+              List Your API
+            </h2>
           </div>
           <p className="text-sm text-gray-400 mb-8 leading-relaxed">
             Paste your endpoint URL, set a price, and you're live.
@@ -527,12 +599,13 @@ export default function ListApiForm({ onBack }: ListApiFormProps) {
               type="url"
               required
               value={url}
-              onChange={e => setUrl(e.target.value)}
+              onChange={(e) => setUrl(e.target.value)}
               placeholder="https://api.example.com/v1/endpoint"
               aria-describedby="url-hint"
             />
             <p className="text-[11px] text-amber-400/60 mt-1.5" id="url-hint">
-              {t.register?.urlHint || "Enter your API's direct endpoint URL, not a proxy or wrapper."}
+              {t.register?.urlHint ||
+                "Enter your API's direct endpoint URL, not a proxy or wrapper."}
             </p>
           </div>
 
@@ -542,18 +615,22 @@ export default function ListApiForm({ onBack }: ListApiFormProps) {
             </FieldLabel>
 
             {/* Presets */}
-            <div className="flex flex-wrap gap-2 mb-2.5" role="group" aria-label="Price presets">
-              {PRICE_PRESETS.map(p => (
+            <div
+              className="flex flex-wrap gap-2 mb-2.5"
+              role="group"
+              aria-label="Price presets"
+            >
+              {PRICE_PRESETS.map((p) => (
                 <button
                   key={p}
                   type="button"
                   onClick={() => setPrice(String(p))}
                   className={[
-                    'px-3 py-1.5 rounded-lg text-xs font-mono transition-all cursor-pointer border',
+                    "px-3 py-1.5 rounded-lg text-xs font-mono transition-all cursor-pointer border",
                     price === String(p)
-                      ? 'bg-[#34D399]/10 text-[#34D399] border-[#34D399]/30'
-                      : 'bg-white/5 text-gray-400 border-white/10 hover:text-white hover:border-white/20',
-                  ].join(' ')}
+                      ? "bg-[#34D399]/10 text-[#34D399] border-[#34D399]/30"
+                      : "bg-white/5 text-gray-400 border-white/10 hover:text-white hover:border-white/20",
+                  ].join(" ")}
                 >
                   ${p}
                 </button>
@@ -570,7 +647,7 @@ export default function ListApiForm({ onBack }: ListApiFormProps) {
                 max="1000"
                 required
                 value={price}
-                onChange={e => setPrice(e.target.value)}
+                onChange={(e) => setPrice(e.target.value)}
                 placeholder="0.01"
                 className="pr-16"
                 aria-label="Price in USDC"
@@ -601,7 +678,7 @@ export default function ListApiForm({ onBack }: ListApiFormProps) {
               type="text"
               required
               value={wallet}
-              onChange={e => setWallet(e.target.value)}
+              onChange={(e) => setWallet(e.target.value)}
               placeholder="0x..."
               spellCheck={false}
             />
@@ -609,11 +686,11 @@ export default function ListApiForm({ onBack }: ListApiFormProps) {
               <p className="text-[11px] text-gray-500 mt-1.5">
                 <button
                   type="button"
-                  onClick={() => openConnectModal?.()}
+                  onClick={() => connect({ client: thirdwebClient, wallets })}
                   className="text-[#34D399] hover:underline bg-transparent border-none cursor-pointer p-0 text-[11px]"
                 >
                   Connect wallet
-                </button>{' '}
+                </button>{" "}
                 to auto-fill and sign.
               </p>
             )}
@@ -621,19 +698,24 @@ export default function ListApiForm({ onBack }: ListApiFormProps) {
 
           <button
             type="button"
-            onClick={() => setExpanded(v => !v)}
+            onClick={() => setExpanded((v) => !v)}
             className="flex items-center gap-2 w-full text-sm text-gray-400 hover:text-white transition-colors mb-4 cursor-pointer bg-transparent border-none"
             aria-expanded={expanded}
             aria-controls="advanced-fields"
           >
             <svg
-              className={`w-4 h-4 transition-transform duration-300 ${expanded ? 'rotate-180' : ''}`}
+              className={`w-4 h-4 transition-transform duration-300 ${expanded ? "rotate-180" : ""}`}
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
               aria-hidden="true"
             >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 9l-7 7-7-7"
+              />
             </svg>
             <span>Customize (name, tags, credentials…)</span>
             {(name || tags || description || showCredentials) && (
@@ -646,7 +728,7 @@ export default function ListApiForm({ onBack }: ListApiFormProps) {
           <div
             id="advanced-fields"
             style={{
-              display: expanded ? 'block' : 'none',
+              display: expanded ? "block" : "none",
             }}
           >
             <div className="border-t border-white/[0.06] mb-5" />
@@ -659,7 +741,7 @@ export default function ListApiForm({ onBack }: ListApiFormProps) {
                   type="text"
                   maxLength={200}
                   value={name}
-                  onChange={e => setName(e.target.value)}
+                  onChange={(e) => setName(e.target.value)}
                   placeholder="My Awesome API"
                 />
               </div>
@@ -671,7 +753,7 @@ export default function ListApiForm({ onBack }: ListApiFormProps) {
                   rows={3}
                   maxLength={1000}
                   value={description}
-                  onChange={e => setDescription(e.target.value)}
+                  onChange={(e) => setDescription(e.target.value)}
                   placeholder="What does your API do? How should AI agents use it?"
                 />
               </div>
@@ -683,10 +765,12 @@ export default function ListApiForm({ onBack }: ListApiFormProps) {
                     <FieldSelect
                       id="list-category"
                       value={category}
-                      onChange={e => setCategory(e.target.value)}
+                      onChange={(e) => setCategory(e.target.value)}
                     >
-                      {CATEGORIES.map(c => (
-                        <option key={c.value} value={c.value}>{c.label}</option>
+                      {CATEGORIES.map((c) => (
+                        <option key={c.value} value={c.value}>
+                          {c.label}
+                        </option>
                       ))}
                     </FieldSelect>
                     <svg
@@ -696,7 +780,12 @@ export default function ListApiForm({ onBack }: ListApiFormProps) {
                       viewBox="0 0 24 24"
                       aria-hidden="true"
                     >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 9l-7 7-7-7"
+                      />
                     </svg>
                   </div>
                 </div>
@@ -708,17 +797,17 @@ export default function ListApiForm({ onBack }: ListApiFormProps) {
                     role="group"
                     aria-label="HTTP Method"
                   >
-                    {METHODS.map(m => (
+                    {METHODS.map((m) => (
                       <button
                         key={m}
                         type="button"
                         onClick={() => setMethod(m)}
                         className={[
-                          'flex-1 py-3 text-sm font-mono font-semibold transition-all cursor-pointer border-none',
+                          "flex-1 py-3 text-sm font-mono font-semibold transition-all cursor-pointer border-none",
                           method === m
-                            ? 'bg-[#34D399]/10 text-[#34D399]'
-                            : 'bg-[#12141a]/80 text-gray-500 hover:text-gray-300',
-                        ].join(' ')}
+                            ? "bg-[#34D399]/10 text-[#34D399]"
+                            : "bg-[#12141a]/80 text-gray-500 hover:text-gray-300",
+                        ].join(" ")}
                       >
                         {m}
                       </button>
@@ -733,38 +822,42 @@ export default function ListApiForm({ onBack }: ListApiFormProps) {
                   id="list-tags"
                   type="text"
                   value={tags}
-                  onChange={e => setTags(e.target.value)}
+                  onChange={(e) => setTags(e.target.value)}
                   placeholder="weather, forecast, realtime (comma separated)"
                 />
               </div>
 
               <div>
-                <FieldLabel htmlFor="list-params">Required parameters</FieldLabel>
+                <FieldLabel htmlFor="list-params">
+                  Required parameters
+                </FieldLabel>
                 <FieldInput
                   id="list-params"
                   type="text"
                   value={requiredParams}
-                  onChange={e => setRequiredParams(e.target.value)}
+                  onChange={(e) => setRequiredParams(e.target.value)}
                   placeholder="city, units (comma separated)"
                 />
               </div>
 
               <div>
-                <FieldLabel htmlFor="list-free-calls">Free calls per month</FieldLabel>
+                <FieldLabel htmlFor="list-free-calls">
+                  Free calls per month
+                </FieldLabel>
                 <FieldInput
                   id="list-free-calls"
                   type="number"
                   min="0"
                   max="1000"
                   value={freeCallsPerMonth}
-                  onChange={e => setFreeCallsPerMonth(e.target.value)}
+                  onChange={(e) => setFreeCallsPerMonth(e.target.value)}
                   placeholder="100"
                 />
               </div>
 
               <CredentialsSection
                 showCredentials={showCredentials}
-                onToggle={() => setShowCredentials(v => !v)}
+                onToggle={() => setShowCredentials((v) => !v)}
                 credentialType={credentialType}
                 onTypeChange={setCredentialType}
                 credentialItems={credentialItems}
@@ -792,28 +885,44 @@ export default function ListApiForm({ onBack }: ListApiFormProps) {
             type="submit"
             disabled={loading}
             className={[
-              'w-full py-3.5 rounded-2xl font-semibold text-[#0a0a0f]',
-              'bg-gradient-to-br from-[#34D399] to-[#10b981]',
-              'hover:shadow-[0_0_40px_rgba(52,211,153,0.25)] hover:-translate-y-0.5',
-              'transition duration-200',
-              'disabled:opacity-50 disabled:cursor-not-allowed disabled:translate-y-0 disabled:shadow-none',
-              'cursor-pointer border-none',
-            ].join(' ')}
+              "w-full py-3.5 rounded-2xl font-semibold text-[#0a0a0f]",
+              "bg-gradient-to-br from-[#34D399] to-[#10b981]",
+              "hover:shadow-[0_0_40px_rgba(52,211,153,0.25)] hover:-translate-y-0.5",
+              "transition duration-200",
+              "disabled:opacity-50 disabled:cursor-not-allowed disabled:translate-y-0 disabled:shadow-none",
+              "cursor-pointer border-none",
+            ].join(" ")}
           >
             {loading ? (
               <span className="flex items-center justify-center gap-2">
-                <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24" aria-hidden="true">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                <svg
+                  className="w-4 h-4 animate-spin"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  />
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                  />
                 </svg>
                 Signing &amp; listing…
               </span>
             ) : (
-              'List My API'
+              "List My API"
             )}
           </button>
         </form>
       </div>
     </div>
-  )
+  );
 }

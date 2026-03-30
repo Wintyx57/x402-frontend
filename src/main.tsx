@@ -1,16 +1,15 @@
-import * as Sentry from '@sentry/react';
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
-import { WagmiProvider } from 'wagmi';
-import { RainbowKitProvider, darkTheme } from '@rainbow-me/rainbowkit';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { BrowserRouter } from 'react-router-dom';
-import { config } from './wagmi';
-import { LanguageProvider } from './i18n/LanguageContext';
-import { ThemeProvider } from './context/ThemeContext';
-import App from './App';
-import '@rainbow-me/rainbowkit/styles.css';
-import './index.css';
+import * as Sentry from "@sentry/react";
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { WagmiProvider } from "wagmi";
+import { ThirdwebProvider } from "thirdweb/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter } from "react-router-dom";
+import { config } from "./wagmi";
+import { LanguageProvider } from "./i18n/LanguageContext";
+import { ThemeProvider } from "./context/ThemeContext";
+import App from "./App";
+import "./index.css";
 
 if (import.meta.env.PROD) {
   Sentry.init({
@@ -30,7 +29,7 @@ const queryClient = new QueryClient({
   },
 });
 
-const root = document.getElementById('root');
+const root = document.getElementById("root");
 
 function renderError(err: unknown) {
   if (root) {
@@ -55,7 +54,7 @@ try {
     <StrictMode>
       <WagmiProvider config={config}>
         <QueryClientProvider client={queryClient}>
-          <RainbowKitProvider locale="en" theme={darkTheme({ accentColor: '#FF9900', accentColorForeground: 'white', borderRadius: 'medium' })} modalSize="compact">
+          <ThirdwebProvider>
             <BrowserRouter>
               <ThemeProvider>
                 <LanguageProvider>
@@ -63,23 +62,23 @@ try {
                 </LanguageProvider>
               </ThemeProvider>
             </BrowserRouter>
-          </RainbowKitProvider>
+          </ThirdwebProvider>
         </QueryClientProvider>
       </WagmiProvider>
     </StrictMode>,
   );
 } catch (err) {
-  console.error('Fatal initialization error:', err);
+  console.error("Fatal initialization error:", err);
   renderError(err);
 }
 
 // Catch unhandled errors that crash React tree
-window.addEventListener('error', (event) => {
+window.addEventListener("error", (event) => {
   if (root && !root.hasChildNodes()) {
     renderError(event.error || event.message);
   }
 });
 
-window.addEventListener('unhandledrejection', (event) => {
-  console.error('Unhandled promise rejection:', event.reason);
+window.addEventListener("unhandledrejection", (event) => {
+  console.error("Unhandled promise rejection:", event.reason);
 });

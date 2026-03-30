@@ -1,27 +1,28 @@
-import { useState, useRef, useCallback } from 'react';
-import { Link } from 'react-router-dom';
-import { useAccount, useSignMessage } from 'wagmi';
-import { useConnectModal } from '@rainbow-me/rainbowkit';
-import { useTranslation } from '../i18n/LanguageContext';
-import useSEO from '../hooks/useSEO';
-import { API_URL } from '../config';
+import { useState, useRef, useCallback } from "react";
+import { Link } from "react-router-dom";
+import { useAccount, useSignMessage } from "wagmi";
+import { useConnectModal } from "thirdweb/react";
+import { thirdwebClient, wallets } from "../lib/thirdweb";
+import { useTranslation } from "../i18n/LanguageContext";
+import useSEO from "../hooks/useSEO";
+import { API_URL } from "../config";
 import CredentialsSection, {
   buildCredentialsPayload,
   type CredentialType,
   type CredentialItem,
-} from '../components/CredentialsSection';
+} from "../components/CredentialsSection";
 
 // ---- Constants ----
 const PRICE_PRESETS = [0.001, 0.005, 0.01];
 
 const METHOD_COLORS: Record<string, string> = {
-  GET: 'bg-[#34D399]/15 text-[#34D399] border-[#34D399]/30',
-  POST: 'bg-[#60A5FA]/15 text-[#60A5FA] border-[#60A5FA]/30',
-  PUT: 'bg-yellow-500/15 text-yellow-400 border-yellow-500/30',
-  DELETE: 'bg-[#EF4444]/15 text-[#EF4444] border-[#EF4444]/30',
-  PATCH: 'bg-purple-500/15 text-purple-400 border-purple-500/30',
-  OPTIONS: 'bg-gray-500/15 text-gray-400 border-gray-500/30',
-  HEAD: 'bg-gray-500/15 text-gray-400 border-gray-500/30',
+  GET: "bg-[#34D399]/15 text-[#34D399] border-[#34D399]/30",
+  POST: "bg-[#60A5FA]/15 text-[#60A5FA] border-[#60A5FA]/30",
+  PUT: "bg-yellow-500/15 text-yellow-400 border-yellow-500/30",
+  DELETE: "bg-[#EF4444]/15 text-[#EF4444] border-[#EF4444]/30",
+  PATCH: "bg-purple-500/15 text-purple-400 border-purple-500/30",
+  OPTIONS: "bg-gray-500/15 text-gray-400 border-gray-500/30",
+  HEAD: "bg-gray-500/15 text-gray-400 border-gray-500/30",
 };
 
 // ---- Types (matching backend snake_case responses) ----
@@ -53,7 +54,12 @@ interface ImportResponse {
   imported: number;
   skipped: number;
   skipped_details: Array<{ path: string; method: string; reason: string }>;
-  services: Array<{ id: string; name: string; url: string; price_usdc: number }>;
+  services: Array<{
+    id: string;
+    name: string;
+    url: string;
+    price_usdc: number;
+  }>;
 }
 
 // ---- StepIndicator ----
@@ -73,18 +79,29 @@ function StepIndicator({
   return (
     <div className="flex flex-col items-center gap-1">
       <div
-        aria-current={current ? 'step' : undefined}
+        aria-current={current ? "step" : undefined}
         className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 border ${
           done
-            ? 'bg-[#34D399]/15 text-[#34D399] border-[#34D399]/40'
+            ? "bg-[#34D399]/15 text-[#34D399] border-[#34D399]/40"
             : active
-            ? 'bg-[#FF9900]/10 text-[#FF9900] border-[#FF9900]/50 shadow-[0_0_12px_rgba(255,153,0,0.2)]'
-            : 'bg-white/5 text-gray-500 border-white/10'
+              ? "bg-[#FF9900]/10 text-[#FF9900] border-[#FF9900]/50 shadow-[0_0_12px_rgba(255,153,0,0.2)]"
+              : "bg-white/5 text-gray-500 border-white/10"
         }`}
       >
         {done ? (
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+          <svg
+            className="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2.5}
+              d="M5 13l4 4L19 7"
+            />
           </svg>
         ) : (
           num
@@ -92,7 +109,7 @@ function StepIndicator({
       </div>
       <span
         className={`text-xs transition-colors duration-300 hidden sm:block ${
-          done ? 'text-[#34D399]' : active ? 'text-[#FF9900]' : 'text-gray-500'
+          done ? "text-[#34D399]" : active ? "text-[#FF9900]" : "text-gray-500"
         }`}
       >
         {label}
@@ -103,9 +120,13 @@ function StepIndicator({
 
 // ---- MethodBadge ----
 function MethodBadge({ method }: { method: string }) {
-  const cls = METHOD_COLORS[method.toUpperCase()] || 'bg-gray-500/15 text-gray-400 border-gray-500/30';
+  const cls =
+    METHOD_COLORS[method.toUpperCase()] ||
+    "bg-gray-500/15 text-gray-400 border-gray-500/30";
   return (
-    <span className={`px-2 py-0.5 rounded-md text-xs font-mono font-bold border ${cls}`}>
+    <span
+      className={`px-2 py-0.5 rounded-md text-xs font-mono font-bold border ${cls}`}
+    >
       {method.toUpperCase()}
     </span>
   );
@@ -133,9 +154,25 @@ function TagBadge({ tag, onRemove }: { tag: string; onRemove?: () => void }) {
 // ---- Spinner ----
 function Spinner() {
   return (
-    <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24" aria-hidden="true">
-      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+    <svg
+      className="w-4 h-4 animate-spin"
+      fill="none"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+    >
+      <circle
+        className="opacity-25"
+        cx="12"
+        cy="12"
+        r="10"
+        stroke="currentColor"
+        strokeWidth="4"
+      />
+      <path
+        className="opacity-75"
+        fill="currentColor"
+        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+      />
     </svg>
   );
 }
@@ -144,15 +181,17 @@ function Spinner() {
 export default function ImportOpenAPI() {
   const { address, isConnected } = useAccount();
   const { signMessageAsync } = useSignMessage();
-  const { openConnectModal } = useConnectModal();
+  const { connect } = useConnectModal();
   const { t } = useTranslation();
-  const p = ((t as unknown) as Record<string, Record<string, string>>).importOpenAPI || {};
+  const p =
+    (t as unknown as Record<string, Record<string, string>>).importOpenAPI ||
+    {};
 
   useSEO({
-    title: p.title || 'Import OpenAPI Spec — x402 Bazaar',
+    title: p.title || "Import OpenAPI Spec — x402 Bazaar",
     description:
       p.subtitle ||
-      'Upload your OpenAPI/Swagger spec and list all endpoints as paid APIs in one click.',
+      "Upload your OpenAPI/Swagger spec and list all endpoints as paid APIs in one click.",
   });
 
   // ---- Step state ----
@@ -160,10 +199,10 @@ export default function ImportOpenAPI() {
 
   // ---- Step 1: Upload ----
   const [file, setFile] = useState<File | null>(null);
-  const [specUrl, setSpecUrl] = useState('');
+  const [specUrl, setSpecUrl] = useState("");
   const [isDragging, setIsDragging] = useState(false);
   const [isParsing, setIsParsing] = useState(false);
-  const [parseError, setParseError] = useState('');
+  const [parseError, setParseError] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // ---- Step 2: Preview ----
@@ -172,18 +211,21 @@ export default function ImportOpenAPI() {
 
   // ---- Step 3: Configure ----
   const [defaultPrice, setDefaultPrice] = useState(0.005);
-  const [tagsInput, setTagsInput] = useState('');
+  const [tagsInput, setTagsInput] = useState("");
   const [tags, setTags] = useState<string[]>([]);
 
   // ---- Step 3: Credentials (apply to all imported endpoints) ----
   const [showCredentials, setShowCredentials] = useState(false);
-  const [credentialType, setCredentialType] = useState<CredentialType>('bearer');
-  const [credentialItems, setCredentialItems] = useState<CredentialItem[]>([{ key: '', value: '' }]);
+  const [credentialType, setCredentialType] =
+    useState<CredentialType>("bearer");
+  const [credentialItems, setCredentialItems] = useState<CredentialItem[]>([
+    { key: "", value: "" },
+  ]);
 
   // ---- Step 4: Sign & Import ----
   const [isSigning, setIsSigning] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
-  const [importError, setImportError] = useState('');
+  const [importError, setImportError] = useState("");
 
   // ---- Step 5: Results ----
   const [results, setResults] = useState<ImportResponse | null>(null);
@@ -205,7 +247,7 @@ export default function ImportOpenAPI() {
     const dropped = e.dataTransfer.files[0];
     if (dropped && /\.(json|ya?ml)$/i.test(dropped.name)) {
       setFile(dropped);
-      setSpecUrl('');
+      setSpecUrl("");
     }
   }, []);
 
@@ -213,7 +255,7 @@ export default function ImportOpenAPI() {
     const f = e.target.files?.[0];
     if (f) {
       setFile(f);
-      setSpecUrl('');
+      setSpecUrl("");
     }
   };
 
@@ -221,28 +263,32 @@ export default function ImportOpenAPI() {
   const handleParseSpec = async () => {
     if (!file && !specUrl.trim()) return;
     setIsParsing(true);
-    setParseError('');
+    setParseError("");
     try {
       let resp: Response;
       if (file) {
         const form = new FormData();
         // BUG FIX 2: field name must be 'specFile', not 'file'
-        form.append('specFile', file);
+        form.append("specFile", file);
         resp = await fetch(`${API_URL}/api/import-openapi/preview`, {
-          method: 'POST',
+          method: "POST",
           body: form,
         });
       } else {
         resp = await fetch(`${API_URL}/api/import-openapi/preview`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           // BUG FIX 1: field must be 'specUrl', not 'url'
           body: JSON.stringify({ specUrl: specUrl.trim() }),
         });
       }
       if (!resp.ok) {
         const err = await resp.json().catch(() => ({}));
-        throw new Error((err as { error?: string }).error || p.parseError || 'Failed to parse spec');
+        throw new Error(
+          (err as { error?: string }).error ||
+            p.parseError ||
+            "Failed to parse spec",
+        );
       }
       // BUG FIX 4: backend returns snake_case — PreviewResponse now matches backend shape
       const data: PreviewResponse = await resp.json();
@@ -255,7 +301,11 @@ export default function ImportOpenAPI() {
       setSelected(autoSelected);
       setStep(2);
     } catch (err) {
-      setParseError(err instanceof Error ? err.message : p.parseError || 'Failed to parse spec');
+      setParseError(
+        err instanceof Error
+          ? err.message
+          : p.parseError || "Failed to parse spec",
+      );
     } finally {
       setIsParsing(false);
     }
@@ -287,21 +337,21 @@ export default function ImportOpenAPI() {
   };
 
   const handleAddTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' || e.key === ',') {
+    if (e.key === "Enter" || e.key === ",") {
       e.preventDefault();
-      const val = tagsInput.trim().replace(/,$/, '');
+      const val = tagsInput.trim().replace(/,$/, "");
       if (val && !tags.includes(val) && tags.length < 10) {
         setTags((prev) => [...prev, val]);
-        setTagsInput('');
+        setTagsInput("");
       }
     }
   };
 
   const handleTagsBlur = () => {
-    const val = tagsInput.trim().replace(/,$/, '');
+    const val = tagsInput.trim().replace(/,$/, "");
     if (val && !tags.includes(val) && tags.length < 10) {
       setTags((prev) => [...prev, val]);
-      setTagsInput('');
+      setTagsInput("");
     }
   };
 
@@ -316,13 +366,13 @@ export default function ImportOpenAPI() {
   // BUG FIX 3 & 5: correct payload shape + timestamp in milliseconds
   const handleSignAndImport = async () => {
     if (!isConnected || !address) {
-      openConnectModal?.();
+      connect({ client: thirdwebClient, wallets });
       return;
     }
     if (selectedEndpoints.length === 0) return;
 
     setIsSigning(true);
-    setImportError('');
+    setImportError("");
     try {
       // BUG FIX 5: timestamp in MILLISECONDS (Date.now()), not seconds
       const timestamp = Date.now();
@@ -336,32 +386,38 @@ export default function ImportOpenAPI() {
         .filter((ep, i) => !selected.has(i) && !ep.already_registered)
         .map((ep) => ep.path);
 
-      const importCredentials = buildCredentialsPayload(credentialType, credentialItems);
+      const importCredentials = buildCredentialsPayload(
+        credentialType,
+        credentialItems,
+      );
 
       let resp: Response;
       if (file) {
         // BUG FIX 3: re-upload the file and send correct fields for import endpoint
         const form = new FormData();
-        form.append('specFile', file);
-        form.append('ownerAddress', address);
-        form.append('defaultPrice', String(defaultPrice));
-        form.append('signature', signature);
-        form.append('timestamp', String(timestamp));
+        form.append("specFile", file);
+        form.append("ownerAddress", address);
+        form.append("defaultPrice", String(defaultPrice));
+        form.append("signature", signature);
+        form.append("timestamp", String(timestamp));
         if (excludePaths.length > 0) {
-          form.append('excludePaths', JSON.stringify(excludePaths));
+          form.append("excludePaths", JSON.stringify(excludePaths));
         }
         if (tags.length > 0) {
-          form.append('defaultTags', JSON.stringify(tags));
+          form.append("defaultTags", JSON.stringify(tags));
         }
         if (importCredentials) {
-          form.append('credentials', JSON.stringify(importCredentials));
+          form.append("credentials", JSON.stringify(importCredentials));
         }
-        resp = await fetch(`${API_URL}/api/import-openapi`, { method: 'POST', body: form });
+        resp = await fetch(`${API_URL}/api/import-openapi`, {
+          method: "POST",
+          body: form,
+        });
       } else {
         // BUG FIX 3: backend re-parses the spec — send specUrl + correct field names
         resp = await fetch(`${API_URL}/api/import-openapi`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             specUrl: specUrl.trim(),
             ownerAddress: address,
@@ -377,14 +433,18 @@ export default function ImportOpenAPI() {
 
       if (!resp.ok) {
         const err = await resp.json().catch(() => ({}));
-        throw new Error((err as { error?: string }).error || p.importError || 'Import failed');
+        throw new Error(
+          (err as { error?: string }).error || p.importError || "Import failed",
+        );
       }
 
       const data: ImportResponse = await resp.json();
       setResults(data);
       setStep(5);
     } catch (err) {
-      setImportError(err instanceof Error ? err.message : p.importError || 'Import failed');
+      setImportError(
+        err instanceof Error ? err.message : p.importError || "Import failed",
+      );
     } finally {
       setIsSigning(false);
       setIsImporting(false);
@@ -394,49 +454,62 @@ export default function ImportOpenAPI() {
   const handleReset = () => {
     setStep(1);
     setFile(null);
-    setSpecUrl('');
+    setSpecUrl("");
     setPreview(null);
     setSelected(new Set());
     setDefaultPrice(0.005);
     setTags([]);
-    setTagsInput('');
+    setTagsInput("");
     setResults(null);
-    setImportError('');
-    setParseError('');
+    setImportError("");
+    setParseError("");
     setShowCredentials(false);
-    setCredentialType('bearer');
-    setCredentialItems([{ key: '', value: '' }]);
+    setCredentialType("bearer");
+    setCredentialItems([{ key: "", value: "" }]);
   };
 
   // ---- Step labels ----
   const stepLabels = [
-    p.stepUpload || 'Upload',
-    p.stepPreview || 'Preview',
-    p.stepConfigure || 'Configure',
-    p.stepSign || 'Sign',
-    p.stepResults || 'Done',
+    p.stepUpload || "Upload",
+    p.stepPreview || "Preview",
+    p.stepConfigure || "Configure",
+    p.stepSign || "Sign",
+    p.stepResults || "Done",
   ];
 
   const alreadyRegisteredCount = preview ? preview.already_registered_count : 0;
 
   return (
-    <main className="min-h-screen pb-20" aria-label={p.title || 'Import OpenAPI'}>
+    <main
+      className="min-h-screen pb-20"
+      aria-label={p.title || "Import OpenAPI"}
+    >
       <div className="max-w-4xl mx-auto px-4 py-12 animate-fade-in-up">
-
         {/* Header */}
         <header className="text-center mb-10">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FF9900]/10 border border-[#FF9900]/20 text-[#FF9900] text-xs font-medium mb-4">
-            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+            <svg
+              className="w-3.5 h-3.5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+              />
             </svg>
             OpenAPI Import
           </div>
           <h1 className="text-3xl sm:text-4xl font-bold text-white mb-3">
-            {p.title || 'Import OpenAPI Spec'}
+            {p.title || "Import OpenAPI Spec"}
           </h1>
           <p className="text-gray-400 text-sm max-w-xl mx-auto leading-relaxed">
             {p.subtitle ||
-              'Upload your OpenAPI/Swagger spec and list all endpoints as paid APIs in one click.'}
+              "Upload your OpenAPI/Swagger spec and list all endpoints as paid APIs in one click."}
           </p>
           <div className="mt-4 flex items-center justify-center gap-4">
             <Link
@@ -455,7 +528,10 @@ export default function ImportOpenAPI() {
         </header>
 
         {/* Step indicators */}
-        <nav aria-label="Import progress" className="flex items-center justify-center gap-2 sm:gap-4 mb-10">
+        <nav
+          aria-label="Import progress"
+          className="flex items-center justify-center gap-2 sm:gap-4 mb-10"
+        >
           {stepLabels.map((label, i) => {
             const num = i + 1;
             return (
@@ -470,7 +546,7 @@ export default function ImportOpenAPI() {
                 {i < stepLabels.length - 1 && (
                   <div
                     className={`h-px w-8 sm:w-12 transition-colors duration-300 ${
-                      step > num ? 'bg-[#34D399]/40' : 'bg-white/10'
+                      step > num ? "bg-[#34D399]/40" : "bg-white/10"
                     }`}
                     aria-hidden="true"
                   />
@@ -482,27 +558,35 @@ export default function ImportOpenAPI() {
 
         {/* ---- STEP 1: Upload ---- */}
         {step === 1 && (
-          <section className="glass-card rounded-xl p-6 sm:p-8 animate-fade-in-up" aria-labelledby="step1-title">
-            <h2 id="step1-title" className="text-lg font-semibold text-white mb-6">
-              {p.stepUpload || 'Upload Your Spec'}
+          <section
+            className="glass-card rounded-xl p-6 sm:p-8 animate-fade-in-up"
+            aria-labelledby="step1-title"
+          >
+            <h2
+              id="step1-title"
+              className="text-lg font-semibold text-white mb-6"
+            >
+              {p.stepUpload || "Upload Your Spec"}
             </h2>
 
             {/* Dropzone */}
             <div
               role="button"
               tabIndex={0}
-              aria-label={p.dropzoneTitle || 'Drop your OpenAPI spec here'}
+              aria-label={p.dropzoneTitle || "Drop your OpenAPI spec here"}
               onClick={() => fileInputRef.current?.click()}
-              onKeyDown={(e) => e.key === 'Enter' && fileInputRef.current?.click()}
+              onKeyDown={(e) =>
+                e.key === "Enter" && fileInputRef.current?.click()
+              }
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
               className={`relative border-2 border-dashed rounded-xl p-10 text-center cursor-pointer transition-all duration-200 ${
                 isDragging
-                  ? 'border-[#FF9900] bg-[#FF9900]/5 scale-[1.01]'
+                  ? "border-[#FF9900] bg-[#FF9900]/5 scale-[1.01]"
                   : file
-                  ? 'border-[#34D399]/50 bg-[#34D399]/5'
-                  : 'border-white/15 hover:border-[#FF9900]/40 hover:bg-[#FF9900]/3'
+                    ? "border-[#34D399]/50 bg-[#34D399]/5"
+                    : "border-white/15 hover:border-[#FF9900]/40 hover:bg-[#FF9900]/3"
               }`}
             >
               <input
@@ -516,15 +600,33 @@ export default function ImportOpenAPI() {
               {file ? (
                 <div className="flex flex-col items-center gap-3">
                   <div className="w-12 h-12 rounded-xl bg-[#34D399]/10 flex items-center justify-center">
-                    <svg className="w-6 h-6 text-[#34D399]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    <svg
+                      className="w-6 h-6 text-[#34D399]"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
                     </svg>
                   </div>
-                  <p className="text-[#34D399] font-medium text-sm">{file.name}</p>
-                  <p className="text-gray-500 text-xs">{(file.size / 1024).toFixed(1)} KB</p>
+                  <p className="text-[#34D399] font-medium text-sm">
+                    {file.name}
+                  </p>
+                  <p className="text-gray-500 text-xs">
+                    {(file.size / 1024).toFixed(1)} KB
+                  </p>
                   <button
                     type="button"
-                    onClick={(e) => { e.stopPropagation(); setFile(null); }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setFile(null);
+                    }}
                     className="text-xs text-gray-500 hover:text-gray-300 underline transition-colors"
                   >
                     Remove
@@ -533,19 +635,33 @@ export default function ImportOpenAPI() {
               ) : (
                 <div className="flex flex-col items-center gap-3">
                   <div className="w-12 h-12 rounded-xl bg-[#FF9900]/10 flex items-center justify-center">
-                    <svg className="w-6 h-6 text-[#FF9900]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                    <svg
+                      className="w-6 h-6 text-[#FF9900]"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                      />
                     </svg>
                   </div>
                   <p className="text-white font-medium text-sm">
                     {isDragging
-                      ? 'Drop it here!'
-                      : (p.dropzoneTitle || 'Drop your OpenAPI spec here')}
+                      ? "Drop it here!"
+                      : p.dropzoneTitle || "Drop your OpenAPI spec here"}
                   </p>
                   <p className="text-gray-500 text-xs">
-                    {p.dropzoneSubtitle || 'JSON or YAML — OpenAPI 2.0, 3.0, or 3.1'}
+                    {p.dropzoneSubtitle ||
+                      "JSON or YAML — OpenAPI 2.0, 3.0, or 3.1"}
                   </p>
-                  <p className="text-[#FF9900] text-xs font-medium">Click to browse</p>
+                  <p className="text-[#FF9900] text-xs font-medium">
+                    Click to browse
+                  </p>
                 </div>
               )}
             </div>
@@ -553,30 +669,51 @@ export default function ImportOpenAPI() {
             {/* Divider */}
             <div className="flex items-center gap-3 my-5">
               <div className="flex-1 h-px bg-white/10" />
-              <span className="text-gray-500 text-xs">{p.orUrl || 'Or paste a spec URL'}</span>
+              <span className="text-gray-500 text-xs">
+                {p.orUrl || "Or paste a spec URL"}
+              </span>
               <div className="flex-1 h-px bg-white/10" />
             </div>
 
             {/* URL input */}
             <div>
               <label htmlFor="spec-url" className="sr-only">
-                {p.orUrl || 'Spec URL'}
+                {p.orUrl || "Spec URL"}
               </label>
               <input
                 id="spec-url"
                 type="url"
                 value={specUrl}
-                onChange={(e) => { setSpecUrl(e.target.value); setFile(null); }}
-                placeholder={p.urlPlaceholder || 'https://api.example.com/openapi.json'}
+                onChange={(e) => {
+                  setSpecUrl(e.target.value);
+                  setFile(null);
+                }}
+                placeholder={
+                  p.urlPlaceholder || "https://api.example.com/openapi.json"
+                }
                 className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-[#FF9900]/50 focus:ring-1 focus:ring-[#FF9900]/20 transition-colors"
               />
             </div>
 
             {/* Error */}
             {parseError && (
-              <p role="alert" className="mt-3 text-[#EF4444] text-xs flex items-center gap-2 p-3 bg-[#EF4444]/5 border border-[#EF4444]/20 rounded-lg">
-                <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <p
+                role="alert"
+                className="mt-3 text-[#EF4444] text-xs flex items-center gap-2 p-3 bg-[#EF4444]/5 border border-[#EF4444]/20 rounded-lg"
+              >
+                <svg
+                  className="w-4 h-4 shrink-0"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
                 </svg>
                 {parseError}
               </p>
@@ -593,14 +730,25 @@ export default function ImportOpenAPI() {
                 {isParsing ? (
                   <>
                     <Spinner />
-                    {p.parsing || 'Parsing...'}
+                    {p.parsing || "Parsing..."}
                   </>
                 ) : (
                   <>
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                      />
                     </svg>
-                    {p.parseSpec || 'Parse Spec'}
+                    {p.parseSpec || "Parse Spec"}
                   </>
                 )}
               </button>
@@ -615,7 +763,9 @@ export default function ImportOpenAPI() {
             {(preview.spec_title || preview.base_url) && (
               <div className="glass-card rounded-xl px-4 py-3 mb-4 flex flex-wrap items-center gap-3 text-xs">
                 {preview.spec_title && (
-                  <span className="text-white font-semibold">{preview.spec_title}</span>
+                  <span className="text-white font-semibold">
+                    {preview.spec_title}
+                  </span>
                 )}
                 {preview.spec_version && (
                   <span className="px-2 py-0.5 rounded-md bg-white/5 border border-white/10 text-gray-400 font-mono">
@@ -623,7 +773,9 @@ export default function ImportOpenAPI() {
                   </span>
                 )}
                 {preview.base_url && (
-                  <span className="text-gray-500 font-mono truncate max-w-xs">{preview.base_url}</span>
+                  <span className="text-gray-500 font-mono truncate max-w-xs">
+                    {preview.base_url}
+                  </span>
                 )}
               </div>
             )}
@@ -631,11 +783,15 @@ export default function ImportOpenAPI() {
             {/* Stats bar */}
             <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
               <div className="flex items-center gap-3">
-                <h2 id="step2-title" className="text-sm font-semibold text-white">
-                  {preview.total} {p.endpointsFound || 'endpoints found'}
+                <h2
+                  id="step2-title"
+                  className="text-sm font-semibold text-white"
+                >
+                  {preview.total} {p.endpointsFound || "endpoints found"}
                   {alreadyRegisteredCount > 0 && (
                     <span className="ml-2 text-gray-500">
-                      ({alreadyRegisteredCount} {p.alreadyRegistered || 'already registered'})
+                      ({alreadyRegisteredCount}{" "}
+                      {p.alreadyRegistered || "already registered"})
                     </span>
                   )}
                 </h2>
@@ -646,7 +802,7 @@ export default function ImportOpenAPI() {
                   onClick={handleSelectAll}
                   className="text-xs text-[#FF9900] hover:text-[#FF9900]/80 transition-colors"
                 >
-                  {p.selectAll || 'Select All'}
+                  {p.selectAll || "Select All"}
                 </button>
                 <span className="text-gray-600 text-xs">·</span>
                 <button
@@ -654,7 +810,7 @@ export default function ImportOpenAPI() {
                   onClick={handleDeselectAll}
                   className="text-xs text-gray-400 hover:text-gray-300 transition-colors"
                 >
-                  {p.deselectAll || 'Deselect All'}
+                  {p.deselectAll || "Deselect All"}
                 </button>
                 <span className="text-[#FF9900] text-xs font-semibold ml-2">
                   {selected.size} selected
@@ -663,17 +819,42 @@ export default function ImportOpenAPI() {
             </div>
 
             <div className="glass-card rounded-xl overflow-hidden">
-              <div className="overflow-x-auto" role="region" aria-label="Endpoints table" tabIndex={0}>
+              <div
+                className="overflow-x-auto"
+                role="region"
+                aria-label="Endpoints table"
+                tabIndex={0}
+              >
                 <table className="w-full text-sm" role="table">
                   <thead>
                     <tr className="border-b border-white/5 bg-white/3">
                       <th className="w-10 p-3" scope="col">
                         <span className="sr-only">Select</span>
                       </th>
-                      <th className="text-left p-3 text-gray-400 font-medium text-xs" scope="col">Method</th>
-                      <th className="text-left p-3 text-gray-400 font-medium text-xs" scope="col">Path</th>
-                      <th className="text-left p-3 text-gray-400 font-medium text-xs" scope="col">Name</th>
-                      <th className="text-left p-3 text-gray-400 font-medium text-xs hidden md:table-cell" scope="col">Category</th>
+                      <th
+                        className="text-left p-3 text-gray-400 font-medium text-xs"
+                        scope="col"
+                      >
+                        Method
+                      </th>
+                      <th
+                        className="text-left p-3 text-gray-400 font-medium text-xs"
+                        scope="col"
+                      >
+                        Path
+                      </th>
+                      <th
+                        className="text-left p-3 text-gray-400 font-medium text-xs"
+                        scope="col"
+                      >
+                        Name
+                      </th>
+                      <th
+                        className="text-left p-3 text-gray-400 font-medium text-xs hidden md:table-cell"
+                        scope="col"
+                      >
+                        Category
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
@@ -687,10 +868,10 @@ export default function ImportOpenAPI() {
                           onClick={() => toggleSelect(i)}
                           className={`border-b border-white/5 last:border-0 transition-colors duration-150 ${
                             isDisabled
-                              ? 'opacity-40 cursor-not-allowed'
+                              ? "opacity-40 cursor-not-allowed"
                               : isSelected
-                              ? 'bg-[#FF9900]/5 cursor-pointer hover:bg-[#FF9900]/8'
-                              : 'cursor-pointer hover:bg-white/3'
+                                ? "bg-[#FF9900]/5 cursor-pointer hover:bg-[#FF9900]/8"
+                                : "cursor-pointer hover:bg-white/3"
                           }`}
                           aria-selected={isSelected}
                           role="row"
@@ -700,21 +881,46 @@ export default function ImportOpenAPI() {
                               <div
                                 className={`w-4 h-4 rounded border mx-auto flex items-center justify-center transition-all duration-150 ${
                                   isSelected
-                                    ? 'bg-[#FF9900] border-[#FF9900]'
-                                    : 'border-white/20 bg-white/5'
+                                    ? "bg-[#FF9900] border-[#FF9900]"
+                                    : "border-white/20 bg-white/5"
                                 }`}
                                 aria-hidden="true"
                               >
                                 {isSelected && (
-                                  <svg className="w-2.5 h-2.5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                                  <svg
+                                    className="w-2.5 h-2.5 text-black"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={3}
+                                      d="M5 13l4 4L19 7"
+                                    />
                                   </svg>
                                 )}
                               </div>
                             ) : (
-                              <span className="text-[#34D399] text-xs" title="Already registered" aria-label="Already registered">
-                                <svg className="w-3.5 h-3.5 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                              <span
+                                className="text-[#34D399] text-xs"
+                                title="Already registered"
+                                aria-label="Already registered"
+                              >
+                                <svg
+                                  className="w-3.5 h-3.5 mx-auto"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                  aria-hidden="true"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2.5}
+                                    d="M5 13l4 4L19 7"
+                                  />
                                 </svg>
                               </span>
                             )}
@@ -722,15 +928,23 @@ export default function ImportOpenAPI() {
                           <td className="p-3" role="cell">
                             <MethodBadge method={ep.method} />
                           </td>
-                          <td className="p-3 font-mono text-xs text-gray-300 max-w-[200px] truncate" role="cell" title={ep.path}>
+                          <td
+                            className="p-3 font-mono text-xs text-gray-300 max-w-[200px] truncate"
+                            role="cell"
+                            title={ep.path}
+                          >
                             {ep.path}
                           </td>
-                          <td className="p-3 text-gray-300 text-xs max-w-[180px] truncate" role="cell" title={ep.name}>
-                            {ep.name || '—'}
+                          <td
+                            className="p-3 text-gray-300 text-xs max-w-[180px] truncate"
+                            role="cell"
+                            title={ep.name}
+                          >
+                            {ep.name || "—"}
                           </td>
                           <td className="p-3 hidden md:table-cell" role="cell">
                             <span className="px-2 py-0.5 rounded-md text-xs bg-white/5 text-gray-400 border border-white/10">
-                              {ep.category || 'other'}
+                              {ep.category || "other"}
                             </span>
                           </td>
                         </tr>
@@ -743,7 +957,7 @@ export default function ImportOpenAPI() {
 
             {preview.endpoints.length === 0 && (
               <p className="text-center text-gray-500 text-sm py-8">
-                {p.noEndpoints || 'No importable endpoints found'}
+                {p.noEndpoints || "No importable endpoints found"}
               </p>
             )}
 
@@ -769,16 +983,22 @@ export default function ImportOpenAPI() {
 
         {/* ---- STEP 3: Configure ---- */}
         {step === 3 && (
-          <section className="glass-card rounded-xl p-6 sm:p-8 animate-fade-in-up" aria-labelledby="step3-title">
-            <h2 id="step3-title" className="text-lg font-semibold text-white mb-6">
-              {p.stepConfigure || 'Configure'}
+          <section
+            className="glass-card rounded-xl p-6 sm:p-8 animate-fade-in-up"
+            aria-labelledby="step3-title"
+          >
+            <h2
+              id="step3-title"
+              className="text-lg font-semibold text-white mb-6"
+            >
+              {p.stepConfigure || "Configure"}
             </h2>
 
             <div className="space-y-6">
               {/* Default price */}
               <fieldset>
                 <legend className="block text-xs font-medium text-gray-400 mb-2">
-                  {p.defaultPrice || 'Default Price (USDC per call)'}
+                  {p.defaultPrice || "Default Price (USDC per call)"}
                 </legend>
                 <div className="flex items-center gap-3 flex-wrap">
                   {PRICE_PRESETS.map((preset) => (
@@ -788,8 +1008,8 @@ export default function ImportOpenAPI() {
                       onClick={() => setDefaultPrice(preset)}
                       className={`px-3 py-1.5 rounded-lg text-xs font-mono border transition-all duration-150 ${
                         defaultPrice === preset
-                          ? 'bg-[#FF9900]/15 border-[#FF9900]/50 text-[#FF9900]'
-                          : 'bg-white/5 border-white/10 text-gray-400 hover:border-white/20 hover:text-white'
+                          ? "bg-[#FF9900]/15 border-[#FF9900]/50 text-[#FF9900]"
+                          : "bg-white/5 border-white/10 text-gray-400 hover:border-white/20 hover:text-white"
                       }`}
                     >
                       ${preset} USDC
@@ -803,11 +1023,15 @@ export default function ImportOpenAPI() {
                       min="0.001"
                       max="1000"
                       value={defaultPrice}
-                      onChange={(e) => setDefaultPrice(parseFloat(e.target.value) || 0.005)}
+                      onChange={(e) =>
+                        setDefaultPrice(parseFloat(e.target.value) || 0.005)
+                      }
                       className="w-24 bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-[#FF9900]/50 transition-colors font-mono"
-                      aria-label={p.defaultPrice || 'Default price in USDC'}
+                      aria-label={p.defaultPrice || "Default price in USDC"}
                     />
-                    <span className="text-gray-500 text-xs">{p.perCallPrice || 'per call'}</span>
+                    <span className="text-gray-500 text-xs">
+                      {p.perCallPrice || "per call"}
+                    </span>
                   </div>
                 </div>
               </fieldset>
@@ -815,25 +1039,45 @@ export default function ImportOpenAPI() {
               {/* Wallet address */}
               <div>
                 <p className="block text-xs font-medium text-gray-400 mb-2">
-                  {p.walletAddress || 'Payment Wallet'}
+                  {p.walletAddress || "Payment Wallet"}
                 </p>
                 {isConnected && address ? (
                   <div className="flex items-center gap-2 px-4 py-3 bg-white/5 border border-white/10 rounded-xl">
-                    <div className="w-2 h-2 rounded-full bg-[#34D399] shrink-0" aria-hidden="true" />
-                    <span className="text-gray-300 text-xs font-mono truncate">{address}</span>
-                    <span className="ml-auto text-[#34D399] text-xs">Connected</span>
+                    <div
+                      className="w-2 h-2 rounded-full bg-[#34D399] shrink-0"
+                      aria-hidden="true"
+                    />
+                    <span className="text-gray-300 text-xs font-mono truncate">
+                      {address}
+                    </span>
+                    <span className="ml-auto text-[#34D399] text-xs">
+                      Connected
+                    </span>
                   </div>
                 ) : (
                   <div className="space-y-2">
                     <button
                       type="button"
-                      onClick={() => openConnectModal?.()}
+                      onClick={() =>
+                        connect({ client: thirdwebClient, wallets })
+                      }
                       className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-[#FF9900]/5 border border-[#FF9900]/20 rounded-xl text-[#FF9900] text-sm font-medium hover:bg-[#FF9900]/10 transition-colors"
                     >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        aria-hidden="true"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"
+                        />
                       </svg>
-                      {p.connectWalletFirst || 'Connect Wallet to Continue'}
+                      {p.connectWalletFirst || "Connect Wallet to Continue"}
                     </button>
                     <p className="text-yellow-500/70 text-xs text-center">
                       A wallet signature is required to authenticate the import
@@ -844,9 +1088,14 @@ export default function ImportOpenAPI() {
 
               {/* Tags */}
               <div>
-                <label htmlFor="tags-input" className="block text-xs font-medium text-gray-400 mb-2">
-                  {p.defaultTags || 'Default Tags'}{' '}
-                  <span className="text-gray-600 font-normal">(optional, applied to all imported APIs)</span>
+                <label
+                  htmlFor="tags-input"
+                  className="block text-xs font-medium text-gray-400 mb-2"
+                >
+                  {p.defaultTags || "Default Tags"}{" "}
+                  <span className="text-gray-600 font-normal">
+                    (optional, applied to all imported APIs)
+                  </span>
                 </label>
                 <input
                   id="tags-input"
@@ -855,14 +1104,24 @@ export default function ImportOpenAPI() {
                   onChange={(e) => setTagsInput(e.target.value)}
                   onKeyDown={handleAddTag}
                   onBlur={handleTagsBlur}
-                  placeholder={p.tagsPlaceholder || 'e.g. weather, data, api — press Enter to add'}
+                  placeholder={
+                    p.tagsPlaceholder ||
+                    "e.g. weather, data, api — press Enter to add"
+                  }
                   className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-[#FF9900]/50 transition-colors"
                 />
                 {tags.length > 0 && (
-                  <div className="flex flex-wrap gap-1.5 mt-2" role="list" aria-label="Selected tags">
+                  <div
+                    className="flex flex-wrap gap-1.5 mt-2"
+                    role="list"
+                    aria-label="Selected tags"
+                  >
                     {tags.map((tag) => (
                       <div key={tag} role="listitem">
-                        <TagBadge tag={tag} onRemove={() => handleRemoveTag(tag)} />
+                        <TagBadge
+                          tag={tag}
+                          onRemove={() => handleRemoveTag(tag)}
+                        />
                       </div>
                     ))}
                   </div>
@@ -902,9 +1161,15 @@ export default function ImportOpenAPI() {
 
         {/* ---- STEP 4: Confirm & Sign ---- */}
         {step === 4 && (
-          <section className="glass-card rounded-xl p-6 sm:p-8 animate-fade-in-up" aria-labelledby="step4-title">
-            <h2 id="step4-title" className="text-lg font-semibold text-white mb-6">
-              {p.importSummary || 'Review & Sign'}
+          <section
+            className="glass-card rounded-xl p-6 sm:p-8 animate-fade-in-up"
+            aria-labelledby="step4-title"
+          >
+            <h2
+              id="step4-title"
+              className="text-lg font-semibold text-white mb-6"
+            >
+              {p.importSummary || "Review & Sign"}
             </h2>
 
             {/* Summary card */}
@@ -912,30 +1177,40 @@ export default function ImportOpenAPI() {
               {preview?.spec_title && (
                 <div className="flex items-center justify-between">
                   <span className="text-gray-400 text-xs">Spec</span>
-                  <span className="text-white text-xs font-medium">{preview.spec_title}</span>
+                  <span className="text-white text-xs font-medium">
+                    {preview.spec_title}
+                  </span>
                 </div>
               )}
               <div className="flex items-center justify-between">
                 <span className="text-gray-400 text-xs">
-                  {p.endpointsToImport || 'Endpoints to import'}
+                  {p.endpointsToImport || "Endpoints to import"}
                 </span>
-                <span className="text-white font-semibold text-sm">{selectedEndpoints.length}</span>
+                <span className="text-white font-semibold text-sm">
+                  {selectedEndpoints.length}
+                </span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-gray-400 text-xs">{p.walletAddress || 'Owner wallet'}</span>
+                <span className="text-gray-400 text-xs">
+                  {p.walletAddress || "Owner wallet"}
+                </span>
                 <span className="text-gray-300 text-xs font-mono truncate max-w-[200px]">
-                  {address || '—'}
+                  {address || "—"}
                 </span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-gray-400 text-xs">{p.priceRange || 'Price per call'}</span>
+                <span className="text-gray-400 text-xs">
+                  {p.priceRange || "Price per call"}
+                </span>
                 <span className="text-[#FF9900] font-mono text-xs font-semibold">
                   ${defaultPrice} USDC
                 </span>
               </div>
               {tags.length > 0 && (
                 <div className="flex items-start justify-between gap-3">
-                  <span className="text-gray-400 text-xs shrink-0 pt-0.5">Tags</span>
+                  <span className="text-gray-400 text-xs shrink-0 pt-0.5">
+                    Tags
+                  </span>
                   <div className="flex flex-wrap justify-end gap-1">
                     {tags.map((tag) => (
                       <TagBadge key={tag} tag={tag} />
@@ -950,15 +1225,24 @@ export default function ImportOpenAPI() {
               <div className="mb-6">
                 <p className="text-xs text-gray-500 mb-2">
                   Endpoints to import
-                  {selectedEndpoints.length > 10 && ` (showing 10 of ${selectedEndpoints.length})`}:
+                  {selectedEndpoints.length > 10 &&
+                    ` (showing 10 of ${selectedEndpoints.length})`}
+                  :
                 </p>
                 <div className="space-y-1.5 max-h-44 overflow-y-auto pr-1 rounded-lg">
                   {selectedEndpoints.slice(0, 10).map((ep, i) => (
-                    <div key={i} className="flex items-center gap-2 text-xs px-2 py-1 rounded-lg bg-white/3">
+                    <div
+                      key={i}
+                      className="flex items-center gap-2 text-xs px-2 py-1 rounded-lg bg-white/3"
+                    >
                       <MethodBadge method={ep.method} />
-                      <span className="text-gray-300 font-mono truncate flex-1">{ep.path}</span>
+                      <span className="text-gray-300 font-mono truncate flex-1">
+                        {ep.path}
+                      </span>
                       {ep.name && (
-                        <span className="text-gray-500 truncate max-w-[120px] hidden sm:block">{ep.name}</span>
+                        <span className="text-gray-500 truncate max-w-[120px] hidden sm:block">
+                          {ep.name}
+                        </span>
                       )}
                     </div>
                   ))}
@@ -973,19 +1257,45 @@ export default function ImportOpenAPI() {
 
             {/* Signature info */}
             <div className="mb-5 p-3 bg-[#FF9900]/5 border border-[#FF9900]/15 rounded-lg flex gap-2.5">
-              <svg className="w-4 h-4 text-[#FF9900] shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <svg
+                className="w-4 h-4 text-[#FF9900] shrink-0 mt-0.5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
               </svg>
               <p className="text-[#FF9900]/80 text-xs leading-relaxed">
-                Your wallet will sign a message to authenticate this import. No gas fees are required — this is a free off-chain signature.
+                Your wallet will sign a message to authenticate this import. No
+                gas fees are required — this is a free off-chain signature.
               </p>
             </div>
 
             {/* Error */}
             {importError && (
-              <p role="alert" className="mb-4 text-[#EF4444] text-xs flex items-center gap-2 p-3 bg-[#EF4444]/5 border border-[#EF4444]/20 rounded-lg">
-                <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <p
+                role="alert"
+                className="mb-4 text-[#EF4444] text-xs flex items-center gap-2 p-3 bg-[#EF4444]/5 border border-[#EF4444]/20 rounded-lg"
+              >
+                <svg
+                  className="w-4 h-4 shrink-0"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
                 </svg>
                 {importError}
               </p>
@@ -1003,26 +1313,42 @@ export default function ImportOpenAPI() {
 
               <button
                 type="button"
-                disabled={isSigning || isImporting || selectedEndpoints.length === 0 || !isConnected}
+                disabled={
+                  isSigning ||
+                  isImporting ||
+                  selectedEndpoints.length === 0 ||
+                  !isConnected
+                }
                 onClick={handleSignAndImport}
                 className="gradient-btn px-6 py-2.5 rounded-xl text-white text-sm font-semibold disabled:opacity-40 disabled:cursor-not-allowed transition-all flex items-center gap-2"
               >
                 {isSigning ? (
                   <>
                     <Spinner />
-                    {p.signing || 'Signing...'}
+                    {p.signing || "Signing..."}
                   </>
                 ) : isImporting ? (
                   <>
                     <Spinner />
-                    {p.importing || 'Importing...'}
+                    {p.importing || "Importing..."}
                   </>
                 ) : (
                   <>
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13l-3 3m0 0l-3-3m3 3V8m0 13a9 9 0 110-18 9 9 0 010 18z" />
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M15 13l-3 3m0 0l-3-3m3 3V8m0 13a9 9 0 110-18 9 9 0 010 18z"
+                      />
                     </svg>
-                    {p.signAndImport || 'Sign & Import'}
+                    {p.signAndImport || "Sign & Import"}
                   </>
                 )}
               </button>
@@ -1037,37 +1363,63 @@ export default function ImportOpenAPI() {
             <div className="glass-card rounded-xl p-6 mb-6 border border-[#34D399]/20 shadow-[0_0_30px_rgba(52,211,153,0.08)]">
               <div className="flex flex-col items-center text-center gap-4">
                 <div className="w-16 h-16 rounded-full bg-[#34D399]/10 border border-[#34D399]/30 flex items-center justify-center">
-                  <svg className="w-8 h-8 text-[#34D399]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  <svg
+                    className="w-8 h-8 text-[#34D399]"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
                   </svg>
                 </div>
                 <div>
-                  <h2 id="step5-title" className="text-xl font-bold text-white mb-1">
-                    {p.importSuccess || 'Import Successful!'}
+                  <h2
+                    id="step5-title"
+                    className="text-xl font-bold text-white mb-1"
+                  >
+                    {p.importSuccess || "Import Successful!"}
                   </h2>
                   {results.spec_title && (
-                    <p className="text-gray-400 text-sm">{results.spec_title}</p>
+                    <p className="text-gray-400 text-sm">
+                      {results.spec_title}
+                    </p>
                   )}
                 </div>
-                {(results as any).credential_validation?.status === 'warning' && (
+                {(results as any).credential_validation?.status ===
+                  "warning" && (
                   <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-3 mt-3 text-yellow-300 text-xs text-left">
-                    <span className="font-semibold">Credential warning:</span> {(results as any).credential_validation.message}
+                    <span className="font-semibold">Credential warning:</span>{" "}
+                    {(results as any).credential_validation.message}
                   </div>
                 )}
-                {(results as any).credential_validation?.status === 'valid' && (
+                {(results as any).credential_validation?.status === "valid" && (
                   <div className="bg-green-500/10 border border-green-500/30 rounded-xl p-3 mt-3 text-green-300 text-xs text-left">
                     Credentials verified successfully against upstream.
                   </div>
                 )}
                 <div className="flex items-center gap-8">
                   <div className="text-center">
-                    <p className="text-3xl font-bold text-[#34D399]">{results.imported}</p>
-                    <p className="text-gray-500 text-xs mt-0.5">{p.imported || 'imported'}</p>
+                    <p className="text-3xl font-bold text-[#34D399]">
+                      {results.imported}
+                    </p>
+                    <p className="text-gray-500 text-xs mt-0.5">
+                      {p.imported || "imported"}
+                    </p>
                   </div>
                   {results.skipped > 0 && (
                     <div className="text-center">
-                      <p className="text-3xl font-bold text-gray-400">{results.skipped}</p>
-                      <p className="text-gray-500 text-xs mt-0.5">{p.skipped || 'skipped'}</p>
+                      <p className="text-3xl font-bold text-gray-400">
+                        {results.skipped}
+                      </p>
+                      <p className="text-gray-500 text-xs mt-0.5">
+                        {p.skipped || "skipped"}
+                      </p>
                     </div>
                   )}
                 </div>
@@ -1079,14 +1431,21 @@ export default function ImportOpenAPI() {
               <div className="glass-card rounded-xl overflow-hidden mb-6">
                 <div className="px-4 py-3 border-b border-white/5 bg-white/3">
                   <h3 className="text-xs font-semibold text-gray-300">
-                    {p.imported || 'Imported'} APIs ({results.services.length})
+                    {p.imported || "Imported"} APIs ({results.services.length})
                   </h3>
                 </div>
                 <ul className="divide-y divide-white/5">
                   {results.services.map((svc) => (
-                    <li key={svc.id} className="flex items-center gap-3 px-4 py-3 hover:bg-white/3 transition-colors">
-                      <span className="text-gray-300 text-xs font-mono flex-1 truncate">{svc.name || svc.url}</span>
-                      <span className="text-[#FF9900] font-mono text-xs shrink-0">${svc.price_usdc}</span>
+                    <li
+                      key={svc.id}
+                      className="flex items-center gap-3 px-4 py-3 hover:bg-white/3 transition-colors"
+                    >
+                      <span className="text-gray-300 text-xs font-mono flex-1 truncate">
+                        {svc.name || svc.url}
+                      </span>
+                      <span className="text-[#FF9900] font-mono text-xs shrink-0">
+                        ${svc.price_usdc}
+                      </span>
                       <Link
                         to={`/services/${svc.id}`}
                         className="text-[#FF9900] text-xs hover:text-[#FF9900]/80 transition-colors shrink-0 no-underline"
@@ -1105,15 +1464,25 @@ export default function ImportOpenAPI() {
               <div className="glass-card rounded-xl overflow-hidden mb-6">
                 <div className="px-4 py-3 border-b border-white/5 bg-white/3">
                   <h3 className="text-xs font-semibold text-gray-400">
-                    {p.skipped || 'Skipped'} ({results.skipped_details.length})
+                    {p.skipped || "Skipped"} ({results.skipped_details.length})
                   </h3>
                 </div>
                 <ul className="divide-y divide-white/5">
                   {results.skipped_details.map((sk, i) => (
-                    <li key={i} className="flex items-center gap-3 px-4 py-3 opacity-60">
+                    <li
+                      key={i}
+                      className="flex items-center gap-3 px-4 py-3 opacity-60"
+                    >
                       <MethodBadge method={sk.method} />
-                      <span className="text-gray-400 text-xs font-mono flex-1 truncate">{sk.path}</span>
-                      <span className="text-gray-600 text-xs shrink-0 max-w-[150px] truncate" title={sk.reason}>{sk.reason}</span>
+                      <span className="text-gray-400 text-xs font-mono flex-1 truncate">
+                        {sk.path}
+                      </span>
+                      <span
+                        className="text-gray-600 text-xs shrink-0 max-w-[150px] truncate"
+                        title={sk.reason}
+                      >
+                        {sk.reason}
+                      </span>
                     </li>
                   ))}
                 </ul>
@@ -1127,13 +1496,13 @@ export default function ImportOpenAPI() {
                 onClick={handleReset}
                 className="px-5 py-2.5 rounded-xl text-gray-300 text-sm border border-white/15 hover:border-white/25 hover:text-white transition-colors font-medium"
               >
-                {p.importAnother || 'Import Another'}
+                {p.importAnother || "Import Another"}
               </button>
               <Link
                 to="/my-apis"
                 className="gradient-btn px-5 py-2.5 rounded-xl text-white text-sm font-medium text-center no-underline transition-opacity hover:opacity-90"
               >
-                {p.viewMyApis || 'View My APIs'} →
+                {p.viewMyApis || "View My APIs"} →
               </Link>
             </div>
           </section>
