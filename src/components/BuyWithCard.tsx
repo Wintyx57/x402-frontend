@@ -5,14 +5,20 @@ import { thirdwebClient } from "../lib/thirdweb";
 import { CHAIN_CONFIG } from "../config";
 import { useTranslation } from "../i18n/LanguageContext";
 
-export default function BuyWithCard({ chainId }: { chainId: number }) {
+const FIAT_CHAINS = [
+  { id: 8453, label: "Base", icon: "🔵" },
+  { id: 137, label: "Polygon", icon: "🟣" },
+];
+
+export default function BuyWithCard() {
   const { address } = useAccount();
   const { t } = useTranslation();
   const f = t.fund || ({} as Record<string, string>);
   const [amount, setAmount] = useState("10");
   const [intentId, setIntentId] = useState<string | null>(null);
+  const [selectedChain, setSelectedChain] = useState(FIAT_CHAINS[0].id);
 
-  const chainConfig = CHAIN_CONFIG[chainId];
+  const chainConfig = CHAIN_CONFIG[selectedChain];
   const usdcAddress = chainConfig?.usdcContract;
 
   const quote = useBuyWithFiatQuote(
@@ -20,7 +26,7 @@ export default function BuyWithCard({ chainId }: { chainId: number }) {
       ? {
           client: thirdwebClient,
           fromCurrencySymbol: "USD",
-          toChainId: chainId,
+          toChainId: selectedChain,
           toAmount: amount,
           toTokenAddress: usdcAddress,
           toAddress: address,
@@ -66,6 +72,31 @@ export default function BuyWithCard({ chainId }: { chainId: number }) {
 
   return (
     <div className="space-y-4">
+      {/* Chain selector */}
+      <div>
+        <label className="block text-sm font-medium text-gray-300 mb-1.5">
+          {f.destinationChain || "Destination Chain"}
+        </label>
+        <div className="flex gap-2">
+          {FIAT_CHAINS.map((chain) => (
+            <button
+              key={chain.id}
+              onClick={() => {
+                setSelectedChain(chain.id);
+                setIntentId(null);
+              }}
+              className={`flex-1 py-2 px-3 rounded-xl text-sm font-medium transition-all ${
+                selectedChain === chain.id
+                  ? "bg-[#FF9900]/20 border border-[#FF9900]/40 text-white"
+                  : "bg-white/5 border border-white/10 text-gray-400 hover:text-white"
+              }`}
+            >
+              {chain.icon} {chain.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Amount input */}
       <div>
         <label className="block text-sm font-medium text-gray-300 mb-1.5">

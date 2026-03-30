@@ -1,5 +1,4 @@
 import { lazy, Suspense, useState } from "react";
-import { useChainId } from "wagmi";
 import { useTranslation } from "../i18n/LanguageContext";
 import useSEO from "../hooks/useSEO";
 import { useReveal } from "../hooks/useReveal";
@@ -35,7 +34,6 @@ export default function FundWallet() {
   const { t } = useTranslation();
   const f = t.fund || ({} as Record<string, string>);
   const [activeTab, setActiveTab] = useState<"card" | "bridge">("card");
-  const chainId = useChainId();
 
   useSEO({
     title: f.pageTitle || "Fund Your Wallet — Bridge USDC Cross-Chain",
@@ -177,7 +175,7 @@ export default function FundWallet() {
         {activeTab === "card" ? (
           <div className="max-w-lg mx-auto glass-card rounded-2xl p-5">
             <Suspense fallback={<BridgeWidgetSkeleton />}>
-              <BuyWithCard chainId={chainId} />
+              <BuyWithCard />
             </Suspense>
           </div>
         ) : (

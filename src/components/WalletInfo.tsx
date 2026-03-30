@@ -3,6 +3,8 @@ import { useUsdcBalance } from "../hooks/useUsdcBalance";
 import { Link } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "../i18n/LanguageContext";
+import { useConnectModal } from "thirdweb/react";
+import { thirdwebClient, wallets } from "../lib/thirdweb";
 import ConnectButton from "./ConnectButton";
 
 export default function WalletInfo() {
@@ -12,6 +14,7 @@ export default function WalletInfo() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { t } = useTranslation();
+  const { connect } = useConnectModal();
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -115,6 +118,30 @@ export default function WalletInfo() {
             </svg>
             {t.nav.fund}
           </Link>
+          <button
+            onClick={() => {
+              setDropdownOpen(false);
+              disconnect();
+              connect({ client: thirdwebClient, wallets });
+            }}
+            className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-300 hover:text-white
+                       hover:bg-white/5 cursor-pointer bg-transparent border-none text-left transition-colors"
+          >
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"
+              />
+            </svg>
+            {t.connect?.switchWallet || "Switch Wallet"}
+          </button>
           <div className="border-t border-white/10 my-1" />
           <button
             onClick={() => {
