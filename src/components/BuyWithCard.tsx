@@ -4,10 +4,36 @@ import { useBuyWithFiatQuote, useBuyWithFiatStatus } from "thirdweb/react";
 import { thirdwebClient } from "../lib/thirdweb";
 import { CHAIN_CONFIG } from "../config";
 import { useTranslation } from "../i18n/LanguageContext";
+import { Link } from "react-router-dom";
 
 const FIAT_CHAINS = [
-  { id: 8453, label: "Base", icon: "🔵" },
-  { id: 137, label: "Polygon", icon: "🟣" },
+  {
+    id: 1187947933,
+    buyOn: 8453,
+    label: "SKALE",
+    icon: "🟢",
+    color: "#00D395",
+    needsBridge: true,
+    desc: "Buy on Base → auto-bridge to SKALE ($0 gas)",
+  },
+  {
+    id: 8453,
+    buyOn: 8453,
+    label: "Base",
+    icon: "🔵",
+    color: "#0052FF",
+    needsBridge: false,
+    desc: "Direct purchase on Base",
+  },
+  {
+    id: 137,
+    buyOn: 137,
+    label: "Polygon",
+    icon: "🟣",
+    color: "#8247E5",
+    needsBridge: false,
+    desc: "Direct purchase on Polygon",
+  },
 ];
 
 export default function BuyWithCard() {
@@ -16,17 +42,18 @@ export default function BuyWithCard() {
   const f = t.fund || ({} as Record<string, string>);
   const [amount, setAmount] = useState("10");
   const [intentId, setIntentId] = useState<string | null>(null);
-  const [selectedChain, setSelectedChain] = useState(FIAT_CHAINS[0].id);
+  const [selectedIdx, setSelectedIdx] = useState(0);
 
-  const chainConfig = CHAIN_CONFIG[selectedChain];
-  const usdcAddress = chainConfig?.usdcContract;
+  const selected = FIAT_CHAINS[selectedIdx];
+  const buyChainConfig = CHAIN_CONFIG[selected.buyOn];
+  const usdcAddress = buyChainConfig?.usdcContract;
 
   const quote = useBuyWithFiatQuote(
     address && usdcAddress
       ? {
           client: thirdwebClient,
           fromCurrencySymbol: "USD",
-          toChainId: selectedChain,
+          toChainId: selected.buyOn,
           toAmount: amount,
           toTokenAddress: usdcAddress,
           toAddress: address,
@@ -59,14 +86,6 @@ export default function BuyWithCard() {
     );
   }
 
-  if (!usdcAddress) {
-    return (
-      <div className="text-center py-8 text-gray-400 text-sm">
-        {f.chainNotSupported || "Fiat onramp not available for this chain"}
-      </div>
-    );
-  }
-
   const isComplete = status.data?.status === "ON_RAMP_TRANSFER_COMPLETED";
   const isPending = intentId && !isComplete;
 
@@ -78,23 +97,29 @@ export default function BuyWithCard() {
           {f.destinationChain || "Destination Chain"}
         </label>
         <div className="flex gap-2">
-          {FIAT_CHAINS.map((chain) => (
+          {FIAT_CHAINS.map((chain, idx) => (
             <button
               key={chain.id}
               onClick={() => {
-                setSelectedChain(chain.id);
+                setSelectedIdx(idx);
                 setIntentId(null);
               }}
-              className={`flex-1 py-2 px-3 rounded-xl text-sm font-medium transition-all ${
-                selectedChain === chain.id
-                  ? "bg-[#FF9900]/20 border border-[#FF9900]/40 text-white"
+              className={`flex-1 py-2 px-2 rounded-xl text-sm font-medium transition-all ${
+                selectedIdx === idx
+                  ? "bg-white/10 border-2 text-white"
                   : "bg-white/5 border border-white/10 text-gray-400 hover:text-white"
               }`}
+              style={
+                selectedIdx === idx
+                  ? { borderColor: `${chain.color}60` }
+                  : undefined
+              }
             >
-              {chain.icon} {chain.label}
+              <span>{chain.icon}</span> {chain.label}
             </button>
           ))}
         </div>
+        <p className="text-[11px] text-gray-500 mt-1">{selected.desc}</p>
       </div>
 
       {/* Amount input */}
@@ -137,7 +162,11 @@ export default function BuyWithCard() {
           </div>
           <div className="flex justify-between">
             <span className="text-gray-400">{f.chain || "Chain"}</span>
-            <span className="text-white">{chainConfig.label}</span>
+            <span className="text-white">
+              {selected.needsBridge
+                ? `Base → ${selected.label}`
+                : selected.label}
+            </span>
           </div>
           {quote.data.estimatedDurationSeconds && (
             <div className="flex justify-between">
@@ -146,7 +175,14 @@ export default function BuyWithCard() {
               </span>
               <span className="text-white">
                 ~{Math.ceil(quote.data.estimatedDurationSeconds / 60)} min
+                {selected.needsBridge ? " + bridge" : ""}
               </span>
+            </div>
+          )}
+          {selected.needsBridge && (
+            <div className="flex justify-between">
+              <span className="text-gray-400">Gas on SKALE</span>
+              <span className="text-green-400 font-medium">$0.00</span>
             </div>
           )}
         </div>
@@ -169,7 +205,7 @@ export default function BuyWithCard() {
         </div>
       )}
 
-      {isComplete && (
+      {isComplete && !selected.needsBridge && (
         <div className="glass-card rounded-xl p-4 text-sm border-green-500/20">
           <div className="flex items-center gap-2 text-green-400">
             <svg
@@ -191,6 +227,54 @@ export default function BuyWithCard() {
         </div>
       )}
 
+      {isComplete && selected.needsBridge && (
+        <div className="glass-card rounded-xl p-4 text-sm space-y-3">
+          <div className="flex items-center gap-2 text-green-400">
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M5 13l4 4L19 7"
+              />
+            </svg>
+            Step 1 done — USDC on Base!
+          </div>
+          <div className="flex items-center gap-2 text-[#FF9900]">
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M13 7l5 5m0 0l-5 5m5-5H6"
+              />
+            </svg>
+            Step 2 — Bridge to SKALE below
+          </div>
+          <Link
+            to="/fund"
+            onClick={() => {
+              /* switch to bridge tab handled by parent */
+            }}
+            className="block w-full py-2.5 rounded-xl font-medium text-sm text-center transition-all
+                       bg-gradient-to-r from-[#00D395] to-[#00B37D] text-white
+                       hover:shadow-lg hover:shadow-[#00D395]/20 no-underline"
+          >
+            Bridge to SKALE →
+          </Link>
+        </div>
+      )}
+
       {/* Buy button */}
       <button
         onClick={handleBuy}
@@ -202,7 +286,9 @@ export default function BuyWithCard() {
       >
         {isPending
           ? f.processing || "Processing..."
-          : f.buyWithCard || "Buy with Card"}
+          : selected.needsBridge
+            ? f.buyAndBridge || "Buy USDC on Base"
+            : f.buyWithCard || "Buy with Card"}
       </button>
     </div>
   );

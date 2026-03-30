@@ -1,20 +1,28 @@
-import { useAccount, useDisconnect } from "wagmi";
+import { useAccount, useDisconnect, useSwitchChain, useChainId } from "wagmi";
 import { useUsdcBalance } from "../hooks/useUsdcBalance";
 import { Link } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "../i18n/LanguageContext";
-import { useConnectModal } from "thirdweb/react";
-import { thirdwebClient, wallets } from "../lib/thirdweb";
 import ConnectButton from "./ConnectButton";
+import { CHAIN_CONFIG } from "../config";
+
+const NETWORKS = [
+  { id: 1187947933, label: "SKALE", color: "#00D395" },
+  { id: 8453, label: "Base", color: "#0052FF" },
+  { id: 137, label: "Polygon", color: "#8247E5" },
+];
 
 export default function WalletInfo() {
   const { address, isConnected } = useAccount();
   const { disconnect } = useDisconnect();
+  const { switchChain } = useSwitchChain();
+  const currentChainId = useChainId();
   const { balance, isLoading: balanceLoading } = useUsdcBalance();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { t } = useTranslation();
-  const { connect } = useConnectModal();
+  const currentNetwork = NETWORKS.find((n) => n.id === currentChainId);
+  const currentChainConfig = CHAIN_CONFIG[currentChainId];
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -51,6 +59,18 @@ export default function WalletInfo() {
                    bg-white/8 border border-white/10 text-white hover:bg-white/12
                    transition-colors cursor-pointer"
       >
+        {currentNetwork && (
+          <>
+            <span
+              className="inline-block w-2 h-2 rounded-full"
+              style={{ backgroundColor: currentNetwork.color }}
+            />
+            <span className="text-gray-400 text-[10px]">
+              {currentNetwork.label}
+            </span>
+            <span className="text-gray-600">|</span>
+          </>
+        )}
         <span className="text-[#FF9900] font-semibold">
           {displayBalance} USDC
         </span>
@@ -118,30 +138,32 @@ export default function WalletInfo() {
             </svg>
             {t.nav.fund}
           </Link>
-          <button
-            onClick={() => {
-              setDropdownOpen(false);
-              disconnect();
-              connect({ client: thirdwebClient, wallets });
-            }}
-            className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-300 hover:text-white
-                       hover:bg-white/5 cursor-pointer bg-transparent border-none text-left transition-colors"
-          >
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"
-              />
-            </svg>
-            {t.connect?.switchWallet || "Switch Wallet"}
-          </button>
+          <div className="px-3 py-1.5">
+            <span className="text-[10px] uppercase tracking-wider text-gray-500 font-semibold">
+              {t.connect?.network || "Network"}
+            </span>
+            <div className="flex gap-1 mt-1">
+              {NETWORKS.map((net) => (
+                <button
+                  key={net.id}
+                  onClick={() => {
+                    switchChain({ chainId: net.id });
+                  }}
+                  className={`flex-1 py-1 px-1.5 rounded-md text-[10px] font-medium transition-all cursor-pointer border ${
+                    currentChainId === net.id
+                      ? "border-white/20 bg-white/10 text-white"
+                      : "border-transparent bg-white/5 text-gray-500 hover:text-gray-300"
+                  }`}
+                >
+                  <span
+                    className="inline-block w-1.5 h-1.5 rounded-full mr-0.5"
+                    style={{ backgroundColor: net.color }}
+                  />
+                  {net.label}
+                </button>
+              ))}
+            </div>
+          </div>
           <div className="border-t border-white/10 my-1" />
           <button
             onClick={() => {
