@@ -1,0 +1,607 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Free Tier — Top Bar Options</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        background: #0a0a0f;
+        color: #edeae6;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      }
+
+      /* Switcher */
+      .switcher {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        background: rgba(10, 10, 15, 0.95);
+        backdrop-filter: blur(12px);
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+        padding: 12px 0;
+      }
+      .switcher-inner {
+        max-width: 800px;
+        margin: 0 auto;
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+        padding: 0 16px;
+      }
+      .sw-btn {
+        padding: 8px 18px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.03);
+        color: rgba(255, 255, 255, 0.5);
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .sw-btn:hover {
+        border-color: rgba(52, 211, 153, 0.4);
+        color: #fff;
+      }
+      .sw-btn.active {
+        background: rgba(52, 211, 153, 0.12);
+        border-color: #34d399;
+        color: #34d399;
+      }
+
+      .variant {
+        display: none;
+      }
+      .variant.active {
+        display: block;
+      }
+
+      /* ===== NAVBAR ===== */
+      .navbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 24px;
+        height: 52px;
+        background: rgba(10, 10, 15, 0.85);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        position: sticky;
+        top: 0;
+        z-index: 50;
+      }
+      .navbar.with-topbar {
+        top: 36px;
+      }
+      .nav-left {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .nav-logo {
+        font-size: 16px;
+        font-weight: 800;
+        color: #ff9900;
+      }
+      .nav-badge {
+        font-size: 9px;
+        padding: 2px 6px;
+        border-radius: 4px;
+        background: rgba(255, 153, 0, 0.1);
+        border: 1px solid rgba(255, 153, 0, 0.2);
+        color: #ff9900;
+        font-weight: 600;
+      }
+      .nav-links {
+        display: flex;
+        gap: 20px;
+      }
+      .nav-links a {
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.5);
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+      .nav-links a:hover {
+        color: #fff;
+      }
+      .nav-right {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .nav-lang {
+        font-size: 11px;
+        padding: 4px 8px;
+        border-radius: 5px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        color: rgba(255, 255, 255, 0.5);
+        cursor: pointer;
+      }
+      .nav-connect {
+        font-size: 12px;
+        padding: 7px 14px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #ff9900, #e68a00);
+        color: #fff;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+      }
+
+      /* ===== TOP BAR VARIANTS ===== */
+
+      /* A: Slim full-width bar above navbar */
+      .topbar-a {
+        position: sticky;
+        top: 0;
+        z-index: 60;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        padding: 8px 16px;
+        background: rgba(52, 211, 153, 0.06);
+        border-bottom: 1px solid rgba(52, 211, 153, 0.12);
+        backdrop-filter: blur(8px);
+      }
+      .topbar-a-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #34d399;
+        box-shadow: 0 0 8px rgba(52, 211, 153, 0.6);
+        flex-shrink: 0;
+      }
+      .topbar-a-text {
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.75);
+      }
+      .topbar-a-text strong {
+        color: #34d399;
+        font-weight: 600;
+      }
+      .topbar-a-cta {
+        font-size: 12px;
+        color: #34d399;
+        text-decoration: none;
+        font-weight: 600;
+        padding: 3px 10px;
+        border-radius: 5px;
+        border: 1px solid rgba(52, 211, 153, 0.25);
+        background: rgba(52, 211, 153, 0.08);
+        transition: all 0.2s;
+      }
+      .topbar-a-cta:hover {
+        background: rgba(52, 211, 153, 0.15);
+      }
+      .topbar-a-close {
+        color: rgba(255, 255, 255, 0.25);
+        cursor: pointer;
+        font-size: 16px;
+        margin-left: 8px;
+        border: none;
+        background: none;
+        line-height: 1;
+      }
+      .topbar-a-close:hover {
+        color: rgba(255, 255, 255, 0.5);
+      }
+
+      /* B: Integrated in navbar (right side, before connect) */
+      .nav-free-pill {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 5px 12px;
+        border-radius: 7px;
+        background: rgba(52, 211, 153, 0.08);
+        border: 1px solid rgba(52, 211, 153, 0.2);
+        font-size: 11px;
+        font-weight: 600;
+        color: #34d399;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-decoration: none;
+      }
+      .nav-free-pill:hover {
+        background: rgba(52, 211, 153, 0.14);
+        border-color: rgba(52, 211, 153, 0.35);
+      }
+      .nav-free-dot {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: #34d399;
+        box-shadow: 0 0 6px rgba(52, 211, 153, 0.5);
+        animation: blink 2s ease-in-out infinite;
+      }
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.4;
+        }
+      }
+
+      /* C: Top bar mais plus design, avec gradient */
+      .topbar-c {
+        position: sticky;
+        top: 0;
+        z-index: 60;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        padding: 9px 16px;
+        background: linear-gradient(
+          90deg,
+          rgba(52, 211, 153, 0.08) 0%,
+          rgba(52, 211, 153, 0.04) 40%,
+          rgba(52, 211, 153, 0.04) 60%,
+          rgba(52, 211, 153, 0.08) 100%
+        );
+        border-bottom: 1px solid rgba(52, 211, 153, 0.1);
+      }
+      .topbar-c-badge {
+        font-size: 10px;
+        font-weight: 700;
+        color: #0a0a0f;
+        background: #34d399;
+        padding: 2px 7px;
+        border-radius: 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .topbar-c-text {
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.7);
+      }
+      .topbar-c-text strong {
+        color: #fff;
+        font-weight: 600;
+      }
+      .topbar-c-link {
+        font-size: 12px;
+        color: #34d399;
+        text-decoration: underline;
+        text-underline-offset: 2px;
+        font-weight: 500;
+      }
+      .topbar-c-link:hover {
+        color: #6ee7b7;
+      }
+
+      /* ===== HERO (context) ===== */
+      .hero {
+        position: relative;
+        height: 75vh;
+        min-height: 480px;
+        display: flex;
+        overflow: hidden;
+        background: #07080c;
+      }
+      .hero-gradient {
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(
+            ellipse at 30% 40%,
+            rgba(255, 153, 0, 0.06) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            ellipse at 70% 40%,
+            rgba(96, 165, 250, 0.06) 0%,
+            transparent 50%
+          );
+      }
+      .hero-side {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        position: relative;
+        z-index: 2;
+        padding: 40px;
+      }
+      .hero-left {
+        justify-content: flex-end;
+      }
+      .hero-right {
+        justify-content: flex-start;
+      }
+      .hero-content {
+        max-width: 320px;
+      }
+      .hero-label {
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .hero-label-l {
+        color: rgba(255, 153, 0, 0.7);
+        justify-content: flex-end;
+      }
+      .hero-label-r {
+        color: rgba(96, 165, 250, 0.7);
+      }
+      .hero-line {
+        width: 28px;
+        height: 1px;
+      }
+      .hero-line-o {
+        background: linear-gradient(
+          to left,
+          rgba(255, 153, 0, 0.5),
+          transparent
+        );
+      }
+      .hero-line-b {
+        background: linear-gradient(
+          to right,
+          rgba(96, 165, 250, 0.5),
+          transparent
+        );
+      }
+      .hero-title {
+        font-size: 30px;
+        font-weight: 800;
+        line-height: 1.15;
+        margin-bottom: 12px;
+        color: #fff;
+      }
+      .hero-title em {
+        font-style: normal;
+      }
+      .hero-title-o em {
+        background: linear-gradient(135deg, #ff9900, #ffd699);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .hero-title-b em {
+        background: linear-gradient(135deg, #60a5fa, #93c5fd);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .hero-desc {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.4);
+        line-height: 1.6;
+        margin-bottom: 14px;
+      }
+      .hero-left .hero-content {
+        text-align: right;
+      }
+      .hero-center {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -55%);
+        z-index: 3;
+        text-align: center;
+      }
+      .portal {
+        width: 110px;
+        height: 110px;
+        border-radius: 50%;
+        border: 2px solid rgba(255, 153, 0, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+      }
+      .portal-text {
+        font-size: 20px;
+        font-weight: 900;
+        color: #ff9900;
+        text-shadow: 0 0 20px rgba(255, 153, 0, 0.3);
+      }
+      .hero-bottom {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 8px;
+        background: rgba(0, 0, 0, 0.4);
+        border-top: 1px solid rgba(255, 255, 255, 0.04);
+      }
+      .hero-bottom span {
+        font-size: 10px;
+        padding: 3px 7px;
+        border-radius: 4px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        color: rgba(255, 255, 255, 0.4);
+      }
+      .hero-bottom-name {
+        font-size: 12px;
+        font-weight: 700;
+        color: #fff;
+      }
+      .hero-bottom-pow {
+        font-size: 9px;
+        color: rgba(255, 255, 255, 0.25);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      body {
+        padding-bottom: 60px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ===== VARIANT A: Slim bar above navbar ===== -->
+    <div class="variant active" id="v-a">
+      <div class="topbar-a">
+        <span class="topbar-a-dot"></span>
+        <span class="topbar-a-text"
+          ><strong>95 APIs free to try</strong> — 5 calls/day, no wallet
+          needed</span
+        >
+        <a href="#" class="topbar-a-cta">Try now</a>
+        <button class="topbar-a-close">&times;</button>
+      </div>
+    </div>
+
+    <!-- ===== VARIANT C: Top bar gradient + badge ===== -->
+    <div class="variant" id="v-c">
+      <div class="topbar-c">
+        <span class="topbar-c-badge">Free</span>
+        <span class="topbar-c-text"
+          ><strong>95 APIs</strong> available without wallet — 5 calls/day</span
+        >
+        <a href="#" class="topbar-c-link">Explore</a>
+      </div>
+    </div>
+
+    <!-- ===== NAVBAR ===== -->
+    <!-- Variant A & C: navbar pushed down -->
+    <div class="variant active" id="nav-normal">
+      <nav class="navbar">
+        <div class="nav-left">
+          <span class="nav-logo">x402 Bazaar</span>
+          <span class="nav-badge">Beta</span>
+        </div>
+        <div class="nav-links">
+          <a href="#">APIs</a>
+          <a href="#">For Developers</a>
+          <a href="#">For Providers</a>
+        </div>
+        <div class="nav-right">
+          <span class="nav-lang">EN</span>
+          <button class="nav-connect">Connect Wallet</button>
+        </div>
+      </nav>
+    </div>
+
+    <!-- Variant B: navbar with free pill integrated -->
+    <div class="variant" id="nav-b">
+      <nav class="navbar" style="top: 0">
+        <div class="nav-left">
+          <span class="nav-logo">x402 Bazaar</span>
+          <span class="nav-badge">Beta</span>
+        </div>
+        <div class="nav-links">
+          <a href="#">APIs</a>
+          <a href="#">For Developers</a>
+          <a href="#">For Providers</a>
+        </div>
+        <div class="nav-right">
+          <a href="#" class="nav-free-pill">
+            <span class="nav-free-dot"></span>
+            95 APIs free
+          </a>
+          <span class="nav-lang">EN</span>
+          <button class="nav-connect">Connect Wallet</button>
+        </div>
+      </nav>
+    </div>
+
+    <!-- ===== HERO ===== -->
+    <div class="hero">
+      <div class="hero-gradient"></div>
+      <div class="hero-side hero-left">
+        <div class="hero-content">
+          <div class="hero-label hero-label-l">
+            <span class="hero-line hero-line-o"></span>FOR PROVIDERS
+          </div>
+          <h2 class="hero-title hero-title-o">
+            <em>Monetize</em><br />any API<br />in 2 min.
+          </h2>
+          <p class="hero-desc">
+            Register your API, set a price, earn USDC on every call.
+          </p>
+        </div>
+      </div>
+      <div class="hero-center">
+        <div class="portal"><span class="portal-text">x402</span></div>
+      </div>
+      <div class="hero-side hero-right">
+        <div class="hero-content">
+          <div class="hero-label hero-label-r">
+            FOR AI AGENTS<span class="hero-line hero-line-b"></span>
+          </div>
+          <h2 class="hero-title hero-title-b">
+            <em>Pay</em> and go.<br />No keys.<br />No subscriptions.
+          </h2>
+          <p class="hero-desc">
+            HTTP 402 auto-payment. Discover, pay, use — autonomously.
+          </p>
+        </div>
+      </div>
+      <div class="hero-bottom">
+        <div
+          style="
+            width: 24px;
+            height: 24px;
+            border-radius: 5px;
+            background: #1a1a2e;
+          "
+        ></div>
+        <div>
+          <div class="hero-bottom-pow">Powered by</div>
+          <div class="hero-bottom-name">SKALE Network</div>
+        </div>
+        <span>$0.00 gas</span><span>Instant</span><span>EVM</span>
+      </div>
+    </div>
+
+    <!-- Switcher (bottom) -->
+    <div class="switcher">
+      <div class="switcher-inner">
+        <button class="sw-btn active" onclick="show('a', this)">
+          A — Barre au-dessus
+        </button>
+        <button class="sw-btn" onclick="show('b', this)">
+          B — Pill dans la navbar
+        </button>
+        <button class="sw-btn" onclick="show('c', this)">
+          C — Barre + badge "Free"
+        </button>
+      </div>
+    </div>
+
+    <script>
+      function show(id, btn) {
+        document
+          .querySelectorAll(".sw-btn")
+          .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        document
+          .querySelectorAll(".variant")
+          .forEach((v) => v.classList.remove("active"));
+        document.getElementById("v-" + id)?.classList.add("active");
+        // Navbar variant
+        if (id === "b") {
+          document.getElementById("nav-b").classList.add("active");
+        } else {
+          document.getElementById("nav-normal").classList.add("active");
+        }
+      }
+    </script>
+  </body>
+</html>

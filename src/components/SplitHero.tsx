@@ -1,11 +1,11 @@
-import { useState, useEffect, lazy, Suspense } from 'react';
-import { Link } from 'react-router-dom';
-import { useTranslation } from '../i18n/LanguageContext';
-import { usePublicStats } from '../hooks/usePublicStats';
+import { useState, lazy, Suspense } from "react";
+import { Link } from "react-router-dom";
+import { useTranslation } from "../i18n/LanguageContext";
+import { usePublicStats } from "../hooks/usePublicStats";
 
-const HeroScene = lazy(() => import('./HeroScene'));
+const HeroScene = lazy(() => import("./HeroScene"));
 
-type HoverState = 'none' | 'provider' | 'agent';
+type HoverState = "none" | "provider" | "agent";
 
 // Arrow icon shared between both CTAs
 function ArrowIcon() {
@@ -19,7 +19,12 @@ function ArrowIcon() {
       viewBox="0 0 24 24"
       aria-hidden="true"
     >
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2.5}
+        d="M13 7l5 5m0 0l-5 5m5-5H6"
+      />
     </svg>
   );
 }
@@ -28,19 +33,19 @@ export default function SplitHero() {
   const { t } = useTranslation();
   const h = t.home;
 
-  const [hoverState, setHoverState] = useState<HoverState>('none');
+  const [hoverState, setHoverState] = useState<HoverState>("none");
   const { data: stats } = usePublicStats();
 
   // Real payment count from API, fallback to 0
   const txCount = stats?.totalPayments ?? 0;
 
   const heroClass = [
-    'hero-split',
-    hoverState === 'provider' ? 'hover-provider' : '',
-    hoverState === 'agent' ? 'hover-agent' : '',
+    "hero-split",
+    hoverState === "provider" ? "hover-provider" : "",
+    hoverState === "agent" ? "hover-agent" : "",
   ]
     .filter(Boolean)
-    .join(' ');
+    .join(" ");
 
   return (
     <div className={heroClass} id="hero">
@@ -55,15 +60,15 @@ export default function SplitHero() {
       {/* Chain badges */}
       <div className="hero-chain-badges" aria-hidden="true">
         <span className="hero-chain-badge hero-chain-skale">
-          <span className="hero-chain-dot" style={{ background: '#00d4aa' }} />
+          <span className="hero-chain-dot" style={{ background: "#00d4aa" }} />
           SKALE
         </span>
         <span className="hero-chain-badge hero-chain-base">
-          <span className="hero-chain-dot" style={{ background: '#0052FF' }} />
+          <span className="hero-chain-dot" style={{ background: "#0052FF" }} />
           Base
         </span>
         <span className="hero-chain-badge hero-chain-poly">
-          <span className="hero-chain-dot" style={{ background: '#8247E5' }} />
+          <span className="hero-chain-dot" style={{ background: "#8247E5" }} />
           Polygon
         </span>
       </div>
@@ -71,8 +76,8 @@ export default function SplitHero() {
       {/* ====== PROVIDER SIDE ====== */}
       <div
         className="hero-side hero-side-provider"
-        onMouseEnter={() => setHoverState('provider')}
-        onMouseLeave={() => setHoverState('none')}
+        onMouseEnter={() => setHoverState("provider")}
+        onMouseLeave={() => setHoverState("none")}
       >
         <div className="hero-content">
           {/* Label */}
@@ -119,25 +124,27 @@ export default function SplitHero() {
           <div className="hero-reveal">
             <div className="hero-reveal-dashboard">
               <div className="hero-reveal-header">
-                <span className="hero-reveal-label">{h.heroProviderRevenue}</span>
+                <span className="hero-reveal-label">
+                  {h.heroProviderRevenue}
+                </span>
                 <span className="hero-reveal-amount">$847</span>
               </div>
               <div className="hero-reveal-bars">
                 {[
-                  { h: '12px', opacity: .15, delay: '.3s' },
-                  { h: '20px', opacity: .20, delay: '.4s' },
-                  { h: '16px', opacity: .25, delay: '.5s' },
-                  { h: '28px', opacity: .30, delay: '.6s' },
-                  { h: '24px', opacity: .35, delay: '.7s' },
-                  { h: '32px', opacity: .40, delay: '.8s' },
-                  { h: '22px', opacity: .45, delay: '.9s' },
-                  { h: '38px', opacity: 1,   delay: '1s'  },
+                  { h: "12px", opacity: 0.15, delay: ".3s" },
+                  { h: "20px", opacity: 0.2, delay: ".4s" },
+                  { h: "16px", opacity: 0.25, delay: ".5s" },
+                  { h: "28px", opacity: 0.3, delay: ".6s" },
+                  { h: "24px", opacity: 0.35, delay: ".7s" },
+                  { h: "32px", opacity: 0.4, delay: ".8s" },
+                  { h: "22px", opacity: 0.45, delay: ".9s" },
+                  { h: "38px", opacity: 1, delay: "1s" },
                 ].map((bar, i) => (
                   <div
                     key={i}
                     className="hero-reveal-bar"
                     style={{
-                      ['--hero-bar-h' as string]: bar.h,
+                      ["--hero-bar-h" as string]: bar.h,
                       background: `rgba(255,153,0,${bar.opacity})`,
                       animationDelay: bar.delay,
                     }}
@@ -158,7 +165,9 @@ export default function SplitHero() {
         <div className="hero-counter">
           <div>
             <span className="hero-counter-dot" />
-            <span className="hero-counter-value">{txCount.toLocaleString()}</span>
+            <span className="hero-counter-value">
+              {txCount.toLocaleString()}
+            </span>
           </div>
           <div className="hero-counter-label">{h.heroTxnsLabel}</div>
         </div>
@@ -166,15 +175,17 @@ export default function SplitHero() {
 
       {/* Bridge button — centered on portal */}
       <Link to="/fund" className="hero-bridge-btn">
-        <span className="hero-bridge-icon" aria-hidden="true">⇄</span>
+        <span className="hero-bridge-icon" aria-hidden="true">
+          ⇄
+        </span>
         Bridge USDC
       </Link>
 
       {/* ====== AGENT SIDE ====== */}
       <div
         className="hero-side hero-side-agent"
-        onMouseEnter={() => setHoverState('agent')}
-        onMouseLeave={() => setHoverState('none')}
+        onMouseEnter={() => setHoverState("agent")}
+        onMouseLeave={() => setHoverState("none")}
       >
         <div className="hero-content">
           {/* Label */}
@@ -225,16 +236,18 @@ export default function SplitHero() {
           <div className="hero-reveal">
             <div className="hero-reveal-terminal">
               <div className="hero-terminal-line">
-                <span style={{ color: '#60A5FA' }}>$</span>{' '}
-                curl -H{' '}
-                <span style={{ color: '#FFB347' }}>"X-Payment: 0xabc..."</span>{' \\ '}
+                <span style={{ color: "#60A5FA" }}>$</span> curl -H{" "}
+                <span style={{ color: "#FFB347" }}>"X-Payment: 0xabc..."</span>
+                {" \\ "}
               </div>
               <div className="hero-terminal-line">
                 &nbsp;&nbsp;x402-api.onrender.com/api/search?q=AI
               </div>
               <div className="hero-terminal-line">
-                <span style={{ color: '#4ade80' }}>{`{"results": [...]}`}</span>{' '}
-                <span style={{ color: 'rgba(255,255,255,.2)' }}>// 0.001 USDC</span>
+                <span style={{ color: "#4ade80" }}>{`{"results": [...]}`}</span>{" "}
+                <span style={{ color: "rgba(255,255,255,.2)" }}>
+                  // 0.001 USDC
+                </span>
                 <span className="hero-terminal-cursor" />
               </div>
             </div>

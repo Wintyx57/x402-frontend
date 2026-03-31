@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "../i18n/LanguageContext";
 import ConnectButton from "./ConnectButton";
-import { CHAIN_CONFIG } from "../config";
 
 const NETWORKS = [
   { id: 1187947933, label: "SKALE", color: "#00D395" },
@@ -22,7 +21,6 @@ export default function WalletInfo() {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { t } = useTranslation();
   const currentNetwork = NETWORKS.find((n) => n.id === currentChainId);
-  const currentChainConfig = CHAIN_CONFIG[currentChainId];
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {

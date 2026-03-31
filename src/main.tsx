@@ -31,7 +31,7 @@ const queryClient = new QueryClient({
 
 const root = document.getElementById("root");
 
-function renderError(err: unknown) {
+function renderError(_err: unknown) {
   if (root) {
     root.innerHTML = `
       <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:#0a0a0f;color:#E8E4E0;font-family:Inter,system-ui,sans-serif;padding:2rem">

@@ -128,6 +128,7 @@ export const translations = {
       copyAddress: "Copy address",
       addressCopied: "Copied!",
       disconnect: "Disconnect",
+      network: "Network",
     },
     myApis: {
       title: "My APIs",
@@ -2161,6 +2162,8 @@ def my_function(query: str) -> dict:
       progressStep3: "Bridging to destination...",
       progressStep4: "Complete!",
       buyWithCard: "Buy with Card",
+      buyAndBridge: "Buy USDC on Base",
+      destinationChain: "Destination Chain",
       bridgeTab: "Bridge Crypto",
       enterAmount: "Amount (USD)",
       gettingQuote: "Getting quote...",
@@ -2351,6 +2354,7 @@ def my_function(query: str) -> dict:
       copyAddress: "Copier l'adresse",
       addressCopied: "Copié !",
       disconnect: "Déconnecter",
+      network: "Réseau",
     },
     myApis: {
       title: "Mes APIs",
@@ -4419,6 +4423,8 @@ def my_function(query: str) -> dict:
       progressStep3: "Bridge vers la destination...",
       progressStep4: "Termine !",
       buyWithCard: "Acheter par carte",
+      buyAndBridge: "Acheter USDC sur Base",
+      destinationChain: "Chaine de destination",
       bridgeTab: "Bridge Crypto",
       enterAmount: "Montant (USD)",
       gettingQuote: "Obtention du devis...",

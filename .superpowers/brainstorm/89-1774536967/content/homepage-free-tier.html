@@ -1,0 +1,296 @@
+<h2>Homepage Free Tier — Where and how?</h2>
+<p class="subtitle">
+  95 APIs are now free to try (5 calls/day, no wallet needed). How do we
+  communicate this on the homepage?
+</p>
+
+<div class="cards">
+  <!-- Option A -->
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding: 24px; background: #0a0a0f">
+      <!-- Hero banner mockup -->
+      <div
+        style="
+          border-radius: 16px;
+          overflow: hidden;
+          border: 1px solid rgba(52, 211, 153, 0.2);
+          background: linear-gradient(
+            135deg,
+            rgba(52, 211, 153, 0.08) 0%,
+            rgba(52, 211, 153, 0.02) 100%
+          );
+        "
+      >
+        <div
+          style="
+            padding: 28px 32px;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+          "
+        >
+          <div
+            style="
+              flex-shrink: 0;
+              width: 48px;
+              height: 48px;
+              border-radius: 12px;
+              background: linear-gradient(135deg, #34d399, #059669);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-size: 24px;
+            "
+          >
+            <span style="filter: brightness(10)">&#9889;</span>
+          </div>
+          <div style="flex: 1">
+            <div
+              style="
+                font-size: 18px;
+                font-weight: 700;
+                color: #fff;
+                margin-bottom: 4px;
+              "
+            >
+              Try any API free — no wallet needed
+            </div>
+            <div style="font-size: 14px; color: #94a3b8">
+              5 free calls/day on 95+ APIs. Just send a request. No signup, no
+              crypto, no credit card.
+            </div>
+          </div>
+          <div
+            style="
+              flex-shrink: 0;
+              padding: 10px 20px;
+              border-radius: 10px;
+              background: linear-gradient(135deg, #34d399, #059669);
+              color: #fff;
+              font-weight: 600;
+              font-size: 14px;
+              cursor: pointer;
+            "
+          >
+            Explore Free APIs &rarr;
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A. Banner sous le hero</h3>
+      <p>
+        Banniere glassmorphique verte, pleine largeur, entre le hero et les
+        categories. Visible immediatement. Message clair + CTA.
+      </p>
+    </div>
+  </div>
+
+  <!-- Option B -->
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding: 24px; background: #0a0a0f">
+      <!-- Stat card mockup -->
+      <div
+        style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px"
+      >
+        <div
+          style="
+            border-radius: 12px;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            text-align: center;
+          "
+        >
+          <div style="font-size: 28px; font-weight: 800; color: #ff9900">
+            107
+          </div>
+          <div style="font-size: 11px; color: #94a3b8; margin-top: 4px">
+            Live APIs
+          </div>
+        </div>
+        <div
+          style="
+            border-radius: 12px;
+            padding: 16px;
+            background: rgba(52, 211, 153, 0.08);
+            border: 1px solid rgba(52, 211, 153, 0.25);
+            text-align: center;
+            position: relative;
+          "
+        >
+          <div
+            style="
+              position: absolute;
+              top: -6px;
+              right: -6px;
+              background: #34d399;
+              color: #000;
+              font-size: 9px;
+              font-weight: 700;
+              padding: 2px 6px;
+              border-radius: 6px;
+            "
+          >
+            NEW
+          </div>
+          <div style="font-size: 28px; font-weight: 800; color: #34d399">
+            95
+          </div>
+          <div style="font-size: 11px; color: #34d399; margin-top: 4px">
+            Free to try
+          </div>
+        </div>
+        <div
+          style="
+            border-radius: 12px;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            text-align: center;
+          "
+        >
+          <div style="font-size: 28px; font-weight: 800; color: #60a5fa">
+            42ms
+          </div>
+          <div style="font-size: 11px; color: #94a3b8; margin-top: 4px">
+            Avg latency
+          </div>
+        </div>
+        <div
+          style="
+            border-radius: 12px;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            text-align: center;
+          "
+        >
+          <div style="font-size: 28px; font-weight: 800; color: #fbbf24">3</div>
+          <div style="font-size: 11px; color: #94a3b8; margin-top: 4px">
+            Chains
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B. Stat card highlight</h3>
+      <p>
+        Ajout d'une stat "95 Free to try" en vert dans la grille de stats
+        existante, avec badge "NEW". Subtil, integre, pas intrusif.
+      </p>
+    </div>
+  </div>
+
+  <!-- Option C -->
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding: 24px; background: #0a0a0f">
+      <!-- Combined: banner + stat -->
+      <div
+        style="
+          margin-bottom: 16px;
+          border-radius: 16px;
+          overflow: hidden;
+          border: 1px solid rgba(52, 211, 153, 0.15);
+          background: linear-gradient(
+            135deg,
+            rgba(52, 211, 153, 0.06) 0%,
+            transparent 60%
+          );
+        "
+      >
+        <div
+          style="
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+          "
+        >
+          <div
+            style="
+              flex-shrink: 0;
+              width: 40px;
+              height: 40px;
+              border-radius: 50%;
+              background: rgba(52, 211, 153, 0.15);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            "
+          >
+            <span style="color: #34d399; font-size: 18px">&#10003;</span>
+          </div>
+          <div style="flex: 1">
+            <div style="font-size: 15px; font-weight: 600; color: #fff">
+              No wallet? No problem.
+            </div>
+            <div style="font-size: 13px; color: #94a3b8">
+              5 free API calls/day. Just send a request — we handle the rest.
+            </div>
+          </div>
+          <div
+            style="
+              flex-shrink: 0;
+              padding: 8px 16px;
+              border-radius: 8px;
+              border: 1px solid rgba(52, 211, 153, 0.3);
+              color: #34d399;
+              font-weight: 600;
+              font-size: 13px;
+              cursor: pointer;
+            "
+          >
+            Try now
+          </div>
+        </div>
+      </div>
+      <!-- Stats row below -->
+      <div style="display: flex; gap: 8px; justify-content: center">
+        <span
+          style="
+            font-size: 12px;
+            color: #94a3b8;
+            background: rgba(255, 255, 255, 0.04);
+            padding: 4px 12px;
+            border-radius: 6px;
+          "
+          >107 APIs</span
+        >
+        <span
+          style="
+            font-size: 12px;
+            color: #34d399;
+            background: rgba(52, 211, 153, 0.08);
+            padding: 4px 12px;
+            border-radius: 6px;
+            border: 1px solid rgba(52, 211, 153, 0.2);
+          "
+          >95 free to try</span
+        >
+        <span
+          style="
+            font-size: 12px;
+            color: #94a3b8;
+            background: rgba(255, 255, 255, 0.04);
+            padding: 4px 12px;
+            border-radius: 6px;
+          "
+          >3 chains</span
+        >
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C. Banner compact + pills stats</h3>
+      <p>
+        Banniere fine "No wallet? No problem." + ligne de pills stats en
+        dessous. Elegant, pas trop gros, message fort. Combine les deux
+        approches.
+      </p>
+    </div>
+  </div>
+</div>
+
+<p class="subtitle" style="margin-top: 24px">
+  Clique sur ton option preferee, puis dis-moi dans le terminal.
+</p>
