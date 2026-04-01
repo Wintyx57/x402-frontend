@@ -224,7 +224,6 @@ export default function ListApiForm({ onBack }: ListApiFormProps) {
   const [method, setMethod] = useState<"GET" | "POST">("GET");
   const [tags, setTags] = useState("");
   const [requiredParams, setRequiredParams] = useState("");
-  const [freeCallsPerMonth, setFreeCallsPerMonth] = useState("");
 
   // ── Credentials ───────────────────────────────────────────────────────────
   const [showCredentials, setShowCredentials] = useState(false);
@@ -314,10 +313,6 @@ export default function ListApiForm({ onBack }: ListApiFormProps) {
         };
         const params = splitCommaList(requiredParams);
         if (params.length) service.required_parameters = { required: params };
-        const freeCalls = parseInt(freeCallsPerMonth, 10);
-        if (!isNaN(freeCalls) && freeCalls > 0) {
-          service.free_calls_per_month = Math.min(freeCalls, 1000);
-        }
         if (credentials) service.credentials = credentials;
 
         const res = await fetch(`${API_URL}/batch-register`, {
@@ -379,7 +374,6 @@ export default function ListApiForm({ onBack }: ListApiFormProps) {
     setMethod("GET");
     setTags("");
     setRequiredParams("");
-    setFreeCallsPerMonth("");
     setShowCredentials(false);
     setCredentialItems([{ key: "", value: "" }]);
     setResult(null);
@@ -837,21 +831,6 @@ export default function ListApiForm({ onBack }: ListApiFormProps) {
                   value={requiredParams}
                   onChange={(e) => setRequiredParams(e.target.value)}
                   placeholder="city, units (comma separated)"
-                />
-              </div>
-
-              <div>
-                <FieldLabel htmlFor="list-free-calls">
-                  Free calls per month
-                </FieldLabel>
-                <FieldInput
-                  id="list-free-calls"
-                  type="number"
-                  min="0"
-                  max="1000"
-                  value={freeCallsPerMonth}
-                  onChange={(e) => setFreeCallsPerMonth(e.target.value)}
-                  placeholder="100"
                 />
               </div>
 
