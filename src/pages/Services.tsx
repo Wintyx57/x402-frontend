@@ -283,7 +283,7 @@ export default function Services() {
     setSearchParams(params);
   };
 
-  const serviceCount = services.length || "70+";
+  const serviceCount = services.length || "100+";
   useSEO({
     title: `API Catalog — ${serviceCount} Services for AI Agents`,
     description: `Browse ${serviceCount} APIs for AI agents across 11 categories. Pay per call with USDC on Base or SKALE via x402 protocol. No API keys required.`,

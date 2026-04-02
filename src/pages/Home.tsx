@@ -798,7 +798,7 @@ export default function Home() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-10 mb-10">
             <div className="text-center animate-fade-in-up">
               <div className="text-4xl font-bold gradient-text mb-2">
-                <CountUp end={stats?.totalPayments || 170} suffix="+" />
+                <CountUp end={stats?.totalPayments || 4000} suffix="+" />
               </div>
               <p className="text-gray-400 text-sm">{t.home.tractionPayments}</p>
             </div>
@@ -807,7 +807,7 @@ export default function Home() {
               style={{ animationDelay: "100ms" }}
             >
               <div className="text-4xl font-bold text-[#34D399] mb-2">
-                <CountUp end={stats?.externalProviders || 3} />
+                <CountUp end={stats?.externalProviders || 7} />
               </div>
               <p className="text-gray-400 text-sm">
                 {t.home.tractionProviders}
@@ -819,7 +819,7 @@ export default function Home() {
             >
               <div className="text-4xl font-bold text-[#60A5FA] mb-2">
                 <CountUp
-                  end={stats?.usdcVolume || 19}
+                  end={stats?.usdcVolume || 24}
                   prefix="$"
                   suffix=" USDC"
                 />
@@ -1125,7 +1125,7 @@ export default function Home() {
             </div>
             <div className="text-center">
               <div className="text-xl sm:text-3xl font-bold text-[#FF9900]">
-                <CountUp end={nativeCount || 69} />
+                <CountUp end={nativeCount || 100} />
               </div>
               <div className="text-xs text-gray-400 mt-1">Native APIs</div>
             </div>

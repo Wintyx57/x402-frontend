@@ -263,7 +263,7 @@ export const translations = {
       useCaseTitle: "Proven at Scale",
       useCase1: "1000+ API calls per day",
       useCase2: "Ultra-low gas fees on SKALE",
-      useCase3: "69+ native wrappers",
+      useCase3: "100+ native wrappers",
       howStep1Icon: "Browse",
       howStep2Icon: "Pay",
       howStep3Icon: "Use",
@@ -435,7 +435,7 @@ export const translations = {
       q16: "Can fully autonomous agents use x402 Bazaar?",
       a16: "Yes! That's our core use case. Agents using Claude (MCP), ChatGPT, LangChain, Auto-GPT, or the CLI can discover, pay for, and consume APIs without any human intervention.",
       q17: "What is the revenue share for API providers?",
-      a17: "API providers keep 95% of every payment. The 5% platform fee covers hosting, monitoring, payment processing, and multi-platform distribution (9 integrations).",
+      a17: "API providers keep 95% of every payment. The 5% platform fee covers hosting, monitoring, payment processing, and multi-platform distribution (13 integrations).",
       q18: "What is the average API response time?",
       a18: "Our native endpoints average under 2 seconds response time. Community-registered APIs depend on the provider's infrastructure. We monitor all endpoints every 5 minutes and show live status on the Status page.",
       cta: "Start Integrating",
@@ -605,7 +605,7 @@ export const translations = {
       benefit5Title: "Analytics & Monitoring",
       benefit5Desc:
         "Real-time monitoring (5-min checks), uptime tracking, and Telegram alerts for your API.",
-      benefit6Title: "9 Platform Integrations",
+      benefit6Title: "13 Platform Integrations",
       benefit6Desc:
         "Your API is accessible from MCP (Claude), ChatGPT Actions, CLI, LangChain, Telegram, Auto-GPT, n8n, and more.",
       specTitle: "API Specification Template",
@@ -647,7 +647,7 @@ export const translations = {
       vp4Title: "Global AI Reach",
       vp4Desc:
         "Your API is discoverable by thousands of AI agents on Claude, ChatGPT, LangChain, and more.",
-      vp5Title: "9 Platform Integrations",
+      vp5Title: "13 Platform Integrations",
       vp5Desc:
         "Auto-distributed to MCP, ChatGPT, CLI, LangChain, Telegram, Auto-GPT, n8n, and more.",
       vp6Title: "Zero Infrastructure",
@@ -1387,7 +1387,7 @@ def my_function(query: str) -> dict:
       founderName: "Robin",
       founderRole: "Founder & Lead Developer",
       founderBio:
-        "Full-stack developer passionate about decentralized infrastructure and AI agents. Built x402 Bazaar from scratch — 69+ API wrappers, 9 platform integrations, 505+ tests, and counting. Believer in open protocols and permissionless innovation.",
+        "Full-stack developer passionate about decentralized infrastructure and AI agents. Built x402 Bazaar from scratch — 100+ API wrappers, 13 platform integrations, 2000+ tests, and counting. Believer in open protocols and permissionless innovation.",
       teamHackathon: "Launched at SF x402 — Open Source",
       teamHackathonDesc: "From concept to production platform",
       contactTitle: "Contact",
@@ -1423,7 +1423,7 @@ def my_function(query: str) -> dict:
         "We aim for 99.5% availability on all native endpoints, monitored 24/7 with automated alerts.",
       sla2Title: "Monitoring: Every 5 min",
       sla2Desc:
-        "All 69+ endpoints are checked every 5 minutes. Status is publicly visible on the /status page.",
+        "All 100+ endpoints are checked every 5 minutes. Status is publicly visible on the /status page.",
       sla3Title: "Response Time: < 2s",
       sla3Desc:
         "Native endpoints target sub-2-second response times including payment verification.",
@@ -1938,7 +1938,7 @@ def my_function(query: str) -> dict:
     },
     status: {
       pageTitle: "System Status - x402 Bazaar",
-      pageDesc: "Real-time status of all 69+ API endpoints on x402 Bazaar.",
+      pageDesc: "Real-time status of all 100+ API endpoints on x402 Bazaar.",
       title: "System Status",
       subtitle: "Real-time monitoring of all x402 Bazaar API endpoints",
       operational: "All Systems Operational",
@@ -2489,7 +2489,7 @@ def my_function(query: str) -> dict:
       useCaseTitle: "Performance Prouvee",
       useCase1: "1000+ appels par jour",
       useCase2: "Frais de gas ultra-bas sur SKALE",
-      useCase3: "69+ wrappers natifs",
+      useCase3: "100+ wrappers natifs",
       howStep1Icon: "Explorer",
       howStep2Icon: "Payer",
       howStep3Icon: "Utiliser",
@@ -2663,7 +2663,7 @@ def my_function(query: str) -> dict:
       q16: "Les agents entierement autonomes peuvent-ils utiliser x402 Bazaar ?",
       a16: "Oui ! C'est notre cas d'usage principal. Les agents utilisant Claude (MCP), ChatGPT, LangChain, Auto-GPT ou le CLI peuvent decouvrir, payer et consommer des APIs sans intervention humaine.",
       q17: "Quelle est la part de revenu pour les fournisseurs d'API ?",
-      a17: "Les fournisseurs gardent 95% de chaque paiement. Les 5% de commission couvrent l'hebergement, le monitoring, le traitement des paiements et la distribution multi-plateforme (9 integrations).",
+      a17: "Les fournisseurs gardent 95% de chaque paiement. Les 5% de commission couvrent l'hebergement, le monitoring, le traitement des paiements et la distribution multi-plateforme (13 integrations).",
       q18: "Quel est le temps de reponse moyen des API ?",
       a18: "Nos endpoints natifs ont un temps de reponse moyen inferieur a 2 secondes. Les APIs communautaires dependent de l'infrastructure du fournisseur. Nous monitorons tous les endpoints toutes les 5 minutes.",
       cta: "Commencer l'integration",
@@ -2833,7 +2833,7 @@ def my_function(query: str) -> dict:
       benefit5Title: "Analytics & Monitoring",
       benefit5Desc:
         "Monitoring en temps reel (checks toutes les 5 min), suivi de l'uptime et alertes Telegram pour votre API.",
-      benefit6Title: "9 integrations plateforme",
+      benefit6Title: "13 integrations plateforme",
       benefit6Desc:
         "Votre API est accessible depuis MCP (Claude), ChatGPT Actions, CLI, LangChain, Telegram, Auto-GPT, n8n et plus.",
       specTitle: "Template de specification API",
@@ -2876,7 +2876,7 @@ def my_function(query: str) -> dict:
       vp4Title: "Portee IA mondiale",
       vp4Desc:
         "Votre API est decouvrable par des milliers d'agents IA sur Claude, ChatGPT, LangChain et plus.",
-      vp5Title: "9 integrations plateforme",
+      vp5Title: "13 integrations plateforme",
       vp5Desc:
         "Distribution automatique sur MCP, ChatGPT, CLI, LangChain, Telegram, Auto-GPT, n8n et plus.",
       vp6Title: "Zero infrastructure",
@@ -3629,7 +3629,7 @@ def my_function(query: str) -> dict:
       founderName: "Robin",
       founderRole: "Fondateur & Développeur Principal",
       founderBio:
-        "Développeur full-stack passionné par l'infrastructure décentralisée et les agents IA. A construit x402 Bazaar de zéro — 69+ wrappers API, 9 intégrations, 505+ tests, et ce n'est que le début. Convaincu par les protocoles ouverts et l'innovation sans permission.",
+        "Développeur full-stack passionné par l'infrastructure décentralisée et les agents IA. A construit x402 Bazaar de zéro — 100+ wrappers API, 13 intégrations, 2000+ tests, et ce n'est que le début. Convaincu par les protocoles ouverts et l'innovation sans permission.",
       teamHackathon: "Lance au SF x402 — Open Source",
       teamHackathonDesc: "Du concept à la plateforme de production",
       contactTitle: "Contact",
@@ -3666,7 +3666,7 @@ def my_function(query: str) -> dict:
         "Nous visons 99.5% de disponibilite sur tous les endpoints natifs, surveilles 24/7 avec alertes automatisees.",
       sla2Title: "Monitoring : toutes les 5 min",
       sla2Desc:
-        "Les 69+ endpoints sont verifies toutes les 5 minutes. Le statut est visible publiquement sur la page /status.",
+        "Les 100+ endpoints sont verifies toutes les 5 minutes. Le statut est visible publiquement sur la page /status.",
       sla3Title: "Temps de reponse : < 2s",
       sla3Desc:
         "Les endpoints natifs visent un temps de reponse inferieur a 2 secondes, verification de paiement incluse.",
@@ -4192,7 +4192,7 @@ def my_function(query: str) -> dict:
     },
     status: {
       pageTitle: "Etat du Systeme - x402 Bazaar",
-      pageDesc: "Etat en temps reel des 69+ endpoints API de x402 Bazaar.",
+      pageDesc: "Etat en temps reel des 100+ endpoints API de x402 Bazaar.",
       title: "Etat du Systeme",
       subtitle:
         "Monitoring en temps reel de tous les endpoints API x402 Bazaar",

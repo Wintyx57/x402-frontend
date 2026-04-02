@@ -1,53 +1,270 @@
-import { useState, useCallback } from 'react';
-import DOMPurify from 'dompurify';
-import { useTranslation } from '../i18n/LanguageContext';
-import { useReveal } from '../hooks/useReveal';
-import useSEO from '../hooks/useSEO';
-import CopyButton from '../components/CopyButton';
-import ChainSelector from '../components/ChainSelector';
-import { API_URL } from '../config';
+import { useState, useCallback } from "react";
+import DOMPurify from "dompurify";
+import { useTranslation } from "../i18n/LanguageContext";
+import { useReveal } from "../hooks/useReveal";
+import useSEO from "../hooks/useSEO";
+import CopyButton from "../components/CopyButton";
+import ChainSelector from "../components/ChainSelector";
+import { API_URL } from "../config";
 
 const PLAYGROUND_APIS = [
-  { id: 'weather', route: '/api/weather', method: 'GET', price: '0.02', category: 'Data', free: false, params: [{ name: 'city', defaultValue: 'Paris', required: true }] },
-  { id: 'crypto', route: '/api/crypto', method: 'GET', price: '0.02', category: 'Finance', free: false, params: [{ name: 'coin', defaultValue: 'bitcoin', required: true }] },
-  { id: 'joke', route: '/api/joke', method: 'GET', price: '0.01', category: 'Fun', free: false, params: [] },
-  { id: 'translate', route: '/api/translate', method: 'GET', price: '0.005', category: 'AI', free: true, params: [{ name: 'text', defaultValue: 'Hello world', required: true }, { name: 'to', defaultValue: 'fr', required: true }] },
-  { id: 'sentiment', route: '/api/sentiment', method: 'GET', price: '0.005', category: 'AI', free: true, params: [{ name: 'text', defaultValue: 'I love this product!', required: true }] },
-  { id: 'search', route: '/api/search', method: 'GET', price: '0.005', category: 'Data', free: true, params: [{ name: 'q', defaultValue: 'x402 protocol', required: true }] },
-  { id: 'wikipedia', route: '/api/wikipedia', method: 'GET', price: '0.005', category: 'Data', free: true, params: [{ name: 'q', defaultValue: 'Bitcoin', required: true }] },
-  { id: 'github', route: '/api/github', method: 'GET', price: '0.005', category: 'Developer', free: true, params: [{ name: 'user', defaultValue: 'Wintyx57', required: true }] },
-  { id: 'countries', route: '/api/countries', method: 'GET', price: '0.005', category: 'Data', free: true, params: [{ name: 'name', defaultValue: 'France', required: true }] },
-  { id: 'hash', route: '/api/hash', method: 'GET', price: '0.001', category: 'Developer', free: true, params: [{ name: 'text', defaultValue: 'hello', required: true }, { name: 'algo', defaultValue: 'sha256' }] },
-  { id: 'currency', route: '/api/currency', method: 'GET', price: '0.005', category: 'Finance', free: true, params: [{ name: 'from', defaultValue: 'USD', required: true }, { name: 'to', defaultValue: 'EUR', required: true }] },
-  { id: 'dns', route: '/api/dns', method: 'GET', price: '0.003', category: 'Developer', free: true, params: [{ name: 'domain', defaultValue: 'google.com', required: true }] },
-  { id: 'stocks', route: '/api/stocks', method: 'GET', price: '0.005', category: 'Finance', free: true, params: [{ name: 'symbol', defaultValue: 'AAPL', required: true }] },
-  { id: 'news', route: '/api/news', method: 'GET', price: '0.005', category: 'Data', free: true, params: [{ name: 'topic', defaultValue: 'artificial intelligence', required: true }] },
-  { id: 'reddit', route: '/api/reddit', method: 'GET', price: '0.005', category: 'Social', free: true, params: [{ name: 'subreddit', defaultValue: 'programming', required: true }] },
-  { id: 'math', route: '/api/math', method: 'GET', price: '0.001', category: 'Utility', free: true, params: [{ name: 'expr', defaultValue: '2*pi+sqrt(16)', required: true }] },
-  { id: 'regex', route: '/api/regex', method: 'GET', price: '0.001', category: 'Developer', free: true, params: [{ name: 'pattern', defaultValue: '\\d+', required: true }, { name: 'text', defaultValue: 'abc123def456', required: true }, { name: 'flags', defaultValue: 'g' }] },
-  { id: 'password-strength', route: '/api/password-strength', method: 'GET', price: '0.001', category: 'Security', free: true, params: [{ name: 'password', defaultValue: 'MyP@ssw0rd!2026', required: true }] },
-  { id: 'unit-convert', route: '/api/unit-convert', method: 'GET', price: '0.001', category: 'Utility', free: true, params: [{ name: 'value', defaultValue: '100', required: true }, { name: 'from', defaultValue: 'km', required: true }, { name: 'to', defaultValue: 'miles', required: true }] },
-  { id: 'url-shorten', route: '/api/url-shorten', method: 'GET', price: '0.003', category: 'Utility', free: true, params: [{ name: 'url', defaultValue: 'https://x402bazaar.org/docs', required: true }] },
+  {
+    id: "weather",
+    route: "/api/weather",
+    method: "GET",
+    price: "0.02",
+    category: "Data",
+    free: false,
+    params: [{ name: "city", defaultValue: "Paris", required: true }],
+  },
+  {
+    id: "crypto",
+    route: "/api/crypto",
+    method: "GET",
+    price: "0.02",
+    category: "Finance",
+    free: false,
+    params: [{ name: "coin", defaultValue: "bitcoin", required: true }],
+  },
+  {
+    id: "joke",
+    route: "/api/joke",
+    method: "GET",
+    price: "0.01",
+    category: "Fun",
+    free: false,
+    params: [],
+  },
+  {
+    id: "translate",
+    route: "/api/translate",
+    method: "GET",
+    price: "0.005",
+    category: "AI",
+    free: true,
+    params: [
+      { name: "text", defaultValue: "Hello world", required: true },
+      { name: "to", defaultValue: "fr", required: true },
+    ],
+  },
+  {
+    id: "sentiment",
+    route: "/api/sentiment",
+    method: "GET",
+    price: "0.005",
+    category: "AI",
+    free: true,
+    params: [
+      { name: "text", defaultValue: "I love this product!", required: true },
+    ],
+  },
+  {
+    id: "search",
+    route: "/api/search",
+    method: "GET",
+    price: "0.005",
+    category: "Data",
+    free: true,
+    params: [{ name: "q", defaultValue: "x402 protocol", required: true }],
+  },
+  {
+    id: "wikipedia",
+    route: "/api/wikipedia",
+    method: "GET",
+    price: "0.005",
+    category: "Data",
+    free: true,
+    params: [{ name: "q", defaultValue: "Bitcoin", required: true }],
+  },
+  {
+    id: "github",
+    route: "/api/github",
+    method: "GET",
+    price: "0.005",
+    category: "Developer",
+    free: true,
+    params: [{ name: "user", defaultValue: "Wintyx57", required: true }],
+  },
+  {
+    id: "countries",
+    route: "/api/countries",
+    method: "GET",
+    price: "0.005",
+    category: "Data",
+    free: true,
+    params: [{ name: "name", defaultValue: "France", required: true }],
+  },
+  {
+    id: "hash",
+    route: "/api/hash",
+    method: "GET",
+    price: "0.001",
+    category: "Developer",
+    free: true,
+    params: [
+      { name: "text", defaultValue: "hello", required: true },
+      { name: "algo", defaultValue: "sha256" },
+    ],
+  },
+  {
+    id: "currency",
+    route: "/api/currency",
+    method: "GET",
+    price: "0.005",
+    category: "Finance",
+    free: true,
+    params: [
+      { name: "from", defaultValue: "USD", required: true },
+      { name: "to", defaultValue: "EUR", required: true },
+    ],
+  },
+  {
+    id: "dns",
+    route: "/api/dns",
+    method: "GET",
+    price: "0.003",
+    category: "Developer",
+    free: true,
+    params: [{ name: "domain", defaultValue: "google.com", required: true }],
+  },
+  {
+    id: "stocks",
+    route: "/api/stocks",
+    method: "GET",
+    price: "0.005",
+    category: "Finance",
+    free: true,
+    params: [{ name: "symbol", defaultValue: "AAPL", required: true }],
+  },
+  {
+    id: "news",
+    route: "/api/news",
+    method: "GET",
+    price: "0.005",
+    category: "Data",
+    free: true,
+    params: [
+      {
+        name: "topic",
+        defaultValue: "artificial intelligence",
+        required: true,
+      },
+    ],
+  },
+  {
+    id: "reddit",
+    route: "/api/reddit",
+    method: "GET",
+    price: "0.005",
+    category: "Social",
+    free: true,
+    params: [
+      { name: "subreddit", defaultValue: "programming", required: true },
+    ],
+  },
+  {
+    id: "math",
+    route: "/api/math",
+    method: "GET",
+    price: "0.001",
+    category: "Utility",
+    free: true,
+    params: [{ name: "expr", defaultValue: "2*pi+sqrt(16)", required: true }],
+  },
+  {
+    id: "regex",
+    route: "/api/regex",
+    method: "GET",
+    price: "0.001",
+    category: "Developer",
+    free: true,
+    params: [
+      { name: "pattern", defaultValue: "\\d+", required: true },
+      { name: "text", defaultValue: "abc123def456", required: true },
+      { name: "flags", defaultValue: "g" },
+    ],
+  },
+  {
+    id: "password-strength",
+    route: "/api/password-strength",
+    method: "GET",
+    price: "0.001",
+    category: "Security",
+    free: true,
+    params: [
+      { name: "password", defaultValue: "MyP@ssw0rd!2026", required: true },
+    ],
+  },
+  {
+    id: "unit-convert",
+    route: "/api/unit-convert",
+    method: "GET",
+    price: "0.001",
+    category: "Utility",
+    free: true,
+    params: [
+      { name: "value", defaultValue: "100", required: true },
+      { name: "from", defaultValue: "km", required: true },
+      { name: "to", defaultValue: "miles", required: true },
+    ],
+  },
+  {
+    id: "url-shorten",
+    route: "/api/url-shorten",
+    method: "GET",
+    price: "0.003",
+    category: "Utility",
+    free: true,
+    params: [
+      {
+        name: "url",
+        defaultValue: "https://x402bazaar.org/docs",
+        required: true,
+      },
+    ],
+  },
 ];
 
 function highlightJSON(json: string): string {
-  if (typeof json !== 'string') return '';
+  if (typeof json !== "string") return "";
   return json
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-    .replace(/("(\\u[\da-fA-F]{4}|\\[^u]|[^\\"])*")\s*:/g, '<span style="color:#60A5FA">$1</span>:')
-    .replace(/("(\\u[\da-fA-F]{4}|\\[^u]|[^\\"])*")/g, '<span style="color:#34D399">$1</span>')
-    .replace(/\b(-?\d+\.?\d*([eE][+-]?\d+)?)\b/g, '<span style="color:#FBBF24">$1</span>')
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(
+      /("(\\u[\da-fA-F]{4}|\\[^u]|[^\\"])*")\s*:/g,
+      '<span style="color:#60A5FA">$1</span>:',
+    )
+    .replace(
+      /("(\\u[\da-fA-F]{4}|\\[^u]|[^\\"])*")/g,
+      '<span style="color:#34D399">$1</span>',
+    )
+    .replace(
+      /\b(-?\d+\.?\d*([eE][+-]?\d+)?)\b/g,
+      '<span style="color:#FBBF24">$1</span>',
+    )
     .replace(/\b(true|false)\b/g, '<span style="color:#FF9900">$1</span>')
     .replace(/\bnull\b/g, '<span style="color:#6B7280">null</span>');
 }
 
-function generateCode(api: Record<string, any>, params: Record<string, string>, tab: string): string {
-  const qs = api.params.length > 0
-    ? '?' + api.params.map((p: Record<string, any>) => `${p.name}=${encodeURIComponent(params[p.name] || p.defaultValue)}`).join('&')
-    : '';
+function generateCode(
+  api: Record<string, any>,
+  params: Record<string, string>,
+  tab: string,
+): string {
+  const qs =
+    api.params.length > 0
+      ? "?" +
+        api.params
+          .map(
+            (p: Record<string, any>) =>
+              `${p.name}=${encodeURIComponent(params[p.name] || p.defaultValue)}`,
+          )
+          .join("&")
+      : "";
   const url = `${API_URL}${api.route}${qs}`;
 
-  if (tab === 'curl') {
+  if (tab === "curl") {
     return `# Step 1: Call the API (returns 402 with payment details)
 curl "${url}"
 
@@ -59,7 +276,7 @@ curl -H "X-Payment-TxHash: 0xYOUR_TX_HASH" \\
      "${url}"`;
   }
 
-  if (tab === 'javascript') {
+  if (tab === "javascript") {
     return `// Step 1: Call the API
 const res = await fetch("${url}");
 
@@ -80,7 +297,7 @@ if (res.status === 402) {
 }`;
   }
 
-  if (tab === 'python') {
+  if (tab === "python") {
     return `import requests
 
 # Step 1: Call the API
@@ -102,31 +319,37 @@ if res.status_code == 402:
     print("Result:", data)`;
   }
 
-  return '';
+  return "";
 }
 
 export default function Playground() {
   const { t } = useTranslation();
   const pg = t.playground || {};
   useSEO({
-    title: pg.title || 'API Playground — Test x402 APIs Live',
-    description: 'Test all 69 x402 Bazaar APIs directly in your browser without writing a single line of code. See HTTP 402 micropayments in action and generate ready-to-use cURL, JavaScript or Python snippets.',
-    keywords: 'x402 API playground, test HTTP 402 live, USDC micropayment demo, AI API sandbox, x402 Bazaar playground',
+    title: pg.title || "API Playground — Test x402 APIs Live",
+    description:
+      "Test all 100+ x402 Bazaar APIs directly in your browser without writing a single line of code. See HTTP 402 micropayments in action and generate ready-to-use cURL, JavaScript or Python snippets.",
+    keywords:
+      "x402 API playground, test HTTP 402 live, USDC micropayment demo, AI API sandbox, x402 Bazaar playground",
   });
 
   const heroRef = useReveal();
   const mainRef = useReveal();
 
-  const [selectedApi, setSelectedApi] = useState<Record<string, any> | null>(null);
+  const [selectedApi, setSelectedApi] = useState<Record<string, any> | null>(
+    null,
+  );
   const [params, setParams] = useState<Record<string, string>>({});
   const [response, setResponse] = useState<Record<string, any> | null>(null);
   const [loading, setLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState('curl');
+  const [activeTab, setActiveTab] = useState("curl");
 
   const handleSelectApi = useCallback((api: Record<string, any>) => {
     setSelectedApi(api);
     const defaults: Record<string, string> = {};
-    api.params.forEach((p: Record<string, any>) => { defaults[p.name] = p.defaultValue; });
+    api.params.forEach((p: Record<string, any>) => {
+      defaults[p.name] = p.defaultValue;
+    });
     setParams(defaults);
     setResponse(null);
   }, []);
@@ -136,9 +359,16 @@ export default function Playground() {
     setLoading(true);
     setResponse(null);
 
-    const qs = selectedApi.params.length > 0
-      ? '?' + selectedApi.params.map((p: Record<string, any>) => `${p.name}=${encodeURIComponent(params[p.name] || '')}`).join('&')
-      : '';
+    const qs =
+      selectedApi.params.length > 0
+        ? "?" +
+          selectedApi.params
+            .map(
+              (p: Record<string, any>) =>
+                `${p.name}=${encodeURIComponent(params[p.name] || "")}`,
+            )
+            .join("&")
+        : "";
     const url = `${API_URL}${selectedApi.route}${qs}`;
 
     const start = performance.now();
@@ -150,16 +380,31 @@ export default function Playground() {
       clearTimeout(timeout);
       const duration = Math.round(performance.now() - start);
       let body;
-      try { body = await res.json(); } catch { body = { error: 'Non-JSON response' }; }
-      setResponse({ status: res.status, statusText: res.statusText, body, duration, url });
+      try {
+        body = await res.json();
+      } catch {
+        body = { error: "Non-JSON response" };
+      }
+      setResponse({
+        status: res.status,
+        statusText: res.statusText,
+        body,
+        duration,
+        url,
+      });
     } catch (err: unknown) {
       clearTimeout(timeout);
       const duration = Math.round(performance.now() - start);
       const e = err as Record<string, any>;
       setResponse({
-        status: 0, statusText: 'Network Error',
-        body: { error: e.name === 'AbortError' ? 'Request timed out (15s)' : e.message },
-        duration, url
+        status: 0,
+        statusText: "Network Error",
+        body: {
+          error:
+            e.name === "AbortError" ? "Request timed out (15s)" : e.message,
+        },
+        duration,
+        url,
       });
     } finally {
       setLoading(false);
@@ -167,31 +412,39 @@ export default function Playground() {
   }, [selectedApi, params, loading]);
 
   const statusColor = (status: number) => {
-    if (status === 402) return 'bg-[#FF9900]/20 text-[#FF9900] border-[#FF9900]/30';
-    if (status >= 200 && status < 300) return 'bg-green-500/20 text-green-400 border-green-500/30';
-    if (status >= 400) return 'bg-red-500/20 text-red-400 border-red-500/30';
-    return 'bg-gray-500/20 text-gray-400 border-gray-500/30';
+    if (status === 402)
+      return "bg-[#FF9900]/20 text-[#FF9900] border-[#FF9900]/30";
+    if (status >= 200 && status < 300)
+      return "bg-green-500/20 text-green-400 border-green-500/30";
+    if (status >= 400) return "bg-red-500/20 text-red-400 border-red-500/30";
+    return "bg-gray-500/20 text-gray-400 border-gray-500/30";
   };
 
-  const jsonStr = response?.body ? JSON.stringify(response.body, null, 2) : '';
+  const jsonStr = response?.body ? JSON.stringify(response.body, null, 2) : "";
 
   const tabs = [
-    { key: 'curl', label: pg.tabCurl || 'cURL' },
-    { key: 'javascript', label: pg.tabJavascript || 'JavaScript' },
-    { key: 'python', label: pg.tabPython || 'Python' },
+    { key: "curl", label: pg.tabCurl || "cURL" },
+    { key: "javascript", label: pg.tabJavascript || "JavaScript" },
+    { key: "python", label: pg.tabPython || "Python" },
   ];
 
   return (
-    <main data-page-gradient className="min-h-screen bg-gradient-to-b from-[#0a0e17] to-[#131921] pt-28 pb-16 px-4">
+    <main
+      data-page-gradient
+      className="min-h-screen bg-gradient-to-b from-[#0a0e17] to-[#131921] pt-28 pb-16 px-4"
+    >
       <div className="max-w-6xl mx-auto">
         {/* Demo Mode Banner */}
         <div className="mb-6 bg-green-500/10 border border-green-500/30 rounded-xl p-4">
           <div className="flex items-start gap-3">
             <span className="text-xl mt-0.5">🟢</span>
             <div>
-              <p className="text-sm text-green-300 font-medium">Free endpoints are marked with 🟢</p>
+              <p className="text-sm text-green-300 font-medium">
+                Free endpoints are marked with 🟢
+              </p>
               <p className="text-xs text-green-200/70 mt-1">
-                Try them without a wallet! Paid endpoints return HTTP 402 — see the payment flow in action.
+                Try them without a wallet! Paid endpoints return HTTP 402 — see
+                the payment flow in action.
               </p>
             </div>
           </div>
@@ -203,43 +456,68 @@ export default function Playground() {
             API Playground
           </span>
           <h1 className="text-3xl md:text-4xl font-bold text-white mb-3">
-            {pg.title || 'Test APIs Live'}
+            {pg.title || "Test APIs Live"}
           </h1>
           <p className="text-gray-400 max-w-2xl mx-auto mb-6">
-            {pg.subtitle || 'Select an API, tweak the parameters, and see the x402 payment protocol in action.'}
+            {pg.subtitle ||
+              "Select an API, tweak the parameters, and see the x402 payment protocol in action."}
           </p>
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#FF9900]/5 border border-[#FF9900]/15 text-sm text-[#FF9900]">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-            {pg.protocolBanner || 'Paid APIs return HTTP 402 — this is the x402 protocol in action!'}
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            {pg.protocolBanner ||
+              "Paid APIs return HTTP 402 — this is the x402 protocol in action!"}
           </div>
         </div>
 
         {/* Main layout */}
-        <div ref={mainRef} className="reveal-section grid lg:grid-cols-[340px_1fr] gap-6">
+        <div
+          ref={mainRef}
+          className="reveal-section grid lg:grid-cols-[340px_1fr] gap-6"
+        >
           {/* Left column */}
           <div className="space-y-6">
             <ChainSelector />
             {/* API Selector */}
             <div className="bg-white/[0.03] border border-white/8 rounded-xl p-4">
-              <h3 className="text-sm font-semibold text-white mb-3">{pg.selectApi || 'Select an API'}</h3>
+              <h3 className="text-sm font-semibold text-white mb-3">
+                {pg.selectApi || "Select an API"}
+              </h3>
               <div className="grid grid-cols-2 gap-2">
-                {PLAYGROUND_APIS.map(api => (
+                {PLAYGROUND_APIS.map((api) => (
                   <button
                     key={api.id}
                     onClick={() => handleSelectApi(api)}
                     className={`text-left px-3 py-2.5 rounded-lg text-xs transition-all duration-200 cursor-pointer border ${
                       selectedApi?.id === api.id
-                        ? 'bg-[#FF9900]/10 border-[#FF9900]/40 text-white'
-                        : 'bg-white/[0.02] border-white/6 text-gray-400 hover:bg-white/5 hover:text-white'
+                        ? "bg-[#FF9900]/10 border-[#FF9900]/40 text-white"
+                        : "bg-white/[0.02] border-white/6 text-gray-400 hover:bg-white/5 hover:text-white"
                     }`}
                   >
                     <div className="font-medium capitalize truncate flex items-center gap-1.5">
                       {api.free && <span className="text-green-400">🟢</span>}
                       {api.id}
                     </div>
-                    <span className={`text-[10px] mt-0.5 inline-block ${
-                      selectedApi?.id === api.id ? 'text-[#FF9900]' : 'text-gray-500'
-                    }`}>${api.price}</span>
+                    <span
+                      className={`text-[10px] mt-0.5 inline-block ${
+                        selectedApi?.id === api.id
+                          ? "text-[#FF9900]"
+                          : "text-gray-500"
+                      }`}
+                    >
+                      ${api.price}
+                    </span>
                   </button>
                 ))}
               </div>
@@ -248,22 +526,37 @@ export default function Playground() {
             {/* Param Form */}
             {selectedApi && (
               <div className="bg-white/[0.03] border border-white/8 rounded-xl p-4">
-                <h3 className="text-sm font-semibold text-white mb-3">{pg.parameters || 'Parameters'}</h3>
+                <h3 className="text-sm font-semibold text-white mb-3">
+                  {pg.parameters || "Parameters"}
+                </h3>
                 <div className="space-y-3">
                   {selectedApi.params.map((p: Record<string, any>) => (
                     <div key={p.name}>
                       <div className="flex items-center gap-2 mb-1">
-                        <label className="text-xs text-gray-400 font-mono">{p.name}</label>
-                        <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${
-                          p.required ? 'bg-red-500/10 text-red-400' : 'bg-gray-500/10 text-gray-500'
-                        }`}>
-                          {p.required ? (pg.required || 'required') : (pg.optional || 'optional')}
+                        <label className="text-xs text-gray-400 font-mono">
+                          {p.name}
+                        </label>
+                        <span
+                          className={`text-[10px] px-1.5 py-0.5 rounded-full ${
+                            p.required
+                              ? "bg-red-500/10 text-red-400"
+                              : "bg-gray-500/10 text-gray-500"
+                          }`}
+                        >
+                          {p.required
+                            ? pg.required || "required"
+                            : pg.optional || "optional"}
                         </span>
                       </div>
                       <input
                         type="text"
-                        value={(params as Record<string, string>)[p.name] || ''}
-                        onChange={e => setParams(prev => ({ ...prev, [p.name]: e.target.value }))}
+                        value={(params as Record<string, string>)[p.name] || ""}
+                        onChange={(e) =>
+                          setParams((prev) => ({
+                            ...prev,
+                            [p.name]: e.target.value,
+                          }))
+                        }
                         className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white
                                    placeholder-gray-600 focus:outline-none focus:border-[#FF9900]/50 transition-colors"
                         placeholder={p.defaultValue}
@@ -271,7 +564,9 @@ export default function Playground() {
                     </div>
                   ))}
                   {(selectedApi.params as any[]).length === 0 && (
-                    <p className="text-xs text-gray-500 italic">{pg.noParams || 'No parameters needed'}</p>
+                    <p className="text-xs text-gray-500 italic">
+                      {pg.noParams || "No parameters needed"}
+                    </p>
                   )}
                 </div>
                 <button
@@ -281,16 +576,18 @@ export default function Playground() {
                              bg-gradient-to-r from-[#FF9900] to-[#FF6600] hover:from-[#FFa500] hover:to-[#FF7700]
                              disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
                 >
-                  {loading
-                    ? <span className="flex items-center justify-center gap-2">
-                        <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin-slow" />
-                        {pg.sending || 'Sending...'}
-                      </span>
-                    : `${pg.sendRequest || 'Send Request'} — ${selectedApi.method} ${selectedApi.route}`
-                  }
+                  {loading ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin-slow" />
+                      {pg.sending || "Sending..."}
+                    </span>
+                  ) : (
+                    `${pg.sendRequest || "Send Request"} — ${selectedApi.method} ${selectedApi.route}`
+                  )}
                 </button>
                 <p className="text-[11px] text-gray-500 mt-2 text-center">
-                  {pg.paymentNote || 'No real payment will be made — you\'ll see the 402 response'}
+                  {pg.paymentNote ||
+                    "No real payment will be made — you'll see the 402 response"}
                 </p>
               </div>
             )}
@@ -301,31 +598,59 @@ export default function Playground() {
             {/* Response Viewer */}
             <div className="bg-white/[0.03] border border-white/8 rounded-xl overflow-hidden">
               <div className="flex items-center justify-between px-4 py-3 border-b border-white/6">
-                <h3 className="text-sm font-semibold text-white">{pg.responseTitle || 'Response'}</h3>
+                <h3 className="text-sm font-semibold text-white">
+                  {pg.responseTitle || "Response"}
+                </h3>
                 {response && (
                   <div className="flex items-center gap-3">
-                    <span className={`px-2 py-0.5 rounded text-xs font-mono border ${statusColor(response.status)}`}>
+                    <span
+                      className={`px-2 py-0.5 rounded text-xs font-mono border ${statusColor(response.status)}`}
+                    >
                       {response.status} {response.statusText}
                     </span>
-                    <span className="text-xs text-gray-500">{response.duration}ms</span>
+                    <span className="text-xs text-gray-500">
+                      {response.duration}ms
+                    </span>
                   </div>
                 )}
               </div>
               <div className="relative">
                 {response ? (
                   <>
-                    <CopyButton text={jsonStr} label={pg.copy || 'Copy'} copiedLabel={pg.copied || 'Copied'} />
+                    <CopyButton
+                      text={jsonStr}
+                      label={pg.copy || "Copy"}
+                      copiedLabel={pg.copied || "Copied"}
+                    />
                     <pre
                       className="p-4 text-xs leading-relaxed overflow-x-auto max-h-[500px] overflow-y-auto font-mono"
-                      dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(highlightJSON(jsonStr), { ALLOWED_TAGS: ['span'], ALLOWED_ATTR: ['style', 'class'] }) }}
+                      dangerouslySetInnerHTML={{
+                        __html: DOMPurify.sanitize(highlightJSON(jsonStr), {
+                          ALLOWED_TAGS: ["span"],
+                          ALLOWED_ATTR: ["style", "class"],
+                        }),
+                      }}
                     />
                   </>
                 ) : (
                   <div className="flex flex-col items-center justify-center py-16 text-gray-500">
-                    <svg className="w-10 h-10 mb-3 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    <svg
+                      className="w-10 h-10 mb-3 opacity-30"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={1.5}
+                        d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
                     </svg>
-                    <p className="text-sm">{pg.emptyState || 'Select an API and click Send to see the response'}</p>
+                    <p className="text-sm">
+                      {pg.emptyState ||
+                        "Select an API and click Send to see the response"}
+                    </p>
                   </div>
                 )}
               </div>
@@ -335,15 +660,17 @@ export default function Playground() {
             {selectedApi && (
               <div className="bg-white/[0.03] border border-white/8 rounded-xl overflow-hidden">
                 <div className="flex items-center gap-1 px-4 py-2 border-b border-white/6">
-                  <h3 className="text-sm font-semibold text-white mr-3">{pg.codeExamples || 'Code Examples'}</h3>
-                  {tabs.map(tab => (
+                  <h3 className="text-sm font-semibold text-white mr-3">
+                    {pg.codeExamples || "Code Examples"}
+                  </h3>
+                  {tabs.map((tab) => (
                     <button
                       key={tab.key}
                       onClick={() => setActiveTab(tab.key)}
                       className={`px-3 py-1.5 text-xs rounded-md transition-colors cursor-pointer border-none ${
                         activeTab === tab.key
-                          ? 'bg-[#FF9900]/15 text-[#FF9900]'
-                          : 'text-gray-400 hover:text-white hover:bg-white/5'
+                          ? "bg-[#FF9900]/15 text-[#FF9900]"
+                          : "text-gray-400 hover:text-white hover:bg-white/5"
                       }`}
                     >
                       {tab.label}
@@ -353,8 +680,8 @@ export default function Playground() {
                 <div className="relative">
                   <CopyButton
                     text={generateCode(selectedApi, params, activeTab)}
-                    label={pg.copy || 'Copy'}
-                    copiedLabel={pg.copied || 'Copied'}
+                    label={pg.copy || "Copy"}
+                    copiedLabel={pg.copied || "Copied"}
                   />
                   <pre className="p-4 text-xs leading-relaxed overflow-x-auto max-h-[400px] overflow-y-auto font-mono text-gray-300">
                     {generateCode(selectedApi, params, activeTab)}
@@ -368,7 +695,9 @@ export default function Playground() {
               <div className="flex items-start gap-3">
                 <span className="text-xl mt-0.5">🧪</span>
                 <div>
-                  <p className="text-sm text-blue-300 font-medium">Want to test with fake USDC?</p>
+                  <p className="text-sm text-blue-300 font-medium">
+                    Want to test with fake USDC?
+                  </p>
                   <p className="text-xs text-blue-200/70 mt-1">
                     Use Base Sepolia testnet:
                   </p>

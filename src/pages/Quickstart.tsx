@@ -1,8 +1,15 @@
-import type { ReactNode } from 'react';
-import { useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { Bot, Code, CircleDollarSign, Package, BookOpen, Plug } from 'lucide-react';
-import useSEO from '../hooks/useSEO';
+import type { ReactNode } from "react";
+import { useEffect } from "react";
+import { Link } from "react-router-dom";
+import {
+  Bot,
+  Code,
+  CircleDollarSign,
+  Package,
+  BookOpen,
+  Plug,
+} from "lucide-react";
+import useSEO from "../hooks/useSEO";
 
 interface PathItem {
   icon: ReactNode;
@@ -18,45 +25,52 @@ interface PathItem {
 const paths: PathItem[] = [
   {
     icon: <Bot className="w-7 h-7" />,
-    title: 'I have an AI Agent',
-    description: 'Connect your agent to 60+ APIs. Pay per call with USDC, no API keys needed.',
+    title: "I have an AI Agent",
+    description:
+      "Connect your agent to 60+ APIs. Pay per call with USDC, no API keys needed.",
     steps: [
-      { code: true, text: 'npx x402-bazaar init', suffix: '— auto-configure wallet + MCP' },
-      { code: false, text: 'Fund your wallet with USDC on Base' },
-      { code: false, text: 'Start calling APIs — payments are automatic' },
+      {
+        code: true,
+        text: "npx x402-bazaar init",
+        suffix: "— auto-configure wallet + MCP",
+      },
+      { code: false, text: "Fund your wallet with USDC on Base" },
+      { code: false, text: "Start calling APIs — payments are automatic" },
     ],
-    primaryLabel: 'Setup MCP Server',
-    primaryHref: '/mcp',
-    secondaryLabel: 'View API catalog',
-    secondaryHref: '/services',
+    primaryLabel: "Setup MCP Server",
+    primaryHref: "/mcp",
+    secondaryLabel: "View API catalog",
+    secondaryHref: "/services",
   },
   {
     icon: <Code className="w-7 h-7" />,
     title: "I'm a Developer",
-    description: 'Integrate x402 protocol in your app. Call paid APIs or build your own payment layer.',
+    description:
+      "Integrate x402 protocol in your app. Call paid APIs or build your own payment layer.",
     steps: [
-      { code: false, text: 'Read the API docs — 100+ endpoints documented' },
-      { code: true, text: 'npm install x402-bazaar', suffix: '' },
-      { code: false, text: 'Make your first paid API call' },
+      { code: false, text: "Read the API docs — 100+ endpoints documented" },
+      { code: true, text: "npm install x402-bazaar", suffix: "" },
+      { code: false, text: "Make your first paid API call" },
     ],
-    primaryLabel: 'Read the Docs',
-    primaryHref: '/developers',
-    secondaryLabel: 'Try the Playground',
-    secondaryHref: '/playground',
+    primaryLabel: "Read the Docs",
+    primaryHref: "/developers",
+    secondaryLabel: "Try the Playground",
+    secondaryHref: "/playground",
   },
   {
     icon: <CircleDollarSign className="w-7 h-7" />,
-    title: 'I have an API to monetize',
-    description: 'List your API and earn USDC from AI agents. 95% revenue, instant on-chain settlement.',
+    title: "I have an API to monetize",
+    description:
+      "List your API and earn USDC from AI agents. 95% revenue, instant on-chain settlement.",
     steps: [
-      { code: false, text: 'Register your endpoint on x402 Bazaar' },
-      { code: false, text: 'Set your price in USDC (from $0.001/call)' },
-      { code: false, text: 'Get discovered and paid automatically' },
+      { code: false, text: "Register your endpoint on x402 Bazaar" },
+      { code: false, text: "Set your price in USDC (from $0.001/call)" },
+      { code: false, text: "Get discovered and paid automatically" },
     ],
-    primaryLabel: 'List My API',
-    primaryHref: '/register',
-    secondaryLabel: 'View all services',
-    secondaryHref: '/services',
+    primaryLabel: "List My API",
+    primaryHref: "/register",
+    secondaryLabel: "View all services",
+    secondaryHref: "/services",
   },
 ];
 
@@ -69,69 +83,90 @@ interface QuickLink {
 }
 
 const quickLinks: QuickLink[] = [
-  { icon: <Package className="w-4 h-4" />, label: 'Install CLI', text: 'npx x402-bazaar init', isCode: true, href: null },
-  { icon: <BookOpen className="w-4 h-4" />, label: 'API Reference', text: 'API Reference', isCode: false, href: '/developers' },
-  { icon: <Plug className="w-4 h-4" />, label: 'MCP Setup', text: 'MCP Setup', isCode: false, href: '/mcp' },
+  {
+    icon: <Package className="w-4 h-4" />,
+    label: "Install CLI",
+    text: "npx x402-bazaar init",
+    isCode: true,
+    href: null,
+  },
+  {
+    icon: <BookOpen className="w-4 h-4" />,
+    label: "API Reference",
+    text: "API Reference",
+    isCode: false,
+    href: "/developers",
+  },
+  {
+    icon: <Plug className="w-4 h-4" />,
+    label: "MCP Setup",
+    text: "MCP Setup",
+    isCode: false,
+    href: "/mcp",
+  },
 ];
 
 export default function Quickstart() {
   useSEO({
-    title: 'Quickstart — Get Started in 5 Minutes',
+    title: "Quickstart — Get Started in 5 Minutes",
     description:
-      'Choose your path on x402 Bazaar: connect an AI agent, integrate as a developer, or monetize your API. Up and running in 5 minutes.',
+      "Choose your path on x402 Bazaar: connect an AI agent, integrate as a developer, or monetize your API. Up and running in 5 minutes.",
     keywords:
-      'x402 quickstart, npx x402-bazaar init, HTTP 402 setup, AI agent payment tutorial, USDC wallet Base, MCP quickstart',
+      "x402 quickstart, npx x402-bazaar init, HTTP 402 setup, AI agent payment tutorial, USDC wallet Base, MCP quickstart",
   });
 
   // HowTo JSON-LD structured data
   useEffect(() => {
     const howToSchema = {
-      '@context': 'https://schema.org',
-      '@type': 'HowTo',
-      name: 'Get Started with x402 Bazaar in 5 Minutes',
-      description: 'Connect your AI agent or application to 70+ paid APIs using USDC micropayments on Base or SKALE via the HTTP 402 protocol.',
-      totalTime: 'PT5M',
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      name: "Get Started with x402 Bazaar in 5 Minutes",
+      description:
+        "Connect your AI agent or application to 100+ paid APIs using USDC micropayments on Base or SKALE via the HTTP 402 protocol.",
+      totalTime: "PT5M",
       tool: [
-        { '@type': 'HowToTool', name: 'Node.js' },
-        { '@type': 'HowToTool', name: 'npm or npx' },
-        { '@type': 'HowToTool', name: 'USDC wallet on Base' },
+        { "@type": "HowToTool", name: "Node.js" },
+        { "@type": "HowToTool", name: "npm or npx" },
+        { "@type": "HowToTool", name: "USDC wallet on Base" },
       ],
       step: [
         {
-          '@type': 'HowToStep',
+          "@type": "HowToStep",
           position: 1,
-          name: 'Run the initializer',
-          text: 'Run npx x402-bazaar init in your terminal. This automatically configures your wallet and MCP server.',
-          url: 'https://x402bazaar.org/quickstart',
+          name: "Run the initializer",
+          text: "Run npx x402-bazaar init in your terminal. This automatically configures your wallet and MCP server.",
+          url: "https://x402bazaar.org/quickstart",
         },
         {
-          '@type': 'HowToStep',
+          "@type": "HowToStep",
           position: 2,
-          name: 'Fund your wallet with USDC on Base',
-          text: 'Send USDC to your agent wallet address on Base mainnet. A few dollars is enough to start.',
-          url: 'https://x402bazaar.org/quickstart',
+          name: "Fund your wallet with USDC on Base",
+          text: "Send USDC to your agent wallet address on Base mainnet. A few dollars is enough to start.",
+          url: "https://x402bazaar.org/quickstart",
         },
         {
-          '@type': 'HowToStep',
+          "@type": "HowToStep",
           position: 3,
-          name: 'Start calling APIs — payments are automatic',
-          text: 'Your agent calls any x402 Bazaar API. When a 402 is returned, the wallet pays automatically and the request is retried.',
-          url: 'https://x402bazaar.org/quickstart',
+          name: "Start calling APIs — payments are automatic",
+          text: "Your agent calls any x402 Bazaar API. When a 402 is returned, the wallet pays automatically and the request is retried.",
+          url: "https://x402bazaar.org/quickstart",
         },
       ],
     };
 
-    let script = document.getElementById('howto-jsonld') as HTMLScriptElement | null;
+    let script = document.getElementById(
+      "howto-jsonld",
+    ) as HTMLScriptElement | null;
     if (!script) {
-      script = document.createElement('script');
-      script.id = 'howto-jsonld';
-      script.type = 'application/ld+json';
+      script = document.createElement("script");
+      script.id = "howto-jsonld";
+      script.type = "application/ld+json";
       document.head.appendChild(script);
     }
     script.textContent = JSON.stringify(howToSchema);
 
     return () => {
-      const s = document.getElementById('howto-jsonld');
+      const s = document.getElementById("howto-jsonld");
       if (s) s.remove();
     };
   }, []);
@@ -139,12 +174,10 @@ export default function Quickstart() {
   return (
     <div className="min-h-screen bg-[#0f1117] text-white">
       <div className="max-w-6xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
-
         {/* Section 1 — Hero */}
         <div className="text-center mb-16">
           <h1 className="text-4xl sm:text-5xl font-bold mb-4 tracking-tight">
-            Get Started with{' '}
-            <span className="text-[#FF9900]">x402 Bazaar</span>
+            Get Started with <span className="text-[#FF9900]">x402 Bazaar</span>
           </h1>
           <p className="text-gray-400 text-lg sm:text-xl max-w-xl mx-auto">
             Choose your path and be up and running in 5 minutes.
@@ -164,7 +197,9 @@ export default function Quickstart() {
                   {path.icon}
                 </div>
                 <h2 className="text-xl font-semibold mb-2">{path.title}</h2>
-                <p className="text-gray-400 text-sm leading-relaxed">{path.description}</p>
+                <p className="text-gray-400 text-sm leading-relaxed">
+                  {path.description}
+                </p>
               </div>
 
               {/* Steps */}
@@ -181,7 +216,10 @@ export default function Quickstart() {
                             {step.text}
                           </code>
                           {step.suffix && (
-                            <span className="text-gray-400"> {step.suffix}</span>
+                            <span className="text-gray-400">
+                              {" "}
+                              {step.suffix}
+                            </span>
                           )}
                         </>
                       ) : (
@@ -217,7 +255,7 @@ export default function Quickstart() {
             Common first steps
           </h3>
           <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
-            {quickLinks.map((item) => (
+            {quickLinks.map((item) =>
               item.href ? (
                 <Link
                   key={item.label}
@@ -235,11 +273,10 @@ export default function Quickstart() {
                   <span className="text-gray-400">{item.icon}</span>
                   <code className="text-[#FF9900] font-mono">{item.text}</code>
                 </div>
-              )
-            ))}
+              ),
+            )}
           </div>
         </div>
-
       </div>
     </div>
   );
