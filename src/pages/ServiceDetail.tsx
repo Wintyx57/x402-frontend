@@ -1,77 +1,94 @@
-import { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { useAccount } from 'wagmi';
-import { API_URL } from '../config';
-import { useTranslation } from '../i18n/LanguageContext';
-import useSEO from '../hooks/useSEO';
-import { useReviews, useReviewStats } from '../hooks/useReviews';
-import StarRating from '../components/StarRating';
-import ReviewCard from '../components/ReviewCard';
-import ReviewForm from '../components/ReviewForm';
-import CopyButton from '../components/CopyButton';
-import ChainSelector from '../components/ChainSelector';
-import EmbedSnippet from '../components/EmbedSnippet';
-import type { Service } from '../types/service';
+import { useEffect, useState } from "react";
+import { useParams, Link } from "react-router-dom";
+import { useAccount } from "wagmi";
+import { API_URL } from "../config";
+import { useTranslation } from "../i18n/LanguageContext";
+import useSEO from "../hooks/useSEO";
+import { useReviews, useReviewStats } from "../hooks/useReviews";
+import StarRating from "../components/StarRating";
+import ReviewCard from "../components/ReviewCard";
+import ReviewForm from "../components/ReviewForm";
+import CopyButton from "../components/CopyButton";
+import ChainSelector from "../components/ChainSelector";
+import EmbedSnippet from "../components/EmbedSnippet";
+import type { Service } from "../types/service";
 
 const CHAIN_KEY_MAP: Record<number, string> = {
-  8453: 'base',
-  1187947933: 'skale',
-  137: 'polygon',
+  8453: "base",
+  1187947933: "skale",
+  137: "polygon",
 };
 
-type CodeTab = 'curl' | 'javascript' | 'python';
+type CodeTab = "curl" | "javascript" | "python";
 
 const CHAIN_LABELS: Record<string, string> = {
-  base: 'Base',
-  skale: 'SKALE on Base (ultra-low gas ~$0.0007/tx)',
-  polygon: 'Polygon (low gas ~$0.001/tx)',
+  base: "Base",
+  skale: "SKALE on Base (ultra-low gas ~$0.0007/tx)",
+  polygon: "Polygon (low gas ~$0.001/tx)",
 };
 
-function getCodeSnippet(service: Service, tab: CodeTab, chainKey: string): string {
-  const url = service.url || `${API_URL}/api/${service.name.toLowerCase().replace(/\s+/g, '-')}`;
+function getCodeSnippet(
+  service: Service,
+  tab: CodeTab,
+  chainKey: string,
+): string {
+  const url =
+    service.url ||
+    `${API_URL}/api/${service.name.toLowerCase().replace(/\s+/g, "-")}`;
   const price = Number(service.price_usdc);
   const isFree = price === 0;
-  const chainLabel = CHAIN_LABELS[chainKey] || 'Base';
+  const chainLabel = CHAIN_LABELS[chainKey] || "Base";
   const paymentNote = isFree
-    ? '# Free API — no payment required'
+    ? "# Free API — no payment required"
     : `# Price: $${price} USDC on ${chainLabel}`;
   const reqParams = service.required_parameters?.required;
   const paramsNote = reqParams?.length
-    ? `# Required parameters: ${reqParams.join(', ')}`
-    : '';
+    ? `# Required parameters: ${reqParams.join(", ")}`
+    : "";
   const exampleQs = reqParams?.length
-    ? '?' + reqParams.map((p: string) => `${p}=YOUR_${p.toUpperCase()}`).join('&')
-    : '';
+    ? "?" +
+      reqParams.map((p: string) => `${p}=YOUR_${p.toUpperCase()}`).join("&")
+    : "";
 
-  if (tab === 'curl') {
+  if (tab === "curl") {
     if (isFree) {
-      return [paymentNote, paramsNote, `curl -X GET "${url}${exampleQs}"`].filter(Boolean).join('\n');
+      return [paymentNote, paramsNote, `curl -X GET "${url}${exampleQs}"`]
+        .filter(Boolean)
+        .join("\n");
     }
-    return [paymentNote, paramsNote,
-      '',
-      '# Step 1: Call the API (returns 402 with payment instructions)',
+    return [
+      paymentNote,
+      paramsNote,
+      "",
+      "# Step 1: Call the API (returns 402 with payment instructions)",
       `curl "${url}${exampleQs}"`,
-      '',
+      "",
       `# Step 2: Send USDC on ${chainLabel} to the recipient address shown in the 402 response`,
-      '',
-      '# Step 3: Retry with the transaction hash',
+      "",
+      "# Step 3: Retry with the transaction hash",
       `curl -X GET "${url}${exampleQs}" \\`,
       '  -H "X-Payment-TxHash: 0xYOUR_TX_HASH" \\',
       `  -H "X-Payment-Chain: ${chainKey}"`,
-    ].filter(l => l !== undefined).join('\n');
+    ]
+      .filter((l) => l !== undefined)
+      .join("\n");
   }
 
-  if (tab === 'javascript') {
+  if (tab === "javascript") {
     if (isFree) {
-      return [paymentNote, paramsNote ? `// ${paramsNote.slice(2)}` : '',
-        '',
+      return [
+        paymentNote,
+        paramsNote ? `// ${paramsNote.slice(2)}` : "",
+        "",
         `const response = await fetch("${url}${exampleQs}");`,
-        'const data = await response.json();',
-        'console.log(data);',
-      ].filter(Boolean).join('\n');
+        "const data = await response.json();",
+        "console.log(data);",
+      ]
+        .filter(Boolean)
+        .join("\n");
     }
     return `${paymentNote}
-${paramsNote ? `// ${paramsNote.slice(2)}` : ''}
+${paramsNote ? `// ${paramsNote.slice(2)}` : ""}
 
 // Step 1: Call the API
 const res = await fetch("${url}${exampleQs}");
@@ -96,15 +113,19 @@ if (res.status === 402) {
 }`;
   }
 
-  if (tab === 'python') {
+  if (tab === "python") {
     if (isFree) {
-      return [paymentNote, paramsNote,
-        '',
-        'import requests',
-        '',
+      return [
+        paymentNote,
+        paramsNote,
+        "",
+        "import requests",
+        "",
         `response = requests.get("${url}${exampleQs}")`,
-        'print(response.json())',
-      ].filter(Boolean).join('\n');
+        "print(response.json())",
+      ]
+        .filter(Boolean)
+        .join("\n");
     }
     return `${paymentNote}
 ${paramsNote}
@@ -134,7 +155,7 @@ if res.status_code == 402:
     print(data)`;
   }
 
-  return '';
+  return "";
 }
 
 // ── Rating distribution bar ────────────────────────────────────────────────────
@@ -149,7 +170,12 @@ function DistributionBar({ star, count, total }: DistributionBarProps) {
   const pct = total > 0 ? Math.round((count / total) * 100) : 0;
   return (
     <div className="flex items-center gap-2 text-xs">
-      <span className="text-gray-500 w-3 text-right" aria-label={`${star} star`}>{star}</span>
+      <span
+        className="text-gray-500 w-3 text-right"
+        aria-label={`${star} star`}
+      >
+        {star}
+      </span>
       <div
         className="flex-1 bg-white/5 rounded-full h-1.5 overflow-hidden"
         role="progressbar"
@@ -195,15 +221,15 @@ function Pagination({ page, totalPages, onPageChange }: PaginationProps) {
         &larr;
       </button>
 
-      {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
+      {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
         <button
           key={p}
           onClick={() => onPageChange(p)}
-          aria-current={p === page ? 'page' : undefined}
+          aria-current={p === page ? "page" : undefined}
           className={`px-3 py-1.5 rounded-lg text-sm transition-all duration-150 cursor-pointer ${
             p === page
-              ? 'bg-[#FF9900]/15 text-[#FF9900] border border-[#FF9900]/25 font-medium'
-              : 'text-gray-500 bg-white/5 border border-white/10 hover:bg-white/10 hover:text-white'
+              ? "bg-[#FF9900]/15 text-[#FF9900] border border-[#FF9900]/25 font-medium"
+              : "text-gray-500 bg-white/5 border border-white/10 hover:bg-white/10 hover:text-white"
           }`}
         >
           {p}
@@ -236,11 +262,11 @@ export default function ServiceDetail() {
   const [service, setService] = useState<Service | null>(null);
   const [loadingService, setLoadingService] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<CodeTab>('curl');
+  const [activeTab, setActiveTab] = useState<CodeTab>("curl");
   const [urlCopied, setUrlCopied] = useState(false);
   const [reviewPage, setReviewPage] = useState(1);
 
-  const chainKey = (chain?.id && CHAIN_KEY_MAP[chain.id]) || 'skale';
+  const chainKey = (chain?.id && CHAIN_KEY_MAP[chain.id]) || "skale";
 
   // ── TanStack Query: reviews + stats ──
   const {
@@ -256,12 +282,12 @@ export default function ServiceDetail() {
   const totalPages = Math.ceil(totalReviews / PAGE_SIZE);
 
   useSEO({
-    title: service ? `${service.name} — x402 Bazaar` : 'Service — x402 Bazaar',
+    title: service ? `${service.name} — x402 Bazaar` : "Service — x402 Bazaar",
     description: service
-      ? `${service.description} Pay per call with USDC from $${service.price_usdc ?? '0.001'} via x402 protocol on Base, SKALE or Polygon. No API key required.`
-      : 'Discover and call this API service with USDC micropayments via the x402 protocol on x402 Bazaar.',
+      ? `${service.description} Pay per call with USDC from $${service.price_usdc ?? "0.001"} via x402 protocol on Base, SKALE or Polygon. No API key required.`
+      : "Discover and call this API service with USDC micropayments via the x402 protocol on x402 Bazaar.",
     keywords: service
-      ? `${service.name}, ${(service.tags || []).join(', ')}, pay-per-call API, USDC micropayment, x402 protocol, AI agent API`
+      ? `${service.name}, ${(service.tags || []).join(", ")}, pay-per-call API, USDC micropayment, x402 protocol, AI agent API`
       : undefined,
   });
 
@@ -278,30 +304,44 @@ export default function ServiceDetail() {
       setReviewPage(1);
 
       try {
-        let r = await fetch(`${API_URL}/api/services/${id}`, { signal: controller.signal });
+        let r = await fetch(`${API_URL}/api/services/${id}`, {
+          signal: controller.signal,
+        });
         let result: Service;
         if (r.status === 404 || r.status === 405) {
-          const listRes = await fetch(`${API_URL}/api/services`, { signal: controller.signal });
+          const listRes = await fetch(`${API_URL}/api/services`, {
+            signal: controller.signal,
+          });
           const json = await listRes.json();
-          const data: Service[] = Array.isArray(json) ? json : (json.data ?? []);
-          const found = data.find(s => s.id === id);
-          if (!found) throw new Error('Service not found');
+          const data: Service[] = Array.isArray(json)
+            ? json
+            : (json.data ?? []);
+          const found = data.find((s) => s.id === id);
+          if (!found) throw new Error("Service not found");
           result = found;
         } else {
-          if (!r.ok) throw new Error('Failed to load service');
-          result = await r.json() as Service;
+          if (!r.ok) throw new Error("Failed to load service");
+          result = (await r.json()) as Service;
         }
         if (!cancelled) setService(result);
       } catch (err) {
-        if (!cancelled && !(err instanceof DOMException && err.name === 'AbortError')) {
-          setError(err instanceof Error ? err.message : 'Failed to load service');
+        if (
+          !cancelled &&
+          !(err instanceof DOMException && err.name === "AbortError")
+        ) {
+          setError(
+            err instanceof Error ? err.message : "Failed to load service",
+          );
         }
       } finally {
         if (!cancelled) setLoadingService(false);
       }
     })();
 
-    return () => { cancelled = true; controller.abort(); };
+    return () => {
+      cancelled = true;
+      controller.abort();
+    };
   }, [id]);
 
   const handleCopyUrl = async () => {
@@ -336,8 +376,11 @@ export default function ServiceDetail() {
   if (error || !service) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-16 text-center">
-        <p className="text-gray-400 mb-4">{error || 'Service not found'}</p>
-        <Link to="/services" className="text-[#FF9900] hover:text-[#FEBD69] no-underline text-sm">
+        <p className="text-gray-400 mb-4">{error || "Service not found"}</p>
+        <Link
+          to="/services"
+          className="text-[#FF9900] hover:text-[#FEBD69] no-underline text-sm"
+        >
           &larr; Back to Services
         </Link>
       </div>
@@ -345,68 +388,141 @@ export default function ServiceDetail() {
   }
 
   const isFree = Number(service.price_usdc) === 0;
-  const isNative = service.url?.startsWith('https://x402-api.onrender.com');
+  const isNative = service.url?.startsWith("https://x402-api.onrender.com");
   const codeSnippet = getCodeSnippet(service, activeTab, chainKey);
 
   const CODE_TABS: { key: CodeTab; label: string }[] = [
-    { key: 'curl', label: 'cURL' },
-    { key: 'javascript', label: 'JavaScript' },
-    { key: 'python', label: 'Python' },
+    { key: "curl", label: "cURL" },
+    { key: "javascript", label: "JavaScript" },
+    { key: "python", label: "Python" },
   ];
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
-
       {/* ── BREADCRUMB ── */}
       <nav aria-label="Breadcrumb" className="mb-5">
-        <ol className="flex items-center flex-wrap gap-1 text-xs text-gray-500" role="list">
+        <ol
+          className="flex items-center flex-wrap gap-1 text-xs text-gray-500"
+          role="list"
+        >
           <li>
-            <Link to="/" className="hover:text-[#FF9900] no-underline transition-colors duration-150">{t.serviceDetail?.breadcrumbHome || 'Home'}</Link>
+            <Link
+              to="/"
+              className="hover:text-[#FF9900] no-underline transition-colors duration-150"
+            >
+              {t.serviceDetail?.breadcrumbHome || "Home"}
+            </Link>
           </li>
           <li aria-hidden="true" className="mx-0.5">
-            <svg className="w-3 h-3 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+            <svg
+              className="w-3 h-3 inline"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 5l7 7-7 7"
+              />
+            </svg>
           </li>
           <li>
-            <Link to="/services" className="hover:text-[#FF9900] no-underline transition-colors duration-150">{t.serviceDetail?.breadcrumbServices || 'Services'}</Link>
+            <Link
+              to="/services"
+              className="hover:text-[#FF9900] no-underline transition-colors duration-150"
+            >
+              {t.serviceDetail?.breadcrumbServices || "Services"}
+            </Link>
           </li>
           {service.tags?.[0] && (
             <>
               <li aria-hidden="true" className="mx-0.5">
-                <svg className="w-3 h-3 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                <svg
+                  className="w-3 h-3 inline"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
               </li>
               <li>
-                <Link to={`/services?cat=${service.tags[0]}`} className="hover:text-[#FF9900] no-underline transition-colors duration-150 capitalize">
+                <Link
+                  to={`/services?cat=${service.tags[0]}`}
+                  className="hover:text-[#FF9900] no-underline transition-colors duration-150 capitalize"
+                >
                   {service.tags[0]}
                 </Link>
               </li>
             </>
           )}
           <li aria-hidden="true" className="mx-0.5">
-            <svg className="w-3 h-3 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+            <svg
+              className="w-3 h-3 inline"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 5l7 7-7 7"
+              />
+            </svg>
           </li>
-          <li aria-current="page" className="text-gray-300 truncate max-w-[180px] font-medium">{service.name}</li>
+          <li
+            aria-current="page"
+            className="text-gray-300 truncate max-w-[180px] font-medium"
+          >
+            {service.name}
+          </li>
         </ol>
       </nav>
 
       {/* ── x402 PROXY ENDPOINT ── */}
       <div className="bg-[#FF9900]/5 border border-[#FF9900]/20 rounded-xl p-4 mb-4">
         <div className="flex items-center gap-2 mb-2">
-          <svg className="w-4 h-4 text-[#FF9900]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+          <svg
+            className="w-4 h-4 text-[#FF9900]"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            strokeWidth={2}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M13 10V3L4 14h7v7l9-11h-7z"
+            />
           </svg>
-          <span className="text-sm font-semibold text-white">{t.serviceDetail?.endpointLabel || 'x402 Endpoint'}</span>
+          <span className="text-sm font-semibold text-white">
+            {t.serviceDetail?.endpointLabel || "x402 Endpoint"}
+          </span>
           <span className="text-xs bg-[#FF9900]/10 text-[#FF9900] px-2 py-0.5 rounded border border-[#FF9900]/20 ml-auto">
-            {t.serviceDetail?.noSdkBadge || 'No SDK Required — Just HTTP'}
+            {t.serviceDetail?.noSdkBadge || "No SDK Required — Just HTTP"}
           </span>
         </div>
         <div className="flex items-center gap-2">
           <code className="text-sm text-[#FF9900] font-mono flex-1 truncate bg-black/20 px-3 py-2 rounded-lg">
             POST {API_URL}/api/call/{id}
           </code>
-          <CopyButton text={`${API_URL}/api/call/${id}`} label="Copy" copiedLabel="Copied!" />
+          <CopyButton
+            text={`${API_URL}/api/call/${id}`}
+            label="Copy"
+            copiedLabel="Copied!"
+          />
         </div>
         <p className="text-xs text-gray-500 mt-2">
-          {t.serviceDetail?.proxyHint || 'Your API stays untouched. We handle payments through our proxy.'}
+          {t.serviceDetail?.proxyHint ||
+            "Your API stays untouched. We handle payments through our proxy."}
         </p>
       </div>
 
@@ -419,33 +535,64 @@ export default function ServiceDetail() {
               <h1 className="text-2xl font-bold text-white">{service.name}</h1>
               {isNative && (
                 <span className="text-xs bg-[#FF9900]/10 text-[#FF9900] px-2 py-0.5 rounded border border-[#FF9900]/20">
-                  {t.serviceDetail?.nativeBadge || 'Native'}
+                  {t.serviceDetail?.nativeBadge || "Native"}
                 </span>
               )}
-              {service.verified_status === 'mainnet_verified' && (
+              {service.verified_status === "mainnet_verified" && (
                 <span className="inline-flex items-center gap-1 text-xs bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded border border-emerald-500/20">
-                  <svg className="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  <svg
+                    className="w-2.5 h-2.5"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    aria-hidden="true"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clipRule="evenodd"
+                    />
                   </svg>
-                  {t.serviceDetail?.verifiedBadge || 'Verified'}
+                  {t.serviceDetail?.verifiedBadge || "Verified"}
                 </span>
               )}
-              {service.verified_status === 'reachable' && (
+              {service.verified_status === "reachable" && (
                 <span className="text-xs bg-blue-500/10 text-blue-400 px-2 py-0.5 rounded border border-blue-500/20">
-                  {t.serviceDetail?.autoTestedBadge || 'Auto-tested'}
+                  {t.serviceDetail?.autoTestedBadge || "Auto-tested"}
                 </span>
               )}
               {service.trust_score != null && (
                 <span
                   className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded font-medium"
                   style={{
-                    backgroundColor: service.trust_score >= 80 ? '#34D39915' : service.trust_score >= 60 ? '#FBBF2415' : service.trust_score >= 40 ? '#FB923C15' : '#F8717115',
-                    color: service.trust_score >= 80 ? '#34D399' : service.trust_score >= 60 ? '#FBBF24' : service.trust_score >= 40 ? '#FB923C' : '#F87171',
-                    border: `1px solid ${service.trust_score >= 80 ? '#34D39930' : service.trust_score >= 60 ? '#FBBF2430' : service.trust_score >= 40 ? '#FB923C30' : '#F8717130'}`,
+                    backgroundColor:
+                      service.trust_score >= 80
+                        ? "#34D39915"
+                        : service.trust_score >= 60
+                          ? "#FBBF2415"
+                          : service.trust_score >= 40
+                            ? "#FB923C15"
+                            : "#F8717115",
+                    color:
+                      service.trust_score >= 80
+                        ? "#34D399"
+                        : service.trust_score >= 60
+                          ? "#FBBF24"
+                          : service.trust_score >= 40
+                            ? "#FB923C"
+                            : "#F87171",
+                    border: `1px solid ${service.trust_score >= 80 ? "#34D39930" : service.trust_score >= 60 ? "#FBBF2430" : service.trust_score >= 40 ? "#FB923C30" : "#F8717130"}`,
                   }}
                   title="Proof of Quality — algorithmic trust score based on reliability, speed, reviews, and activity"
                 >
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 1l3.09 6.26L22 8.27l-5 4.87 1.18 6.88L12 16.77l-6.18 3.25L7 13.14 2 8.27l6.91-1.01z"/></svg>
+                  <svg
+                    width="11"
+                    height="11"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path d="M12 1l3.09 6.26L22 8.27l-5 4.87 1.18 6.88L12 16.77l-6.18 3.25L7 13.14 2 8.27l6.91-1.01z" />
+                  </svg>
                   {service.trust_score}/100
                 </span>
               )}
@@ -461,22 +608,27 @@ export default function ServiceDetail() {
               <div className="flex items-center gap-2 mb-2">
                 <StarRating rating={stats.average} size="sm" />
                 <span className="text-xs text-gray-400">
-                  {stats.average} ({stats.count} {t.reviews.title.toLowerCase()})
+                  {stats.average} ({stats.count} {t.reviews.title.toLowerCase()}
+                  )
                 </span>
               </div>
             )}
 
-            <p className="text-gray-400 text-sm leading-relaxed">{service.description}</p>
+            <p className="text-gray-400 text-sm leading-relaxed">
+              {service.description}
+            </p>
           </div>
 
           {/* Price + prominent Try it CTA */}
           <div className="flex flex-col items-end gap-3 shrink-0">
-            <span className={`font-mono text-sm font-bold px-3 py-1.5 rounded-lg ${
-              isFree
-                ? 'bg-[#34D399]/10 text-[#34D399] border border-[#34D399]/20'
-                : 'bg-[#FF9900]/10 text-[#FF9900] border border-[#FF9900]/20'
-            }`}>
-              {isFree ? 'Free' : `$${service.price_usdc} USDC`}
+            <span
+              className={`font-mono text-sm font-bold px-3 py-1.5 rounded-lg ${
+                isFree
+                  ? "bg-[#34D399]/10 text-[#34D399] border border-[#34D399]/20"
+                  : "bg-[#FF9900]/10 text-[#FF9900] border border-[#FF9900]/20"
+              }`}
+            >
+              {isFree ? "Free" : `$${service.price_usdc} USDC`}
             </span>
 
             <Link
@@ -486,7 +638,12 @@ export default function ServiceDetail() {
                          shadow-[0_0_20px_rgba(255,153,0,0.30)]"
               aria-label={`Try ${service.name} in the playground`}
             >
-              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <svg
+                className="w-4 h-4"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
                 <path d="M8 5v14l11-7z" />
               </svg>
               Try it now
@@ -497,7 +654,7 @@ export default function ServiceDetail() {
         {/* Tags — clickable links to category filter */}
         {(service.tags?.length ?? 0) > 0 && (
           <div className="flex flex-wrap gap-1.5 mt-4">
-            {(service.tags ?? []).map(tag => (
+            {(service.tags ?? []).map((tag) => (
               <Link
                 key={tag}
                 to={`/services?cat=${tag}`}
@@ -519,9 +676,24 @@ export default function ServiceDetail() {
                      px-5 py-2.5 rounded-lg text-sm transition-all duration-200 no-underline
                      hover:shadow-[0_0_16px_rgba(255,153,0,0.4)]"
         >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2} aria-hidden="true">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-            <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          <svg
+            className="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            strokeWidth={2}
+            aria-hidden="true"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
+            />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
           </svg>
           Try in Playground
         </Link>
@@ -532,18 +704,46 @@ export default function ServiceDetail() {
             className="inline-flex items-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10
                        text-gray-300 hover:text-white font-medium px-5 py-2.5 rounded-lg text-sm
                        transition-colors duration-200 cursor-pointer"
-            aria-label={urlCopied ? 'URL copied to clipboard' : 'Copy API URL to clipboard'}
+            aria-label={
+              urlCopied
+                ? "URL copied to clipboard"
+                : "Copy API URL to clipboard"
+            }
           >
             {urlCopied ? (
-              <svg className="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2} aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+              <svg
+                className="w-4 h-4 text-emerald-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                strokeWidth={2}
+                aria-hidden="true"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M5 13l4 4L19 7"
+                />
               </svg>
             ) : (
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2} aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                strokeWidth={2}
+                aria-hidden="true"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                />
               </svg>
             )}
-            <span className={urlCopied ? 'text-emerald-400' : ''}>{urlCopied ? 'Copied!' : 'Copy URL'}</span>
+            <span className={urlCopied ? "text-emerald-400" : ""}>
+              {urlCopied ? "Copied!" : "Copy URL"}
+            </span>
           </button>
         )}
 
@@ -556,13 +756,52 @@ export default function ServiceDetail() {
                        text-gray-300 hover:text-white font-medium px-5 py-2.5 rounded-lg text-sm
                        transition-colors duration-200 no-underline"
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2} aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+              />
             </svg>
             View API
           </a>
         )}
       </div>
+
+      {/* Fund wallet CTA for paid APIs */}
+      {!isFree && (
+        <div className="flex items-center gap-3 mb-4 px-4 py-3 rounded-xl bg-emerald-500/5 border border-emerald-500/20">
+          <svg
+            className="w-5 h-5 text-emerald-400 shrink-0"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"
+            />
+          </svg>
+          <p className="text-sm text-gray-400 flex-1">
+            Need USDC? Fund your agent wallet to start calling this API.
+          </p>
+          <Link
+            to="/fund"
+            className="px-4 py-1.5 text-xs font-semibold text-white bg-emerald-500/20 border border-emerald-500/30 rounded-lg no-underline hover:bg-emerald-500/30 transition shrink-0"
+          >
+            Fund Wallet
+          </Link>
+        </div>
+      )}
 
       {/* ── Chain Selector ── */}
       {!isFree && <ChainSelector />}
@@ -570,14 +809,28 @@ export default function ServiceDetail() {
       {/* ── 3. QUICK START ── */}
       <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden mb-6">
         <div className="flex items-center gap-2 px-5 py-3 border-b border-white/8">
-          <svg className="w-4 h-4 text-[#FF9900]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+          <svg
+            className="w-4 h-4 text-[#FF9900]"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            strokeWidth={2}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
+            />
           </svg>
           <h2 className="text-sm font-semibold text-white">Quick Start</h2>
 
           {/* Tab buttons */}
-          <div className="flex gap-1 ml-auto" role="tablist" aria-label="Code language selector">
-            {CODE_TABS.map(tab => (
+          <div
+            className="flex gap-1 ml-auto"
+            role="tablist"
+            aria-label="Code language selector"
+          >
+            {CODE_TABS.map((tab) => (
               <button
                 key={tab.key}
                 role="tab"
@@ -585,8 +838,8 @@ export default function ServiceDetail() {
                 onClick={() => setActiveTab(tab.key)}
                 className={`px-3 py-1 text-xs rounded-md transition-colors cursor-pointer border-none ${
                   activeTab === tab.key
-                    ? 'bg-[#FF9900]/15 text-[#FF9900]'
-                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                    ? "bg-[#FF9900]/15 text-[#FF9900]"
+                    : "text-gray-400 hover:text-white hover:bg-white/5"
                 }`}
               >
                 {tab.label}
@@ -604,65 +857,113 @@ export default function ServiceDetail() {
       </div>
 
       {/* ── 3b. REQUIRED PARAMETERS ── */}
-      {service.required_parameters?.required && service.required_parameters.required.length > 0 && (
-        <div className="bg-amber-500/5 border border-amber-500/20 rounded-xl p-5 mb-6">
-          <h2 className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
-            <svg className="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
-            </svg>
-            Required Parameters
-          </h2>
-          <p className="text-xs text-gray-400 mb-3">
-            You must provide these parameters when calling this API, otherwise the request will fail.
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {service.required_parameters.required.map((param: string) => (
-              <span
-                key={param}
-                className="font-mono text-xs bg-amber-500/10 text-amber-300 px-2.5 py-1 rounded-md border border-amber-500/20"
+      {service.required_parameters?.required &&
+        service.required_parameters.required.length > 0 && (
+          <div className="bg-amber-500/5 border border-amber-500/20 rounded-xl p-5 mb-6">
+            <h2 className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
+              <svg
+                className="w-4 h-4 text-amber-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                strokeWidth={2}
               >
-                {param}
-              </span>
-            ))}
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"
+                />
+              </svg>
+              Required Parameters
+            </h2>
+            <p className="text-xs text-gray-400 mb-3">
+              You must provide these parameters when calling this API, otherwise
+              the request will fail.
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {service.required_parameters.required.map((param: string) => (
+                <span
+                  key={param}
+                  className="font-mono text-xs bg-amber-500/10 text-amber-300 px-2.5 py-1 rounded-md border border-amber-500/20"
+                >
+                  {param}
+                </span>
+              ))}
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
       {/* ── 4. PAYMENT INFO ── */}
       <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-5 mb-6">
         <h2 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
-          <svg className="w-4 h-4 text-[#FF9900]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+          <svg
+            className="w-4 h-4 text-[#FF9900]"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            strokeWidth={2}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
+            />
           </svg>
-          {t.serviceDetail?.paymentInfo || 'Payment Info'}
+          {t.serviceDetail?.paymentInfo || "Payment Info"}
         </h2>
 
         <div className="grid sm:grid-cols-2 gap-4 text-sm">
           <div>
-            <span className="text-xs text-gray-500 block mb-1">{t.serviceDetail?.price || 'Price'}</span>
-            <span className={`font-mono font-bold ${isFree ? 'text-[#34D399]' : 'text-[#FF9900]'}`}>
-              {isFree ? 'Free' : `$${service.price_usdc} USDC`}
+            <span className="text-xs text-gray-500 block mb-1">
+              {t.serviceDetail?.price || "Price"}
+            </span>
+            <span
+              className={`font-mono font-bold ${isFree ? "text-[#34D399]" : "text-[#FF9900]"}`}
+            >
+              {isFree ? "Free" : `$${service.price_usdc} USDC`}
             </span>
           </div>
 
           <div>
-            <span className="text-xs text-gray-500 block mb-1">{t.serviceDetail?.chain || 'Chain'}</span>
+            <span className="text-xs text-gray-500 block mb-1">
+              {t.serviceDetail?.chain || "Chain"}
+            </span>
             <div className="flex flex-col gap-1">
-              <span className={`font-medium text-sm ${chainKey === 'skale' ? 'text-white' : 'text-gray-300'}`}>SKALE on Base (USDC) <span className="text-gray-500 font-normal text-xs">— recommended</span></span>
-              <span className={`font-medium text-sm ${chainKey === 'base' ? 'text-white' : 'text-gray-300'}`}>Base (USDC)</span>
-              <span className={`font-medium text-sm ${chainKey === 'polygon' ? 'text-white' : 'text-gray-300'}`}>Polygon (USDC)</span>
+              <span
+                className={`font-medium text-sm ${chainKey === "skale" ? "text-white" : "text-gray-300"}`}
+              >
+                SKALE on Base (USDC){" "}
+                <span className="text-gray-500 font-normal text-xs">
+                  — recommended
+                </span>
+              </span>
+              <span
+                className={`font-medium text-sm ${chainKey === "base" ? "text-white" : "text-gray-300"}`}
+              >
+                Base (USDC)
+              </span>
+              <span
+                className={`font-medium text-sm ${chainKey === "polygon" ? "text-white" : "text-gray-300"}`}
+              >
+                Polygon (USDC)
+              </span>
             </div>
           </div>
 
           <div>
-            <span className="text-xs text-gray-500 block mb-1">{t.serviceDetail?.owner || 'Owner'}</span>
+            <span className="text-xs text-gray-500 block mb-1">
+              {t.serviceDetail?.owner || "Owner"}
+            </span>
             <span className="font-mono text-gray-300 text-xs">
-              {service.owner_address?.slice(0, 6)}...{service.owner_address?.slice(-4)}
+              {service.owner_address?.slice(0, 6)}...
+              {service.owner_address?.slice(-4)}
             </span>
           </div>
 
           <div>
-            <span className="text-xs text-gray-500 block mb-1">{t.serviceDetail?.protocol || 'Protocol'}</span>
+            <span className="text-xs text-gray-500 block mb-1">
+              {t.serviceDetail?.protocol || "Protocol"}
+            </span>
             <span className="text-gray-300">HTTP 402 / x402</span>
           </div>
         </div>
@@ -676,8 +977,18 @@ export default function ServiceDetail() {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 text-xs text-[#FF9900] hover:text-[#FEBD69] no-underline"
             >
-              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <svg
+                className="w-3.5 h-3.5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
               </svg>
               Verified on-chain (Basescan) &rarr;
             </a>
@@ -687,25 +998,38 @@ export default function ServiceDetail() {
 
       {/* ── EMBED THIS API ── */}
       <div className="mb-6">
-        <EmbedSnippet serviceId={service.id} serviceName={service.name} chainKey={chainKey} />
+        <EmbedSnippet
+          serviceId={service.id}
+          serviceName={service.name}
+          chainKey={chainKey}
+        />
       </div>
 
       {/* ── 5. REVIEWS ── */}
       <section aria-labelledby="reviews-heading">
-
         {/* Rating distribution */}
         {stats && stats.count > 0 && (
           <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-5 mb-4">
             <div className="flex items-center gap-6 flex-wrap">
               {/* Average score */}
-              <div className="text-center shrink-0" aria-label={`Average rating: ${stats.average} out of 5`}>
-                <div className="text-4xl font-bold text-white">{stats.average}</div>
+              <div
+                className="text-center shrink-0"
+                aria-label={`Average rating: ${stats.average} out of 5`}
+              >
+                <div className="text-4xl font-bold text-white">
+                  {stats.average}
+                </div>
                 <StarRating rating={stats.average} size="md" />
-                <div className="text-xs text-gray-500 mt-1">{stats.count} {t.reviews.title.toLowerCase()}</div>
+                <div className="text-xs text-gray-500 mt-1">
+                  {stats.count} {t.reviews.title.toLowerCase()}
+                </div>
               </div>
               {/* Distribution bars */}
-              <div className="flex-1 min-w-[150px] flex flex-col gap-1.5" aria-label="Rating distribution">
-                {[5, 4, 3, 2, 1].map(star => (
+              <div
+                className="flex-1 min-w-[150px] flex flex-col gap-1.5"
+                aria-label="Rating distribution"
+              >
+                {[5, 4, 3, 2, 1].map((star) => (
                   <DistributionBar
                     key={star}
                     star={star}
@@ -724,16 +1048,25 @@ export default function ServiceDetail() {
         </div>
 
         {/* Reviews list heading */}
-        <h2 id="reviews-heading" className="text-lg font-semibold text-white mb-4">
+        <h2
+          id="reviews-heading"
+          className="text-lg font-semibold text-white mb-4"
+        >
           {t.reviews.title}
           {stats && stats.count > 0 && (
-            <span className="text-sm text-gray-500 font-normal ml-2">({stats.count})</span>
+            <span className="text-sm text-gray-500 font-normal ml-2">
+              ({stats.count})
+            </span>
           )}
         </h2>
 
         {/* Reviews list */}
         {loadingReviews ? (
-          <div className="text-center py-8" role="status" aria-label="Loading reviews">
+          <div
+            className="text-center py-8"
+            role="status"
+            aria-label="Loading reviews"
+          >
             <div className="w-6 h-6 border-2 border-[#FF9900]/20 border-t-[#FF9900] rounded-full animate-spin mx-auto" />
           </div>
         ) : reviews.length === 0 ? (
@@ -743,11 +1076,11 @@ export default function ServiceDetail() {
         ) : (
           <>
             <div
-              className={`flex flex-col gap-3 transition-opacity duration-200 ${fetchingReviews ? 'opacity-60' : 'opacity-100'}`}
+              className={`flex flex-col gap-3 transition-opacity duration-200 ${fetchingReviews ? "opacity-60" : "opacity-100"}`}
               aria-live="polite"
               aria-busy={fetchingReviews}
             >
-              {reviews.map(review => (
+              {reviews.map((review) => (
                 <ReviewCard key={review.id} review={review} />
               ))}
             </div>
@@ -758,7 +1091,9 @@ export default function ServiceDetail() {
               onPageChange={(p) => {
                 setReviewPage(p);
                 // Scroll to top of reviews section smoothly
-                document.getElementById('reviews-heading')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                document
+                  .getElementById("reviews-heading")
+                  ?.scrollIntoView({ behavior: "smooth", block: "start" });
               }}
             />
           </>
