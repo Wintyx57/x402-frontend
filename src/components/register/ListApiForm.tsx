@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useAccount, useSignMessage } from "wagmi";
 import { useConnectModal } from "thirdweb/react";
 import { thirdwebClient, wallets } from "../../lib/thirdweb";
@@ -237,6 +237,7 @@ export default function ListApiForm({ onBack }: ListApiFormProps) {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
+  const errorRef = useRef<HTMLDivElement>(null);
 
   // Auto-fill wallet when wallet connects
   useEffect(() => {
@@ -244,6 +245,13 @@ export default function ListApiForm({ onBack }: ListApiFormProps) {
       setWallet(address);
     }
   }, [isConnected, address]); // intentionally omit `wallet` to avoid overwriting manual edits
+
+  // Scroll to error when it appears
+  useEffect(() => {
+    if (error && errorRef.current) {
+      errorRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }, [error]);
 
   // ─────────────────────────────────────────────────────────────────────────
   // Submit handler
@@ -580,9 +588,44 @@ export default function ListApiForm({ onBack }: ListApiFormProps) {
               List Your API
             </h2>
           </div>
-          <p className="text-sm text-gray-400 mb-8 leading-relaxed">
+          <p className="text-sm text-gray-400 mb-5 leading-relaxed">
             Paste your endpoint URL, set a price, and you're live.
           </p>
+
+          {/* Wallet connection banner — shown prominently before form fields */}
+          {!isConnected && (
+            <div className="mb-6 px-4 py-3 rounded-xl bg-[#FF9900]/10 border border-[#FF9900]/30 flex items-center gap-3">
+              <svg
+                className="w-5 h-5 text-[#FF9900] shrink-0"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                />
+              </svg>
+              <div className="flex-1">
+                <p className="text-sm text-[#FF9900] font-medium">
+                  Wallet required
+                </p>
+                <p className="text-xs text-gray-400">
+                  Connect your wallet to sign the registration and receive
+                  payments.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => connect({ client: thirdwebClient, wallets })}
+                className="px-4 py-1.5 text-xs font-semibold text-black bg-[#FF9900] rounded-lg cursor-pointer border-none hover:brightness-110 transition shrink-0"
+              >
+                Connect
+              </button>
+            </div>
+          )}
 
           <div className="mb-5">
             <FieldLabel htmlFor="list-url">
@@ -853,6 +896,7 @@ export default function ListApiForm({ onBack }: ListApiFormProps) {
 
           {error && (
             <div
+              ref={errorRef}
               role="alert"
               className="mb-5 px-4 py-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm"
             >
