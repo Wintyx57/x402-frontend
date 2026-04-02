@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useAccount } from "wagmi";
+import { useAccount, useSignMessage } from "wagmi";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   Chart as ChartJS,
@@ -415,9 +415,7 @@ export default function MyApis() {
         />
       )}
       {tab === "payouts" && <PayoutsTab data={data} />}
-      {tab === "payment-links" && (
-        <PaymentLinksTab address={address!} signAction={signAction} />
-      )}
+      {tab === "payment-links" && <PaymentLinksTab address={address!} />}
 
       {editService && (
         <EditModal
@@ -848,16 +846,8 @@ interface PaymentLink {
   created_at: string;
 }
 
-function PaymentLinksTab({
-  address,
-  signAction,
-}: {
-  address: string;
-  signAction: (
-    action: string,
-    resourceId: string,
-  ) => Promise<{ message: string; signature: string }>;
-}) {
+function PaymentLinksTab({ address }: { address: string }) {
+  const { signMessageAsync } = useSignMessage();
   const [links, setLinks] = useState<PaymentLink[]>([]);
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState<string | null>(null);
@@ -891,17 +881,17 @@ function PaymentLinksTab({
   const handleDeactivate = async (linkId: string) => {
     setDeactivating(linkId);
     try {
-      const { message, signature } = await signAction(
-        "deactivate-payment-link",
-        linkId,
-      );
+      const timestamp = Date.now();
+      const message = `delete-payment-link:${linkId}:${address}:${timestamp}`;
+      const signature = await signMessageAsync({ message });
       const res = await fetch(`${API_URL}/api/payment-links/${linkId}`, {
         method: "DELETE",
-        headers: {
-          "X-Wallet-Address": address,
-          "X-Wallet-Message": message,
-          "X-Wallet-Signature": signature,
-        },
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ownerAddress: address,
+          signature,
+          timestamp,
+        }),
       });
       if (!res.ok) {
         const d = await res.json().catch(() => ({}));
