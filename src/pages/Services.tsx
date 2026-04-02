@@ -568,7 +568,8 @@ export default function Services() {
                         }
                       </div>
                       <div className="text-[11px] text-gray-600">
-                        {categoryCounts[cat.tag!] || 0} APIs
+                        {categoryCounts[cat.tag!] || 0}{" "}
+                        {(categoryCounts[cat.tag!] || 0) === 1 ? "API" : "APIs"}
                       </div>
                     </button>
                   ))}
