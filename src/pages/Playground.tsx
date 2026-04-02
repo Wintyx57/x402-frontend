@@ -1,4 +1,5 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import DOMPurify from "dompurify";
 import { useTranslation } from "../i18n/LanguageContext";
 import { useReveal } from "../hooks/useReveal";
@@ -335,6 +336,7 @@ export default function Playground() {
 
   const heroRef = useReveal();
   const mainRef = useReveal();
+  const [searchParams] = useSearchParams();
 
   const [selectedApi, setSelectedApi] = useState<Record<string, any> | null>(
     null,
@@ -353,6 +355,20 @@ export default function Playground() {
     setParams(defaults);
     setResponse(null);
   }, []);
+
+  // Auto-select API from ?api= query param (linked from ServiceDetail)
+  useEffect(() => {
+    const apiParam = searchParams.get("api");
+    if (apiParam && !selectedApi) {
+      const match = PLAYGROUND_APIS.find(
+        (a) =>
+          a.id === apiParam ||
+          a.route === apiParam ||
+          a.route === `/api/${apiParam}`,
+      );
+      if (match) handleSelectApi(match);
+    }
+  }, [searchParams, selectedApi, handleSelectApi]);
 
   const handleSend = useCallback(async () => {
     if (!selectedApi || loading) return;
