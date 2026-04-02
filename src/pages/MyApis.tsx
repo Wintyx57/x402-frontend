@@ -446,7 +446,7 @@ function OverviewTab({ data }: { data: ProviderAnalytics }) {
           Total Revenue
         </p>
         <p className="text-5xl font-extrabold text-[#34D399]">
-          ${data.total_earned.toFixed(2)}
+          ${(data.total_earned ?? 0).toFixed(2)}
         </p>
         {last7 > 0 && (
           <p className="text-sm text-gray-500 mt-1">
@@ -759,19 +759,19 @@ function PayoutsTab({ data }: { data: ProviderAnalytics }) {
         <div className="glass rounded-xl p-5 text-center">
           <p className="text-xs text-gray-500 uppercase mb-1">Pending</p>
           <p className="text-3xl font-bold text-[#FBBF24]">
-            ${data.payouts_summary.pending_total.toFixed(2)}
+            ${(data.payouts_summary?.pending_total ?? 0).toFixed(2)}
           </p>
           <p className="text-xs text-gray-600 mt-1">
-            {data.payouts_summary.pending_count} transactions
+            {data.payouts_summary?.pending_count ?? 0} transactions
           </p>
         </div>
         <div className="glass rounded-xl p-5 text-center">
           <p className="text-xs text-gray-500 uppercase mb-1">Paid</p>
           <p className="text-3xl font-bold text-[#34D399]">
-            ${data.payouts_summary.paid_total.toFixed(2)}
+            ${(data.payouts_summary?.paid_total ?? 0).toFixed(2)}
           </p>
           <p className="text-xs text-gray-600 mt-1">
-            {data.payouts_summary.paid_count} transactions
+            {data.payouts_summary?.paid_count ?? 0} transactions
           </p>
         </div>
       </div>

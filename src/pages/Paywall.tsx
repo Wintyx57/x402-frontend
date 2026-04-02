@@ -163,7 +163,9 @@ export default function Paywall() {
         abi: USDC_ABI,
         functionName: "transfer",
         args: [
-          (linkData._recipient || linkData.owner_address) as `0x${string}`,
+          (linkData._recipient ||
+            linkData.owner_address ||
+            "") as `0x${string}`,
           parseUnits(String(linkData.price_usdc), decimals),
         ],
       });
