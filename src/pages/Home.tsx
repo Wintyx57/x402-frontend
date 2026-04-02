@@ -856,14 +856,14 @@ export default function Home() {
                     "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
                 },
                 {
-                  name: "Fia Signals",
-                  category: "Finance / Trading",
-                  desc: "Real-time trading signals and market intelligence data.",
-                  url: "https://x402.fiasignals.com",
-                  status: "reachable",
-                  statusLabel: "Auto-tested",
+                  name: "SentimentAlpha",
+                  category: "AI / Analytics",
+                  desc: "AI-powered market sentiment analysis and trading signals.",
+                  url: null,
+                  status: "mainnet_verified",
+                  statusLabel: "Verified",
                   statusColor:
-                    "text-blue-400 bg-blue-500/10 border-blue-500/20",
+                    "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
                 },
               ].map((provider, i) => (
                 <div

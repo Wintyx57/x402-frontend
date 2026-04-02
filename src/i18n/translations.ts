@@ -230,7 +230,7 @@ export const translations = {
       exploreCTA: "Browse {count}+ APIs",
       listApiCTA: "List Your API",
       compareCommission: "5% commission vs RapidAPI's 25%",
-      trustProviders: "Trusted by Interzoid, AgentsHere, and Fia Signals",
+      trustProviders: "Trusted by Interzoid, AgentsHere, and SentimentAlpha",
       viewAnalyticsCTA: "View Analytics",
       readDocsCTA: "Read the docs",
       avgTransaction: "Avg. Transaction",
@@ -279,7 +279,7 @@ export const translations = {
       badgeOpenSource: "Open Source",
       cliCopyLabel: "Copy CLI command",
       // Hero CTA keys
-      heroCtaExplore: "Explore 74+ APIs",
+      heroCtaExplore: "Explore 110+ APIs",
       heroCtaList: "List Your API — 95% Revenue",
       heroStatBlockchains: "Blockchains",
       heroStatTests: "Tests",
@@ -335,7 +335,7 @@ export const translations = {
       heroProviderTitle3: "in 2 min.",
       heroProviderDesc:
         "No SDK. No code change. Wrap your endpoint and start earning USDC on every call.",
-      heroProviderStat1: "103 APIs",
+      heroProviderStat1: "112 APIs",
       heroProviderStat2: "95% revenue",
       heroProviderCta: "List your API",
       heroProviderRevealTitle: "AES-256 encrypted credentials",
@@ -2456,7 +2456,7 @@ def my_function(query: str) -> dict:
       exploreCTA: "Parcourir {count}+ APIs",
       listApiCTA: "Lister votre API",
       compareCommission: "5% de commission vs 25% chez RapidAPI",
-      trustProviders: "Utilise par Interzoid, AgentsHere et Fia Signals",
+      trustProviders: "Utilise par Interzoid, AgentsHere et SentimentAlpha",
       viewAnalyticsCTA: "Voir les Analytiques",
       readDocsCTA: "Lire la documentation",
       avgTransaction: "Transaction moy.",
@@ -2505,7 +2505,7 @@ def my_function(query: str) -> dict:
       badgeOpenSource: "Open Source",
       cliCopyLabel: "Copier la commande CLI",
       // Hero CTA
-      heroCtaExplore: "Explorer 74+ APIs",
+      heroCtaExplore: "Explorer 110+ APIs",
       heroCtaList: "Lister votre API — 95% de revenus",
       heroStatBlockchains: "Blockchains",
       heroStatTests: "Tests",
@@ -2563,7 +2563,7 @@ def my_function(query: str) -> dict:
       heroProviderTitle3: "en 2 min.",
       heroProviderDesc:
         "Pas de SDK. Pas de code. Wrappez votre endpoint et gagnez des USDC a chaque appel.",
-      heroProviderStat1: "103 APIs",
+      heroProviderStat1: "112 APIs",
       heroProviderStat2: "95% revenus",
       heroProviderCta: "Lister votre API",
       heroProviderRevealTitle: "Chiffrement AES-256",

@@ -104,7 +104,7 @@ export default function SplitHero() {
           <div className="hero-stats">
             <span className="hero-stat-pill">
               <span className="hero-stat-dot" />
-              {h.heroProviderStat1}
+              {stats?.services || 112} APIs
             </span>
             <span className="hero-stat-pill">
               <span className="hero-stat-dot" />
@@ -127,7 +127,9 @@ export default function SplitHero() {
                 <span className="hero-reveal-label">
                   {h.heroProviderRevenue}
                 </span>
-                <span className="hero-reveal-amount">$847</span>
+                <span className="hero-reveal-amount">
+                  ${stats?.usdcVolume ? stats.usdcVolume.toFixed(0) : "24"}
+                </span>
               </div>
               <div className="hero-reveal-bars">
                 {[
