@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { useAccount, useSignMessage } from "wagmi";
 import { useQueryClient } from "@tanstack/react-query";
@@ -89,12 +89,29 @@ function EditModal({
   onClose: () => void;
   onSave: (data: Record<string, any>) => Promise<void>;
 }) {
+  const { t } = useTranslation();
+  const m = t.myApis;
   const [name, setName] = useState(service.name);
   const [description, setDescription] = useState(service.description || "");
   const [price, setPrice] = useState(service.price_usdc.toString());
   const [tags, setTags] = useState(service.tags?.join(", ") || "");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const nameInputRef = useRef<HTMLInputElement>(null);
+
+  // Focus first input on mount
+  useEffect(() => {
+    nameInputRef.current?.focus();
+  }, []);
+
+  // Close on Escape
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", handleKey);
+    return () => document.removeEventListener("keydown", handleKey);
+  }, [onClose]);
 
   const handleSave = async () => {
     setSaving(true);
@@ -131,24 +148,43 @@ function EditModal({
       onClick={onClose}
     >
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="edit-modal-title"
         className="glass rounded-2xl p-6 w-full max-w-lg mx-4"
         onClick={(e) => e.stopPropagation()}
       >
-        <h3 className="text-lg font-semibold text-white mb-4">Edit Service</h3>
+        <h3
+          id="edit-modal-title"
+          className="text-lg font-semibold text-white mb-4"
+        >
+          {m?.editService ?? "Edit Service"}
+        </h3>
         <div className="space-y-4">
           <div>
-            <label className="text-xs text-gray-400 mb-1 block">Name</label>
+            <label
+              htmlFor="edit-name"
+              className="text-xs text-gray-400 mb-1 block"
+            >
+              {m?.fieldName ?? "Name"}
+            </label>
             <input
+              id="edit-name"
+              ref={nameInputRef}
               value={name}
               onChange={(e) => setName(e.target.value)}
               className="w-full bg-white/8 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#FF9900]/50"
             />
           </div>
           <div>
-            <label className="text-xs text-gray-400 mb-1 block">
-              Description
+            <label
+              htmlFor="edit-description"
+              className="text-xs text-gray-400 mb-1 block"
+            >
+              {m?.fieldDescription ?? "Description"}
             </label>
             <textarea
+              id="edit-description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
@@ -156,10 +192,14 @@ function EditModal({
             />
           </div>
           <div>
-            <label className="text-xs text-gray-400 mb-1 block">
-              Price (USDC)
+            <label
+              htmlFor="edit-price"
+              className="text-xs text-gray-400 mb-1 block"
+            >
+              {m?.fieldPrice ?? "Price (USDC)"}
             </label>
             <input
+              id="edit-price"
               type="number"
               step="0.001"
               value={price}
@@ -168,10 +208,14 @@ function EditModal({
             />
           </div>
           <div>
-            <label className="text-xs text-gray-400 mb-1 block">
-              Tags (comma separated)
+            <label
+              htmlFor="edit-tags"
+              className="text-xs text-gray-400 mb-1 block"
+            >
+              {m?.fieldTags ?? "Tags (comma separated)"}
             </label>
             <input
+              id="edit-tags"
               value={tags}
               onChange={(e) => setTags(e.target.value)}
               className="w-full bg-white/8 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#FF9900]/50"
@@ -183,14 +227,16 @@ function EditModal({
               onClick={onClose}
               className="px-4 py-2 text-sm text-gray-400 hover:text-white transition-colors cursor-pointer bg-transparent border border-white/10 rounded-lg"
             >
-              Cancel
+              {m?.cancel ?? "Cancel"}
             </button>
             <button
               onClick={handleSave}
               disabled={saving}
               className="px-4 py-2 text-sm font-medium text-white bg-[#FF9900] hover:bg-[#FF9900]/90 rounded-lg cursor-pointer border-none disabled:opacity-50"
             >
-              {saving ? "Saving..." : "Save Changes"}
+              {saving
+                ? (m?.saving ?? "Saving...")
+                : (m?.save ?? "Save Changes")}
             </button>
           </div>
         </div>
@@ -208,7 +254,25 @@ function DeleteModal({
   onClose: () => void;
   onConfirm: () => Promise<void>;
 }) {
+  const { t } = useTranslation();
+  const m = t.myApis;
   const [deleting, setDeleting] = useState(false);
+  const cancelRef = useRef<HTMLButtonElement>(null);
+
+  // Focus Cancel button on mount (safe default for destructive actions)
+  useEffect(() => {
+    cancelRef.current?.focus();
+  }, []);
+
+  // Close on Escape
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", handleKey);
+    return () => document.removeEventListener("keydown", handleKey);
+  }, [onClose]);
+
   const handleDelete = async () => {
     setDeleting(true);
     try {
@@ -218,35 +282,48 @@ function DeleteModal({
       setDeleting(false);
     }
   };
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
       onClick={onClose}
     >
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="delete-modal-title"
         className="glass rounded-2xl p-6 w-full max-w-md mx-4"
         onClick={(e) => e.stopPropagation()}
       >
-        <h3 className="text-lg font-semibold text-white mb-2">
-          Delete Service
+        <h3
+          id="delete-modal-title"
+          className="text-lg font-semibold text-white mb-2"
+        >
+          {m?.deleteService ?? "Delete Service"}
         </h3>
-        <p className="text-sm text-gray-400 mb-4">
-          Are you sure you want to delete{" "}
+        <p className="text-sm text-gray-400 mb-1">
+          {m?.deleteConfirm ?? "Are you sure you want to delete"}{" "}
           <strong className="text-white">{service.name}</strong>?
+        </p>
+        <p className="text-xs text-red-400 mb-4">
+          {m?.deleteWarning ?? "This action cannot be undone."}
         </p>
         <div className="flex gap-3 justify-end">
           <button
+            ref={cancelRef}
             onClick={onClose}
             className="px-4 py-2 text-sm text-gray-400 hover:text-white transition-colors cursor-pointer bg-transparent border border-white/10 rounded-lg"
           >
-            Cancel
+            {m?.cancel ?? "Cancel"}
           </button>
           <button
             onClick={handleDelete}
             disabled={deleting}
             className="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-500 rounded-lg cursor-pointer border-none disabled:opacity-50"
           >
-            {deleting ? "Deleting..." : "Delete"}
+            {deleting
+              ? (m?.deleting ?? "Deleting...")
+              : (m?.delete ?? "Delete")}
           </button>
         </div>
       </div>

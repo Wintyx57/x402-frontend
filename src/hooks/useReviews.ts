@@ -1,5 +1,6 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { API_URL } from '../config';
+import { useMemo } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { API_URL } from "../config";
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 
@@ -34,7 +35,11 @@ export interface SubmitReviewPayload {
 
 // ── Fetchers ───────────────────────────────────────────────────────────────────
 
-async function fetchReviews(serviceId: string, page: number, limit: number): Promise<ReviewsPage> {
+async function fetchReviews(
+  serviceId: string,
+  page: number,
+  limit: number,
+): Promise<ReviewsPage> {
   const res = await fetch(
     `${API_URL}/api/reviews/${serviceId}?page=${page}&limit=${limit}`,
   );
@@ -51,10 +56,10 @@ async function fetchReviewStats(serviceId: string): Promise<ReviewStats> {
 async function submitReview(payload: SubmitReviewPayload): Promise<void> {
   const { service_id, rating, comment, walletAddress } = payload;
   const res = await fetch(`${API_URL}/api/reviews`, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
-      'X-Wallet-Address': walletAddress,
+      "Content-Type": "application/json",
+      "X-Wallet-Address": walletAddress,
     },
     body: JSON.stringify({
       service_id,
@@ -65,7 +70,7 @@ async function submitReview(payload: SubmitReviewPayload): Promise<void> {
 
   const data = await res.json();
   if (!res.ok) {
-    throw new Error(data.message || data.error || 'Failed to submit review');
+    throw new Error(data.message || data.error || "Failed to submit review");
   }
 }
 
@@ -80,7 +85,7 @@ const PAGE_SIZE = 5;
  */
 export function useReviews(serviceId: string | undefined, page = 1) {
   return useQuery<ReviewsPage>({
-    queryKey: ['reviews', serviceId, page],
+    queryKey: ["reviews", serviceId, page],
     queryFn: () => fetchReviews(serviceId!, page, PAGE_SIZE),
     enabled: !!serviceId,
     staleTime: 60 * 1000, // 1 minute
@@ -94,7 +99,7 @@ export function useReviews(serviceId: string | undefined, page = 1) {
  */
 export function useReviewStats(serviceId: string | undefined) {
   return useQuery<ReviewStats>({
-    queryKey: ['reviewStats', serviceId],
+    queryKey: ["reviewStats", serviceId],
     queryFn: () => fetchReviewStats(serviceId!),
     enabled: !!serviceId,
     staleTime: 60 * 1000,
@@ -104,11 +109,14 @@ export function useReviewStats(serviceId: string | undefined) {
 // Réponse du endpoint batch : pas de `distribution` (champ optionnel)
 type BatchStatsResponse = Record<string, { average: number; count: number }>;
 
-async function fetchBatchReviewStats(ids: string[]): Promise<BatchStatsResponse> {
+async function fetchBatchReviewStats(
+  ids: string[],
+): Promise<BatchStatsResponse> {
   const res = await fetch(
-    `${API_URL}/api/reviews/stats/batch?ids=${ids.join(',')}`,
+    `${API_URL}/api/reviews/stats/batch?ids=${ids.join(",")}`,
   );
-  if (!res.ok) throw new Error(`Failed to fetch batch review stats (${res.status})`);
+  if (!res.ok)
+    throw new Error(`Failed to fetch batch review stats (${res.status})`);
   return res.json();
 }
 
@@ -120,29 +128,34 @@ async function fetchBatchReviewStats(ids: string[]): Promise<BatchStatsResponse>
  * @param serviceIds — array of service UUIDs
  * @returns Map<serviceId, ReviewStats>
  */
-export function useAllReviewStats(serviceIds: string[]): Map<string, ReviewStats> {
-  const key = serviceIds.join(',');
+export function useAllReviewStats(
+  serviceIds: string[],
+): Map<string, ReviewStats> {
+  // Sort IDs so that order changes don't cause unnecessary cache misses
+  const key = useMemo(() => [...serviceIds].sort().join(","), [serviceIds]);
 
   const { data } = useQuery<BatchStatsResponse>({
-    queryKey: ['reviewStatsBatch', key],
+    queryKey: ["reviewStatsBatch", key],
     queryFn: () => fetchBatchReviewStats(serviceIds),
     enabled: serviceIds.length > 0,
     staleTime: 5 * 60 * 1000, // 5 minutes — le catalogue tolère des données légèrement périmées
   });
 
-  const map = new Map<string, ReviewStats>();
-  if (data) {
-    for (const [id, stats] of Object.entries(data)) {
-      if (stats.count > 0) {
-        map.set(id, {
-          average: stats.average,
-          count: stats.count,
-          distribution: {},
-        });
+  return useMemo(() => {
+    const map = new Map<string, ReviewStats>();
+    if (data) {
+      for (const [id, stats] of Object.entries(data)) {
+        if (stats.count > 0) {
+          map.set(id, {
+            average: stats.average,
+            count: stats.count,
+            distribution: {},
+          });
+        }
       }
     }
-  }
-  return map;
+    return map;
+  }, [data]);
 }
 
 /**
@@ -156,8 +169,8 @@ export function useSubmitReview(serviceId: string | undefined) {
     mutationFn: submitReview,
     onSuccess: () => {
       // Invalidate all pages for this service + stats
-      queryClient.invalidateQueries({ queryKey: ['reviews', serviceId] });
-      queryClient.invalidateQueries({ queryKey: ['reviewStats', serviceId] });
+      queryClient.invalidateQueries({ queryKey: ["reviews", serviceId] });
+      queryClient.invalidateQueries({ queryKey: ["reviewStats", serviceId] });
     },
   });
 }

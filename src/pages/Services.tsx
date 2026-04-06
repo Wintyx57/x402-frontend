@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { API_URL } from "../config";
 import { useTranslation } from "../i18n/LanguageContext";
@@ -263,9 +263,6 @@ export default function Services() {
   const reviewStatsMap = useAllReviewStats(serviceIds);
   void reviewStatsMap; // reviews used in ServiceDetail, kept for cache warming
 
-  const [uptimeMap, setUptimeMap] = useState<Record<string, number>>({});
-  void uptimeMap; // uptime data kept for future use
-
   const [searchParams, setSearchParams] = useSearchParams();
   const { t } = useTranslation();
 
@@ -322,26 +319,6 @@ export default function Services() {
       document.getElementById("services-itemlist-jsonld")?.remove();
     };
   }, [services]);
-
-  // Uptime
-  useEffect(() => {
-    const controller = new AbortController();
-    fetch(`${API_URL}/api/status/uptime?period=7d`, {
-      signal: controller.signal,
-    })
-      .then((r) => r.json())
-      .then((data) => {
-        if (data?.endpoints) {
-          const map: Record<string, number> = {};
-          for (const ep of data.endpoints) {
-            if (ep.uptime !== null) map[`${API_URL}${ep.endpoint}`] = ep.uptime;
-          }
-          setUptimeMap(map);
-        }
-      })
-      .catch(() => {});
-    return () => controller.abort();
-  }, []);
 
   // Category helpers
   const { getCategory, categoryCounts } = useMemo(() => {

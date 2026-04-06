@@ -32,11 +32,12 @@ export default defineConfig({
             if (id.includes("thirdweb")) {
               return "vendor-thirdweb";
             }
-            // Web3 core: viem + wagmi + react-query
+            // Web3 core: viem + wagmi + ethers
             if (
               id.includes("/viem/") ||
               id.includes("wagmi") ||
-              id.includes("@tanstack/react-query")
+              id.includes("/ethers/") ||
+              id.includes("ethers/lib")
             ) {
               return "vendor-web3";
             }
