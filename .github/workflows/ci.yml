@@ -10,8 +10,8 @@ permissions:
   contents: read
 
 jobs:
-  lint:
-    name: Lint
+  lint-and-typecheck:
+    name: Lint + Typecheck
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -20,8 +20,9 @@ jobs:
           node-version: '20.19.0'
           cache: npm
       - run: npm ci
-      # Progressively tighten max-warnings toward 0
-      - run: npx eslint src/ --max-warnings 50
+      # Progressively tighten: 63 warnings remain (46 no-explicit-any + 16 exhaustive-deps)
+      - run: npx eslint src/ --max-warnings 65
+      - run: npx tsc --noEmit
 
   test:
     name: Unit Tests
@@ -39,7 +40,7 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     # Only build if lint and tests pass — prevents deploying broken code
-    needs: [lint, test]
+    needs: [lint-and-typecheck, test]
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
