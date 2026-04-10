@@ -22,7 +22,7 @@ x402 Bazaar is an autonomous API marketplace built on the [HTTP 402 Payment Requ
 
 ## Key Features
 
-- **Service Catalog** -- Browse, search, and filter 70+ API services with real-time data from the backend.
+- **Service Catalog** -- Browse, search, and filter 112+ API services with real-time data from the backend.
 - **Register Your API** -- Submit your own API service to the marketplace with an on-chain USDC payment.
 - **Wallet Connect** -- MetaMask and Coinbase Wallet via wagmi/viem with automatic network detection (Base, SKALE on Base, Polygon).
 - **ChainSelector** -- 3-way toggle (Base / SKALE on Base / Polygon) for multi-chain payment routing.
@@ -157,7 +157,7 @@ Contributions are welcome. See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelin
 
 | Repository | Description |
 |---|---|
-| **[x402-backend](https://github.com/Wintyx57/x402-backend)** | API server, 74 native endpoints, payment middleware, MCP server |
+| **[x402-backend](https://github.com/Wintyx57/x402-backend)** | API server, 112 native endpoints, payment middleware, MCP server |
 | **[x402-frontend](https://github.com/Wintyx57/x402-frontend)** | React + TypeScript UI (this repo) |
 | **[x402-bazaar-cli](https://github.com/Wintyx57/x402-bazaar-cli)** | `npx x402-bazaar` -- CLI with 7 commands |
 | **[x402-sdk](https://github.com/Wintyx57/x402-sdk)** | TypeScript SDK for AI agents |
