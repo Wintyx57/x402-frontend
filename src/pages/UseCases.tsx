@@ -492,7 +492,7 @@ async def enrichment_agent(company: str, ticker: str) -> dict:
 # Run
 result = asyncio.run(enrichment_agent("Apple Inc", "AAPL"))
 print(f"Sentiment: {result['sentiment_label']} ({result['sentiment_score']:.2f})")
-print(f"Stock: ${result["stock_price"]} ({result['stock_change_pct']:+.2f}%)")`,
+print(f"Stock: \${result['stock_price']} ({result['stock_change_pct']:+.2f}%)")`,
     },
   ];
 
