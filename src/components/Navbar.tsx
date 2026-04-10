@@ -1,4 +1,12 @@
-import { useState, useEffect, useRef, useCallback, memo } from "react";
+import {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  memo,
+  lazy,
+  Suspense,
+} from "react";
 import {
   Link,
   useNavigate,
@@ -6,9 +14,12 @@ import {
   useSearchParams,
 } from "react-router-dom";
 import { useTranslation } from "../i18n/LanguageContext";
-import WalletInfo from "./WalletInfo";
 import LanguageToggle from "./LanguageToggle";
 import DarkModeToggle from "./DarkModeToggle";
+
+// Lazy-load WalletInfo to defer wagmi hooks (vendor-web3) + thirdweb ConnectButton
+// from the initial bundle. Renders a placeholder until providers are ready.
+const WalletInfo = lazy(() => import("./WalletInfo"));
 
 type DropdownId = "developers" | "providers" | null;
 
@@ -629,7 +640,11 @@ function Navbar() {
 
             <DarkModeToggle />
             <LanguageToggle />
-            <WalletInfo />
+            <Suspense
+              fallback={<div className="h-7 w-20 animate-shimmer rounded-lg" />}
+            >
+              <WalletInfo />
+            </Suspense>
 
             {/* CTA — List Your API (desktop) */}
             <Link

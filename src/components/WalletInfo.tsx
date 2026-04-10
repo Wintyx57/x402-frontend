@@ -1,9 +1,10 @@
 import { useAccount, useDisconnect, useSwitchChain, useChainId } from "wagmi";
 import { useUsdcBalance } from "../hooks/useUsdcBalance";
 import { Link } from "react-router-dom";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, lazy, Suspense } from "react";
 import { useTranslation } from "../i18n/LanguageContext";
-import ConnectButton from "./ConnectButton";
+
+const ConnectButton = lazy(() => import("./ConnectButton"));
 
 const NETWORKS = [
   { id: 1187947933, label: "SKALE", color: "#00D395" },
@@ -36,7 +37,13 @@ export default function WalletInfo() {
   }, []);
 
   if (!isConnected || !address) {
-    return <ConnectButton />;
+    return (
+      <Suspense
+        fallback={<div className="h-7 w-20 animate-shimmer rounded-lg" />}
+      >
+        <ConnectButton />
+      </Suspense>
+    );
   }
 
   const displayBalance = balanceLoading

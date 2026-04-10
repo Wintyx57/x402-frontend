@@ -28,16 +28,19 @@ export default defineConfig({
             if (id.includes("0xtrails") || id.includes("@0xsequence")) {
               return "vendor-trails";
             }
-            // Thirdweb SDK — isolated (social login, fiat onramp)
-            if (id.includes("thirdweb")) {
+            // Thirdweb SDK — isolated (social login, fiat onramp, wagmi adapter)
+            if (id.includes("thirdweb") || id.includes("@thirdweb-dev")) {
               return "vendor-thirdweb";
             }
-            // Web3 core: viem + wagmi + ethers
+            // Web3 core: viem + wagmi + ethers + react-query
+            // react-query is co-located here to avoid circular chunks
+            // (wagmi imports @tanstack/react-query internally)
             if (
               id.includes("/viem/") ||
-              id.includes("wagmi") ||
+              (id.includes("wagmi") && !id.includes("thirdweb")) ||
               id.includes("/ethers/") ||
-              id.includes("ethers/lib")
+              id.includes("ethers/lib") ||
+              id.includes("@tanstack/react-query")
             ) {
               return "vendor-web3";
             }
@@ -46,9 +49,6 @@ export default defineConfig({
             }
             if (id.includes("react-router-dom")) {
               return "vendor-router";
-            }
-            if (id.includes("@tanstack/react-query")) {
-              return "vendor-query";
             }
             if (id.includes("chart.js") || id.includes("react-chartjs-2")) {
               return "vendor-charts";
