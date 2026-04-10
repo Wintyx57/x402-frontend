@@ -20,6 +20,7 @@ if (import.meta.env.PROD) {
 
 const root = document.getElementById("root");
 
+// eslint-disable-next-line react-refresh/only-export-components -- entry point, HMR not applicable
 function AppShellLoading() {
   return (
     <div
@@ -49,8 +50,7 @@ function renderError(_err: unknown) {
       '<button onclick="location.reload()" style="background:linear-gradient(135deg,#FF9900,#e68a00);color:white;border:none;padding:0.625rem 1.5rem;border-radius:8px;font-size:0.875rem;font-weight:500;cursor:pointer">Refresh Page</button>',
       "</div></div>",
     ].join("");
-    // eslint-disable-next-line no-unsanitized/property -- static strings only
-    root.innerHTML = errorHtml;
+    root.innerHTML = errorHtml; // static strings only, no user content
   }
 }
 

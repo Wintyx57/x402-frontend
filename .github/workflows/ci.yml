@@ -20,8 +20,8 @@ jobs:
           node-version: '20.19.0'
           cache: npm
       - run: npm ci
-      # Progressively tighten: 63 warnings remain (46 no-explicit-any + 16 exhaustive-deps)
-      - run: npx eslint src/ --max-warnings 65
+      # Progressively tighten: 62 warnings remain (46 no-explicit-any + 15 exhaustive-deps)
+      - run: npx eslint src/ --max-warnings 62
       - run: npx tsc --noEmit
 
   test:
