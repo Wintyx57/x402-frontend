@@ -580,6 +580,18 @@ function Navbar() {
               {t.nav.apis || "APIs"}
             </Link>
 
+            {/* Use Cases — direct link */}
+            <Link
+              to="/use-cases"
+              className={`text-xs font-medium px-3 py-1.5 rounded-lg transition-colors duration-200 whitespace-nowrap no-underline ${
+                pathname === "/use-cases"
+                  ? "text-[#FF9900]"
+                  : "text-gray-300 hover:text-white hover:bg-white/5"
+              }`}
+            >
+              {(t.nav as Record<string, string>).useCases || "Use Cases"}
+            </Link>
+
             {/* Dropdowns */}
             {dropdownGroups.map(({ id, label, links }) => (
               <NavDropdown

@@ -3,6 +3,7 @@ import { useUsdcBalance } from "../hooks/useUsdcBalance";
 import { Link } from "react-router-dom";
 import { useState, useRef, useEffect, lazy, Suspense } from "react";
 import { useTranslation } from "../i18n/LanguageContext";
+import { useSimpleMode } from "../hooks/useSimpleMode";
 
 const ConnectButton = lazy(() => import("./ConnectButton"));
 
@@ -21,6 +22,7 @@ export default function WalletInfo() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { t } = useTranslation();
+  const { isSimple } = useSimpleMode();
   const currentNetwork = NETWORKS.find((n) => n.id === currentChainId);
 
   useEffect(() => {
@@ -46,12 +48,14 @@ export default function WalletInfo() {
     );
   }
 
-  const displayBalance = balanceLoading
+  const rawBalance = balanceLoading
     ? "..."
     : balance
       ? parseFloat(balance).toFixed(2)
       : "0.00";
+  const displayBalance = isSimple ? `$${rawBalance}` : `${rawBalance} USDC`;
   const shortAddress = `${address.slice(0, 6)}...${address.slice(-4)}`;
+  const accountLabel = isSimple ? t.simpleMode.account : t.connect.wallet;
 
   return (
     <div ref={dropdownRef} className="relative">
@@ -59,12 +63,13 @@ export default function WalletInfo() {
         onClick={() => setDropdownOpen(!dropdownOpen)}
         aria-expanded={dropdownOpen}
         aria-haspopup="menu"
-        aria-label={`${t.connect.wallet}: ${displayBalance} USDC — ${shortAddress}`}
+        aria-label={`${accountLabel}: ${displayBalance} — ${shortAddress}`}
         className="flex items-center gap-2 text-xs font-medium px-3 py-1.5 rounded-lg
                    bg-white/8 border border-white/10 text-white hover:bg-white/12
                    transition-colors cursor-pointer"
       >
-        {currentNetwork && (
+        {/* In Advanced mode: show network dot + label */}
+        {!isSimple && currentNetwork && (
           <>
             <span
               className="inline-block w-2 h-2 rounded-full"
@@ -76,9 +81,7 @@ export default function WalletInfo() {
             <span className="text-gray-600">|</span>
           </>
         )}
-        <span className="text-[#FF9900] font-semibold">
-          {displayBalance} USDC
-        </span>
+        <span className="text-[#FF9900] font-semibold">{displayBalance}</span>
         <span className="text-gray-400">|</span>
         <span>{shortAddress}</span>
         <svg
@@ -143,32 +146,35 @@ export default function WalletInfo() {
             </svg>
             {t.nav.fund}
           </Link>
-          <div className="px-3 py-1.5">
-            <span className="text-[10px] uppercase tracking-wider text-gray-500 font-semibold">
-              {t.connect?.network || "Network"}
-            </span>
-            <div className="flex gap-1 mt-1">
-              {NETWORKS.map((net) => (
-                <button
-                  key={net.id}
-                  onClick={() => {
-                    switchChain({ chainId: net.id });
-                  }}
-                  className={`flex-1 py-1 px-1.5 rounded-md text-[10px] font-medium transition-all cursor-pointer border ${
-                    currentChainId === net.id
-                      ? "border-white/20 bg-white/10 text-white"
-                      : "border-transparent bg-white/5 text-gray-500 hover:text-gray-300"
-                  }`}
-                >
-                  <span
-                    className="inline-block w-1.5 h-1.5 rounded-full mr-0.5"
-                    style={{ backgroundColor: net.color }}
-                  />
-                  {net.label}
-                </button>
-              ))}
+          {/* Network switcher — Advanced mode only */}
+          {!isSimple && (
+            <div className="px-3 py-1.5">
+              <span className="text-[10px] uppercase tracking-wider text-gray-500 font-semibold">
+                {t.connect?.network || "Network"}
+              </span>
+              <div className="flex gap-1 mt-1">
+                {NETWORKS.map((net) => (
+                  <button
+                    key={net.id}
+                    onClick={() => {
+                      switchChain({ chainId: net.id });
+                    }}
+                    className={`flex-1 py-1 px-1.5 rounded-md text-[10px] font-medium transition-all cursor-pointer border ${
+                      currentChainId === net.id
+                        ? "border-white/20 bg-white/10 text-white"
+                        : "border-transparent bg-white/5 text-gray-500 hover:text-gray-300"
+                    }`}
+                  >
+                    <span
+                      className="inline-block w-1.5 h-1.5 rounded-full mr-0.5"
+                      style={{ backgroundColor: net.color }}
+                    />
+                    {net.label}
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
           <div className="border-t border-white/10 my-1" />
           <button
             onClick={() => {
