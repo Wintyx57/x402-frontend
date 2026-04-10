@@ -1,6 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import DOMPurify from "dompurify";
 import { useTranslation } from "../i18n/LanguageContext";
 import { useReveal } from "../hooks/useReveal";
 import useSEO from "../hooks/useSEO";
@@ -225,28 +224,6 @@ const PLAYGROUND_APIS = [
     ],
   },
 ];
-
-function highlightJSON(json: string): string {
-  if (typeof json !== "string") return "";
-  return json
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(
-      /("(\\u[\da-fA-F]{4}|\\[^u]|[^\\"])*")\s*:/g,
-      '<span style="color:#60A5FA">$1</span>:',
-    )
-    .replace(
-      /("(\\u[\da-fA-F]{4}|\\[^u]|[^\\"])*")/g,
-      '<span style="color:#34D399">$1</span>',
-    )
-    .replace(
-      /\b(-?\d+\.?\d*([eE][+-]?\d+)?)\b/g,
-      '<span style="color:#FBBF24">$1</span>',
-    )
-    .replace(/\b(true|false)\b/g, '<span style="color:#FF9900">$1</span>')
-    .replace(/\bnull\b/g, '<span style="color:#6B7280">null</span>');
-}
 
 function generateCode(
   api: Record<string, any>,
@@ -638,15 +615,9 @@ export default function Playground() {
                       label={pg.copy || "Copy"}
                       copiedLabel={pg.copied || "Copied"}
                     />
-                    <pre
-                      className="p-4 text-xs leading-relaxed overflow-x-auto max-h-[500px] overflow-y-auto font-mono"
-                      dangerouslySetInnerHTML={{
-                        __html: DOMPurify.sanitize(highlightJSON(jsonStr), {
-                          ALLOWED_TAGS: ["span"],
-                          ALLOWED_ATTR: ["style", "class"],
-                        }),
-                      }}
-                    />
+                    <pre className="p-4 text-xs leading-relaxed overflow-x-auto max-h-[500px] overflow-y-auto font-mono">
+                      <HighlightedJSON json={jsonStr} />
+                    </pre>
                   </>
                 ) : (
                   <div className="flex flex-col items-center justify-center py-16 text-gray-500">
