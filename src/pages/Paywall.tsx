@@ -66,6 +66,7 @@ export default function Paywall() {
   // Fetch link info
   useEffect(() => {
     if (!id) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional: sets loading flag before async fetch
     setLoading(true);
     fetch(`${API_URL}/api/payment-links/${id}`)
       .then(async (res) => {
@@ -101,6 +102,7 @@ export default function Paywall() {
   useEffect(() => {
     if (!isConfirmed || !txHash || payState !== "confirming") return;
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional: updates state machine after tx confirmation
     setPayState("accessing");
     // Map wagmi chainId to backend chain key
     const chainId = chain?.id ?? 8453;
@@ -139,6 +141,7 @@ export default function Paywall() {
   // Keep confirming state in sync while tx is confirming
   useEffect(() => {
     if (isConfirming && payState === "paying") {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional: syncs state machine with tx confirmation status
       setPayState("confirming");
     }
   }, [isConfirming, payState]);

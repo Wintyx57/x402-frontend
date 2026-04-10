@@ -9,6 +9,9 @@ import CategoryIcon from "../components/CategoryIcon";
 import { CATEGORIES, CATEGORY_LABELS } from "../data/categories";
 import type { Service } from "../types/service";
 
+// Module-level timestamp for "new service" badge filtering (avoids Date.now() in render)
+const PAGE_LOAD_TIME = Date.now();
+
 // ---- Floating Background ----
 function FloatingBackground() {
   return (
@@ -335,8 +338,8 @@ export default function Services() {
 
   // Quick filter + search + category filter
   const filtered = useMemo(() => {
-    const now = Date.now();
     const sevenDays = 7 * 24 * 60 * 60 * 1000;
+    const now = PAGE_LOAD_TIME;
     return services.filter((s) => {
       // Search
       if (search) {
@@ -357,7 +360,8 @@ export default function Services() {
       if (quickFilter === "cheap" && Number(s.price_usdc) >= 0.01) return false;
       if (
         quickFilter === "new" &&
-        (!s.created_at || now - new Date(s.created_at).getTime() > sevenDays)
+        (!s.created_at ||
+          now.current - new Date(s.created_at).getTime() > sevenDays)
       )
         return false;
       // Category
