@@ -143,6 +143,7 @@ export default function App() {
               element={<Navigate to="/register" replace />}
             />
             <Route path="/quickstart" element={<Quickstart />} />
+            <Route path="/start" element={<Quickstart />} />
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/agent" element={<LiveAgent />} />
             <Route path="/services/:id" element={<ServiceDetail />} />

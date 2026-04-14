@@ -1,280 +1,500 @@
-import type { ReactNode } from "react";
-import { useEffect } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
-  Bot,
-  Code,
-  CircleDollarSign,
-  Package,
+  Zap,
+  Copy,
+  Check,
+  Play,
+  Terminal,
+  ChevronRight,
+  Wallet,
   BookOpen,
-  Plug,
+  Blocks,
+  ArrowRight,
+  Clock,
+  Shield,
 } from "lucide-react";
 import useSEO from "../hooks/useSEO";
+import { API_URL } from "../config";
 
-interface PathItem {
-  icon: ReactNode;
-  title: string;
-  description: string;
-  steps: { code: boolean; text: string; suffix?: string }[];
-  primaryLabel: string;
-  primaryHref: string;
-  secondaryLabel: string;
-  secondaryHref: string;
+/* ─── Live Try-It ─── */
+function LiveTryIt() {
+  const [response, setResponse] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [elapsed, setElapsed] = useState<number | null>(null);
+
+  const tryApi = useCallback(async () => {
+    setLoading(true);
+    setResponse(null);
+    const start = performance.now();
+    try {
+      const res = await fetch(
+        `${API_URL}/api/translate?text=Hello%20world&to=fr`,
+      );
+      const data = await res.json();
+      setElapsed(Math.round(performance.now() - start));
+      setResponse(JSON.stringify(data, null, 2));
+    } catch {
+      setElapsed(Math.round(performance.now() - start));
+      setResponse('{"error": "Network error — try again"}');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  return (
+    <div className="mt-4">
+      <button
+        onClick={tryApi}
+        disabled={loading}
+        className="inline-flex items-center gap-2 bg-[#FF9900] text-black font-semibold rounded-lg px-5 py-2.5 hover:bg-[#FF9900]/90 transition-colors disabled:opacity-50 cursor-pointer text-sm"
+      >
+        <Play className="w-4 h-4" />
+        {loading ? "Calling..." : "Run it live"}
+      </button>
+      {response && (
+        <div className="mt-3 relative">
+          {elapsed !== null && (
+            <span className="absolute top-2 right-3 text-[10px] text-gray-500 font-mono">
+              {elapsed}ms
+            </span>
+          )}
+          <pre className="bg-black/60 border border-green-500/30 rounded-lg p-4 text-green-400 text-xs font-mono overflow-x-auto max-h-48">
+            {response}
+          </pre>
+        </div>
+      )}
+    </div>
+  );
 }
 
-const paths: PathItem[] = [
-  {
-    icon: <Bot className="w-7 h-7" />,
-    title: "I have an AI Agent",
-    description:
-      "Connect your agent to 60+ APIs. Pay per call with USDC, no API keys needed.",
-    steps: [
-      {
-        code: true,
-        text: "npx x402-bazaar init",
-        suffix: "— auto-configure wallet + MCP",
-      },
-      { code: false, text: "Fund your wallet with USDC on Base" },
-      { code: false, text: "Start calling APIs — payments are automatic" },
-    ],
-    primaryLabel: "Setup MCP Server",
-    primaryHref: "/mcp",
-    secondaryLabel: "View API catalog",
-    secondaryHref: "/services",
-  },
-  {
-    icon: <Code className="w-7 h-7" />,
-    title: "I'm a Developer",
-    description:
-      "Integrate x402 protocol in your app. Call paid APIs or build your own payment layer.",
-    steps: [
-      { code: false, text: "Read the API docs — 100+ endpoints documented" },
-      { code: true, text: "npm install x402-bazaar", suffix: "" },
-      { code: false, text: "Make your first paid API call" },
-    ],
-    primaryLabel: "Read the Docs",
-    primaryHref: "/developers",
-    secondaryLabel: "Try the Playground",
-    secondaryHref: "/playground",
-  },
-  {
-    icon: <CircleDollarSign className="w-7 h-7" />,
-    title: "I have an API to monetize",
-    description:
-      "List your API and earn USDC from AI agents. 95% revenue, instant on-chain settlement.",
-    steps: [
-      { code: false, text: "Register your endpoint on x402 Bazaar" },
-      { code: false, text: "Set your price in USDC (from $0.001/call)" },
-      { code: false, text: "Get discovered and paid automatically" },
-    ],
-    primaryLabel: "List My API",
-    primaryHref: "/register",
-    secondaryLabel: "View all services",
-    secondaryHref: "/services",
-  },
-];
-
-interface QuickLink {
-  icon: ReactNode;
-  label: string;
-  text: string;
-  isCode: boolean;
-  href: string | null;
+/* ─── Copy Button (inline) ─── */
+function InlineCopy({ text }: { text: string }) {
+  const [copied, setCopied] = useState(false);
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      /* noop */
+    }
+  };
+  return (
+    <button
+      onClick={copy}
+      className="absolute top-3 right-3 p-1.5 rounded-md bg-white/10 hover:bg-white/20 text-gray-400 hover:text-white transition-all cursor-pointer"
+      aria-label="Copy to clipboard"
+    >
+      {copied ? (
+        <Check className="w-3.5 h-3.5" />
+      ) : (
+        <Copy className="w-3.5 h-3.5" />
+      )}
+    </button>
+  );
 }
 
-const quickLinks: QuickLink[] = [
-  {
-    icon: <Package className="w-4 h-4" />,
-    label: "Install CLI",
-    text: "npx x402-bazaar init",
-    isCode: true,
-    href: null,
-  },
-  {
-    icon: <BookOpen className="w-4 h-4" />,
-    label: "API Reference",
-    text: "API Reference",
-    isCode: false,
-    href: "/developers",
-  },
-  {
-    icon: <Plug className="w-4 h-4" />,
-    label: "MCP Setup",
-    text: "MCP Setup",
-    isCode: false,
-    href: "/mcp",
-  },
-];
+/* ─── Code Block ─── */
+function CodeBlock({ code, lang }: { code: string; lang: string }) {
+  return (
+    <div className="relative group">
+      <InlineCopy text={code} />
+      <pre className="bg-[#0d1117] border border-white/10 rounded-lg p-4 pr-12 text-sm font-mono overflow-x-auto text-gray-300 leading-relaxed">
+        <code data-lang={lang}>{code}</code>
+      </pre>
+    </div>
+  );
+}
 
+/* ─── Tab selector ─── */
+type Tab = "curl" | "javascript" | "python" | "cli";
+
+function TabBar({
+  tabs,
+  active,
+  onChange,
+}: {
+  tabs: { id: Tab; label: string }[];
+  active: Tab;
+  onChange: (t: Tab) => void;
+}) {
+  return (
+    <div className="flex gap-1 bg-white/5 rounded-lg p-1 w-fit">
+      {tabs.map((tab) => (
+        <button
+          key={tab.id}
+          onClick={() => onChange(tab.id)}
+          className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors cursor-pointer ${
+            active === tab.id
+              ? "bg-[#FF9900]/20 text-[#FF9900]"
+              : "text-gray-400 hover:text-white hover:bg-white/5"
+          }`}
+        >
+          {tab.label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+/* ─── Step Number ─── */
+function StepBadge({ n }: { n: number }) {
+  return (
+    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-[#FF9900]/20 text-[#FF9900] font-bold text-sm shrink-0">
+      {n}
+    </div>
+  );
+}
+
+/* ─── Snippets ─── */
+const CURL_FREE = `curl "${API_URL}/api/translate?text=Hello%20world&to=fr"`;
+
+const CURL_PAID = `# 1. First call returns 402 with payment details
+curl "${API_URL}/api/weather?city=Paris"
+
+# 2. Pay USDC to the address in the 402 response
+# 3. Retry with your transaction hash
+curl -H "X-Payment-TxHash: 0xYOUR_TX_HASH" \\
+     "${API_URL}/api/weather?city=Paris"`;
+
+const JS_SDK = `import { X402Client } from "@wintyx/x402-sdk";
+
+const client = new X402Client({
+  privateKey: process.env.WALLET_KEY, // or auto-generated
+  chain: "skale", // ultra-low gas fees
+});
+
+// Free tier — no payment needed
+const free = await client.call("/api/translate", {
+  text: "Hello world", to: "fr"
+});
+console.log(free); // { translated: "Bonjour le monde" }
+
+// Paid API — payment is automatic
+const weather = await client.call("/api/weather", { city: "Paris" });
+console.log(weather); // { temp: 18.5, ... }`;
+
+const PY_SDK = `from x402_bazaar import X402Client
+
+client = X402Client(
+    private_key="YOUR_WALLET_KEY",  # or auto-generated
+    chain="skale",  # ultra-low gas fees
+)
+
+# Free tier — no payment needed
+free = client.call("/api/translate", text="Hello world", to="fr")
+print(free)  # {"translated": "Bonjour le monde"}
+
+# Paid API — payment is automatic
+weather = client.call("/api/weather", city="Paris")
+print(weather)  # {"temp": 18.5, ...}`;
+
+const CLI_SNIPPET = `# Install
+npm install -g x402-bazaar
+
+# Try a free API
+npx x402-bazaar call /api/translate --param text="Hello world" --param to=fr
+
+# Try a paid API (auto-payment with wallet)
+npx x402-bazaar call /api/weather --param city=Paris --key wallet.json`;
+
+const MCP_SNIPPET = `# One command — auto-configures Claude Desktop / Cursor / VS Code
+npx x402-bazaar init
+
+# Your AI agent can now call 100+ APIs with automatic payment`;
+
+/* ═══════════════════════════════════════════════════════════ */
 export default function Quickstart() {
   useSEO({
-    title: "Quickstart — Get Started in 5 Minutes",
+    title: "Get Started — Your First API Call in 2 Minutes",
     description:
-      "Choose your path on x402 Bazaar: connect an AI agent, integrate as a developer, or monetize your API. Up and running in 5 minutes.",
+      "Make your first API call on x402 Bazaar in under 2 minutes. Free tier, no wallet needed. Copy-paste curl, JS, or Python snippets.",
     keywords:
-      "x402 quickstart, npx x402-bazaar init, HTTP 402 setup, AI agent payment tutorial, USDC wallet Base, MCP quickstart",
+      "x402 quickstart, get started, free API, curl, SDK, AI agent, HTTP 402, USDC, micropayments",
   });
 
-  // HowTo JSON-LD structured data
+  const [sdkTab, setSdkTab] = useState<Tab>("javascript");
+
+  // HowTo JSON-LD
   useEffect(() => {
-    const howToSchema = {
+    const schema = {
       "@context": "https://schema.org",
       "@type": "HowTo",
-      name: "Get Started with x402 Bazaar in 5 Minutes",
+      name: "Make Your First API Call on x402 Bazaar",
       description:
-        "Connect your AI agent or application to 100+ paid APIs using USDC micropayments on Base or SKALE via the HTTP 402 protocol.",
-      totalTime: "PT5M",
-      tool: [
-        { "@type": "HowToTool", name: "Node.js" },
-        { "@type": "HowToTool", name: "npm or npx" },
-        { "@type": "HowToTool", name: "USDC wallet on Base" },
-      ],
+        "Call a free API in 30 seconds with curl, then integrate the SDK for automatic payments.",
+      totalTime: "PT2M",
       step: [
         {
           "@type": "HowToStep",
           position: 1,
-          name: "Run the initializer",
-          text: "Run npx x402-bazaar init in your terminal. This automatically configures your wallet and MCP server.",
-          url: "https://x402bazaar.org/quickstart",
+          name: "Try a free API call",
+          text: "Run a curl command to call the translate API — no wallet, no signup.",
         },
         {
           "@type": "HowToStep",
           position: 2,
-          name: "Fund your wallet with USDC on Base",
-          text: "Send USDC to your agent wallet address on Base mainnet. A few dollars is enough to start.",
-          url: "https://x402bazaar.org/quickstart",
+          name: "Install the SDK",
+          text: "npm install @wintyx/x402-sdk or pip install x402-bazaar for automatic payment handling.",
         },
         {
           "@type": "HowToStep",
           position: 3,
-          name: "Start calling APIs — payments are automatic",
-          text: "Your agent calls any x402 Bazaar API. When a 402 is returned, the wallet pays automatically and the request is retried.",
-          url: "https://x402bazaar.org/quickstart",
+          name: "Make paid calls",
+          text: "Fund a wallet with USDC on SKALE, Base, or Polygon and the SDK handles payments automatically.",
         },
       ],
     };
-
-    let script = document.getElementById(
-      "howto-jsonld",
+    let el = document.getElementById(
+      "quickstart-jsonld",
     ) as HTMLScriptElement | null;
-    if (!script) {
-      script = document.createElement("script");
-      script.id = "howto-jsonld";
-      script.type = "application/ld+json";
-      document.head.appendChild(script);
+    if (!el) {
+      el = document.createElement("script");
+      el.id = "quickstart-jsonld";
+      el.type = "application/ld+json";
+      document.head.appendChild(el);
     }
-    script.textContent = JSON.stringify(howToSchema);
-
+    el.textContent = JSON.stringify(schema);
     return () => {
-      const s = document.getElementById("howto-jsonld");
-      if (s) s.remove();
+      document.getElementById("quickstart-jsonld")?.remove();
     };
   }, []);
 
   return (
     <div className="min-h-screen bg-[#0f1117] text-white">
-      <div className="max-w-6xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
-        {/* Section 1 — Hero */}
-        <div className="text-center mb-16">
+      <div className="max-w-4xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
+        {/* ══ Hero ══ */}
+        <div className="text-center mb-14">
+          <div className="inline-flex items-center gap-2 bg-green-500/10 border border-green-500/20 rounded-full px-4 py-1.5 text-green-400 text-xs font-medium mb-6">
+            <Clock className="w-3.5 h-3.5" />
+            No signup &middot; No wallet &middot; No API key
+          </div>
           <h1 className="text-4xl sm:text-5xl font-bold mb-4 tracking-tight">
-            Get Started with <span className="text-[#FF9900]">x402 Bazaar</span>
+            Your First API Call in{" "}
+            <span className="text-[#FF9900]">2 Minutes</span>
           </h1>
-          <p className="text-gray-400 text-lg sm:text-xl max-w-xl mx-auto">
-            Choose your path and be up and running in 5 minutes.
+          <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+            x402 Bazaar is an API marketplace where AI agents pay per call with
+            USDC. Try it free right now — just copy and paste.
           </p>
         </div>
 
-        {/* Section 2 — 3 parcours */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
-          {paths.map((path) => (
-            <div
-              key={path.title}
-              className="bg-white/5 border border-white/10 rounded-xl p-6 flex flex-col gap-5 hover:border-white/20 transition-colors"
-            >
-              {/* Header */}
-              <div>
-                <div className="w-12 h-12 rounded-xl bg-[#FF9900]/10 flex items-center justify-center text-[#FF9900] mb-3">
-                  {path.icon}
+        {/* ══ Step 1: Try it free ══ */}
+        <section className="mb-14">
+          <div className="flex items-center gap-3 mb-5">
+            <StepBadge n={1} />
+            <div>
+              <h2 className="text-xl font-semibold">Try it free</h2>
+              <p className="text-gray-400 text-sm">
+                5 free calls/day — no wallet, no account needed
+              </p>
+            </div>
+          </div>
+
+          <div className="glass-card rounded-xl p-6">
+            <p className="text-gray-300 text-sm mb-3">
+              Copy this curl command and paste it in your terminal:
+            </p>
+            <CodeBlock code={CURL_FREE} lang="bash" />
+            <LiveTryIt />
+          </div>
+        </section>
+
+        {/* ══ Step 2: Install the SDK ══ */}
+        <section className="mb-14">
+          <div className="flex items-center gap-3 mb-5">
+            <StepBadge n={2} />
+            <div>
+              <h2 className="text-xl font-semibold">Install the SDK</h2>
+              <p className="text-gray-400 text-sm">
+                The SDK handles 402 payment flow automatically
+              </p>
+            </div>
+          </div>
+
+          <div className="glass-card rounded-xl p-6">
+            <TabBar
+              tabs={[
+                { id: "javascript", label: "JavaScript" },
+                { id: "python", label: "Python" },
+                { id: "cli", label: "CLI" },
+                { id: "curl", label: "MCP (AI Agent)" },
+              ]}
+              active={sdkTab}
+              onChange={setSdkTab}
+            />
+
+            <div className="mt-4">
+              {sdkTab === "javascript" && (
+                <div className="space-y-3">
+                  <div className="relative">
+                    <InlineCopy text="npm install @wintyx/x402-sdk" />
+                    <pre className="bg-[#0d1117] border border-white/10 rounded-lg p-3 pr-12 text-sm font-mono text-gray-300">
+                      <span className="text-gray-500">$</span> npm install
+                      @wintyx/x402-sdk
+                    </pre>
+                  </div>
+                  <CodeBlock code={JS_SDK} lang="javascript" />
                 </div>
-                <h2 className="text-xl font-semibold mb-2">{path.title}</h2>
-                <p className="text-gray-400 text-sm leading-relaxed">
-                  {path.description}
+              )}
+
+              {sdkTab === "python" && (
+                <div className="space-y-3">
+                  <div className="relative">
+                    <InlineCopy text="pip install x402-bazaar" />
+                    <pre className="bg-[#0d1117] border border-white/10 rounded-lg p-3 pr-12 text-sm font-mono text-gray-300">
+                      <span className="text-gray-500">$</span> pip install
+                      x402-bazaar
+                    </pre>
+                  </div>
+                  <CodeBlock code={PY_SDK} lang="python" />
+                </div>
+              )}
+
+              {sdkTab === "cli" && <CodeBlock code={CLI_SNIPPET} lang="bash" />}
+
+              {sdkTab === "curl" && (
+                <div className="space-y-3">
+                  <CodeBlock code={MCP_SNIPPET} lang="bash" />
+                  <p className="text-gray-400 text-xs">
+                    This configures the MCP server so Claude, Cursor, or VS Code
+                    can call 100+ APIs autonomously.{" "}
+                    <Link to="/mcp" className="text-[#FF9900] hover:underline">
+                      Full MCP guide
+                    </Link>
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
+
+        {/* ══ Step 3: Go further ══ */}
+        <section className="mb-14">
+          <div className="flex items-center gap-3 mb-5">
+            <StepBadge n={3} />
+            <div>
+              <h2 className="text-xl font-semibold">Make paid calls</h2>
+              <p className="text-gray-400 text-sm">
+                Fund a wallet to unlock all 100+ APIs
+              </p>
+            </div>
+          </div>
+
+          <div className="glass-card rounded-xl p-6 space-y-4">
+            <p className="text-gray-300 text-sm">
+              Paid APIs follow the HTTP 402 protocol: your first call returns
+              payment details, you send USDC, then retry with the transaction
+              hash. The SDK does this automatically.
+            </p>
+            <CodeBlock code={CURL_PAID} lang="bash" />
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+              <Link
+                to="/fund"
+                className="flex items-center gap-2 bg-white/5 border border-white/10 rounded-lg p-3 hover:bg-white/10 hover:border-white/20 transition-colors group"
+              >
+                <Wallet className="w-5 h-5 text-[#FF9900]" />
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium">Fund Wallet</p>
+                  <p className="text-xs text-gray-500">
+                    Bridge USDC from any chain
+                  </p>
+                </div>
+                <ChevronRight className="w-4 h-4 text-gray-600 group-hover:text-gray-400 transition-colors" />
+              </Link>
+              <Link
+                to="/services"
+                className="flex items-center gap-2 bg-white/5 border border-white/10 rounded-lg p-3 hover:bg-white/10 hover:border-white/20 transition-colors group"
+              >
+                <Blocks className="w-5 h-5 text-[#FF9900]" />
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium">API Catalog</p>
+                  <p className="text-xs text-gray-500">Browse 100+ APIs</p>
+                </div>
+                <ChevronRight className="w-4 h-4 text-gray-600 group-hover:text-gray-400 transition-colors" />
+              </Link>
+              <Link
+                to="/playground"
+                className="flex items-center gap-2 bg-white/5 border border-white/10 rounded-lg p-3 hover:bg-white/10 hover:border-white/20 transition-colors group"
+              >
+                <Terminal className="w-5 h-5 text-[#FF9900]" />
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium">Playground</p>
+                  <p className="text-xs text-gray-500">Try APIs in browser</p>
+                </div>
+                <ChevronRight className="w-4 h-4 text-gray-600 group-hover:text-gray-400 transition-colors" />
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* ══ Why x402 ══ */}
+        <section className="mb-14">
+          <h3 className="text-center text-gray-500 text-xs font-medium uppercase tracking-widest mb-6">
+            Why developers choose x402
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {[
+              {
+                icon: <Zap className="w-5 h-5" />,
+                title: "Pay per call",
+                desc: "No subscriptions. No monthly fees. Pay only for what you use, starting at $0.001/call.",
+              },
+              {
+                icon: <Shield className="w-5 h-5" />,
+                title: "No API keys",
+                desc: "The HTTP 402 protocol replaces API keys with on-chain payment proof. No signup needed.",
+              },
+              {
+                icon: <ArrowRight className="w-5 h-5" />,
+                title: "Agent-native",
+                desc: "Built for AI agents. MCP server, LangChain, CrewAI, AutoGPT — agents pay autonomously.",
+              },
+            ].map((item) => (
+              <div
+                key={item.title}
+                className="bg-white/5 border border-white/10 rounded-xl p-5 text-center"
+              >
+                <div className="w-10 h-10 rounded-lg bg-[#FF9900]/10 flex items-center justify-center text-[#FF9900] mx-auto mb-3">
+                  {item.icon}
+                </div>
+                <h4 className="text-sm font-semibold mb-1">{item.title}</h4>
+                <p className="text-xs text-gray-400 leading-relaxed">
+                  {item.desc}
                 </p>
               </div>
+            ))}
+          </div>
+        </section>
 
-              {/* Steps */}
-              <ol className="flex flex-col gap-3">
-                {path.steps.map((step, i) => (
-                  <li key={i} className="flex items-start gap-3 text-sm">
-                    <span className="flex-shrink-0 w-5 h-5 rounded-full bg-[#FF9900]/20 text-[#FF9900] flex items-center justify-center text-xs font-bold mt-0.5">
-                      {i + 1}
-                    </span>
-                    <span className="text-gray-300 leading-snug">
-                      {step.code ? (
-                        <>
-                          <code className="bg-white/10 text-[#FF9900] px-1.5 py-0.5 rounded text-xs font-mono">
-                            {step.text}
-                          </code>
-                          {step.suffix && (
-                            <span className="text-gray-400">
-                              {" "}
-                              {step.suffix}
-                            </span>
-                          )}
-                        </>
-                      ) : (
-                        step.text
-                      )}
-                    </span>
-                  </li>
-                ))}
-              </ol>
-
-              {/* CTAs */}
-              <div className="flex flex-col gap-3 mt-auto pt-2">
-                <Link
-                  to={path.primaryHref}
-                  className="bg-[#FF9900] text-black font-semibold rounded-lg px-6 py-3 hover:bg-[#FF9900]/90 transition-colors text-center text-sm"
-                >
-                  {path.primaryLabel}
-                </Link>
-                <Link
-                  to={path.secondaryHref}
-                  className="border border-white/20 text-white rounded-lg px-6 py-3 hover:bg-white/5 transition-colors text-center text-sm"
-                >
-                  {path.secondaryLabel}
-                </Link>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Section 3 — Common first steps */}
-        <div className="border-t border-white/10 pt-10">
-          <h3 className="text-center text-gray-400 text-sm font-medium uppercase tracking-wider mb-6">
-            Common first steps
+        {/* ══ Next Steps ══ */}
+        <div className="border-t border-white/10 pt-10 text-center">
+          <h3 className="text-gray-500 text-xs font-medium uppercase tracking-widest mb-4">
+            Go deeper
           </h3>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
-            {quickLinks.map((item) =>
-              item.href ? (
-                <Link
-                  key={item.label}
-                  to={item.href}
-                  className="flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-5 py-2.5 hover:bg-white/10 hover:border-white/20 transition-colors text-sm text-white"
-                >
-                  <span className="text-gray-400">{item.icon}</span>
-                  <span>{item.text}</span>
-                </Link>
-              ) : (
-                <div
-                  key={item.label}
-                  className="flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-5 py-2.5 text-sm"
-                >
-                  <span className="text-gray-400">{item.icon}</span>
-                  <code className="text-[#FF9900] font-mono">{item.text}</code>
-                </div>
-              ),
-            )}
+          <div className="flex flex-wrap justify-center gap-3">
+            <Link
+              to="/developers"
+              className="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-5 py-2.5 hover:bg-white/10 hover:border-white/20 transition-colors text-sm"
+            >
+              <BookOpen className="w-4 h-4 text-gray-400" />
+              API Reference
+            </Link>
+            <Link
+              to="/for-providers"
+              className="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-5 py-2.5 hover:bg-white/10 hover:border-white/20 transition-colors text-sm"
+            >
+              <Blocks className="w-4 h-4 text-gray-400" />
+              List Your API
+            </Link>
+            <Link
+              to="/mcp"
+              className="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-5 py-2.5 hover:bg-white/10 hover:border-white/20 transition-colors text-sm"
+            >
+              <Terminal className="w-4 h-4 text-gray-400" />
+              MCP Setup
+            </Link>
           </div>
         </div>
       </div>
