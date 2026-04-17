@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { Link } from "react-router-dom";
 import { useAccount, useSignMessage } from "wagmi";
 import { useQueryClient } from "@tanstack/react-query";
@@ -257,6 +257,7 @@ function DeleteModal({
   const { t } = useTranslation();
   const m = t.myApis;
   const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
   const cancelRef = useRef<HTMLButtonElement>(null);
 
   // Focus Cancel button on mount (safe default for destructive actions)
@@ -275,10 +276,19 @@ function DeleteModal({
 
   const handleDelete = async () => {
     setDeleting(true);
+    setDeleteError(null);
     try {
       await onConfirm();
       onClose();
-    } catch {
+    } catch (err: unknown) {
+      // Previously this catch was silent — user clicked Delete, nothing happened,
+      // the modal reset its state and they had no idea if the call failed.
+      // Now we surface the error so the user can retry or report it.
+      const msg =
+        err instanceof Error && err.message
+          ? err.message
+          : "Delete failed. Please retry.";
+      setDeleteError(msg);
       setDeleting(false);
     }
   };
@@ -308,6 +318,14 @@ function DeleteModal({
         <p className="text-xs text-red-400 mb-4">
           {m?.deleteWarning ?? "This action cannot be undone."}
         </p>
+        {deleteError && (
+          <div
+            role="alert"
+            className="mb-4 p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-sm text-red-300"
+          >
+            {deleteError}
+          </div>
+        )}
         <div className="flex gap-3 justify-end">
           <button
             ref={cancelRef}
@@ -347,6 +365,9 @@ export default function MyApis() {
     serviceId: string,
     updates: Record<string, any>,
   ) => {
+    if (!address) {
+      throw new Error("Wallet not connected");
+    }
     const { message, signature } = await signAction(
       "update-service",
       serviceId,
@@ -355,7 +376,7 @@ export default function MyApis() {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        "X-Wallet-Address": address!,
+        "X-Wallet-Address": address,
         "X-Wallet-Message": message,
         "X-Wallet-Signature": signature,
       },
@@ -369,6 +390,9 @@ export default function MyApis() {
   };
 
   const handleDelete = async (serviceId: string) => {
+    if (!address) {
+      throw new Error("Wallet not connected");
+    }
     const { message, signature } = await signAction(
       "delete-service",
       serviceId,
@@ -376,7 +400,7 @@ export default function MyApis() {
     const res = await fetch(`${API_URL}/api/services/${serviceId}`, {
       method: "DELETE",
       headers: {
-        "X-Wallet-Address": address!,
+        "X-Wallet-Address": address,
         "X-Wallet-Message": message,
         "X-Wallet-Signature": signature,
       },
@@ -469,15 +493,16 @@ export default function MyApis() {
         </div>
       </div>
 
-      {/* Tabs */}
+      {/* Tabs — parameter renamed to `tabItem` to avoid shadowing the `t`
+           translations object in the enclosing scope. */}
       <div className="flex gap-0 border-b border-white/10 mb-8 overflow-x-auto">
-        {tabs.map((t) => (
+        {tabs.map((tabItem) => (
           <button
-            key={t.key}
-            onClick={() => setTab(t.key)}
-            className={`px-5 py-3 text-sm font-medium transition-colors cursor-pointer whitespace-nowrap ${tab === t.key ? "text-[#FF9900] border-b-2 border-[#FF9900]" : "text-gray-500 hover:text-gray-300"}`}
+            key={tabItem.key}
+            onClick={() => setTab(tabItem.key)}
+            className={`px-5 py-3 text-sm font-medium transition-colors cursor-pointer whitespace-nowrap ${tab === tabItem.key ? "text-[#FF9900] border-b-2 border-[#FF9900]" : "text-gray-500 hover:text-gray-300"}`}
           >
-            {t.label}
+            {tabItem.label}
           </button>
         ))}
       </div>
@@ -492,7 +517,9 @@ export default function MyApis() {
         />
       )}
       {tab === "payouts" && <PayoutsTab data={data} />}
-      {tab === "payment-links" && <PaymentLinksTab address={address!} />}
+      {tab === "payment-links" && address && (
+        <PaymentLinksTab address={address} />
+      )}
 
       {editService && (
         <EditModal
@@ -589,49 +616,65 @@ function OverviewTab({ data }: { data: ProviderAnalytics }) {
 // ─── Revenue Tab ──────────────────────────────────────────────────────────
 
 function RevenueTab({ data }: { data: ProviderAnalytics }) {
-  const chartData = {
-    labels: data.daily_revenue.map((d) => d.date.slice(5)),
-    datasets: [
-      {
-        label: "Revenue (USDC)",
-        data: data.daily_revenue.map((d) => d.amount),
-        backgroundColor: "#FF9900",
-        borderRadius: 4,
+  // Memoize chart configs — chart.js rebuilds the canvas when the options
+  // or data reference changes, which made every parent rerender wipe and
+  // redraw the chart. Now only data.daily_revenue / data.by_chain changes
+  // trigger a redraw.
+  const chartData = useMemo(
+    () => ({
+      labels: data.daily_revenue.map((d) => d.date.slice(5)),
+      datasets: [
+        {
+          label: "Revenue (USDC)",
+          data: data.daily_revenue.map((d) => d.amount),
+          backgroundColor: "#FF9900",
+          borderRadius: 4,
+        },
+      ],
+    }),
+    [data.daily_revenue],
+  );
+  const chartOptions = useMemo(
+    () => ({
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: { label: (ctx: any) => `$${ctx.raw.toFixed(4)} USDC` },
+        },
       },
-    ],
-  };
-  const chartOptions = {
-    responsive: true,
-    plugins: {
-      legend: { display: false },
-      tooltip: {
-        callbacks: { label: (ctx: any) => `$${ctx.raw.toFixed(4)} USDC` },
+      scales: {
+        x: {
+          grid: { color: "rgba(255,255,255,0.05)" },
+          ticks: { color: "#666", font: { size: 10 } },
+        },
+        y: {
+          grid: { color: "rgba(255,255,255,0.05)" },
+          ticks: { color: "#666", callback: (v: any) => `$${v}` },
+        },
       },
-    },
-    scales: {
-      x: {
-        grid: { color: "rgba(255,255,255,0.05)" },
-        ticks: { color: "#666", font: { size: 10 } },
-      },
-      y: {
-        grid: { color: "rgba(255,255,255,0.05)" },
-        ticks: { color: "#666", callback: (v: any) => `$${v}` },
-      },
-    },
-  };
-  const chainEntries = Object.entries(data.by_chain);
-  const doughnutData = {
-    labels: chainEntries.map(([c]) => c.charAt(0).toUpperCase() + c.slice(1)),
-    datasets: [
-      {
-        data: chainEntries.map(([, v]) => v),
-        backgroundColor: chainEntries.map(
-          ([c]) => CHAIN_COLORS[c] || "#6B7280",
-        ),
-        borderWidth: 0,
-      },
-    ],
-  };
+    }),
+    [],
+  );
+  const chainEntries = useMemo(
+    () => Object.entries(data.by_chain),
+    [data.by_chain],
+  );
+  const doughnutData = useMemo(
+    () => ({
+      labels: chainEntries.map(([c]) => c.charAt(0).toUpperCase() + c.slice(1)),
+      datasets: [
+        {
+          data: chainEntries.map(([, v]) => v),
+          backgroundColor: chainEntries.map(
+            ([c]) => CHAIN_COLORS[c] || "#6B7280",
+          ),
+          borderWidth: 0,
+        },
+      ],
+    }),
+    [chainEntries],
+  );
 
   return (
     <div className="space-y-6 animate-fade-in-up">
@@ -956,6 +999,9 @@ function PaymentLinksTab({ address }: { address: string }) {
   }, [address]);
 
   const handleDeactivate = async (linkId: string) => {
+    // Reset stale error from previous attempt so the modal doesn't show an
+    // old error message while the new request is in-flight.
+    setDeactivateError(null);
     setDeactivating(linkId);
     try {
       const timestamp = Date.now();

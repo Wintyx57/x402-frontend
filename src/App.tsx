@@ -102,66 +102,76 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 export default function App() {
   return (
     <div className="min-h-screen overflow-x-hidden transition-colors duration-300">
+      {/* Skip link — visible on focus only, first in tab order. WCAG 2.4.1
+          lets keyboard users bypass the 12+ navbar items on every page. */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:bg-[#FF9900] focus:text-black focus:px-4 focus:py-2 focus:rounded-lg focus:font-medium"
+      >
+        Skip to main content
+      </a>
       <ErrorBoundary>
         <Navbar />
-        <Suspense fallback={<PageSkeleton />}>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/services" element={<Services />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/integrate" element={<Integrate />} />
-            <Route path="/developers" element={<Developers />} />
-            <Route path="/mcp" element={<MCP />} />
-            <Route path="/blog" element={<BlogList />} />
-            <Route path="/blog/:slug" element={<BlogArticle />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/faq" element={<FAQ />} />
-            <Route path="/demos" element={<Demos />} />
-            <Route path="/config" element={<Config />} />
-            <Route path="/docs" element={<Docs />} />
-            <Route path="/status" element={<Status />} />
-            <Route path="/privacy" element={<Privacy />} />
-            <Route path="/terms" element={<Terms />} />
-            <Route path="/legal" element={<Legal />} />
-            <Route path="/playground" element={<Playground />} />
-            <Route path="/analytics" element={<Analytics />} />
-            <Route path="/compare" element={<Compare />} />
-            <Route path="/for-providers" element={<ForProviders />} />
-            <Route path="/budget" element={<Budget />} />
-            <Route path="/fund" element={<FundWallet />} />
-            <Route
-              path="/creators"
-              element={<Navigate to="/for-providers" replace />}
-            />
-            <Route path="/my-apis" element={<MyApis />} />
-            <Route
-              path="/creators/dashboard"
-              element={<Navigate to="/my-apis" replace />}
-            />
-            <Route
-              path="/creators/onboarding"
-              element={<Navigate to="/register" replace />}
-            />
-            <Route path="/quickstart" element={<Quickstart />} />
-            <Route path="/start" element={<Quickstart />} />
-            <Route path="/admin" element={<AdminDashboard />} />
-            <Route path="/agent" element={<LiveAgent />} />
-            <Route path="/services/:id" element={<ServiceDetail />} />
-            <Route path="/import" element={<ImportOpenAPI />} />
-            <Route path="/import/rapidapi" element={<ImportRapidAPI />} />
-            <Route path="/pay/:id" element={<Paywall />} />
-            <Route path="/use-cases" element={<UseCases />} />
-            <Route
-              path="/admin/community-agent"
-              element={
-                <Suspense fallback={<div>Loading...</div>}>
-                  <AdminCommunityAgent />
-                </Suspense>
-              }
-            />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Suspense>
+        <main id="main-content">
+          <Suspense fallback={<PageSkeleton />}>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/services" element={<Services />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/integrate" element={<Integrate />} />
+              <Route path="/developers" element={<Developers />} />
+              <Route path="/mcp" element={<MCP />} />
+              <Route path="/blog" element={<BlogList />} />
+              <Route path="/blog/:slug" element={<BlogArticle />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/faq" element={<FAQ />} />
+              <Route path="/demos" element={<Demos />} />
+              <Route path="/config" element={<Config />} />
+              <Route path="/docs" element={<Docs />} />
+              <Route path="/status" element={<Status />} />
+              <Route path="/privacy" element={<Privacy />} />
+              <Route path="/terms" element={<Terms />} />
+              <Route path="/legal" element={<Legal />} />
+              <Route path="/playground" element={<Playground />} />
+              <Route path="/analytics" element={<Analytics />} />
+              <Route path="/compare" element={<Compare />} />
+              <Route path="/for-providers" element={<ForProviders />} />
+              <Route path="/budget" element={<Budget />} />
+              <Route path="/fund" element={<FundWallet />} />
+              <Route
+                path="/creators"
+                element={<Navigate to="/for-providers" replace />}
+              />
+              <Route path="/my-apis" element={<MyApis />} />
+              <Route
+                path="/creators/dashboard"
+                element={<Navigate to="/my-apis" replace />}
+              />
+              <Route
+                path="/creators/onboarding"
+                element={<Navigate to="/register" replace />}
+              />
+              <Route path="/quickstart" element={<Quickstart />} />
+              <Route path="/start" element={<Quickstart />} />
+              <Route path="/admin" element={<AdminDashboard />} />
+              <Route path="/agent" element={<LiveAgent />} />
+              <Route path="/services/:id" element={<ServiceDetail />} />
+              <Route path="/import" element={<ImportOpenAPI />} />
+              <Route path="/import/rapidapi" element={<ImportRapidAPI />} />
+              <Route path="/pay/:id" element={<Paywall />} />
+              <Route path="/use-cases" element={<UseCases />} />
+              <Route
+                path="/admin/community-agent"
+                element={
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <AdminCommunityAgent />
+                  </Suspense>
+                }
+              />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Suspense>
+        </main>
         <Footer />
       </ErrorBoundary>
       <ScrollToTop />

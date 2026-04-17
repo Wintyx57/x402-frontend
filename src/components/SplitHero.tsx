@@ -57,6 +57,12 @@ export default function SplitHero() {
       {/* Noise overlay */}
       <div className="hero-noise" aria-hidden="true" />
 
+      {/* Visually hidden H1 — the hero renders its title as two H2s for
+          visual impact, but WCAG requires a single H1 for the page. */}
+      <h1 className="sr-only">
+        x402 Bazaar — API marketplace for AI agents with on-chain payments
+      </h1>
+
       {/* Chain badges */}
       <div className="hero-chain-badges" aria-hidden="true">
         <span className="hero-chain-badge hero-chain-skale">

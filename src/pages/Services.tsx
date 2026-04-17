@@ -1,6 +1,5 @@
 import { useEffect, useMemo } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { API_URL } from "../config";
 import { useTranslation } from "../i18n/LanguageContext";
 import useSEO from "../hooks/useSEO";
 import { useServices } from "../hooks/useServices";
@@ -360,8 +359,7 @@ export default function Services() {
       if (quickFilter === "cheap" && Number(s.price_usdc) >= 0.01) return false;
       if (
         quickFilter === "new" &&
-        (!s.created_at ||
-          now.current - new Date(s.created_at).getTime() > sevenDays)
+        (!s.created_at || now - new Date(s.created_at).getTime() > sevenDays)
       )
         return false;
       // Category

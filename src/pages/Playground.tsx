@@ -615,8 +615,8 @@ export default function Playground() {
                       label={pg.copy || "Copy"}
                       copiedLabel={pg.copied || "Copied"}
                     />
-                    <pre className="p-4 text-xs leading-relaxed overflow-x-auto max-h-[500px] overflow-y-auto font-mono">
-                      <HighlightedJSON json={jsonStr} />
+                    <pre className="p-4 text-xs leading-relaxed overflow-x-auto max-h-[500px] overflow-y-auto font-mono text-gray-200">
+                      {jsonStr}
                     </pre>
                   </>
                 ) : (

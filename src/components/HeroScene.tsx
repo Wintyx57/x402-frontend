@@ -570,9 +570,13 @@ export default function HeroScene({ hoverState }: HeroSceneProps) {
         for (let i = 0; i < 22; i++) tokens.push(new Token(false));
         for (let i = 0; i < 8; i++) tokens.push(new Token(true));
 
-        // Re-render USDC texture once fonts are loaded for crisp text
+        // Re-render USDC texture once fonts are loaded for crisp text.
+        // GPU leak fix: the previous version overwrote usdcFaceTex without
+        // disposing the old CanvasTexture, leaving one GPU allocation
+        // permanently live whenever the page's font loaded after mount.
         document.fonts.ready.then(() => {
           if (disposed) return;
+          const oldTex = usdcFaceTex;
           usdcFaceTex = makeUSDCFace(512);
           tokens.forEach((t) => {
             t.fm.map = usdcFaceTex;
@@ -580,6 +584,9 @@ export default function HeroScene({ hoverState }: HeroSceneProps) {
             t.fm.needsUpdate = true;
             t.bm.needsUpdate = true;
           });
+          if (oldTex && oldTex !== usdcFaceTex) {
+            oldTex.dispose();
+          }
         });
 
         // === DUST ===
@@ -633,8 +640,26 @@ export default function HeroScene({ hoverState }: HeroSceneProps) {
         // === ANIMATE ===
         const clock = new THREE.Clock();
         let animId = 0;
+        // Pause the animation loop when the tab is hidden. A WebGL scene
+        // with bloom post-processing + 30 tokens + dust particles costs
+        // noticeable CPU/GPU even when the user isn't looking, which is
+        // wasteful on mobile battery and pointlessly loud on fans.
+        let tabHidden = typeof document !== "undefined" && document.hidden;
+        const onVisibilityChange = () => {
+          const nowHidden = document.hidden;
+          if (nowHidden === tabHidden) return;
+          tabHidden = nowHidden;
+          if (!tabHidden && !disposed) {
+            // Resume — reset the clock delta so the first frame after resume
+            // doesn't simulate an hours-long leap that explodes physics.
+            clock.getDelta();
+            animate();
+          }
+        };
+        document.addEventListener("visibilitychange", onVisibilityChange);
 
         function animate() {
+          if (disposed || tabHidden) return;
           animId = requestAnimationFrame(animate);
           if (prefersReducedMotion) {
             composer.render();
@@ -688,6 +713,7 @@ export default function HeroScene({ hoverState }: HeroSceneProps) {
         cleanupFn = () => {
           cancelAnimationFrame(animId);
           document.removeEventListener("mousemove", onMouseMove);
+          document.removeEventListener("visibilitychange", onVisibilityChange);
           window.removeEventListener("resize", onResize);
 
           tokens.forEach((tk) => tk.dispose());
