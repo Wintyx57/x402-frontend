@@ -1,4 +1,5 @@
 import * as Sentry from "@sentry/react";
+import posthog from "posthog-js";
 import { StrictMode, lazy, Suspense } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
@@ -16,6 +17,20 @@ if (import.meta.env.PROD) {
     dsn: import.meta.env.VITE_SENTRY_DSN,
     tracesSampleRate: 0,
   });
+
+  const posthogKey = import.meta.env.VITE_POSTHOG_PROJECT_API_KEY;
+  if (posthogKey) {
+    posthog.init(posthogKey, {
+      api_host: import.meta.env.VITE_POSTHOG_HOST || "https://us.i.posthog.com",
+      capture_pageview: true,
+      capture_pageleave: true,
+      autocapture: false,
+      persistence: "localStorage+cookie",
+      loaded: (ph) => {
+        if (window.location.search.includes("debug=posthog")) ph.debug();
+      },
+    });
+  }
 }
 
 const root = document.getElementById("root");

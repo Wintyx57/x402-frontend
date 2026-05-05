@@ -9,6 +9,7 @@ import { WagmiProvider } from "wagmi";
 import { ThirdwebProvider } from "thirdweb/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { config } from "./wagmi";
+import WalletTracker from "./components/WalletTracker";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -25,7 +26,10 @@ export default function Providers({ children }: { children: ReactNode }) {
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <ThirdwebProvider>{children}</ThirdwebProvider>
+        <ThirdwebProvider>
+          <WalletTracker />
+          {children}
+        </ThirdwebProvider>
       </QueryClientProvider>
     </WagmiProvider>
   );

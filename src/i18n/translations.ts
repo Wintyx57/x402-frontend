@@ -2299,6 +2299,338 @@ def my_function(query: str) -> dict:
       ctaInstall: "npm install x402-bazaar",
       ctaBtn: "Get Started",
     },
+    security: {
+      badge: "Trust & Security",
+      title: "Security at x402 Bazaar",
+      subtitle: "Last audit: April 2026 — 29 critical fixes deployed",
+      trustAudit: "April 2026 Audit",
+      trustLicense: "MIT License",
+      trustContracts: "MIT Contracts",
+      trustFixesCount: "29 fixes deployed",
+      protectionsTitle: "What we protect against",
+      protectionsSubtitle:
+        "Every layer of the stack is hardened against known attack vectors.",
+      prot1Title: "SSRF",
+      prot1Desc:
+        "Multi-layer validation blocks server-side request forgery. DNS resolution forced to IPv4, private ranges blocked, 10s TTL cache against rebinding.",
+      prot2Title: "Replay Attacks",
+      prot2Desc:
+        "Every transaction hash consumed exactly once via atomic DB insert with in-memory pre-claim set. Rolled-back rows kept for audit trail.",
+      prot3Title: "Wallet Exfiltration",
+      prot3Desc:
+        "MCP wallet encrypted at rest with AES-256-GCM, key derived via PBKDF2 (100k iterations, per-wallet random salt). Private keys never transmitted.",
+      prot4Title: "Timing Side-Channels",
+      prot4Desc:
+        "Admin token comparison uses crypto.timingSafeEqual on equal-length padded buffers. No early exit on length mismatch.",
+      prot5Title: "SQL Injection",
+      prot5Desc:
+        "All database queries use parameterized statements via Supabase client. User input sanitized before any LIKE/iLIKE operation.",
+      prot6Title: "XSS",
+      prot6Desc:
+        "Content-Security-Policy via helmet with strict script-src and connect-src whitelist. Proxied responses receive default-src 'none'.",
+      prot7Title: "DoS / Rate Limiting",
+      prot7Desc:
+        "Three tiers: 500 req/15min general, 120 req/min paid endpoints, 10 req/hr registration. Per-wallet rate limit prevents signer DoS.",
+      prot8Title: "RCE via Expressions",
+      prot8Desc:
+        "User-supplied math expressions sandboxed in hardened mathjs instance. Mitigates GHSA-jvff-x2qm-6286 class of prototype pollution.",
+      prot9Title: "Race Conditions",
+      prot9Desc:
+        "Free-tier increment uses atomic Postgres RPC with INSERT … ON CONFLICT DO UPDATE RETURNING. No TOCTOU window.",
+      onChainTitle: "What is verified on-chain",
+      onChainSubtitle:
+        "Smart contracts independently verifiable by anyone on the public blockchain.",
+      onChainVerified: "Verified",
+      onChain1Name: "FeeSplitter Contract",
+      onChain1Desc:
+        "Splits payments 95/5 on every call. ReentrancyGuard + SafeERC20. 66 Hardhat tests.",
+      onChain1Chain: "Polygon",
+      onChain1Link:
+        "https://polygonscan.com/address/0x820d4b07D09e5E07598464E6E36cB12561e0Ba56",
+      onChain2Name: "ERC-8004 Identity Registry",
+      onChain2Desc:
+        "On-chain identity NFTs for all listed APIs. Unique agent identity per service.",
+      onChain2Chain: "SKALE",
+      onChain2Link:
+        "https://explorer.skale.network/address/0x8004A169FB4a3325136EB29fA0ceB6D2e539a432",
+      onChain3Name: "Reputation Registry",
+      onChain3Desc:
+        "TrustScores pushed on-chain every 6h. Gold/Silver/Bronze badge tied to on-chain reputation.",
+      onChain3Chain: "SKALE",
+      onChain3Link:
+        "https://explorer.skale.network/address/0x8004BAa17C55a88189AE136b182e5fdA19dE9b63",
+      auditTitle: "Recent audit findings",
+      auditSubtitle:
+        "April 2026 — 10 specialized agents in parallel. All findings resolved.",
+      auditFixed: "Fixed",
+      auditP0Label: "Critical (P0)",
+      auditP1Label: "High (P1)",
+      auditP2Label: "Medium (P2)",
+      auditP0Items: [
+        { title: "RCE via mathjs prototype pollution", sha: "2d26b65" },
+        {
+          title: "EIP-3009 headers swapped — USDC burned on upstream retries",
+          sha: "2d26b65",
+        },
+        {
+          title: "Replay-key rollback silently failed on DB conflict",
+          sha: "1d5d9fa",
+        },
+        {
+          title:
+            "MCP wallet key derived without PBKDF2 (machine-bound, reversible)",
+          sha: "1a8cc21",
+        },
+      ],
+      auditP1Items: [
+        {
+          title: "IP hashing used plain SHA-256 without server secret",
+          sha: "2d26b65",
+        },
+        { title: "Free-tier increment had TOCTOU race window", sha: "2d26b65" },
+        {
+          title: "RLS policies allowed anon to read quarantined services",
+          sha: "2d26b65",
+        },
+        {
+          title: "Admin session stored in sessionStorage (XSS-readable)",
+          sha: "2d26b65",
+        },
+        {
+          title: "Double-charge possible on legacy payment path",
+          sha: "1d5d9fa",
+        },
+        {
+          title: "viem publicClient not singleton — created per-request",
+          sha: "1d5d9fa",
+        },
+        {
+          title: "Wallet address normalization bypassed Zod transform",
+          sha: "1d5d9fa",
+        },
+        { title: "getRelayBalance silently swallowed errors", sha: "1d5d9fa" },
+        {
+          title: "HeroScene Three.js animation frame leaked on unmount",
+          sha: "e44afdf",
+        },
+        {
+          title: "Carousel3D used stale closure on scroll listener",
+          sha: "e44afdf",
+        },
+        {
+          title: "MyApis rendered 3 non-null assertion paths unchecked",
+          sha: "e44afdf",
+        },
+      ],
+      auditP2Items: [
+        { title: "ConfirmModal lacked WCAG focus trap", sha: "e44afdf" },
+        {
+          title: "App.tsx missing skip-link, main landmark, and h1",
+          sha: "e44afdf",
+        },
+        {
+          title: "SELECT * used instead of explicit columns in services.js",
+          sha: "2d26b65",
+        },
+        {
+          title: "Float arithmetic in split display caused rounding drift",
+          sha: "1d5d9fa",
+        },
+        { title: "CHAINS constant duplicated across 5 files", sha: "2d26b65" },
+        {
+          title: "URL tokens not scrubbed from access logs (key, sig, auth)",
+          sha: "2d26b65",
+        },
+        {
+          title: "activity.js used .then() on non-Promise Supabase builder",
+          sha: "1d5d9fa",
+        },
+        {
+          title: "budget.js used SELECT * instead of explicit columns",
+          sha: "1d5d9fa",
+        },
+        {
+          title: "Dependabot not configured on any of 7 repos",
+          sha: "2d26b65",
+        },
+        {
+          title: "decryptCmd path exposed in export_private_key MCP response",
+          sha: "1a8cc21",
+        },
+        {
+          title: "reviews.js rate-limiter threw ValidationError on IPv6",
+          sha: "1d5d9fa",
+        },
+        {
+          title: "Prototype pollution on proxy required_parameters not blocked",
+          sha: "1d5d9fa",
+        },
+        {
+          title: "fetchWithTimeout clearTimeout not called on success",
+          sha: "1d5d9fa",
+        },
+        {
+          title: "monitor.js .unref() not called — prevented graceful shutdown",
+          sha: "1d5d9fa",
+        },
+      ],
+      disclosureTitle: "Responsible Disclosure",
+      disclosureSubtitle:
+        "Found a security issue? We commit to a 48-hour acknowledgment SLA.",
+      disclosureEmail: "security@x402bazaar.org",
+      disclosureEmailLabel: "Report by email",
+      disclosureResponse: "48h acknowledgment",
+      disclosureCritical:
+        "24h patch for critical (RCE, wallet drain, credential leak)",
+      disclosureScope: "In scope",
+      disclosureOutOfScope: "Out of scope",
+      disclosureScopeItems: [
+        "Payment verification bypass",
+        "Wallet key exfiltration",
+        "Provider credential leak",
+        "Replay attack vectors",
+        "SSRF on proxy endpoints",
+        "Admin authentication bypass",
+      ],
+      disclosureOutItems: [
+        "Third-party upstream APIs listed on the marketplace",
+        "RapidAPI or external marketplace infrastructure",
+        "Social engineering attacks",
+        "Physical access attacks",
+      ],
+      comingSoonTitle: "Coming soon",
+      bugBountyTitle: "Bug Bounty Program",
+      bugBountyDesc:
+        "Immunefi listing in progress. Rewards for critical vulnerabilities up to $10,000 USDC.",
+      auditTrailTitle: "Trail of Bits Audit",
+      auditTrailDesc:
+        "External audit of the FeeSplitter smart contract. Planned Q2 2026.",
+      soc2Title: "SOC 2 Type II",
+      soc2Desc:
+        "Certification process starts Q3 2026. Applicable for enterprise customers.",
+      ctaTitle: "Build with confidence",
+      ctaSubtitle:
+        "Start integrating x402 Bazaar today — your payments are secured end-to-end.",
+      ctaQuickstart: "Quickstart",
+      ctaContact: "Contact Security",
+    },
+    providers: {
+      badge: "For API Providers",
+      heroTitle: "Sell your API to AI agents",
+      heroSubtitle: "Keep 95% of revenue. Get paid in USDC. No 30-day terms.",
+      heroCtaRegister: "Register your API",
+      heroCtaDocs: "View provider docs",
+      whyTitle: "Why x402 Bazaar",
+      whySubtitle:
+        "Built for providers who want instant, transparent, agent-driven revenue — not platform lock-in.",
+      comparisonTitle: "Revenue split comparison",
+      compHeaderFeature: "Feature",
+      compHeaderX402: "x402 Bazaar",
+      compHeaderRapid: "RapidAPI",
+      compRow1: "Revenue to you",
+      compRow1X402: "95%",
+      compRow1Rapid: "~75%",
+      compRow2: "Payout timing",
+      compRow2X402: "Instant USDC",
+      compRow2Rapid: "30-day net",
+      compRow3: "Listing fee",
+      compRow3X402: "$0",
+      compRow3Rapid: "$0–$500",
+      compRow4: "AI agent native",
+      compRow4X402: "Yes",
+      compRow4Rapid: "No",
+      compRow5: "On-chain audit trail",
+      compRow5X402: "Yes",
+      compRow5Rapid: "No",
+      howTitle: "How it works",
+      howSubtitle: "From zero to first payout in under 15 minutes.",
+      how1Title: "Submit your OpenAPI spec or URL",
+      how1Desc:
+        "Paste your API endpoint URL or OpenAPI spec. We import all endpoints automatically — no code changes needed.",
+      how2Title: "Credentials validated automatically",
+      how2Desc:
+        "We pre-ping your API with your credentials to confirm they work. AES-256-GCM encrypted at rest.",
+      how3Title: "Your API goes live",
+      how3Desc:
+        "Appears in the marketplace, discoverable via MCP, CLI, LangChain, n8n, ChatGPT, and 9 more integrations.",
+      how4Title: "You get paid in USDC after each call",
+      how4Desc:
+        "95% of every payment goes to your wallet instantly. Auto-payout every 6h for balances above $1.",
+      featuresTitle: "What you get",
+      featuresSubtitle:
+        "Everything a provider needs to monetize reliably, without operations overhead.",
+      feat1Title: "Provider analytics dashboard",
+      feat1Desc:
+        "Total earned, by-service breakdown, daily revenue chart, by-chain distribution, pending vs paid.",
+      feat2Title: "Trust score badges",
+      feat2Desc:
+        "Gold / Silver / Bronze based on uptime, latency p95, schema consistency, and content quality.",
+      feat3Title: "ERC-8004 on-chain identity",
+      feat3Desc:
+        "Your API gets an on-chain NFT identity on SKALE. Verifiable agent reputation forever.",
+      feat4Title: "Credential passthrough",
+      feat4Desc:
+        "Your API keys stay yours. Decrypted only in-memory at request time. Never logged or returned.",
+      feat5Title: "95% revenue, 5% platform fee",
+      feat5Desc:
+        "Our only revenue is the 5% platform fee on successful calls. No listing fees, no monthly charges.",
+      feat6Title: "Consumer protection included",
+      feat6Desc:
+        "If your API returns 5xx or empty body, the user is auto-refunded. Protects your reputation too.",
+      topEarnersTitle: "Providers earning right now",
+      topEarnersSubtitle: "Real providers. Real revenue. Data updated daily.",
+      earner1Name: "Brand Story Engine",
+      earner1Revenue: "$38 this week",
+      earner1Calls: "412 calls",
+      earner1Chain: "Base",
+      earner2Name: "MEP Load Analysis",
+      earner2Revenue: "$21 this week",
+      earner2Calls: "190 calls",
+      earner2Chain: "Polygon",
+      earner3Name: "SentimentAlpha",
+      earner3Revenue: "$17 this week",
+      earner3Calls: "280 calls",
+      earner3Chain: "SKALE",
+      earner4Name: "Interzoid Data",
+      earner4Revenue: "$14 this week",
+      earner4Calls: "112 calls",
+      earner4Chain: "Base",
+      earner5Name: "AgentsHere Scraper",
+      earner5Revenue: "$9 this week",
+      earner5Calls: "210 calls",
+      earner5Chain: "SKALE",
+      faqTitle: "Provider FAQ",
+      faqSubtitle:
+        "Common questions from API providers considering x402 Bazaar.",
+      faq1Q: "How are payments split?",
+      faq1A:
+        "95% goes to your registered wallet address, 5% goes to the platform fee wallet. The split happens on every successful call, verified on-chain via the FeeSplitter smart contract.",
+      faq2Q: "When do I get paid?",
+      faq2A:
+        "Payouts settle every 6 hours for wallets with pending balance above $1 USDC. For smaller amounts you can trigger an instant on-chain withdrawal yourself from /my-apis.",
+      faq3Q: "Do I keep my API keys?",
+      faq3A:
+        "Yes. Credentials are encrypted at rest with AES-256-GCM using a key stored only in our server environment. Decrypted only in-memory at request time. We never log or return them.",
+      faq4Q: "What if my API goes down?",
+      faq4A:
+        "We run a health check every 5 minutes. If your API returns 5xx or is unreachable, its status is set to offline and calls are blocked before payment. Users are notified. You get a Telegram alert.",
+      faq5Q: "Can I delist anytime?",
+      faq5A:
+        "Yes. Set status to deprecated via the dashboard or API. The listing disappears from the public marketplace. Existing integrations keep working until you explicitly set it to offline.",
+      faq6Q: "What about exclusivity?",
+      faq6A:
+        "There is no exclusivity. You can list on x402 Bazaar and RapidAPI simultaneously — zero risk. You keep your own infrastructure and your own relationships.",
+      faq7Q: "Is there a listing fee?",
+      faq7A:
+        "No. Registration is completely free. Our only revenue is the 5% platform fee on successful calls. If you make no money, we make no money.",
+      faq8Q: "How does credential validation work?",
+      faq8A:
+        "At registration, we pre-ping your API endpoint with your credentials (HEAD, fallback GET). If it returns 401 or 403, registration is blocked. 5xx or timeout is accepted with a warning. This prevents accidentally listing a broken service.",
+      ctaTitle: "List your API in 5 minutes",
+      ctaSubtitle:
+        "No fees, no approval process. Register now and start earning USDC from AI agent traffic.",
+      ctaRegister: "Register your API",
+    },
   },
   fr: {
     nav: {
@@ -4635,6 +4967,370 @@ def my_function(query: str) -> dict:
         "Installez le SDK, alimentez votre compte avec quelques centimes et commencez à enchaîner des APIs de façon autonome.",
       ctaInstall: "npm install x402-bazaar",
       ctaBtn: "Commencer",
+    },
+    security: {
+      badge: "Confiance & Securite",
+      title: "Securite chez x402 Bazaar",
+      subtitle: "Dernier audit : avril 2026 — 29 correctifs critiques deployes",
+      trustAudit: "Audit avril 2026",
+      trustLicense: "Licence MIT",
+      trustContracts: "Contrats MIT",
+      trustFixesCount: "29 correctifs deployes",
+      protectionsTitle: "Ce contre quoi nous nous protegeons",
+      protectionsSubtitle:
+        "Chaque couche de la pile est renforcee contre les vecteurs d'attaque connus.",
+      prot1Title: "SSRF",
+      prot1Desc:
+        "Validation multi-couches bloquant la falsification de requetes cote serveur. Resolution DNS forcee en IPv4, plages privees bloquees, cache TTL 10s contre le rebinding.",
+      prot2Title: "Attaques par rejeu",
+      prot2Desc:
+        "Chaque hash de transaction consomme une seule fois via insertion DB atomique avec ensemble de pre-reclamation en memoire. Lignes annulees conservees pour piste d'audit.",
+      prot3Title: "Exfiltration de wallet",
+      prot3Desc:
+        "Wallet MCP chiffre au repos avec AES-256-GCM, cle derivee via PBKDF2 (100k iterations, sel aleatoire par wallet). Cles privees jamais transmises.",
+      prot4Title: "Canaux lateraux temporels",
+      prot4Desc:
+        "Comparaison du jeton admin via crypto.timingSafeEqual sur des tampons paddes de longueur egale. Pas de sortie anticipee sur desaccord de longueur.",
+      prot5Title: "Injection SQL",
+      prot5Desc:
+        "Toutes les requetes DB utilisent des instructions parametrees via le client Supabase. Saisie utilisateur assainie avant toute operation LIKE/iLIKE.",
+      prot6Title: "XSS",
+      prot6Desc:
+        "Content-Security-Policy via helmet avec liste blanche stricte script-src et connect-src. Les reponses en proxy recoivent default-src 'none'.",
+      prot7Title: "DoS / Limitation de debit",
+      prot7Desc:
+        "Trois niveaux : 500 req/15min general, 120 req/min endpoints payes, 10 req/h inscription. Limite par wallet empeche le DoS par signataire.",
+      prot8Title: "RCE via expressions",
+      prot8Desc:
+        "Expressions mathematiques fournies par l'utilisateur isolees dans une instance mathjs renforcee. Protege contre la classe GHSA-jvff-x2qm-6286.",
+      prot9Title: "Conditions de course",
+      prot9Desc:
+        "L'increment du forfait gratuit utilise un RPC Postgres atomique avec INSERT … ON CONFLICT DO UPDATE RETURNING. Aucune fenetre TOCTOU.",
+      onChainTitle: "Ce qui est verifie sur la blockchain",
+      onChainSubtitle:
+        "Contrats intelligents verifiables independamment par quiconque sur la blockchain publique.",
+      onChainVerified: "Verifie",
+      onChain1Name: "Contrat FeeSplitter",
+      onChain1Desc:
+        "Divise les paiements 95/5 a chaque appel. ReentrancyGuard + SafeERC20. 66 tests Hardhat.",
+      onChain1Chain: "Polygon",
+      onChain1Link:
+        "https://polygonscan.com/address/0x820d4b07D09e5E07598464E6E36cB12561e0Ba56",
+      onChain2Name: "Registre d'Identite ERC-8004",
+      onChain2Desc:
+        "NFTs d'identite on-chain pour toutes les APIs listees. Identite d'agent unique par service.",
+      onChain2Chain: "SKALE",
+      onChain2Link:
+        "https://explorer.skale.network/address/0x8004A169FB4a3325136EB29fA0ceB6D2e539a432",
+      onChain3Name: "Registre de Reputation",
+      onChain3Desc:
+        "TrustScores envoyes on-chain toutes les 6h. Badge Or/Argent/Bronze lie a la reputation on-chain.",
+      onChain3Chain: "SKALE",
+      onChain3Link:
+        "https://explorer.skale.network/address/0x8004BAa17C55a88189AE136b182e5fdA19dE9b63",
+      auditTitle: "Resultats du dernier audit",
+      auditSubtitle:
+        "Avril 2026 — 10 agents specialises en parallele. Tous les problemes resolus.",
+      auditFixed: "Corrige",
+      auditP0Label: "Critique (P0)",
+      auditP1Label: "Eleve (P1)",
+      auditP2Label: "Moyen (P2)",
+      auditP0Items: [
+        {
+          title: "RCE via pollution de prototype mathjs",
+          sha: "2d26b65",
+        },
+        {
+          title:
+            "Headers EIP-3009 inverses — USDC brule lors des retentatives amont",
+          sha: "2d26b65",
+        },
+        {
+          title:
+            "L'annulation de la cle de rejeu echouait silencieusement sur conflit DB",
+          sha: "1d5d9fa",
+        },
+        {
+          title:
+            "Cle wallet MCP derivee sans PBKDF2 (liee a la machine, reversible)",
+          sha: "1a8cc21",
+        },
+      ],
+      auditP1Items: [
+        {
+          title: "Hachage IP utilisait SHA-256 simple sans secret serveur",
+          sha: "2d26b65",
+        },
+        {
+          title:
+            "L'increment du forfait gratuit avait une fenetre de course TOCTOU",
+          sha: "2d26b65",
+        },
+        {
+          title:
+            "Les politiques RLS permettaient a l'anon de lire les services mis en quarantaine",
+          sha: "2d26b65",
+        },
+        {
+          title: "Session admin stockee dans sessionStorage (lisible par XSS)",
+          sha: "2d26b65",
+        },
+        {
+          title: "Double facturation possible sur le chemin de paiement legacy",
+          sha: "1d5d9fa",
+        },
+        {
+          title: "viem publicClient non singleton — cree par requete",
+          sha: "1d5d9fa",
+        },
+        {
+          title:
+            "La normalisation d'adresse wallet contournait la transformation Zod",
+          sha: "1d5d9fa",
+        },
+        {
+          title: "getRelayBalance absorbait silencieusement les erreurs",
+          sha: "1d5d9fa",
+        },
+        {
+          title:
+            "HeroScene Three.js fuyait les frames d'animation au demontage",
+          sha: "e44afdf",
+        },
+        {
+          title:
+            "Carousel3D utilisait une fermeture perimee sur le listener de scroll",
+          sha: "e44afdf",
+        },
+        {
+          title: "MyApis rendait 3 chemins d'assertion non-null non verifies",
+          sha: "e44afdf",
+        },
+      ],
+      auditP2Items: [
+        {
+          title: "ConfirmModal manquait de piege de focus WCAG",
+          sha: "e44afdf",
+        },
+        {
+          title: "App.tsx manquait de lien de saut, repere main et h1",
+          sha: "e44afdf",
+        },
+        {
+          title:
+            "SELECT * utilise au lieu de colonnes explicites dans services.js",
+          sha: "2d26b65",
+        },
+        {
+          title:
+            "Arithmetique flottante dans l'affichage de split causait une derive d'arrondi",
+          sha: "1d5d9fa",
+        },
+        {
+          title: "La constante CHAINS etait dupliquee dans 5 fichiers",
+          sha: "2d26b65",
+        },
+        {
+          title: "Tokens URL non supprimes des logs d'acces (key, sig, auth)",
+          sha: "2d26b65",
+        },
+        {
+          title:
+            "activity.js utilisait .then() sur un builder Supabase non-Promise",
+          sha: "1d5d9fa",
+        },
+        {
+          title: "budget.js utilisait SELECT * au lieu de colonnes explicites",
+          sha: "1d5d9fa",
+        },
+        {
+          title: "Dependabot non configure sur aucun des 7 repos",
+          sha: "2d26b65",
+        },
+        {
+          title:
+            "Chemin decryptCmd expose dans la reponse MCP export_private_key",
+          sha: "1a8cc21",
+        },
+        {
+          title:
+            "Le limiteur de debit reviews.js generait une ValidationError en IPv6",
+          sha: "1d5d9fa",
+        },
+        {
+          title:
+            "Pollution de prototype sur required_parameters proxy non bloquee",
+          sha: "1d5d9fa",
+        },
+        {
+          title:
+            "fetchWithTimeout ne rappelait pas clearTimeout en cas de succes",
+          sha: "1d5d9fa",
+        },
+        {
+          title:
+            "monitor.js ne appelait pas .unref() — empechait l'arret progressif",
+          sha: "1d5d9fa",
+        },
+      ],
+      disclosureTitle: "Divulgation responsable",
+      disclosureSubtitle:
+        "Vous avez trouve un probleme de securite ? Nous nous engageons a un SLA d'accusation de reception de 48h.",
+      disclosureEmail: "security@x402bazaar.org",
+      disclosureEmailLabel: "Signaler par email",
+      disclosureResponse: "Accusation de reception 48h",
+      disclosureCritical:
+        "Correctif 24h pour les critiques (RCE, vidage de wallet, fuite de credentials)",
+      disclosureScope: "Dans le perimetre",
+      disclosureOutOfScope: "Hors perimetre",
+      disclosureScopeItems: [
+        "Contournement de la verification de paiement",
+        "Exfiltration de cle wallet",
+        "Fuite de credentials fournisseur",
+        "Vecteurs d'attaque par rejeu",
+        "SSRF sur les endpoints proxy",
+        "Contournement de l'authentification admin",
+      ],
+      disclosureOutItems: [
+        "APIs tierces amont listees sur la marketplace",
+        "Infrastructure RapidAPI ou marketplace externe",
+        "Attaques d'ingenierie sociale",
+        "Attaques par acces physique",
+      ],
+      comingSoonTitle: "Bientot disponible",
+      bugBountyTitle: "Programme de Bug Bounty",
+      bugBountyDesc:
+        "Inscription Immunefi en cours. Recompenses pour vulnerabilites critiques jusqu'a 10 000 USDC.",
+      auditTrailTitle: "Audit Trail of Bits",
+      auditTrailDesc:
+        "Audit externe du contrat intelligent FeeSplitter. Prevu T2 2026.",
+      soc2Title: "SOC 2 Type II",
+      soc2Desc:
+        "Le processus de certification demarre T3 2026. Applicable pour les clients entreprises.",
+      ctaTitle: "Construisez avec confiance",
+      ctaSubtitle:
+        "Commencez a integrer x402 Bazaar aujourd'hui — vos paiements sont securises de bout en bout.",
+      ctaQuickstart: "Demarrage rapide",
+      ctaContact: "Contacter la securite",
+    },
+    providers: {
+      badge: "Pour les Fournisseurs d'API",
+      heroTitle: "Vendez votre API aux agents IA",
+      heroSubtitle:
+        "Gardez 95% des revenus. Soyez paye en USDC. Pas de delais a 30 jours.",
+      heroCtaRegister: "Enregistrer votre API",
+      heroCtaDocs: "Voir la documentation",
+      whyTitle: "Pourquoi x402 Bazaar",
+      whySubtitle:
+        "Construit pour les fournisseurs qui veulent des revenus instantanes, transparents et pilotes par les agents.",
+      comparisonTitle: "Comparaison des parts de revenus",
+      compHeaderFeature: "Fonctionnalite",
+      compHeaderX402: "x402 Bazaar",
+      compHeaderRapid: "RapidAPI",
+      compRow1: "Revenus pour vous",
+      compRow1X402: "95%",
+      compRow1Rapid: "~75%",
+      compRow2: "Calendrier de paiement",
+      compRow2X402: "USDC instantane",
+      compRow2Rapid: "Net 30 jours",
+      compRow3: "Frais de listing",
+      compRow3X402: "0 $",
+      compRow3Rapid: "0–500 $",
+      compRow4: "Compatible agents IA",
+      compRow4X402: "Oui",
+      compRow4Rapid: "Non",
+      compRow5: "Piste d'audit on-chain",
+      compRow5X402: "Oui",
+      compRow5Rapid: "Non",
+      howTitle: "Comment ca marche",
+      howSubtitle: "De zero au premier paiement en moins de 15 minutes.",
+      how1Title: "Soumettez votre spec OpenAPI ou URL",
+      how1Desc:
+        "Collez l'URL de votre endpoint ou votre spec OpenAPI. Nous importons tous les endpoints automatiquement — aucune modification de code necessaire.",
+      how2Title: "Credentials valides automatiquement",
+      how2Desc:
+        "Nous pre-pingons votre API avec vos credentials pour confirmer qu'ils fonctionnent. Chiffres au repos avec AES-256-GCM.",
+      how3Title: "Votre API est mise en ligne",
+      how3Desc:
+        "Apparait dans la marketplace, decouvrable via MCP, CLI, LangChain, n8n, ChatGPT et 9 autres integrations.",
+      how4Title: "Vous etes paye en USDC apres chaque appel",
+      how4Desc:
+        "95% de chaque paiement va dans votre wallet instantanement. Virement automatique toutes les 6h pour les soldes au-dessus de 1 $.",
+      featuresTitle: "Ce que vous obtenez",
+      featuresSubtitle:
+        "Tout ce dont un fournisseur a besoin pour monetiser de facon fiable, sans charge operationnelle.",
+      feat1Title: "Tableau de bord analytique fournisseur",
+      feat1Desc:
+        "Total gagne, ventilation par service, graphique de revenus quotidiens, distribution par chaine, en attente vs paye.",
+      feat2Title: "Badges de score de confiance",
+      feat2Desc:
+        "Or / Argent / Bronze base sur la disponibilite, la latence p95, la coherence du schema et la qualite du contenu.",
+      feat3Title: "Identite on-chain ERC-8004",
+      feat3Desc:
+        "Votre API obtient une identite NFT on-chain sur SKALE. Reputation d'agent verifiable pour toujours.",
+      feat4Title: "Passthrough de credentials",
+      feat4Desc:
+        "Vos cles API restent les votres. Dechiffrees uniquement en memoire au moment de la requete. Jamais loguees ni retournees.",
+      feat5Title: "95% de revenus, 5% de frais de plateforme",
+      feat5Desc:
+        "Notre seul revenu est les 5% de frais de plateforme sur les appels reussis. Pas de frais de listing, pas de frais mensuels.",
+      feat6Title: "Protection consommateur incluse",
+      feat6Desc:
+        "Si votre API retourne 5xx ou un corps vide, l'utilisateur est automatiquement rembourse. Protege aussi votre reputation.",
+      topEarnersTitle: "Fournisseurs qui gagnent maintenant",
+      topEarnersSubtitle:
+        "Vrais fournisseurs. Vrais revenus. Donnees mises a jour quotidiennement.",
+      earner1Name: "Brand Story Engine",
+      earner1Revenue: "38 $ cette semaine",
+      earner1Calls: "412 appels",
+      earner1Chain: "Base",
+      earner2Name: "MEP Load Analysis",
+      earner2Revenue: "21 $ cette semaine",
+      earner2Calls: "190 appels",
+      earner2Chain: "Polygon",
+      earner3Name: "SentimentAlpha",
+      earner3Revenue: "17 $ cette semaine",
+      earner3Calls: "280 appels",
+      earner3Chain: "SKALE",
+      earner4Name: "Interzoid Data",
+      earner4Revenue: "14 $ cette semaine",
+      earner4Calls: "112 appels",
+      earner4Chain: "Base",
+      earner5Name: "AgentsHere Scraper",
+      earner5Revenue: "9 $ cette semaine",
+      earner5Calls: "210 appels",
+      earner5Chain: "SKALE",
+      faqTitle: "FAQ Fournisseurs",
+      faqSubtitle:
+        "Questions frequentes des fournisseurs d'API qui envisagent x402 Bazaar.",
+      faq1Q: "Comment les paiements sont-ils divises ?",
+      faq1A:
+        "95% vont a votre adresse wallet enregistree, 5% au wallet de frais de plateforme. La division se produit a chaque appel reussi, verifie on-chain via le contrat intelligent FeeSplitter.",
+      faq2Q: "Quand suis-je paye ?",
+      faq2A:
+        "Les paiements sont regles toutes les 6h pour les wallets avec un solde en attente superieur a 1 USDC. Pour les montants plus petits, vous pouvez declencher un retrait on-chain instantane depuis /my-apis.",
+      faq3Q: "Est-ce que je garde mes cles API ?",
+      faq3A:
+        "Oui. Les credentials sont chiffres au repos avec AES-256-GCM en utilisant une cle stockee uniquement dans notre environnement serveur. Dechiffres uniquement en memoire au moment de la requete. Nous ne les loguons ni ne les retournons jamais.",
+      faq4Q: "Que se passe-t-il si mon API tombe ?",
+      faq4A:
+        "Nous effectuons un controle de sante toutes les 5 minutes. Si votre API retourne 5xx ou est inaccessible, son statut passe a hors ligne et les appels sont bloques avant paiement. Les utilisateurs sont notifies. Vous recevez une alerte Telegram.",
+      faq5Q: "Puis-je me retirer a tout moment ?",
+      faq5A:
+        "Oui. Definissez le statut sur deprecated via le tableau de bord ou l'API. Le listing disparait de la marketplace publique. Les integrations existantes continuent de fonctionner jusqu'a ce que vous le mettiez explicitement hors ligne.",
+      faq6Q: "Qu'en est-il de l'exclusivite ?",
+      faq6A:
+        "Il n'y a pas d'exclusivite. Vous pouvez lister sur x402 Bazaar et RapidAPI simultanement — zero risque. Vous gardez votre propre infrastructure et vos propres relations.",
+      faq7Q: "Y a-t-il des frais de listing ?",
+      faq7A:
+        "Non. L'inscription est entierement gratuite. Notre seul revenu est les 5% de frais de plateforme sur les appels reussis. Si vous ne gagnez rien, nous ne gagnons rien.",
+      faq8Q: "Comment fonctionne la validation des credentials ?",
+      faq8A:
+        "A l'inscription, nous pre-pingons votre endpoint API avec vos credentials (HEAD, fallback GET). S'il retourne 401 ou 403, l'inscription est bloquee. 5xx ou timeout est accepte avec un avertissement. Cela empeche de lister accidentellement un service defectueux.",
+      ctaTitle: "Listez votre API en 5 minutes",
+      ctaSubtitle:
+        "Pas de frais, pas de processus d'approbation. Inscrivez-vous maintenant et commencez a gagner de l'USDC du trafic des agents IA.",
+      ctaRegister: "Enregistrer votre API",
     },
   },
 };

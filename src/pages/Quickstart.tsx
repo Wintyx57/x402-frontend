@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import useSEO from "../hooks/useSEO";
 import { API_URL } from "../config";
+import { track } from "../analytics";
 
 /* ─── Live Try-It ─── */
 function LiveTryIt() {
@@ -75,6 +76,13 @@ function InlineCopy({ text }: { text: string }) {
     try {
       await navigator.clipboard.writeText(text);
       setCopied(true);
+      const isInstall =
+        text.includes("npm install") ||
+        text.includes("pip install") ||
+        text.includes("npx x402-bazaar");
+      track(isInstall ? "cli_install_copied" : "free_call_clicked", {
+        text_length: text.length,
+      });
       setTimeout(() => setCopied(false), 2000);
     } catch {
       /* noop */
@@ -215,6 +223,10 @@ export default function Quickstart() {
   });
 
   const [sdkTab, setSdkTab] = useState<Tab>("javascript");
+
+  useEffect(() => {
+    track("quickstart_view");
+  }, []);
 
   // HowTo JSON-LD
   useEffect(() => {

@@ -16,6 +16,7 @@ import {
 } from "../components/icons/ChainLogos";
 import { VALID_CATEGORIES } from "../data/categories";
 import SplitHero from "../components/SplitHero";
+import { track } from "../analytics";
 
 // ---- CountUp ----
 function CountUp({
@@ -236,6 +237,10 @@ export default function Home() {
   const services = Array.isArray(servicesData) ? servicesData : [];
   const [avgLatency, setAvgLatency] = useState<number | null>(null);
   const { t } = useTranslation();
+
+  useEffect(() => {
+    track("landing_view");
+  }, []);
 
   // Reveal refs
   const howRef = useReveal();

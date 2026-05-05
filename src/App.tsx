@@ -97,6 +97,8 @@ const ImportRapidAPI = lazy(() => import("./pages/ImportRapidAPI"));
 const Paywall = lazy(() => import("./pages/Paywall"));
 const AdminCommunityAgent = lazy(() => import("./pages/AdminCommunityAgent"));
 const UseCases = lazy(() => import("./pages/UseCases"));
+const Security = lazy(() => import("./pages/Security"));
+const ProvidersPage = lazy(() => import("./pages/Providers"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 export default function App() {
@@ -160,6 +162,8 @@ export default function App() {
               <Route path="/import/rapidapi" element={<ImportRapidAPI />} />
               <Route path="/pay/:id" element={<Paywall />} />
               <Route path="/use-cases" element={<UseCases />} />
+              <Route path="/security" element={<Security />} />
+              <Route path="/providers" element={<ProvidersPage />} />
               <Route
                 path="/admin/community-agent"
                 element={
