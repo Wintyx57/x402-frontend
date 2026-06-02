@@ -326,6 +326,10 @@ export default function HeroScene({ hoverState }: HeroSceneProps) {
           life = 0;
           maxLife = 0;
           crossed = false;
+          // Reusable Color objects — avoids ~3600 allocations/s in update()
+          _col = new THREE.Color();
+          _mutedCol = new THREE.Color();
+          _emissiveCol = new THREE.Color();
 
           constructor(big: boolean) {
             this.big = big;
@@ -500,9 +504,9 @@ export default function HeroScene({ hoverState }: HeroSceneProps) {
             ta[2] = this.grp.position.z;
             this.trail.geometry.attributes.position.needsUpdate = true;
 
-            // Color by position
+            // Color by position — reuse instance Color objects to avoid GC pressure
             const t = Math.max(0, Math.min(1, (this.grp.position.x + 7) / 14));
-            const col = new THREE.Color();
+            const col = this._col;
             if (t < 0.5) {
               const sv = t * 2;
               col.setRGB(1 - sv * 0.85, 0.6 - sv * 0.18, sv * 0.8);
@@ -510,12 +514,10 @@ export default function HeroScene({ hoverState }: HeroSceneProps) {
               const sv = (t - 0.5) * 2;
               col.setRGB(0.15 + sv * 0.22, 0.45 + sv * 0.2, 0.8 + sv * 0.18);
             }
-            const mutedCol = col.clone().multiplyScalar(0.55);
+            const mutedCol = this._mutedCol.set(col).multiplyScalar(0.55);
             this.cm.color.lerp(mutedCol, 0.03);
-            this.cm.emissive.lerp(
-              new THREE.Color(col.r * 0.05, col.g * 0.05, col.b * 0.05),
-              0.03,
-            );
+            this._emissiveCol.setRGB(col.r * 0.05, col.g * 0.05, col.b * 0.05);
+            this.cm.emissive.lerp(this._emissiveCol, 0.03);
             this.tm.color.lerp(col, 0.04);
 
             // Alpha fade in/out

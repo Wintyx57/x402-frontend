@@ -259,8 +259,7 @@ export default function Paywall() {
             </svg>
           </div>
           <h1 className="text-xl font-bold text-white mb-2">
-            {(t.paymentLinks as any)?.paywall?.inactive ||
-              "Link No Longer Active"}
+            {t.paymentLinks?.paywall?.inactive || "Link No Longer Active"}
           </h1>
           <p className="text-gray-400 text-sm mb-6">
             This payment link has been deactivated by its owner.
@@ -307,8 +306,7 @@ export default function Paywall() {
               </svg>
             </div>
             <h1 className="text-[#A78BFA] text-2xl font-bold mb-2">
-              {(t.paymentLinks as any)?.paywall?.success ||
-                "Payment Confirmed!"}
+              {t.paymentLinks?.paywall?.success || "Payment Confirmed!"}
             </h1>
             <p className="text-white font-semibold mb-1">{linkData.title}</p>
             <p className="text-gray-400 text-sm mb-8">
@@ -355,7 +353,7 @@ export default function Paywall() {
                   d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
                 />
               </svg>
-              {(t.paymentLinks as any)?.paywall?.redirecting || "Open Content"}
+              {t.paymentLinks?.paywall?.redirecting || "Open Content"}
             </a>
           </div>
         </div>
@@ -372,8 +370,7 @@ export default function Paywall() {
   const statusLabel = () => {
     if (payState === "paying")
       return (
-        (t.paymentLinks as any)?.paywall?.paying ||
-        "Waiting for wallet approval..."
+        t.paymentLinks?.paywall?.paying || "Waiting for wallet approval..."
       );
     if (payState === "confirming") return "Confirming on-chain...";
     if (payState === "accessing") return "Verifying access...";
@@ -433,7 +430,7 @@ export default function Paywall() {
                 className="w-1.5 h-1.5 rounded-full bg-[#A78BFA] animate-pulse"
                 aria-hidden="true"
               />
-              {(t.paymentLinks as any)?.paywall?.locked || "Content Locked"}
+              {t.paymentLinks?.paywall?.locked || "Content Locked"}
             </span>
 
             {/* Title */}
@@ -565,9 +562,8 @@ export default function Paywall() {
                         d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"
                       />
                     </svg>
-                    {(t.paymentLinks as any)?.paywall?.payAccess ||
-                      "Pay & Access"}{" "}
-                    · ${linkData.price_usdc} USDC
+                    {t.paymentLinks?.paywall?.payAccess || "Pay & Access"} · $
+                    {linkData.price_usdc} USDC
                   </>
                 )}
               </button>

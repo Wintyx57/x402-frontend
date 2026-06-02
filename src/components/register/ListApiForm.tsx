@@ -638,7 +638,8 @@ export default function ListApiForm({ onBack }: ListApiFormProps) {
               value={url}
               onChange={(e) => setUrl(e.target.value)}
               placeholder="https://api.example.com/v1/endpoint"
-              aria-describedby="url-hint"
+              aria-invalid={!!error}
+              aria-describedby={error ? "url-hint list-form-error" : "url-hint"}
             />
             <p className="text-[11px] text-amber-400/60 mt-1.5" id="url-hint">
               {t.register?.urlHint ||
@@ -688,6 +689,8 @@ export default function ListApiForm({ onBack }: ListApiFormProps) {
                 placeholder="0.01"
                 className="pr-16"
                 aria-label="Price in USDC"
+                aria-invalid={!!error}
+                aria-describedby={error ? "list-form-error" : undefined}
               />
               <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-mono text-gray-500 pointer-events-none select-none">
                 USDC
@@ -718,6 +721,8 @@ export default function ListApiForm({ onBack }: ListApiFormProps) {
               onChange={(e) => setWallet(e.target.value)}
               placeholder="0x..."
               spellCheck={false}
+              aria-invalid={!!error}
+              aria-describedby={error ? "list-form-error" : undefined}
             />
             {!isConnected && (
               <p className="text-[11px] text-gray-500 mt-1.5">
@@ -897,6 +902,7 @@ export default function ListApiForm({ onBack }: ListApiFormProps) {
           {error && (
             <div
               ref={errorRef}
+              id="list-form-error"
               role="alert"
               className="mb-5 px-4 py-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm"
             >

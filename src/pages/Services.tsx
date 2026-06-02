@@ -259,7 +259,10 @@ export default function Services() {
     isLoading: loading,
     error: servicesError,
   } = useServices();
-  const services: Service[] = Array.isArray(servicesData) ? servicesData : [];
+  const services: Service[] = useMemo(
+    () => (Array.isArray(servicesData) ? servicesData : []),
+    [servicesData],
+  );
 
   const serviceIds = useMemo(() => services.map((s) => s.id), [services]);
   const reviewStatsMap = useAllReviewStats(serviceIds);

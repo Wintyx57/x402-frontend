@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useId, useRef } from "react";
 
 interface ConfirmModalProps {
   title: string;
@@ -22,12 +22,8 @@ export default function ConfirmModal({
   onCancel,
 }: ConfirmModalProps) {
   const cancelRef = useRef<HTMLButtonElement>(null);
-  const titleId = useRef(
-    `confirm-modal-title-${Math.random().toString(36).slice(2, 9)}`,
-  );
-  const descId = useRef(
-    `confirm-modal-desc-${Math.random().toString(36).slice(2, 9)}`,
-  );
+  const titleId = useId();
+  const descId = useId();
 
   // Auto-focus the Cancel button on open (safer default for destructive
   // actions — keeps an accidental Enter from confirming).
@@ -54,8 +50,8 @@ export default function ConfirmModal({
       <div
         role="dialog"
         aria-modal="true"
-        aria-labelledby={titleId.current}
-        aria-describedby={descId.current}
+        aria-labelledby={titleId}
+        aria-describedby={descId}
         className="bg-[#1e2332] border border-white/15 shadow-2xl rounded-2xl p-6 w-full max-w-sm mx-4 animate-fade-in"
         onClick={(e) => e.stopPropagation()}
       >
@@ -67,13 +63,13 @@ export default function ConfirmModal({
           </div>
         )}
         <h3
-          id={titleId.current}
+          id={titleId}
           className="text-lg font-bold text-white mb-2 text-center"
         >
           {title}
         </h3>
         <p
-          id={descId.current}
+          id={descId}
           className="text-sm text-gray-400 mb-6 text-center"
         >
           {message}

@@ -98,17 +98,55 @@ function EditModal({
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const nameInputRef = useRef<HTMLInputElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
 
   // Focus first input on mount
   useEffect(() => {
     nameInputRef.current?.focus();
   }, []);
 
-  // Close on Escape
+  // Focus trap + Escape (WCAG 2.1.2)
   useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+
+    const focusableSelectors = [
+      "a[href]",
+      "button:not([disabled])",
+      "input:not([disabled])",
+      "select:not([disabled])",
+      "textarea:not([disabled])",
+      '[tabindex]:not([tabindex="-1"])',
+    ].join(", ");
+
+    const getFocusable = () =>
+      Array.from(
+        dialog.querySelectorAll<HTMLElement>(focusableSelectors),
+      ).filter((el) => !el.closest('[aria-hidden="true"]'));
+
     const handleKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") {
+        onClose();
+        return;
+      }
+      if (e.key !== "Tab") return;
+      const focusable = getFocusable();
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey) {
+        if (document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else {
+        if (document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
     };
+
     document.addEventListener("keydown", handleKey);
     return () => document.removeEventListener("keydown", handleKey);
   }, [onClose]);
@@ -148,6 +186,7 @@ function EditModal({
       onClick={onClose}
     >
       <div
+        ref={dialogRef}
         role="dialog"
         aria-modal="true"
         aria-labelledby="edit-modal-title"
@@ -164,7 +203,7 @@ function EditModal({
           <div>
             <label
               htmlFor="edit-name"
-              className="text-xs text-gray-400 mb-1 block"
+              className="text-xs text-gray-300 mb-1 block"
             >
               {m?.fieldName ?? "Name"}
             </label>
@@ -173,13 +212,15 @@ function EditModal({
               ref={nameInputRef}
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full bg-white/8 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#FF9900]/50"
+              aria-invalid={!!error}
+              aria-describedby={error ? "edit-modal-error" : undefined}
+              className="w-full bg-white/8 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FF9900] focus-visible:outline-none focus:border-[#FF9900]/50"
             />
           </div>
           <div>
             <label
               htmlFor="edit-description"
-              className="text-xs text-gray-400 mb-1 block"
+              className="text-xs text-gray-300 mb-1 block"
             >
               {m?.fieldDescription ?? "Description"}
             </label>
@@ -188,13 +229,13 @@ function EditModal({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
-              className="w-full bg-white/8 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#FF9900]/50 resize-none"
+              className="w-full bg-white/8 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FF9900] focus-visible:outline-none focus:border-[#FF9900]/50 resize-none"
             />
           </div>
           <div>
             <label
               htmlFor="edit-price"
-              className="text-xs text-gray-400 mb-1 block"
+              className="text-xs text-gray-300 mb-1 block"
             >
               {m?.fieldPrice ?? "Price (USDC)"}
             </label>
@@ -204,13 +245,13 @@ function EditModal({
               step="0.001"
               value={price}
               onChange={(e) => setPrice(e.target.value)}
-              className="w-full bg-white/8 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#FF9900]/50"
+              className="w-full bg-white/8 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FF9900] focus-visible:outline-none focus:border-[#FF9900]/50"
             />
           </div>
           <div>
             <label
               htmlFor="edit-tags"
-              className="text-xs text-gray-400 mb-1 block"
+              className="text-xs text-gray-300 mb-1 block"
             >
               {m?.fieldTags ?? "Tags (comma separated)"}
             </label>
@@ -218,10 +259,18 @@ function EditModal({
               id="edit-tags"
               value={tags}
               onChange={(e) => setTags(e.target.value)}
-              className="w-full bg-white/8 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#FF9900]/50"
+              className="w-full bg-white/8 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FF9900] focus-visible:outline-none focus:border-[#FF9900]/50"
             />
           </div>
-          {error && <p className="text-sm text-red-400">{error}</p>}
+          {error && (
+            <p
+              id="edit-modal-error"
+              role="alert"
+              className="text-sm text-red-400"
+            >
+              {error}
+            </p>
+          )}
           <div className="flex gap-3 justify-end">
             <button
               onClick={onClose}
@@ -259,17 +308,55 @@ function DeleteModal({
   const [deleting, setDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
   const cancelRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
 
   // Focus Cancel button on mount (safe default for destructive actions)
   useEffect(() => {
     cancelRef.current?.focus();
   }, []);
 
-  // Close on Escape
+  // Focus trap + Escape (WCAG 2.1.2)
   useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+
+    const focusableSelectors = [
+      "a[href]",
+      "button:not([disabled])",
+      "input:not([disabled])",
+      "select:not([disabled])",
+      "textarea:not([disabled])",
+      '[tabindex]:not([tabindex="-1"])',
+    ].join(", ");
+
+    const getFocusable = () =>
+      Array.from(
+        dialog.querySelectorAll<HTMLElement>(focusableSelectors),
+      ).filter((el) => !el.closest('[aria-hidden="true"]'));
+
     const handleKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") {
+        onClose();
+        return;
+      }
+      if (e.key !== "Tab") return;
+      const focusable = getFocusable();
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey) {
+        if (document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else {
+        if (document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
     };
+
     document.addEventListener("keydown", handleKey);
     return () => document.removeEventListener("keydown", handleKey);
   }, [onClose]);
@@ -495,10 +582,18 @@ export default function MyApis() {
 
       {/* Tabs — parameter renamed to `tabItem` to avoid shadowing the `t`
            translations object in the enclosing scope. */}
-      <div className="flex gap-0 border-b border-white/10 mb-8 overflow-x-auto">
+      <div
+        role="tablist"
+        aria-label="Dashboard sections"
+        className="flex gap-0 border-b border-white/10 mb-8 overflow-x-auto"
+      >
         {tabs.map((tabItem) => (
           <button
             key={tabItem.key}
+            role="tab"
+            id={`tab-${tabItem.key}`}
+            aria-selected={tab === tabItem.key}
+            aria-controls={`tabpanel-${tabItem.key}`}
             onClick={() => setTab(tabItem.key)}
             className={`px-5 py-3 text-sm font-medium transition-colors cursor-pointer whitespace-nowrap ${tab === tabItem.key ? "text-[#FF9900] border-b-2 border-[#FF9900]" : "text-gray-500 hover:text-gray-300"}`}
           >
@@ -507,18 +602,50 @@ export default function MyApis() {
         ))}
       </div>
 
-      {tab === "overview" && <OverviewTab data={data} />}
-      {tab === "revenue" && <RevenueTab data={data} />}
-      {tab === "apis" && (
-        <ApisTab
-          data={data}
-          onEdit={setEditService}
-          onDelete={setDeleteService}
-        />
+      {tab === "overview" && (
+        <div
+          role="tabpanel"
+          id="tabpanel-overview"
+          aria-labelledby="tab-overview"
+        >
+          <OverviewTab data={data} />
+        </div>
       )}
-      {tab === "payouts" && <PayoutsTab data={data} />}
+      {tab === "revenue" && (
+        <div
+          role="tabpanel"
+          id="tabpanel-revenue"
+          aria-labelledby="tab-revenue"
+        >
+          <RevenueTab data={data} />
+        </div>
+      )}
+      {tab === "apis" && (
+        <div role="tabpanel" id="tabpanel-apis" aria-labelledby="tab-apis">
+          <ApisTab
+            data={data}
+            onEdit={setEditService}
+            onDelete={setDeleteService}
+          />
+        </div>
+      )}
+      {tab === "payouts" && (
+        <div
+          role="tabpanel"
+          id="tabpanel-payouts"
+          aria-labelledby="tab-payouts"
+        >
+          <PayoutsTab data={data} />
+        </div>
+      )}
       {tab === "payment-links" && address && (
-        <PaymentLinksTab address={address} />
+        <div
+          role="tabpanel"
+          id="tabpanel-payment-links"
+          aria-labelledby="tab-payment-links"
+        >
+          <PaymentLinksTab address={address} />
+        </div>
       )}
 
       {editService && (
@@ -682,7 +809,11 @@ function RevenueTab({ data }: { data: ProviderAnalytics }) {
         <h3 className="text-sm font-semibold text-gray-400 mb-4">
           Revenue — Last 30 Days
         </h3>
-        <Bar data={chartData} options={chartOptions} />
+        <Bar
+          data={chartData}
+          options={chartOptions}
+          aria-label="Revenue — last 30 days"
+        />
       </div>
       <div className="grid md:grid-cols-2 gap-6">
         <div className="glass rounded-xl p-5">
@@ -691,6 +822,8 @@ function RevenueTab({ data }: { data: ProviderAnalytics }) {
             <div className="flex items-center gap-6">
               <div className="w-32 h-32">
                 <Doughnut
+                  id="doughnut-by-chain"
+                  aria-describedby="doughnut-by-chain-table"
                   data={doughnutData}
                   options={{
                     plugins: { legend: { display: false } },
@@ -698,6 +831,26 @@ function RevenueTab({ data }: { data: ProviderAnalytics }) {
                   }}
                 />
               </div>
+              <table
+                id="doughnut-by-chain-table"
+                className="sr-only"
+                aria-label="Revenue by chain"
+              >
+                <thead>
+                  <tr>
+                    <th scope="col">Chain</th>
+                    <th scope="col">Amount (USDC)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {chainEntries.map(([chain, amount]) => (
+                    <tr key={chain}>
+                      <td className="capitalize">{chain}</td>
+                      <td>${(amount as number).toFixed(2)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
               <div className="space-y-2">
                 {chainEntries.map(([chain, amount]) => (
                   <div key={chain} className="flex items-center gap-2">

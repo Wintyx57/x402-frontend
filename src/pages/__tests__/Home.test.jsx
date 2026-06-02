@@ -97,10 +97,10 @@ describe("Home", () => {
 
   it("should display the hero agent side title", () => {
     renderWithProviders(<Home />);
-    // The agent side of SplitHero displays "Pay and go." as the first title word.
+    // The agent side of SplitHero displays the current i18n title.
     const headings = screen.getAllByRole("heading", { level: 2 });
     const agentHeading = headings.find((h) =>
-      h.textContent.includes("Pay and go"),
+      h.textContent.includes("Any agent."),
     );
     expect(agentHeading).toBeDefined();
   });

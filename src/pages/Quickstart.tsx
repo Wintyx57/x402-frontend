@@ -128,10 +128,18 @@ function TabBar({
   onChange: (t: Tab) => void;
 }) {
   return (
-    <div className="flex gap-1 bg-white/5 rounded-lg p-1 w-fit">
+    <div
+      role="tablist"
+      aria-label="SDK language"
+      className="flex gap-1 bg-white/5 rounded-lg p-1 w-fit"
+    >
       {tabs.map((tab) => (
         <button
           key={tab.id}
+          role="tab"
+          id={`tab-${tab.id}`}
+          aria-selected={active === tab.id}
+          aria-controls={`tabpanel-${tab.id}`}
           onClick={() => onChange(tab.id)}
           className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors cursor-pointer ${
             active === tab.id
@@ -338,7 +346,12 @@ export default function Quickstart() {
             />
 
             <div className="mt-4">
-              {sdkTab === "javascript" && (
+              <div
+                role="tabpanel"
+                id="tabpanel-javascript"
+                aria-labelledby="tab-javascript"
+                hidden={sdkTab !== "javascript"}
+              >
                 <div className="space-y-3">
                   <div className="relative">
                     <InlineCopy text="npm install @wintyx/x402-sdk" />
@@ -349,9 +362,14 @@ export default function Quickstart() {
                   </div>
                   <CodeBlock code={JS_SDK} lang="javascript" />
                 </div>
-              )}
+              </div>
 
-              {sdkTab === "python" && (
+              <div
+                role="tabpanel"
+                id="tabpanel-python"
+                aria-labelledby="tab-python"
+                hidden={sdkTab !== "python"}
+              >
                 <div className="space-y-3">
                   <div className="relative">
                     <InlineCopy text="pip install x402-bazaar" />
@@ -362,11 +380,23 @@ export default function Quickstart() {
                   </div>
                   <CodeBlock code={PY_SDK} lang="python" />
                 </div>
-              )}
+              </div>
 
-              {sdkTab === "cli" && <CodeBlock code={CLI_SNIPPET} lang="bash" />}
+              <div
+                role="tabpanel"
+                id="tabpanel-cli"
+                aria-labelledby="tab-cli"
+                hidden={sdkTab !== "cli"}
+              >
+                <CodeBlock code={CLI_SNIPPET} lang="bash" />
+              </div>
 
-              {sdkTab === "curl" && (
+              <div
+                role="tabpanel"
+                id="tabpanel-curl"
+                aria-labelledby="tab-curl"
+                hidden={sdkTab !== "curl"}
+              >
                 <div className="space-y-3">
                   <CodeBlock code={MCP_SNIPPET} lang="bash" />
                   <p className="text-gray-400 text-xs">
@@ -377,7 +407,7 @@ export default function Quickstart() {
                     </Link>
                   </p>
                 </div>
-              )}
+              </div>
             </div>
           </div>
         </section>
